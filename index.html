@@ -237,25 +237,27 @@
   </div>
 
   <script>
-    const USER_REPO = "naplus-oficial/NaPlus";
-    const FILE_PATH = "index.html";
-
-    let catalog = [
+    let catalog = JSON.parse(localStorage.getItem('naplus_db_v2')) || [
       {
         id: 1,
         tipo: 'pelicula',
         titulo: 'Película Demo NaPlus',
         genero: 'Acción, Aventura',
         anio: '2026',
-        desc: 'Esta es una película de prueba para la plataforma NaPlus.',
+        desc: 'Esta es una película de prueba con un video demo cargado directamente en OK.ru.',
         portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
+        video: 'https://ok.ru/videoembed/237592963750'
       }
     ];
 
     let favoritos = JSON.parse(localStorage.getItem('naplus_favs')) || [];
-    let esCreador = false;
+    let esCreador = localStorage.getItem('naplus_is_creator') === 'true';
     let generoSeleccionado = 'Todos';
+
+    if (esCreador) {
+      document.body.classList.add('creator-active');
+      document.getElementById('btnAdmin').innerText = "+ Panel Creador";
+    }
 
     function toggleCreador() {
       if (esCreador) {
@@ -267,14 +269,17 @@
       const pass = prompt("Ingresá la clave de creador (9009) o tu Token de GitHub:");
       if (!pass) return;
 
-      if (pass.trim() === "9009" || pass.trim().startsWith("ghp_")) {
-        if (pass.trim().startsWith("ghp_")) {
-          localStorage.setItem('naplus_token', pass.trim());
+      const trimmedPass = pass.trim();
+      if (trimmedPass === "9009" || trimmedPass.startsWith("ghp_")) {
+        if (trimmedPass.startsWith("ghp_")) {
+          localStorage.setItem('naplus_token', trimmedPass);
         }
         esCreador = true;
+        localStorage.setItem('naplus_is_creator', 'true');
         document.body.classList.add('creator-active');
         document.getElementById('btnAdmin').innerText = "+ Panel Creador";
         document.getElementById('creatorPanel').classList.add('active');
+        renderizar();
         alert("Modo creador activado correctamente.");
       } else {
         alert("Clave incorrecta.");
@@ -439,15 +444,16 @@
       document.getElementById('creatorPanel').classList.add('active');
     }
 
-    async function eliminar(index) {
+    function eliminar(index) {
       if (confirm("¿Seguro que querés eliminar este contenido del catálogo?")) {
         catalog.splice(index, 1);
+        localStorage.setItem('naplus_db_v2', JSON.stringify(catalog));
         renderizar();
-        await publicarEnNube();
+        publicarEnNube();
       }
     }
 
-    async function guardarContenido(e) {
+    function guardarContenido(e) {
       e.preventDefault();
       const editIdx = document.getElementById('editIndex').value;
 
@@ -465,51 +471,35 @@
       if (editIdx !== '') catalog[parseInt(editIdx)] = nuevoItem;
       else catalog.unshift(nuevoItem);
 
+      localStorage.setItem('naplus_db_v2', JSON.stringify(catalog));
       renderizar();
       limpiarFormulario();
       cerrarPanel();
-      await publicarEnNube();
+      publicarEnNube();
     }
 
     async function publicarEnNube() {
       let token = localStorage.getItem('naplus_token');
-      if (!token || !token.startsWith("ghp_")) {
-        token = prompt("Pegá tu Token de GitHub (ghp_...) para guardar los cambios globalmente:");
-        if (token && token.trim().startsWith("ghp_")) {
-          token = token.trim();
-          localStorage.setItem('naplus_token', token);
-        } else {
-          alert("Sin token válido, los cambios se guardan solo localmente.");
-          return;
-        }
-      }
+      if (!token || !token.startsWith("ghp_")) return;
 
       try {
-        const getRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`, {
+        const repoPath = localStorage.getItem('naplus_repo') || prompt("Confirmá el repositorio (ejemplo: usuario/naplus):");
+        if (!repoPath) return;
+        localStorage.setItem('naplus_repo', repoPath);
+
+        const getRes = await fetch(`https://api.github.com/repos/${repoPath}/contents/index.html`, {
           headers: { 'Authorization': `token ${token}` }
         });
 
-        if (!getRes.ok) {
-          alert("Error de autenticación con GitHub.");
-          return;
-        }
+        if (!getRes.ok) return;
 
         const getData = await getRes.json();
         let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
         
-        fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${JSON.stringify(catalog, null, 2)};`);
+        fileText = fileText.replace(/let catalog = JSON.parse\(localStorage.getItem\('naplus_db_v2'\)\) \|\| \[[\s\S]*?\];/, `let catalog = JSON.parse(localStorage.getItem('naplus_db_v2')) || ${JSON.stringify(catalog, null, 2)};`);
 
         const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
 
-        const putRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`, {
+        await fetch(`https://api.github.com/repos/${repoPath}/contents/index.html`, {
           method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Actualización NaPlus',
-            content: updatedBase64,
-            sha: getData.sha
-          })
-        });
+          heade
