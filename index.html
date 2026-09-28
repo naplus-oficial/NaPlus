@@ -27,7 +27,7 @@
       background-color: var(--bg-dark);
       color: var(--text-white);
       padding-top: 65px;
-      padding-bottom: 50px;
+      padding-bottom: 70px;
     }
 
     /* BARRA SUPERIOR */
@@ -52,6 +52,13 @@
       background: linear-gradient(135deg, var(--accent-light), var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .btn-creator {
@@ -65,6 +72,40 @@
       cursor: pointer;
     }
 
+    /* NAVEGACIÓN INFERIOR TÁCTIL */
+    nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: rgba(10, 6, 18, 0.98);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid var(--border-purple);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: var(--text-gray);
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      width: 33.33%;
+    }
+
+    .nav-item span { font-size: 1.2rem; }
+    .nav-item.active { color: var(--accent-light); font-weight: bold; }
+
+    /* VISTAS */
+    .view-section { display: none; padding-bottom: 20px; }
+    .view-section.active { display: block; }
+
     /* HERO & BUSCADOR */
     .hero {
       padding: 20px 15px;
@@ -72,22 +113,10 @@
       margin-bottom: 10px;
     }
 
-    .hero h1 {
-      font-size: 1.8rem;
-      margin-bottom: 5px;
-    }
+    .hero h1 { font-size: 1.6rem; margin-bottom: 5px; }
+    .hero p { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 12px; }
 
-    .hero p {
-      font-size: 0.85rem;
-      color: var(--text-gray);
-      margin-bottom: 12px;
-    }
-
-    .search-box {
-      width: 100%;
-      max-width: 500px;
-    }
-
+    .search-box { width: 100%; max-width: 500px; }
     .search-box input {
       width: 100%;
       padding: 10px 14px;
@@ -98,14 +127,11 @@
       font-size: 0.95rem;
       outline: none;
     }
+    .search-box input:focus { border-color: var(--accent-light); }
 
-    .search-box input:focus {
-      border-color: var(--accent-light);
-    }
-
-    /* SECCIONES Y GRILLAS */
+    /* TÍTULOS DE SECCIÓN Y SCROLL HORIZONTAL */
     .section-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin: 20px 15px 10px;
       color: var(--accent-light);
       display: flex;
@@ -116,19 +142,22 @@
     .section-title::before {
       content: '';
       display: inline-block;
-      width: 4px;
-      height: 16px;
+      width: 4px; height: 15px;
       background: var(--accent-purple);
       border-radius: 2px;
     }
 
-    .empty-msg {
-      font-size: 0.85rem;
-      color: var(--text-gray);
-      padding: 0 15px;
-      font-style: italic;
+    .horizontal-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 15px 10px 15px;
+      scrollbar-width: none;
     }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+    .horizontal-scroll .card { min-width: 120px; width: 120px; flex-shrink: 0; }
 
+    /* GRILLAS ESTÁNDAR */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -154,23 +183,9 @@
       pointer-events: none;
     }
 
-    .card-info {
-      padding: 8px;
-      pointer-events: none;
-    }
-
-    .card-title {
-      font-size: 0.85rem;
-      font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-sub {
-      font-size: 0.75rem;
-      color: var(--text-gray);
-    }
+    .card-info { padding: 8px; pointer-events: none; }
+    .card-title { font-size: 0.8rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-sub { font-size: 0.7rem; color: var(--text-gray); }
 
     .card-fav-btn {
       position: absolute;
@@ -180,12 +195,9 @@
       color: #fff;
       width: 28px; height: 28px;
       border-radius: 50%;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
+      font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10;
     }
 
     .admin-btns {
@@ -195,26 +207,21 @@
       gap: 4px;
       z-index: 10;
     }
-
-    body.creator-mode .admin-btns {
-      display: flex;
-    }
-
+    body.creator-mode .admin-btns { display: flex; }
     .admin-btns button {
       background: rgba(0,0,0,0.85);
       border: 1px solid var(--accent-purple);
       color: #fff;
       padding: 4px 6px;
       border-radius: 4px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       cursor: pointer;
     }
 
-    /* MODALES FLOTANTES SEGUROS */
+    /* MODALES FLOTANTES */
     .modal-overlay {
       display: none;
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.85);
       z-index: 2000;
       padding: 20px;
@@ -226,8 +233,7 @@
       background: var(--card-bg);
       padding: 20px;
       border-radius: 12px;
-      width: 100%;
-      max-width: 450px;
+      width: 100%; max-width: 450px;
       border: 1px solid var(--border-purple);
       position: relative;
     }
@@ -236,129 +242,88 @@
       position: absolute;
       top: 12px; right: 12px;
       background: rgba(255,255,255,0.1);
-      color: #fff;
-      border: none;
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      font-size: 1rem;
-      cursor: pointer;
+      color: #fff; border: none;
+      width: 30px; height: 30px; border-radius: 50%;
+      font-size: 1rem; cursor: pointer;
     }
 
-    .modal-box h3 {
-      margin-bottom: 12px;
-      padding-right: 30px;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-gray);
-      margin-bottom: 4px;
-    }
-
+    .modal-box h3 { margin-bottom: 12px; padding-right: 30px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--text-gray); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      background: #0a0612;
-      border: 1px solid var(--border-purple);
-      color: #fff;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      outline: none;
+      width: 100%; padding: 10px;
+      background: #0a0612; border: 1px solid var(--border-purple);
+      color: #fff; border-radius: 6px; font-size: 0.95rem; outline: none;
     }
 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn-cancel {
-      background: transparent;
-      color: var(--text-gray);
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-
-    .btn-submit {
-      background: var(--accent-purple);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+    .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; }
+    .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     /* REPRODUCTOR */
     .video-box {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%; aspect-ratio: 16/9; background: #000;
+      margin-bottom: 12px; border-radius: 8px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
     }
-
-    .video-box video, .video-box iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .btn-telegram {
-      background: #0088cc;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .video-box video, .video-box iframe { width: 100%; height: 100%; border: none; }
+    .empty-msg { font-size: 0.85rem; color: var(--text-gray); padding: 0 15px; font-style: italic; }
   </style>
 </head>
 <body>
 
   <!-- ENCABEZADO -->
   <header>
-    <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnCreator" onclick="handleCreatorClick()">Modo Creador</button>
+    <div class="logo" onclick="switchView('home')">NaPlus</div>
+    <div class="header-actions">
+      <button class="btn-creator" id="btnCreator" onclick="handleCreatorClick()">Modo Creador</button>
+    </div>
   </header>
 
-  <div class="hero">
-    <h1>NaPlus Streaming</h1>
-    <p>Películas y series en alta definición.</p>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()">
+  <!-- VISTA 1: INICIO (Lo más reciente, Top 10, y filas por género) -->
+  <div id="viewHome" class="view-section active">
+    <div class="hero">
+      <h1>Catálogo NaPlus</h1>
+      <p>Películas y series organizadas para vos.</p>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()">
+      </div>
+    </div>
+
+    <!-- Resultados de Búsqueda (Ocultos por defecto si no se busca) -->
+    <div id="searchResultsContainer" style="display: none;">
+      <div class="section-title">Resultados de Búsqueda</div>
+      <div class="grid" id="searchGrid"></div>
+    </div>
+
+    <!-- Contenido Normal de Inicio -->
+    <div id="mainHomeContent">
+      <!-- Lo más reciente -->
+      <div class="section-title">🔥 Lo Más Reciente</div>
+      <div class="horizontal-scroll" id="recentScroll"></div>
+
+      <!-- Top 10 Más Vistas -->
+      <div class="section-title">⭐ Top 10 Más Vistas</div>
+      <div class="horizontal-scroll" id="topScroll"></div>
+
+      <!-- Filas Dinámicas por Género -->
+      <div id="genreRowsContainer"></div>
     </div>
   </div>
 
-  <!-- MI LISTA (FAVORITOS) -->
-  <div id="myListContainer" style="display: none;">
-    <div class="section-title">Mi Lista - Películas</div>
+  <!-- VISTA 2: MI LISTA (Favoritos) -->
+  <div id="viewList" class="view-section">
+    <div class="section-title" style="margin-top: 25px;">🔖 Mi Lista - Películas</div>
     <div class="grid" id="myListMoviesGrid"></div>
-    <div class="section-title">Mi Lista - Series</div>
+    <div class="section-title">🔖 Mi Lista - Series</div>
     <div class="grid" id="myListSeriesGrid"></div>
-    <hr style="border: 0; border-top: 1px solid var(--border-purple); margin: 25px 15px 10px 15px;">
   </div>
 
-  <!-- CATÁLOGO GENERAL -->
-  <div class="section-title">Películas</div>
-  <div class="grid" id="moviesGrid"></div>
-
-  <div class="section-title">Series</div>
-  <div class="grid" id="seriesGrid"></div>
+  <!-- NAVEGACIÓN INFERIOR -->
+  <nav>
+    <button class="nav-item active" id="navHome" onclick="switchView('home')"><span>🏠</span>Inicio</button>
+    <button class="nav-item" id="navList" onclick="switchView('list')"><span>🔖</span>Mi Lista</button>
+  </nav>
 
   <!-- MODAL REPRODUCTOR / DETALLE -->
   <div class="modal-overlay" id="detailModal">
@@ -367,6 +332,7 @@
       <div class="video-box" id="videoBox"></div>
       <h3 id="detailTitle"></h3>
       <p id="detailMeta" style="color:var(--accent-light); font-size:0.85rem; margin-bottom:8px;"></p>
+      <p id="detailViews" style="color:var(--text-gray); font-size:0.75rem; margin-bottom:6px;"></p>
       <p id="detailDesc" style="color:var(--text-gray); font-size:0.85rem; margin-bottom:15px;"></p>
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal('detailModal')">Cerrar</button>
@@ -381,7 +347,7 @@
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Ingresá la clave (9009) o tu Token de GitHub</label>
+          <label>Clave (9009) o Token de GitHub</label>
           <input type="password" id="passInput" placeholder="Clave o Token..." required autocomplete="off">
         </div>
         <div class="form-actions">
@@ -392,7 +358,7 @@
     </div>
   </div>
 
-  <!-- MODAL FORMULARIO SUBIR / EDITAR -->
+  <!-- MODAL SUBIR / EDITAR CONTENIDO -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -400,7 +366,7 @@
       <form onsubmit="submitContent(event)">
         <input type="hidden" id="editId">
         <div class="form-group">
-          <label>Tipo de Contenido</label>
+          <label>Tipo</label>
           <select id="typeInput">
             <option value="movie">Película</option>
             <option value="series">Serie</option>
@@ -408,26 +374,26 @@
         </div>
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="titleInput" required placeholder="Nombre de la obra">
+          <input type="text" id="titleInput" required placeholder="Nombre">
         </div>
         <div class="form-group">
-          <label>Género</label>
-          <input type="text" id="genreInput" required placeholder="Acción, Terror, Comedia">
+          <label>Género (ej. Terror, Acción, Animación)</label>
+          <input type="text" id="genreInput" required placeholder="Terror">
         </div>
         <div class="form-group">
           <label>Año</label>
-          <input type="number" id="yearInput" required placeholder="2026">
+          <input type="number" id="yearInput" required value="2026">
         </div>
         <div class="form-group">
-          <label>Sinopsis / Descripción</label>
-          <textarea id="descInput" rows="2" placeholder="Resumen del contenido..."></textarea>
+          <label>Sinopsis</label>
+          <textarea id="descInput" rows="2" placeholder="Resumen..."></textarea>
         </div>
         <div class="form-group">
-          <label>URL de Imagen de Portada</label>
-          <input type="url" id="coverInput" required placeholder="https://ejemplo.com/imagen.jpg">
+          <label>URL de Portada</label>
+          <input type="url" id="coverInput" required placeholder="https://...">
         </div>
         <div class="form-group">
-          <label>URL del Video (MP4, YouTube, Telegram...)</label>
+          <label>URL del Video</label>
           <input type="url" id="videoInput" required placeholder="https://...">
         </div>
         <div class="form-actions">
@@ -442,24 +408,43 @@
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
 
-    /* BASE DE DATOS PÚBLICA DEL CATÁLOGO */
+    /* BASE DE DATOS DE EJEMPLO DEL CATÁLOGO */
     let catalog = [
       {
         id: 1,
         type: 'movie',
-        title: 'Mi Primera Película',
-        genre: 'Aventura',
-        year: '2026',
-        desc: 'Bienvenido a NaPlus.',
-        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
+        title: '[REC]',
+        genre: 'Terror',
+        year: '2007',
+        desc: 'Película de prueba de terror.',
+        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        video: 'https://ok.ru/videoembed/237592963750',
+        views: 1420,
+        dateAdded: 1710000000000
       }
     ];
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
 
-    // Alternar Favorito (Mi Lista)
+    // Cambiar entre Vistas (Inicio / Mi Lista)
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'home') {
+        document.getElementById('viewHome').classList.add('active');
+        document.getElementById('navHome').classList.add('active');
+        renderHomeSections();
+      } else if (viewName === 'list') {
+        document.getElementById('viewList').classList.add('active');
+        document.getElementById('navList').classList.add('active');
+        renderMyList();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // Gestionar Favoritos
     function toggleFavorite(id, e) {
       e.stopPropagation();
       if (myFavorites.includes(id)) {
@@ -468,52 +453,85 @@
         myFavorites.push(id);
       }
       localStorage.setItem('naPlus_my_list', JSON.stringify(myFavorites));
-      renderCatalog(document.getElementById('searchInput').value);
+      renderHomeSections();
+      renderMyList();
     }
 
-    // Renderizar tarjetas de forma segura
-    function renderCatalog(filterText = '') {
-      const mGrid = document.getElementById('moviesGrid');
-      const sGrid = document.getElementById('seriesGrid');
-      const myListContainer = document.getElementById('myListContainer');
-      const myListMGrid = document.getElementById('myListMoviesGrid');
-      const myListSGrid = document.getElementById('myListSeriesGrid');
+    // Renderizar Secciones de la Página Principal
+    function renderHomeSections() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const searchContainer = document.getElementById('searchResultsContainer');
+      const mainContent = document.getElementById('mainHomeContent');
 
-      if (!mGrid || !sGrid) return;
-
-      mGrid.innerHTML = '';
-      sGrid.innerHTML = '';
-      myListMGrid.innerHTML = '';
-      myListSGrid.innerHTML = '';
-
-      const query = filterText.toLowerCase().trim();
-      const filtered = catalog.filter(item => 
-        item.title.toLowerCase().includes(query) || 
-        item.genre.toLowerCase().includes(query)
-      );
-
-      // Render Catálogo General
-      filtered.forEach(item => {
-        const card = createCardElement(item);
-        if (item.type === 'movie') mGrid.appendChild(card);
-        else sGrid.appendChild(card);
-      });
-
-      // Render Mi Lista (Favoritos) separada
-      const favoriteItems = catalog.filter(item => myFavorites.includes(item.id));
-      if (favoriteItems.length > 0 && query === '') {
-        myListContainer.style.display = 'block';
-        favoriteItems.forEach(item => {
-          const card = createCardElement(item);
-          if (item.type === 'movie') myListMGrid.appendChild(card);
-          else myListSGrid.appendChild(card);
-        });
-
-        if (myListMGrid.children.length === 0) myListMGrid.innerHTML = '<div class="empty-msg">No tenés películas guardadas.</div>';
-        if (myListSGrid.children.length === 0) myListSGrid.innerHTML = '<div class="empty-msg">No tenés series guardadas.</div>';
+      if (query.length > 0) {
+        searchContainer.style.display = 'block';
+        mainContent.style.display = 'none';
+        const searchGrid = document.getElementById('searchGrid');
+        searchGrid.innerHTML = '';
+        const matches = catalog.filter(i => i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query));
+        if (matches.length > 0) {
+          matches.forEach(item => searchGrid.appendChild(createCardElement(item)));
+        } else {
+          searchGrid.innerHTML = '<div class="empty-msg">No se encontraron resultados.</div>';
+        }
+        return;
       } else {
-        myListContainer.style.display = 'none';
+        searchContainer.style.display = 'none';
+        mainContent.style.display = 'block';
       }
+
+      // 1. Lo Más Reciente (Ordenados por fecha descendiente)
+      const recentScroll = document.getElementById('recentScroll');
+      recentScroll.innerHTML = '';
+      const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
+      recentSorted.forEach(item => recentScroll.appendChild(createCardElement(item)));
+
+      // 2. Top 10 Más Vistas (Ordenados por views descendiente)
+      const topScroll = document.getElementById('topScroll');
+      topScroll.innerHTML = '';
+      const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+      topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
+
+      // 3. Filas Dinámicas por Género
+      const genreContainer = document.getElementById('genreRowsContainer');
+      genreContainer.innerHTML = '';
+      
+      // Extraer géneros únicos presentes en el catálogo
+      const uniqueGenres = [...new Set(catalog.map(i => i.genre ? i.genre.trim() : 'Otros'))];
+      
+      uniqueGenres.forEach(genre => {
+        const genreItems = catalog.filter(i => (i.genre ? i.genre.trim() : 'Otros') === genre);
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'section-title';
+          titleDiv.innerText = `🎬 ${genre}`;
+          
+          const scrollDiv = document.createElement('div');
+          scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+
+          genreContainer.appendChild(titleDiv);
+          genreContainer.appendChild(scrollDiv);
+        }
+      });
+    }
+
+    // Renderizar Mi Lista
+    function renderMyList() {
+      const moviesGrid = document.getElementById('myListMoviesGrid');
+      const seriesGrid = document.getElementById('myListSeriesGrid');
+      moviesGrid.innerHTML = '';
+      seriesGrid.innerHTML = '';
+
+      const favorites = catalog.filter(i => myFavorites.includes(i.id));
+      const favMovies = favorites.filter(i => i.type === 'movie');
+      const favSeries = favorites.filter(i => i.type === 'series');
+
+      favMovies.forEach(item => moviesGrid.appendChild(createCardElement(item)));
+      favSeries.forEach(item => seriesGrid.appendChild(createCardElement(item)));
+
+      if (favMovies.length === 0) moviesGrid.innerHTML = '<div class="empty-msg">No tenés películas guardadas.</div>';
+      if (favSeries.length === 0) seriesGrid.innerHTML = '<div class="empty-msg">No tenés series guardadas.</div>';
     }
 
     function createCardElement(item) {
@@ -541,7 +559,7 @@
     }
 
     function handleSearch() {
-      renderCatalog(document.getElementById('searchInput').value);
+      renderHomeSections();
     }
 
     function handleCreatorClick() {
@@ -597,9 +615,10 @@
     }
 
     async function deleteItem(id) {
-      if (confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) {
+      if (confirm("¿Seguro que querés eliminar esta obra del catálogo?")) {
         catalog = catalog.filter(x => x.id != id);
-        renderCatalog(document.getElementById('searchInput').value);
+        renderHomeSections();
+        renderMyList();
         await publishToGitHub();
       }
     }
@@ -615,7 +634,9 @@
         year: document.getElementById('yearInput').value,
         desc: document.getElementById('descInput').value.trim(),
         cover: document.getElementById('coverInput').value.trim(),
-        video: document.getElementById('videoInput').value.trim()
+        video: document.getElementById('videoInput').value.trim(),
+        views: id ? (catalog.find(x => x.id == id)?.views || 0) : Math.floor(Math.random() * 500) + 50,
+        dateAdded: id ? (catalog.find(x => x.id == id)?.dateAdded || Date.now()) : Date.now()
       };
 
       if (id) {
@@ -625,21 +646,21 @@
         catalog.unshift(newItem);
       }
 
-      renderCatalog(document.getElementById('searchInput').value);
+      renderHomeSections();
+      renderMyList();
       closeModal('uploadModal');
       await publishToGitHub();
     }
 
-    // Publicación automática a GitHub
+    // Sincronización automática con GitHub
     async function publishToGitHub() {
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token) {
-        token = prompt("Para publicar los cambios de forma PERMANENTE para todos los espectadores, ingresá tu Token de GitHub (ghp_...):");
+        token = prompt("Para publicar los cambios permanentemente para todos, ingresá tu Token de GitHub (ghp_...):");
         if (token && token.startsWith("ghp_")) {
           token = token.trim();
           localStorage.setItem('naPlus_gh_token', token);
         } else {
-          alert("Los cambios se guardaron temporalmente en tu pantalla, pero los demás usuarios no los verán sin el Token de GitHub.");
           return;
         }
       }
@@ -665,39 +686,42 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: 'Actualización de catálogo NaPlus',
+            message: 'Actualización automática NaPlus',
             content: updatedBase64,
             sha: sha
           })
         });
 
         if (putRes.ok) {
-          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo en sus celulares.");
+          alert("¡Publicado globalmente con éxito!");
         } else {
-          alert("Hubo un problema con el Token de GitHub. Verificalo de nuevo.");
+          alert("Error al validar el Token de GitHub.");
         }
       } catch (err) {
         console.error(err);
-        alert("Error de conexión al guardar públicamente.");
       } finally {
         if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
       }
     }
 
-    // Abrir reproductor
+    // Reproductor e incremento de vistas
     function openDetail(id) {
       const item = catalog.find(x => x.id == id);
       if (!item) return;
 
+      // Incrementar vistas al abrir
+      item.views = (item.views || 0) + 1;
+
       document.getElementById('detailTitle').innerText = item.title;
       document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+      document.getElementById('detailViews').innerText = `👁️ ${item.views} reproducciones`;
       document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
 
       const vBox = document.getElementById('videoBox');
       const vUrl = item.video || '';
 
       if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
-        vBox.innerHTML = `<a href="${vUrl}" target="_blank" class="btn-telegram">✈️ Abrir y Ver en Telegram</a>`;
+        vBox.innerHTML = `<a href="${vUrl}" target="_blank" style="color:#fff; text-decoration:none; font-weight:bold;">✈️ Ver en Telegram</a>`;
       } else if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
         let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
         vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
@@ -706,10 +730,11 @@
       }
 
       document.getElementById('detailModal').style.display = 'flex';
+      renderHomeSections();
     }
 
-    // Inicializar catálogo al arrancar
-    renderCatalog();
+    // Inicializar app
+    renderHomeSections();
   </script>
 </body>
 </html>
