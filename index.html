@@ -135,10 +135,12 @@
     object-fit: cover;
     display: block;
     background: #2a2a2a;
+    pointer-events: none;
   }
 
   .card-body {
     padding: 8px;
+    pointer-events: none;
   }
 
   .card-title {
@@ -161,7 +163,7 @@
     top: 6px;
     right: 6px;
     gap: 4px;
-    z-index: 10;
+    z-index: 20;
   }
 
   body.admin-on .card-admin {
@@ -169,14 +171,17 @@
   }
 
   .card-admin button {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border: none;
     border-radius: 6px;
     background: rgba(0,0,0,0.85);
     color: #fff;
     font-size: 0.85rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* PANEL */
@@ -259,7 +264,7 @@
     position: fixed;
     inset: 0;
     background: #000;
-    z-index: 9999;
+    z-index: 99999;
     flex-direction: column;
   }
 
@@ -279,6 +284,7 @@
     color: #fff;
     font-size: 1.4rem;
     cursor: pointer;
+    padding: 4px 8px;
   }
 
   .player-screen {
@@ -307,8 +313,9 @@
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.85);
-    z-index: 10000;
+    z-index: 100000;
     justify-content: flex-end;
+    align-items: flex-end;
   }
 
   .editor-modal.active { display: flex; }
@@ -334,7 +341,7 @@
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 700;
-    z-index: 99999;
+    z-index: 999999;
     display: none;
   }
 
@@ -349,7 +356,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="app.switchTab('home', this)">NaPlus</div>
+  <div class="logo" onclick="app.switchTab('home', document.querySelector('.nav-btn'))">NaPlus</div>
   <div class="nav">
     <button class="nav-btn active" onclick="app.switchTab('home', this)">Inicio</button>
     <button class="nav-btn" onclick="app.switchTab('movies', this)">Películas</button>
@@ -460,7 +467,7 @@
       </div>
       <div class="field">
         <label>Año</label>
-        <input type="number" id="eYear" required value="2025">
+        <input type="number" id="eYear" required value="2026">
       </div>
       <div class="field">
         <label>Sinopsis</label>
@@ -669,7 +676,7 @@ class NaPlusApp {
 
     $('pTitleTop').textContent = item.title;
     $('pTitle').textContent = item.title;
-    \( ('pMeta').textContent = ` \){item.genre} · ${item.year}`;
+    $('pMeta').textContent = `${item.genre} · ${item.year}`;
     $('pDesc').textContent = item.desc || 'Sin sinopsis.';
     this.updateListBtn();
 
@@ -682,8 +689,7 @@ class NaPlusApp {
   }
 
   closePlayer() {
-    $('pScreen').innerHTML = '';
-    $('playerModal').classList.remove('active');
+    $('pScreen').innerHTML = '';$('playerModal').classList.remove('active');
   }
 
   updateListBtn() {
@@ -727,25 +733,19 @@ class NaPlusApp {
     if (id) {
       const item = this.catalog.find(x => Number(x.id) === id);
       if (!item) return;
-      $('editorHeading').textContent = 'Editar Contenido';
-      $('eId').value = item.id;
+      $('editorHeading').textContent = 'Editar Contenido';$('eId').value = item.id;
       $('eType').value = item.type;
       $('eTitle').value = item.title;
       $('eGenre').value = item.genre;
       $('eYear').value = item.year;
-      $('eDesc').value = item.desc || '';
-      $('eCover').value = item.cover;
+      $('eDesc').value = item.desc \vert{}\vert{} '';$('eCover').value = item.cover;
       $('eVideo').value = item.video;
     } else {
       $('editorHeading').textContent = 'Subir Contenido';
-      $('eId').value = '';
-      $('eType').value = 'movie';
-      $('eTitle').value = '';
-      $('eGenre').value = '';
-      $('eYear').value = new Date().getFullYear();
-      $('eDesc').value = '';
-      $('eCover').value = '';
-      $('eVideo').value = '';
+      $('eId').value = '';$('eType').value = 'movie';
+      $('eTitle').value = '';$('eGenre').value = '';
+      $('eYear').value = new Date().getFullYear();$('eDesc').value = '';
+      $('eCover').value = '';$('eVideo').value = '';
     }
     $('editorModal').classList.add('active');
   }
@@ -816,7 +816,7 @@ class NaPlusApp {
     }
 
     this.showToast('Sincronizando...');
-    const url = `https://api.github.com/repos/\( {this.repo}/contents/ \){this.file}`;
+    const url = `https://api.github.com/repos/${this.repo}/contents/${this.file}`;
     const headers = {
       'Authorization': 'Bearer ' + token,
       'Accept': 'application/vnd.github+json'
@@ -856,7 +856,7 @@ class NaPlusApp {
     const token = storage.get('naplus_token');
     if (!isToken(token)) return;
     try {
-      const res = await fetch(`https://api.github.com/repos/\( {this.repo}/contents/ \){this.file}`, {
+      const res = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.file}`, {
         headers: {
           'Authorization': 'Bearer ' + token,
           'Accept': 'application/vnd.github+json'
