@@ -28,7 +28,7 @@ nav {
 .nav-item {
   background: none; border: none; color: var(--text-muted);
   font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-  gap: 3px; cursor: pointer; width: 25%;
+  gap: 3px; cursor: pointer; width: 33.33%;
 }
 .nav-item span.icon { font-size: 1.2rem; }
 .nav-item.active { color: var(--primary); }
@@ -43,7 +43,6 @@ nav {
   margin-bottom: 15px; padding-top: 5px;
 }
 .app-logo { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: 0.5px; }
-.profile-avatar-sm { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); cursor: pointer; }
 
 /* Buscador */
 .search-box {
@@ -61,18 +60,6 @@ nav {
 .card-info { padding: 6px; }
 .card-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-sub { font-size: 0.65rem; color: var(--text-muted); }
-
-/* Selector de Perfiles (Estilo Crunchyroll Auténtico) */
-.profiles-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; text-align: center; padding: 20px; }
-.profiles-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin: 30px 0; width: 100%; max-width: 350px; }
-.profile-card { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; width: 110px; }
-.profile-avatar { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); transition: transform 0.2s; }
-.profile-card:active .profile-avatar { transform: scale(0.95); }
-.profile-name { font-size: 0.85rem; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-
-/* Botón Añadir Perfil Estilo Crunchyroll */
-.profile-add-btn { width: 85px; height: 85px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.4); background: transparent; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2rem; cursor: pointer; transition: border-color 0.2s; }
-.profile-add-btn:active { border-color: var(--primary); color: var(--primary); }
 
 /* Configuración y Creador */
 .settings-group { background: var(--surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
@@ -106,21 +93,9 @@ nav {
 </head>
 <body>
 
-  <!-- Vista Selección de Perfiles Estilo Crunchyroll -->
-  <div id="viewProfiles" class="view active">
-    <div class="profiles-container">
-      <h1 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 700;">¿Quién se irá de aventura?</h1>
-      <p style="color: var(--text-muted); font-size: 0.8rem;">Seleccioná tu perfil para comenzar</p>
-      <div class="profiles-grid" id="profilesGrid"></div>
-    </div>
-  </div>
-
   <!-- Vista Inicio (Home) -->
-  <div id="viewHome" class="view">
-    <div class="app-header">
-      <div class="app-logo">NaPlus</div>
-      <img id="currentAvatar" class="profile-avatar-sm" onclick="switchProfile()" alt="Perfil">
-    </div>
+  <div id="viewHome" class="view active">
+    <div class="app-header"><div class="app-logo">NaPlus</div></div>
     <input type="search" class="search-box" id="searchBar" placeholder="🔍 Buscar películas o series..." oninput="renderHome()">
     
     <div class="section-title">Películas</div>
@@ -130,13 +105,6 @@ nav {
     <div class="grid" id="seriesGrid"></div>
   </div>
 
-  <!-- Vista Explorar -->
-  <div id="viewExplore" class="view">
-    <div class="app-header"><div class="app-logo">Explorar</div></div>
-    <input type="search" class="search-box" placeholder="🔍 Buscar en todo el catálogo..." oninput="renderExplore(this.value)">
-    <div class="grid" id="exploreGrid" style="margin-top: 15px;"></div>
-  </div>
-
   <!-- Vista Mi Lista -->
   <div id="viewList" class="view">
     <div class="app-header"><div class="app-logo">Mi Lista</div></div>
@@ -144,39 +112,27 @@ nav {
     <p id="emptyListMsg" style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.85rem; display: none;">Tu lista está vacía.</p>
   </div>
 
-  <!-- Vista Configuración / Perfiles -->
+  <!-- Vista Configuración / Modo Creador Oculto -->
   <div id="viewSettings" class="view">
     <div class="app-header"><div class="app-logo">Ajustes</div></div>
     
-    <div class="settings-group">
-      <h3>Perfil Activo</h3>
-      <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
-        <img id="settingsAvatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" alt="Avatar">
-        <div>
-          <h4 id="settingsName" style="font-size: 0.95rem;"></h4>
-          <p style="font-size: 0.75rem; cursor: pointer; color: var(--primary);" onclick="switchProfile()">Cambiar de perfil</p>
-        </div>
-      </div>
-    </div>
-
     <div class="settings-group" id="creatorSection" style="display: none;">
       <h3>Panel de Creador</h3>
       <button class="btn-main" onclick="openAdminModal()">+ Subir Contenido</button>
     </div>
 
     <div class="settings-group">
-      <h3>Seguridad y Modo Creador</h3>
+      <h3>Modo Administrador</h3>
       <div class="form-field" style="margin-bottom: 0;">
-        <label>Clave de Administrador</label>
+        <label>Clave Secreta</label>
         <input type="password" id="adminPassInput" placeholder="Ingresar clave (9009)..." oninput="checkAdminKey(this.value)">
       </div>
     </div>
   </div>
 
   <!-- Barra de Navegación Inferior -->
-  <nav id="bottomNav" style="display: none;">
+  <nav id="bottomNav">
     <button class="nav-item active" onclick="switchView('Home', this)"><span class="icon">🏠</span>Inicio</button>
-    <button class="nav-item" onclick="switchView('Explore', this)"><span class="icon">🧭</span>Explorar</button>
     <button class="nav-item" onclick="switchView('List', this)"><span class="icon">🔖</span>Mi Lista</button>
     <button class="nav-item" onclick="switchView('Settings', this)"><span class="icon">⚙️</span>Ajustes</button>
   </nav>
@@ -222,131 +178,23 @@ nav {
     </div>
   </div>
 
-  <!-- Modal Crear Perfil -->
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal-sheet">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="font-size: 1.1rem; color: var(--primary);">Nuevo Perfil</h3>
-        <button onclick="closeProfileModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
-      </div>
-      <form onsubmit="saveProfile(event)">
-        <div class="form-field"><label>Nombre del Perfil</label><input type="text" id="pName" required placeholder="Ej: Juan"></div>
-        <div class="form-field">
-          <label>Foto de Perfil (Subir desde Galería)</label>
-          <input type="file" id="pAvatarFile" accept="image/*">
-        </div>
-        <button type="submit" class="btn-main" style="margin-top: 10px;">Crear Perfil</button>
-      </form>
-    </div>
-  </div>
-
   <div id="toast"></div>
 
 <script>
 const $ = id => document.getElementById(id);
-const DB_KEY = 'naplus_db_v7';
-const PROFILES_KEY = 'naplus_profiles_v2';
+const DB_KEY = 'naplus_db_v8';
+const LIST_KEY = 'naplus_user_list_v1';
 
 let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
   { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba nativa.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920' }
 ];
 
-let profiles = JSON.parse(localStorage.getItem(PROFILES_KEY)) || [];
-let activeProfileId = null;
+let myList = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
 let currentPlayId = null;
-let customAvatarBase64 = '';
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.style.display = 'block';
   setTimeout(() => t.style.display = 'none', 2500);
-}
-
-// --- GESTIÓN DE PERFILES (ESTILO CRUNCHYROLL) ---
-function renderProfiles() {
-  const grid = $('profilesGrid'); grid.innerHTML = '';
-  
-  profiles.forEach(p => {
-    const card = document.createElement('button');
-    card.className = 'profile-card';
-    card.onclick = () => selectProfile(p.id);
-    card.innerHTML = `
-      <img class="profile-avatar" src="${p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'}" alt="Avatar">
-      <span class="profile-name">${p.name}</span>
-    `;
-    grid.appendChild(card);
-  });
-
-  if(profiles.length < 4) {
-    const addBtnContainer = document.createElement('button');
-    addBtnContainer.className = 'profile-card';
-    addBtnContainer.onclick = openProfileModal;
-    addBtnContainer.innerHTML = `
-      <div class="profile-add-btn">+</div>
-      <span class="profile-name">Añadir perfil</span>
-    `;
-    grid.appendChild(addBtnContainer);
-  }
-}
-
-function openProfileModal() {
-  $('pName').value = ''; $('pAvatarFile').value = ''; customAvatarBase64 = '';$('profileModal').classList.add('active');
-}
-function closeProfileModal() { $('profileModal').classList.remove('active'); }
-
-$('pAvatarFile').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if(file) {
-    const reader = new FileReader();
-    reader.onload = evt => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX = 200;
-        const scale = MAX / img.width;
-        canvas.width = MAX; canvas.height = img.height * scale;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        customAvatarBase64 = canvas.toDataURL('image/jpeg', 0.8);
-      };
-      img.src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-function saveProfile(e) {
-  e.preventDefault();
-  const name = $('pName').value.trim();
-  const newP = {
-    id: Date.now(),
-    name: name,
-    avatar: customAvatarBase64 || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
-    list: []
-  };
-  profiles.push(newP);
-  localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
-  closeProfileModal();
-  renderProfiles();
-  toast('Perfil creado con éxito');
-}
-
-function selectProfile(id) {
-  activeProfileId = id;
-  const p = profiles.find(x => x.id === id);
-  $('currentAvatar').src = p.avatar;
-  $('settingsAvatar').src = p.avatar;
-  $('settingsName').textContent = p.name;
-  
-  $('viewProfiles').classList.remove('active');
-  $('viewHome').classList.add('active');$('bottomNav').style.display = 'flex';
-  renderHome();
-}
-
-function switchProfile() {
-  activeProfileId = null;
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  $('viewProfiles').classList.add('active');$('bottomNav').style.display = 'none';
-  renderProfiles();
 }
 
 // --- NAVEGACIÓN VISTAS ---
@@ -388,19 +236,9 @@ function renderHome() {
   });
 }
 
-function renderExplore(q) {
-  const grid = $('exploreGrid'); grid.innerHTML = '';
-  const query = q.toLowerCase().trim();
-  catalog.filter(i => i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query)).forEach(item => {
-    grid.appendChild(makeCard(item));
-  });
-}
-
 function renderList() {
   const grid = $('listGrid'); grid.innerHTML = '';
-  const p = profiles.find(x => x.id === activeProfileId);
-  const listIds = p ? p.list : [];
-  const items = catalog.filter(i => listIds.includes(i.id));
+  const items = catalog.filter(i => myList.includes(i.id));
 
   if(items.length === 0) { $('emptyListMsg').style.display = 'block'; }
   else {
@@ -424,4 +262,94 @@ function openPlayer(id) {
 
   const stage = $('videoStage');
   stage.innerHTML = `
-    <div class="video-loading" id="videoLoading"
+    <div class="video-loading" id="videoLoading">
+      <div class="spinner"></div>
+      <span>Cargando video...</span>
+    </div>
+  `;
+
+  const url = item.video || '';
+  if(url.includes('youtube.com') || url.includes('youtu.be')) {
+    let embed = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+    const iframe = document.createElement('iframe');
+    iframe.src = embed;
+    iframe.allowFullscreen = true;
+    iframe.onload = () => $('videoLoading').style.display = 'none';
+    stage.appendChild(iframe);
+  } else {
+    const vid = document.createElement('video');
+    vid.src = url;
+    vid.controls = true;
+    vid.playsInline = true;
+    vid.onloadeddata = () => $('videoLoading').style.display = 'none';
+    vid.onerror = () => { $('videoLoading').innerHTML = '<span style="color:#ef4444; padding:0 20px; text-align:center;">Error al cargar el video. Verificá que el enlace de Google Drive sea público.</span>'; };
+    stage.appendChild(vid);
+  }
+
+  $('playerModal').classList.add('active');
+}
+
+function closePlayer() {
+  $('videoStage').innerHTML = '';$('playerModal').classList.remove('active');
+}
+
+function updatePlayerListBtn() {
+  const inList = myList.includes(currentPlayId);
+  const btn = $('playerListBtn');
+  if(inList) {
+    btn.textContent = '✓ En Mi Lista';
+    btn.style.background = '#332b4a';
+  } else {
+    btn.textContent = '+ Agregar a Mi Lista';
+    btn.style.background = 'var(--primary)';
+  }
+}
+
+function toggleCurrentList() {
+  const idx = myList.indexOf(currentPlayId);
+  if(idx > -1) {
+    myList.splice(idx, 1);
+    toast('Eliminado de Mi Lista');
+  } else {
+    myList.push(currentPlayId);
+    toast('Agregado a Mi Lista');
+  }
+  localStorage.setItem(LIST_KEY, JSON.stringify(myList));
+  updatePlayerListBtn();
+}
+
+// --- MODO CREADOR OCULTO ---
+function checkAdminKey(val) {
+  if(val.trim() === "9009") {
+    $('creatorSection').style.display = 'block';
+    toast('¡Modo Creador Desbloqueado!');
+  }
+}
+
+function openAdminModal() { $('adminModal').classList.add('active'); }
+function closeAdminModal() { $('adminModal').classList.remove('active'); }
+
+function saveContent(e) {
+  e.preventDefault();
+  const newItem = {
+    id: Date.now(),
+    type: $('fType').value,
+    title: $('fTitle').value.trim(),
+    genre: $('fGenre').value.trim(),
+    year: $('fYear').value,
+    desc: $('fDesc').value.trim(),
+    cover: $('fCover').value.trim(),
+    video: $('fVideo').value.trim()
+  };
+  catalog.unshift(newItem);
+  localStorage.setItem(DB_KEY, JSON.stringify(catalog));
+  closeAdminModal();
+  renderHome();
+  toast('Contenido publicado');
+}
+
+// Inicializar al cargar
+renderHome();
+</script>
+</body>
+</html>
