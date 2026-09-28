@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
   
-  <!-- Estilos del Reproductor Video.js -->
+  <!-- Estilos del Reproductor Profesional Video.js -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
   <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/city/index.css" rel="stylesheet" />
 
@@ -66,7 +66,6 @@
       font-weight: bold;
       font-size: 0.85rem;
       cursor: pointer;
-      z-index: 1001;
     }
 
     .hero {
@@ -210,6 +209,10 @@
       justify-content: center;
     }
 
+    .modal-overlay.active {
+      display: flex !important;
+    }
+
     .modal-box {
       background: var(--card-bg);
       padding: 20px;
@@ -320,7 +323,7 @@
 
   <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnCreator" onclick="handleCreatorClick()">Modo Creador</button>
+    <button class="btn-creator" id="btnCreator">Modo Creador</button>
   </header>
 
   <div class="hero">
@@ -447,6 +450,11 @@
     let isCreatorMode = false;
     let activePlayer = null;
 
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("btnCreator").addEventListener("click", handleCreatorClick);
+      renderCatalog();
+    });
+
     function toggleFavorite(id, e) {
       e.stopPropagation();
       if (myFavorites.includes(id)) {
@@ -464,6 +472,8 @@
       const myListContainer = document.getElementById('myListContainer');
       const myListMGrid = document.getElementById('myListMoviesGrid');
       const myListSGrid = document.getElementById('myListSeriesGrid');
+
+      if(!mGrid || !sGrid) return;
 
       mGrid.innerHTML = '';
       sGrid.innerHTML = '';
@@ -528,12 +538,18 @@
         openUploadModal();
       } else {
         document.getElementById('passInput').value = '';
-        document.getElementById('loginModal').style.display = 'flex';
+        openModal('loginModal');
       }
     }
 
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('active');
+    }
+
     function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('active');
       if (id === 'detailModal') {
         if (activePlayer) {
           activePlayer.dispose();
@@ -571,7 +587,7 @@
       document.getElementById('descInput').value = item ? item.desc : '';
       document.getElementById('coverInput').value = item ? item.cover : '';
       document.getElementById('videoInput').value = item ? item.video : '';
-      document.getElementById('uploadModal').style.display = 'flex';
+      openModal('uploadModal');
     }
 
     function editItem(id) {
@@ -655,15 +671,4 @@
             'Authorization': `token ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            message: 'Actualización NaPlus',
-            content: updatedBase64,
-            sha: sha
-          })
-        });
-
-        if (putRes.ok) {
-          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo.");
-        } else {
-          const errData = await putRes.json();
-          alert
+      
