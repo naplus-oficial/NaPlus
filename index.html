@@ -156,9 +156,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
-const CFG_KEY = 'naPlus_cfg';        // { repo, token } solo en el dispositivo del creador
-const LIST_KEY = 'naPlus_list';      // "Mi lista" de cada visitante
-const DATA_FILE = 'content.json';    // catálogo público, guardado en el repositorio
+const CFG_KEY = 'naPlus_cfg';
+const LIST_KEY = 'naPlus_list';
+const DATA_FILE = 'content.json';
 const GENRES = ['Acción','Aventura','Comedia','Drama','Terror','Romance','Ciencia ficción','Fantasía','Suspenso','Misterio','Animación','Documental','Familiar','Musical'];
 
 let catalog = [], isCreator = false, pendingCover = '', existingCover = '';
@@ -168,7 +168,6 @@ try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
 const genresOf = item => Array.isArray(item.genres) ? item.genres : String(item.genre || '').split(',').map(s => s.trim()).filter(Boolean);
 const isSaved = id => saved.some(x => x == id);
 
-/* ---------- Configuración del creador ---------- */
 function getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
 function guessRepo() {
   const h = location.hostname;
@@ -177,7 +176,6 @@ function guessRepo() {
   return h.split('.')[0] + '/' + (r && !r.includes('.') ? r : h);
 }
 
-/* ---------- Carga del catálogo ---------- */
 async function loadCatalog() {
   const tries = [[DATA_FILE + '?t=' + Date.now(), { cache: 'no-store' }]];
   const repo = (getCfg() || {}).repo || guessRepo();
@@ -193,13 +191,13 @@ async function loadCatalog() {
   loadFailed = !missing; render();
 }
 
-/* ---------- Guardado en GitHub ---------- */
 function b64(str) {
   const bytes = new TextEncoder().encode(str);
   let s = '';
   for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
   return btoa(s);
 }
+
 function gh(cfg, method, body) {
   return fetch(`https://api.github.com/repos/${cfg.repo}/contents/${DATA_FILE}`, {
     method,
@@ -207,6 +205,7 @@ function gh(cfg, method, body) {
     body: body ? JSON.stringify(body) : undefined
   });
 }
+
 async function ghMsg(res) { try { return (await res.json()).message || ''; } catch (e) { return ''; } }
 
 async function persist() {
@@ -220,25 +219,26 @@ async function persist() {
       else if (g.status !== 404) throw { status: g.status, msg: await ghMsg(g) };
       const p = await gh(cfg, 'PUT', { message: 'Actualizar catálogo', content: b64(JSON.stringify(catalog, null, 1)), ...(sha ? { sha } : {}) });
       if (p.ok) { dirty = false; toast('Guardado. Los demás lo verán en 1 o 2 minutos.'); return; }
-      if ((p.status === 409 || p.status === 422) && attempt === 0) continue; // versión desactualizada: reintenta
+      if ((p.status === 409 || p.status === 422) && attempt === 0) continue;
       throw { status: p.status, msg: await ghMsg(p) };
     }
   } catch (e) { ghFail(e); }
 }
+
 function ghFail(e) {
   const s = e && e.status, m = (e && e.msg) || '';
-  if (s === 401) { toast('GitHub no aceptó el token (incorrecto o vencido). Pegá uno nuevo.', 7000); openLogin(); }
-  else if (s === 403) { toast('El token no tiene permiso para escribir. Creá uno con Contents: Read and write. ' + m, 8000); openLogin(); }
-  else if (s === 404) { toast('No se encontró el repositorio o el token no tiene acceso a él. Revisá el nombre.', 7000); openLogin(); }
+  if (s === 401) { toast('GitHub no aceptó el token. Pegá uno nuevo.', 7000); openLogin(); }
+  else if (s === 403) { toast('El token no tiene permiso para escribir. Activá Contents: Read and write.', 8000); openLogin(); }
+  else if (s === 404) { toast('No se encontró el repositorio o no tenés acceso.', 7000); openLogin(); }
   else toast('No se pudo guardar' + (s ? ' (error ' + s + ')' : '') + '. Probá de nuevo.', 6000);
 }
 
-/* ---------- Interfaz ---------- */
 let toastTimer;
 function toast(msg, ms = 3500) {
   const t = $('toast'); t.textContent = msg; t.style.display = 'block';
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', ms);
 }
+
 function confirmDialog(title, msg) {
   return new Promise(resolve => {
     $('dlgTitle').textContent = title; $('dlgMsg').textContent = msg;
@@ -262,7 +262,7 @@ function makeCard(item) {
     <img src="${esc(item.cover || NO_COVER)}" alt="Portada de ${esc(item.title)}">
     <div class="card-info">
       <div class="card-title">${esc(item.title)}</div>
-      <div class="card-sub">${esc(genresOf(item).join(', '))} • ${esc(item.year)}</div>
+      <div class="card-sub">${esc(genresOf(item).join(', '))} •${esc(item.year)}</div>
     </div>`;
   div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
   div.onclick = () => showDetail(item.id);
@@ -273,8 +273,7 @@ function makeCard(item) {
 }
 
 function fillGrid(id, items, emptyMsg) {
-  const g = $(id);
-  g.innerHTML = '';
+  const g = $(id); g.innerHTML = '';
   items.forEach(i => g.appendChild(makeCard(i)));
   if (!items.length && emptyMsg) g.innerHTML = `<p class="empty">${emptyMsg}</p>`;
 }
@@ -299,39 +298,42 @@ function render() {
   fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), empty);
 }
 
-/* ---------- Mi lista ---------- */
 function toggleSaved(id) {
   const i = saved.findIndex(x => x == id);
   if (i > -1) saved.splice(i, 1); else saved.push(id);
-  try { localStorage.setItem(LIST_KEY, JSON.stringify(saved)); } catch (e) { toast('No se pudo guardar tu lista en este navegador.'); }
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(saved)); } catch (e) {}
   render(); updateDetailSave();
 }
+
 function updateDetailSave() {
   const b = $('detailSave');
   if (b && currentId != null) b.textContent = isSaved(currentId) ? '✓ En mi lista' : '＋ Mi lista';
 }
+
 function goList() {
-  if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía. Tocá ＋ en una película o serie para guardarla.'); return; }
+  if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía.'); return; }
   $('search').value = ''; render();
   $('listSec').scrollIntoView({ behavior: 'smooth' });
 }
 
-/* ---------- Modo creador ---------- */
 function setCreator(on) {
   isCreator = on;
   document.body.classList.toggle('creator', on);
   $('btnAdmin').textContent = on ? '+ Agregar' : 'Modo Creador';
 }
+
 function toggleCreator() {
   if (isCreator) { openAdmin(); return; }
   if (getCfg()) { setCreator(true); toast('Modo creador activado'); return; }
   openLogin();
 }
+
 function openLogin() {
   $('repoInput').value = (getCfg() || {}).repo || guessRepo();
   $('tokenInput').value = '';
   $('loginModal').style.display = 'flex';
 }
+
 function closeLogin() { $('loginModal').style.display = 'none'; $('tokenInput').value = ''; }
 
 async function doLogin(e) {
@@ -342,25 +344,21 @@ async function doLogin(e) {
   toast('Comprobando token...');
   try {
     const r = await fetch('https://api.github.com/repos/' + repo, { headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token } });
-    if (r.status === 401) { toast('GitHub no aceptó el token. Revisá que lo copiaste completo y que no esté vencido.', 7000); return; }
-    if (r.status === 404) { toast('No se encontró ese repositorio con este token. Revisá el nombre y que el token tenga acceso.', 7000); return; }
-    if (r.ok) { const d = await r.json(); if (d.permissions && d.permissions.push === false) { toast('Este token no tiene permiso de escritura. Activá Contents: Read and write.', 7000); return; } }
+    if (r.status === 401) { toast('GitHub no aceptó el token.', 7000); return; }
+    if (r.status === 404) { toast('No se encontró ese repositorio.', 7000); return; }
+    if (r.ok) { const d = await r.json(); if (d.permissions && d.permissions.push === false) { toast('Este token no tiene permiso de escritura.', 7000); return; } }
   } catch (err) {}
   localStorage.setItem(CFG_KEY, JSON.stringify({ repo, token }));
   closeLogin(); setCreator(true); toast('Modo creador activado');
-  if (dirty) persist(); // reintenta los cambios que no se habían guardado
+  if (dirty) persist();
 }
 
-/* ---------- Formulario ---------- */
 function buildChips(sel) {
-  const box = $('genreChips');
-  box.innerHTML = '';
+  const box = $('genreChips'); box.innerHTML = '';
   GENRES.forEach(g => {
     const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'chip' + (sel.includes(g) ? ' on' : '');
-    b.textContent = g;
-    b.onclick = () => b.classList.toggle('on');
+    b.type = 'button'; b.className = 'chip' + (sel.includes(g) ? ' on' : '');
+    b.textContent = g; b.onclick = () => b.classList.toggle('on');
     box.appendChild(b);
   });
   $('genreOther').value = sel.filter(g => !GENRES.includes(g)).join(', ');
@@ -376,4 +374,28 @@ function openAdmin(item = null) {
   $('desc').value = item ? item.desc : '';
   $('video').value = item ? item.video : '';
   existingCover = item ? (item.cover || '') : '';
-  $('cover').value = existingCover.startsWith('dat
+  $('cover').value = existingCover.startsWith('data:') ? '' : existingCover;
+  $('coverFile').value = ''; pendingCover = '';
+  $('adminModal').style.display = 'flex';
+}
+
+function closeAdmin() { $('adminModal').style.display = 'none'; }
+
+$('coverFile').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) { pendingCover = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => { pendingCover = reader.result; };
+  reader.readAsDataURL(f);
+};
+
+function saveData(e) {
+  e.preventDefault();
+  const id = $('editId').value;
+  const chipSel = Array.from($('genreChips').querySelectorAll('.chip.on')).map(c => c.textContent);
+  const otherSel = $('genreOther').value.split(',').map(s => s.trim()).filter(Boolean);
+  const genres = Array.from(new Set([...chipSel, ...otherSel]));
+  const coverUrl = $('cover').value.trim();
+  const cover = pendingCover || coverUrl || existingCover;
+
+  const newI
