@@ -8,353 +8,211 @@
     :root {
       --bg-dark: #0a0612;
       --card-bg: #140d24;
-      --accent-purple: #7c3aed;
+      --accent: #7c3aed;
       --accent-light: #c084fc;
-      --text-white: #f8fafc;
-      --text-gray: #94a3b8;
-      --border-purple: rgba(124, 58, 237, 0.25);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
 
     body {
       background-color: var(--bg-dark);
-      color: var(--text-white);
-      min-height: 100vh;
-      overflow-x: hidden;
+      color: var(--text);
+      padding-top: 65px;
+      padding-bottom: 40px;
     }
 
+    /* Navbar */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 60px;
-      padding: 0 4%;
+      padding: 0 15px;
+      background: #0a0612;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(10, 6, 18, 0.9);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      border-bottom: 1px solid var(--border-purple);
+      z-index: 100;
+      border-bottom: 1px solid rgba(124, 58, 237, 0.3);
     }
 
     .logo {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent-light), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      cursor: pointer;
+      color: var(--accent-light);
     }
 
     .btn-creator {
-      background: rgba(124, 58, 237, 0.15);
-      border: 1px solid var(--accent-purple);
-      color: var(--text-white);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .hero {
-      position: relative;
-      height: 45vh;
-      margin-top: 60px;
-      background: linear-gradient(180deg, rgba(10, 6, 18, 0.3) 0%, var(--bg-dark) 100%),
-                  url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200') center/cover;
-      display: flex;
-      align-items: flex-end;
-      padding: 0 4% 30px 4%;
-    }
-
-    .hero-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .hero-desc {
-      font-size: 0.95rem;
-      color: var(--text-gray);
-      margin-bottom: 15px;
-    }
-
-    .btn-play {
-      background: linear-gradient(135deg, var(--accent-light), var(--accent-purple));
+      background: var(--accent);
       color: #fff;
       border: none;
-      padding: 10px 22px;
+      padding: 8px 14px;
       border-radius: 6px;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .content-section {
-      padding: 20px 4%;
+    /* Banner */
+    .hero {
+      padding: 20px 15px;
+      background: linear-gradient(180deg, #140d24 0%, #0a0612 100%);
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    .section-header {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .hero h1 { font-size: 1.8rem; margin-bottom: 5px; }
+    .hero p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Catálogo */
+    .section-title {
+      font-size: 1.2rem;
+      margin: 20px 15px 10px 15px;
+      color: var(--accent-light);
     }
 
-    .section-header::before {
-      content: '';
-      width: 3px;
-      height: 16px;
-      background: var(--accent-purple);
-      border-radius: 2px;
-    }
-
-    /* Grid optimizado con tarjetas más chicas */
-    .row-container {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 12px;
-      margin-bottom: 35px;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      padding: 0 15px;
     }
 
-    .movie-card {
-      position: relative;
+    .card {
+      background: var(--card-bg);
       border-radius: 8px;
       overflow: hidden;
-      aspect-ratio: 2/3;
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-purple);
-      cursor: pointer;
+      position: relative;
+      border: 1px solid rgba(124, 58, 237, 0.2);
     }
 
-    .movie-card img {
+    .card img {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 2/3;
       object-fit: cover;
+      display: block;
     }
 
-    .card-overlay {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(180deg, transparent 0%, rgba(10, 6, 18, 0.95) 100%);
-      padding: 10px 8px 8px 8px;
+    .card-info {
+      padding: 6px;
     }
 
     .card-title {
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.8rem;
+      font-weight: bold;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .card-meta {
+    .card-sub {
       font-size: 0.7rem;
-      color: var(--text-gray);
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2px;
+      color: var(--text-muted);
     }
 
-    /* Botones de Administrador en Tarjeta */
-    .card-actions {
+    .card-admin-btns {
       position: absolute;
-      top: 6px; right: 6px;
+      top: 4px; right: 4px;
       display: none;
       gap: 4px;
-      z-index: 10;
     }
 
-    .btn-card-action {
-      background: rgba(10, 6, 18, 0.85);
-      border: 1px solid var(--border-purple);
+    .card-admin-btns button {
+      background: rgba(0,0,0,0.8);
+      border: none;
       color: #fff;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       padding: 4px 6px;
       border-radius: 4px;
-      cursor: pointer;
     }
 
-    .btn-card-action.delete {
-      border-color: #ef4444;
-      color: #f87171;
-    }
-
-    /* Modal de Detalles / Reproductor */
-    .detail-modal {
+    /* Modales */
+    .modal {
       display: none;
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(10, 6, 18, 0.95);
-      backdrop-filter: blur(8px);
-      z-index: 3000;
-      flex-direction: column;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 200;
+      padding: 15px;
+      overflow-y: auto;
       align-items: center;
       justify-content: center;
-      padding: 20px;
     }
 
-    .detail-box {
+    .modal-content {
       background: var(--card-bg);
-      border: 1px solid var(--border-purple);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 650px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .media-container {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      position: relative;
-    }
-
-    .media-container video, .media-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .detail-info {
       padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid var(--accent);
     }
 
-    .detail-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .detail-meta {
-      font-size: 0.85rem;
-      color: var(--accent-light);
+    .modal-content h3 {
       margin-bottom: 12px;
-    }
-
-    .detail-desc {
-      font-size: 0.9rem;
-      color: var(--text-gray);
-      line-height: 1.4;
-    }
-
-    .btn-close-detail {
-      align-self: flex-end;
-      background: transparent;
-      border: none;
-      color: var(--text-gray);
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    /* Modal Formulario Creador */
-    .admin-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(10, 6, 18, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .admin-form-box {
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 450px;
-      border: 1px solid var(--border-purple);
-    }
-
-    .admin-form-box h2 {
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-      color: var(--accent-light);
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .form-group label {
       display: block;
       font-size: 0.8rem;
-      color: var(--text-gray);
       margin-bottom: 4px;
+      color: var(--text-muted);
     }
 
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 10px;
-      background: rgba(10, 6, 18, 0.6);
-      border: 1px solid var(--border-purple);
+      padding: 8px;
+      background: #0a0612;
+      border: 1px solid var(--accent);
       color: #fff;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
 
-    .form-actions {
+    .form-btns {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
       margin-top: 15px;
     }
 
-    .btn-cancel {
+    .btn-sec {
       background: transparent;
-      color: var(--text-gray);
+      color: var(--text-muted);
       border: none;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-size: 0.85rem;
+      padding: 8px 12px;
     }
 
-    .btn-submit {
-      background: linear-gradient(135deg, var(--accent-light), var(--accent-purple));
+    .btn-pri {
+      background: var(--accent);
       color: #fff;
       border: none;
       padding: 8px 16px;
       border-radius: 6px;
       font-weight: bold;
-      cursor: pointer;
-      font-size: 0.85rem;
     }
 
-    .input-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+    .video-box {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      margin-bottom: 10px;
     }
 
-    .input-toggle button {
-      flex: 1;
-      padding: 6px;
-      background: rgba(10, 6, 18, 0.6);
-      border: 1px solid var(--border-purple);
-      color: var(--text-gray);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.75rem;
-    }
-
-    .input-toggle button.active {
-      background: var(--accent-purple);
-      color: #fff;
+    .video-box video, .video-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
   </style>
 </head>
@@ -362,305 +220,232 @@
 
   <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnAdmin" onclick="handleCreatorAccess()">Modo Creador</button>
+    <button class="btn-creator" id="btnAdmin" onclick="toggleCreator()">Modo Creador</button>
   </header>
 
   <div class="hero">
-    <div>
-      <h1 class="hero-title" id="featuredTitle">NaPlus Streaming</h1>
-      <p class="hero-desc" id="featuredDesc">Seleccioná un título para ver sus detalles.</p>
-      <button class="btn-play" onclick="playFeatured()">▶ Ver Destacado</button>
-    </div>
+    <h1>NaPlus Streaming</h1>
+    <p>Seleccioná cualquier película o serie para ver los detalles.</p>
   </div>
 
-  <div class="content-section">
-    <div id="moviesSection">
-      <h2 class="section-header">Películas</h2>
-      <div class="row-container" id="moviesGrid"></div>
-    </div>
+  <div class="section-title">Películas</div>
+  <div class="grid" id="moviesGrid"></div>
 
-    <div id="seriesSection">
-      <h2 class="section-header">Series</h2>
-      <div class="row-container" id="seriesGrid"></div>
-    </div>
-  </div>
+  <div class="section-title">Series</div>
+  <div class="grid" id="seriesGrid"></div>
 
-  <!-- Modal Detalle y Reproductor -->
-  <div class="detail-modal" id="detailModal">
-    <button class="btn-close-detail" onclick="closeDetail()">✕ Cerrar</button>
-    <div class="detail-box">
-      <div class="media-container" id="mediaContainer"></div>
-      <div class="detail-info">
-        <div class="detail-title" id="detailTitle"></div>
-        <div class="detail-meta" id="detailMeta"></div>
-        <div class="detail-desc" id="detailDesc"></div>
+  <!-- Modal Detalle -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <div class="video-box" id="videoBox"></div>
+      <h3 id="detailTitle"></h3>
+      <p id="detailMeta" style="color: var(--accent-light); font-size:0.85rem; margin-bottom:8px;"></p>
+      <p id="detailDesc" style="color: var(--text-muted); font-size:0.85rem; margin-bottom:15px;"></p>
+      <div class="form-btns">
+        <button class="btn-pri" onclick="closeDetail()">Cerrar</button>
       </div>
     </div>
   </div>
 
   <!-- Modal Formulario Creador -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-form-box">
-      <h2 id="modalFormTitle">Publicar Contenido</h2>
-      <form id="uploadForm" onsubmit="saveContent(event)">
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <h3 id="formTitle">Subir Contenido</h3>
+      <form onsubmit="saveData(event)">
         <input type="hidden" id="editId">
         <div class="form-group">
           <label>Tipo</label>
-          <select id="contentType">
+          <select id="type">
             <option value="movie">Película</option>
             <option value="series">Serie</option>
           </select>
         </div>
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="titleInput" required placeholder="Nombre de la obra">
+          <input type="text" id="title" required>
         </div>
         <div class="form-group">
           <label>Género</label>
-          <input type="text" id="genreInput" required placeholder="Acción, Drama, Comedia">
+          <input type="text" id="genre" required placeholder="Acción, Drama...">
         </div>
         <div class="form-group">
           <label>Año</label>
-          <input type="number" id="yearInput" required placeholder="2026">
+          <input type="number" id="year" required placeholder="2026">
         </div>
         <div class="form-group">
-          <label>Descripción / Sinopsis</label>
-          <textarea id="descInput" rows="3" placeholder="Resumen o detalles de la película/serie..."></textarea>
+          <label>Sinopsis / Descripción</label>
+          <textarea id="desc" rows="2"></textarea>
         </div>
-        
         <div class="form-group">
-          <label>Portada (Imagen)</label>
-          <div class="input-toggle">
-            <button type="button" id="btnCoverFile" class="active" onclick="toggleCoverInput('file')">Galería</button>
-            <button type="button" id="btnCoverUrl" onclick="toggleCoverInput('url')">Link URL</button>
-          </div>
-          <input type="file" id="coverFileInput" accept="image/*">
-          <input type="url" id="coverUrlInput" placeholder="https://ejemplo.com/imagen.jpg" style="display:none;">
+          <label>URL / Link de Portada</label>
+          <input type="url" id="cover" placeholder="https://..." required>
         </div>
-
         <div class="form-group">
-          <label>Archivo de Video</label>
-          <div class="input-toggle">
-            <button type="button" id="btnVideoFile" class="active" onclick="toggleVideoInput('file')">Archivo Local</button>
-            <button type="button" id="btnVideoUrl" onclick="toggleVideoInput('url')">Link / Nube</button>
-          </div>
-          <input type="file" id="videoFileInput" accept="video/*">
-          <input type="url" id="videoUrlInput" placeholder="Link de Google Drive, YouTube o directo" style="display:none;">
+          <label>URL / Link de Video (YouTube, MP4, etc.)</label>
+          <input type="url" id="video" placeholder="https://...">
         </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeAdminModal()">Cancelar</button>
-          <button type="submit" class="btn-submit">Guardar</button>
+        <div class="form-btns">
+          <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
+          <button type="submit" class="btn-pri">Guardar</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    let isCreatorMode = false;
-    let coverSourceType = 'file';
-    let videoSourceType = 'file';
-
-    let catalog = JSON.parse(localStorage.getItem('naPlus_catalog')) || [
+    let isCreator = false;
+    let catalog = JSON.parse(localStorage.getItem('naPlus_db')) || [
       {
         id: 1,
         type: 'movie',
-        title: 'Película Destacada',
-        genre: 'Aventura / Acción',
+        title: 'Película Ejemplo',
+        genre: 'Aventura',
         year: '2026',
-        desc: 'Esta es una película de prueba subida a NaPlus. Hacé clic para reproducir el contenido.',
-        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600',
-        videoUrl: ''
+        desc: 'Sinopsis de la película de prueba.',
+        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+        video: ''
       },
       {
         id: 2,
         type: 'series',
-        title: 'Serie Principal',
-        genre: 'Drama / Misterio',
+        title: 'Serie Ejemplo',
+        genre: 'Drama',
         year: '2026',
-        desc: 'Episodio piloto de la serie exclusiva de NaPlus.',
-        cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=600',
-        videoUrl: ''
+        desc: 'Sinopsis de la serie de prueba.',
+        cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400',
+        video: ''
       }
     ];
 
-    function toggleCoverInput(type) {
-      coverSourceType = type;
-      if(type === 'file') {
-        document.getElementById('coverFileInput').style.display = 'block';
-        document.getElementById('coverUrlInput').style.display = 'none';
-        document.getElementById('btnCoverFile').classList.add('active');
-        document.getElementById('btnCoverUrl').classList.remove('active');
-      } else {
-        document.getElementById('coverFileInput').style.display = 'none';
-        document.getElementById('coverUrlInput').style.display = 'block';
-        document.getElementById('btnCoverFile').classList.remove('active');
-        document.getElementById('btnCoverUrl').classList.add('active');
-      }
-    }
-
-    function toggleVideoInput(type) {
-      videoSourceType = type;
-      if(type === 'file') {
-        document.getElementById('videoFileInput').style.display = 'block';
-        document.getElementById('videoUrlInput').style.display = 'none';
-        document.getElementById('btnVideoFile').classList.add('active');
-        document.getElementById('btnVideoUrl').classList.remove('active');
-      } else {
-        document.getElementById('videoFileInput').style.display = 'none';
-        document.getElementById('videoUrlInput').style.display = 'block';
-        document.getElementById('btnVideoFile').classList.remove('active');
-        document.getElementById('btnVideoUrl').classList.add('active');
-      }
-    }
-
-    function renderCatalog() {
-      const moviesGrid = document.getElementById('moviesGrid');
-      const seriesGrid = document.getElementById('seriesGrid');
-
-      moviesGrid.innerHTML = '';
-      seriesGrid.innerHTML = '';
+    function render() {
+      const mGrid = document.getElementById('moviesGrid');
+      const sGrid = document.getElementById('seriesGrid');
+      mGrid.innerHTML = '';
+      sGrid.innerHTML = '';
 
       catalog.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'movie-card';
-        card.onclick = () => openDetail(item);
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.onclick = () => showDetail(item.id);
 
-        card.innerHTML = `
-          <div class="card-actions" style="display:${isCreatorMode ? 'flex' : 'none'}">
-            <button class="btn-card-action" onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
-            <button class="btn-card-action delete" onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
+        div.innerHTML = `
+          <div class="card-admin-btns" style="display:${isCreator ? 'flex' : 'none'}">
+            <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
+            <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
           </div>
-          <img src="${item.cover}" alt="${item.title}" loading="lazy">
-          <div class="card-overlay">
+          <img src="${item.cover}" alt="cover">
+          <div class="card-info">
             <div class="card-title">${item.title}</div>
-            <div class="card-meta">
-              <span>${item.genre}</span>
-              <span>${item.year}</span>
-            </div>
+            <div class="card-sub">${item.genre} • ${item.year}</div>
           </div>
         `;
 
-        if (item.type === 'movie') {
-          moviesGrid.appendChild(card);
-        } else {
-          seriesGrid.appendChild(card);
-        }
+        if (item.type === 'movie') mGrid.appendChild(div);
+        else sGrid.appendChild(div);
       });
     }
 
-    function handleCreatorAccess() {
-      if (!isCreatorMode) {
-        const code = prompt("Acceso Administrador:");
-        if (code === "9009") {
-          isCreatorMode = true;
+    function toggleCreator() {
+      if (!isCreator) {
+        const pass = prompt("Acceso Administrador:");
+        if (pass === "9009") {
+          isCreator = true;
           document.getElementById('btnAdmin').innerText = "+ Agregar";
-          renderCatalog();
-          openAdminModal();
-        } else if (code !== null) {
+          render();
+          openAdmin();
+        } else if (pass !== null) {
           alert("Acceso denegado.");
         }
       } else {
-        openAdminModal();
+        openAdmin();
       }
     }
 
-    function openAdminModal(editData = null) {
-      const form = document.getElementById('uploadForm');
-      form.reset();
-      
-      if(editData) {
-        document.getElementById('modalFormTitle').innerText = "Editar Contenido";
-        document.getElementById('editId').value = editData.id;
-        document.getElementById('contentType').value = editData.type;
-        document.getElementById('titleInput').value = editData.title;
-        document.getElementById('genreInput').value = editData.genre;
-        document.getElementById('yearInput').value = editData.year;
-        document.getElementById('descInput').value = editData.desc || '';
-        toggleCoverInput('url');
-        document.getElementById('coverUrlInput').value = editData.cover;
-        toggleVideoInput('url');
-        document.getElementById('videoUrlInput').value = editData.videoUrl;
-      } else {
-        document.getElementById('modalFormTitle').innerText = "Publicar Contenido";
-        document.getElementById('editId').value = '';
-        toggleCoverInput('file');
-        toggleVideoInput('file');
-      }
+    function openAdmin(item = null) {
+      document.getElementById('editId').value = item ? item.id : '';
+      document.getElementById('formTitle').innerText = item ? 'Editar' : 'Subir Contenido';
+      document.getElementById('type').value = item ? item.type : 'movie';
+      document.getElementById('title').value = item ? item.title : '';
+      document.getElementById('genre').value = item ? item.genre : '';
+      document.getElementById('year').value = item ? item.year : '2026';
+      document.getElementById('desc').value = item ? item.desc : '';
+      document.getElementById('cover').value = item ? item.cover : '';
+      document.getElementById('video').value = item ? item.video : '';
       document.getElementById('adminModal').style.display = 'flex';
     }
 
-    function closeAdminModal() {
+    function closeAdmin() {
       document.getElementById('adminModal').style.display = 'none';
     }
 
-    function saveContent(e) {
+    function saveData(e) {
       e.preventDefault();
+      const id = document.getElementById('editId').value;
+      const newItem = {
+        id: id ? parseInt(id) : Date.now(),
+        type: document.getElementById('type').value,
+        title: document.getElementById('title').value,
+        genre: document.getElementById('genre').value,
+        year: document.getElementById('year').value,
+        desc: document.getElementById('desc').value,
+        cover: document.getElementById('cover').value,
+        video: document.getElementById('video').value
+      };
 
-      const editId = document.getElementById('editId').value;
-      const type = document.getElementById('contentType').value;
-      const title = document.getElementById('titleInput').value;
-      const genre = document.getElementById('genreInput').value;
-      const year = document.getElementById('yearInput').value;
-      const desc = document.getElementById('descInput').value;
-      
-      let coverUrl = '';
-      if(coverSourceType === 'file') {
-        const coverFile = document.getElementById('coverFileInput').files[0];
-        coverUrl = coverFile ? URL.createObjectURL(coverFile) : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600';
+      if (id) {
+        const idx = catalog.findIndex(x => x.id == id);
+        if (idx !== -1) catalog[idx] = newItem;
       } else {
-        coverUrl = document.getElementById('coverUrlInput').value;
+        catalog.unshift(newItem);
       }
 
-      let videoUrl = '';
-      if(videoSourceType === 'file') {
-        const videoFile = document.getElementById('videoFileInput').files[0];
-        videoUrl = videoFile ? URL.createObjectURL(videoFile) : '';
-      } else {
-        videoUrl = document.getElementById('videoUrlInput').value;
-      }
-
-      if (editId) {
-        const index = catalog.findIndex(i => i.id == editId);
-        if(index !== -1) {
-          catalog[index] = { ...catalog[index], type, title, genre, year, desc, cover: coverUrl || catalog[index].cover, videoUrl: videoUrl || catalog[index].videoUrl };
-        }
-      } else {
-        catalog.unshift({ id: Date.now(), type, title, genre, year, desc, cover: coverUrl, videoUrl });
-      }
-
-      try {
-        localStorage.setItem('naPlus_catalog', JSON.stringify(catalog));
-      } catch(err) {}
-
-      renderCatalog();
-      closeAdminModal();
+      localStorage.setItem('naPlus_db', JSON.stringify(catalog));
+      render();
+      closeAdmin();
     }
 
     function editItem(id) {
-      const item = catalog.find(i => i.id == id);
-      if(item) openAdminModal(item);
+      const item = catalog.find(x => x.id == id);
+      if (item) openAdmin(item);
     }
 
     function deleteItem(id) {
-      if(confirm("¿Seguro que querés eliminar este contenido?")) {
-        catalog = catalog.filter(i => i.id != id);
-        try {
-          localStorage.setItem('naPlus_catalog', JSON.stringify(catalog));
-        } catch(err) {}
-        renderCatalog();
+      if (confirm("¿Eliminar este contenido?")) {
+        catalog = catalog.filter(x => x.id != id);
+        localStorage.setItem('naPlus_db', JSON.stringify(catalog));
+        render();
       }
     }
 
-    function openDetail(item) {
-      const modal = document.getElementById('detailModal');
-      const mediaContainer = document.getElementById('mediaContainer');
-      
+    function showDetail(id) {
+      const item = catalog.find(x => x.id == id);
+      if (!item) return;
+
       document.getElementById('detailTitle').innerText = item.title;
       document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
-      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción disponible.';
+      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
 
-      if (item.videoUrl) {
-        if(item.videoUrl.includes('youtube.com') || item.videoUrl.includes('youtu.be')) {
-          let embedUrl = item.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-          mediaContainer.innerHTML = `<iframe src="$
+      const vBox = document.getElementById('videoBox');
+      if (item.video) {
+        if (item.video.includes('youtube.com') || item.video.includes('youtu.be')) {
+          let embed = item.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+          vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
+        } else {
+          vBox.innerHTML = `<video src="${item.video}" controls poster="${item.cover}"></video>`;
+        }
+      } else {
+        vBox.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:0.8rem;">Contenido no disponible</div>`;
+      }
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function closeDetail() {
+      document.getElementById('videoBox').innerHTML = '';
+      document.getElementById('detailModal').style.display = 'none';
+    }
+
+    render();
+  </script>
+</body>
+</html>
