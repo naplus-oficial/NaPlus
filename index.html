@@ -406,19 +406,31 @@
     const FILE_PATH = "index.html";
 
     let catalog = [
-      {
-        id: 1,
-        type: 'movie',
-        title: '[REC]',
-        genre: 'Terror',
-        year: '2007',
-        desc: 'Película de prueba con reproductor OK.ru.',
-        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
-        video: 'https://ok.ru/videoembed/237592963750',
-        views: 1420,
-        dateAdded: 1710000000000
-      }
-    ];
+  {
+    "id": 1790632979212,
+    "type": "movie",
+    "title": "[REC]",
+    "genre": "Terror",
+    "year": "2007",
+    "desc": "En el interior de un edificio residencial, una reportera y su camarógrafo graban el terrible brote de una enfermedad que transforma a los humanos en caníbales. Uno tras otro, los vecinos del inmueble se convierten en monstruos sedientos de sangre.",
+    "cover": "https://www.clarin.com/img/2020/04/15/9OmNWiFE0_720x0__1.jpg",
+    "video": "https://ok.ru/video/16640296815323",
+    "views": 354,
+    "dateAdded": 1790632979213
+  },
+  {
+    "id": 1,
+    "type": "movie",
+    "title": "[REC]",
+    "genre": "Terror",
+    "year": "2007",
+    "desc": "Película de prueba de terror.",
+    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
+    "video": "https://ok.ru/videoembed/237592963750",
+    "views": 1420,
+    "dateAdded": 1710000000000
+  }
+];
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
