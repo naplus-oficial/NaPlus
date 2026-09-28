@@ -183,8 +183,27 @@ class NaPlusProEngine {
     this.listKey = 'naplus_pro_list_v3';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
-    ];
+  {
+    "id": 1790616377522,
+    "type": "movie",
+    "title": "[REC]",
+    "genre": "Terror",
+    "year": "2007",
+    "desc": "Película de terror de uan reportera",
+    "cover": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
+    "video": "https://ok.ru/video/16643535932123"
+  },
+  {
+    "id": 1,
+    "type": "movie",
+    "title": "[REC]",
+    "genre": "Terror",
+    "year": "2007",
+    "desc": "Película de prueba en la Neuro Página.",
+    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
+    "video": "https://ok.ru/videoembed/237592963750"
+  }
+];
     
     this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
     this.currentId = null;
