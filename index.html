@@ -35,21 +35,30 @@ body.creator .btn-exit{display:inline-block}
 .card-admin-btns{position:absolute;top:4px;right:4px;display:none;gap:4px}
 body.creator .card-admin-btns{display:flex}
 .card-admin-btns button{background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.9rem;padding:6px 8px;border-radius:4px;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;padding:15px;overflow-y:auto}
+
+/* Modales */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;padding:15px;overflow-y:auto;align-items:center;justify-content:center}
 #dialogModal{z-index:300}
-.modal-content{background:var(--card-bg);padding:20px;border-radius:10px;width:100%;max-width:500px;border:1px solid var(--accent);margin:auto}
-.modal-content h3{margin-bottom:12px}
+.modal-content{background:var(--card-bg);padding:20px;border-radius:12px;width:100%;max-width:450px;border:1px solid var(--accent);margin:auto;position:relative}
+.modal-content h3{margin-bottom:8px;padding-right:25px}
+
+/* Botón X de cierre */
+.btn-close-modal{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.1);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+.btn-close-modal:active{background:var(--accent)}
+
 .hint{color:var(--text-muted);font-size:.8rem;margin-bottom:12px;line-height:1.4}
 .form-group{margin-bottom:10px}
 .form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
-.form-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:15px;flex-wrap:wrap}
-.btn-sec{background:transparent;color:var(--text-muted);border:none;padding:10px 12px;cursor:pointer;font-size:1rem}
-.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:1rem;text-align:center}
-.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+.form-btns{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px;width:100%}
+.btn-sec{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.1);padding:10px 16px;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:600}
+.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:.9rem;text-align:center}
+
+.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:12px;border-radius:8px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .video-box video,.video-box iframe{width:100%;height:100%;border:none}
-.video-box img{width:100%;height:100%;object-fit:contain}
-.btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;font-size:1rem}
+.video-box img{width:100%;height:100%;object-fit:cover}
+.btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;font-size:0.95rem;box-shadow:0 4px 15px rgba(0,136,204,0.4)}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
 </style>
 </head>
@@ -85,12 +94,13 @@ body.creator .card-admin-btns{display:flex}
 </div>
 
 <!-- Detalle -->
-<div class="modal" id="detailModal">
+<div class="modal" id="detailModal" onclick="closeDetailOnBackdrop(event)">
   <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeDetail()">✕</button>
     <div class="video-box" id="videoBox"></div>
     <h3 id="detailTitle"></h3>
     <p id="detailMeta" style="color:var(--accent-light);font-size:.85rem;margin-bottom:8px"></p>
-    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px"></p>
+    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px;line-height:1.4"></p>
     <div class="form-btns" id="detailBtns"></div>
   </div>
 </div>
@@ -98,6 +108,7 @@ body.creator .card-admin-btns{display:flex}
 <!-- Acceso creador -->
 <div class="modal" id="loginModal">
   <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeLogin()">✕</button>
     <h3>Modo Creador</h3>
     <p class="hint">Ingresá la clave de acceso de administrador.</p>
     <form onsubmit="doLogin(event)">
@@ -105,7 +116,7 @@ body.creator .card-admin-btns{display:flex}
         <label>Clave de Creador</label>
         <input type="password" id="passInput" required autocomplete="off" placeholder="Clave...">
       </div>
-      <div class="form-btns">
+      <div class="form-btns" style="justify-content:flex-end;">
         <button type="button" class="btn-sec" onclick="closeLogin()">Cancelar</button>
         <button type="submit" class="btn-pri">Entrar</button>
       </div>
@@ -116,6 +127,7 @@ body.creator .card-admin-btns{display:flex}
 <!-- Formulario contenido -->
 <div class="modal" id="adminModal">
   <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeAdmin()">✕</button>
     <h3 id="formTitle">Subir contenido</h3>
     <form onsubmit="saveData(event)">
       <input type="hidden" id="editId">
@@ -126,7 +138,6 @@ body.creator .card-admin-btns{display:flex}
       <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
       <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
       
-      <!-- Selección de Portada -->
       <div class="form-group">
         <label>Seleccionar Portada de la Galería</label>
         <input type="file" id="coverFile" accept="image/*">
@@ -140,7 +151,7 @@ body.creator .card-admin-btns{display:flex}
         <label>Link del video o de origen (Telegram, YouTube, MP4...)</label>
         <input type="url" id="video" placeholder="https://t.me/...">
       </div>
-      <div class="form-btns">
+      <div class="form-btns" style="justify-content:flex-end;">
         <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
         <button type="submit" class="btn-pri">Guardar</button>
       </div>
@@ -153,7 +164,7 @@ body.creator .card-admin-btns{display:flex}
   <div class="modal-content">
     <h3 id="dlgTitle"></h3>
     <p id="dlgMsg" class="hint"></p>
-    <div class="form-btns">
+    <div class="form-btns" style="justify-content:flex-end;">
       <button class="btn-sec" id="dlgCancel">Cancelar</button>
       <button class="btn-pri" id="dlgOk">Eliminar</button>
     </div>
@@ -176,10 +187,10 @@ let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
   {
     id: 1,
     type: 'movie',
-    title: 'Película Ejercicio',
-    genre: 'Acción',
-    year: '2026',
-    desc: 'Ejemplo de película en NaPlus.',
+    title: 'Rec',
+    genre: 'Terror',
+    year: '2007',
+    desc: 'Sin descripción.',
     cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
     video: ''
   }
@@ -300,7 +311,6 @@ function doLogin(e) {
   }
 }
 
-// Convertir foto de galería a Base64
 $('coverFile').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (file) {
@@ -389,9 +399,8 @@ function showDetail(id) {
 
   if (vUrl) {
     if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
-      // Redirección directa a Telegram
       vBox.innerHTML = `
-        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.3; position:absolute;">
+        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.2; position:absolute; width:100%; height:100%; object-fit:cover;">
         <a href="${esc(vUrl)}" target="_blank" class="btn-telegram" style="z-index:2;">
           ✈️ Abrir y Ver en Telegram
         </a>`;
@@ -408,7 +417,7 @@ function showDetail(id) {
   const btnBox = $('detailBtns');
   btnBox.innerHTML = `
     <button class="btn-sec" id="detailSave" onclick="toggleSaved(${item.id})"></button>
-    <button class="btn-pri" onclick="closeDetail()">Cerrar</button>
+    <button class="btn-sec" onclick="closeDetail()">Cerrar</button>
   `;
   updateDetailSave();
 
@@ -417,6 +426,12 @@ function showDetail(id) {
 
 function closeDetail() {
   $('videoBox').innerHTML = '';$('detailModal').style.display = 'none';
+}
+
+function closeDetailOnBackdrop(e) {
+  if (e.target.id === 'detailModal') {
+    closeDetail();
+  }
 }
 
 render();
