@@ -43,15 +43,13 @@ body.creator .card-admin-btns{display:flex}
 .form-group{margin-bottom:10px}
 .form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.chip{background:#0a0612;color:var(--text-muted);border:1px solid var(--accent);border-radius:16px;padding:6px 12px;font-size:.85rem;cursor:pointer}
-.chip.on{background:var(--accent);color:#fff}
 .form-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:15px;flex-wrap:wrap}
 .btn-sec{background:transparent;color:var(--text-muted);border:none;padding:10px 12px;cursor:pointer;font-size:1rem}
-.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:1rem}
-.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:10px}
+.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:1rem;text-align:center}
+.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .video-box video,.video-box iframe{width:100%;height:100%;border:none}
 .video-box img{width:100%;height:100%;object-fit:contain}
+.btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;font-size:1rem}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
 </style>
 </head>
@@ -97,7 +95,7 @@ body.creator .card-admin-btns{display:flex}
   </div>
 </div>
 
-<!-- Acceso creador con clave simple -->
+<!-- Acceso creador -->
 <div class="modal" id="loginModal">
   <div class="modal-content">
     <h3>Modo Creador</h3>
@@ -127,8 +125,21 @@ body.creator .card-admin-btns{display:flex}
       <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
       <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
       <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
-      <div class="form-group"><label>Portada: link de imagen</label><input type="url" id="cover" placeholder="https://..."></div>
-      <div class="form-group"><label>Link del video (YouTube, MP4, etc.)</label><input type="url" id="video" placeholder="https://..."></div>
+      
+      <!-- Selección de Portada -->
+      <div class="form-group">
+        <label>Seleccionar Portada de la Galería</label>
+        <input type="file" id="coverFile" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>o Link de imagen (URL opcional)</label>
+        <input type="url" id="coverUrl" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label>Link del video o de origen (Telegram, YouTube, MP4...)</label>
+        <input type="url" id="video" placeholder="https://t.me/...">
+      </div>
       <div class="form-btns">
         <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
         <button type="submit" class="btn-pri">Guardar</button>
@@ -156,9 +167,9 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
 const LIST_KEY = 'naPlus_list';
-const DB_KEY = 'naPlus_db_v2';
+const DB_KEY = 'naPlus_db_v3';
 
-let isCreator = false, currentId = null, saved = [];
+let isCreator = false, currentId = null, saved = [], customCoverData = '';
 try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
 
 let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
@@ -170,16 +181,6 @@ let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
     year: '2026',
     desc: 'Ejemplo de película en NaPlus.',
     cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
-    video: ''
-  },
-  {
-    id: 2,
-    type: 'series',
-    title: 'Serie Ejercicio',
-    genre: 'Drama',
-    year: '2026',
-    desc: 'Ejemplo de serie en NaPlus.',
-    cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400',
     video: ''
   }
 ];
@@ -299,7 +300,20 @@ function doLogin(e) {
   }
 }
 
+// Convertir foto de galería a Base64
+$('coverFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      customCoverData = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
 function openAdmin(item = null) {
+  customCoverData = '';
   $('editId').value = item ? item.id : '';
   $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
   $('type').value = item ? item.type : 'movie';
@@ -307,8 +321,8 @@ function openAdmin(item = null) {
   $('genre').value = item ? item.genre : '';
   $('year').value = item ? item.year : '2026';
   $('desc').value = item ? item.desc : '';
-  $('cover').value = item ? item.cover : '';
-  $('video').value = item ? item.video : '';
+  $('coverUrl').value = item ? item.cover : '';
+  $('coverFile').value = '';$('video').value = item ? item.video : '';
   $('adminModal').style.display = 'flex';
 }
 
@@ -317,6 +331,8 @@ function closeAdmin() { $('adminModal').style.display = 'none'; }
 function saveData(e) {
   e.preventDefault();
   const id = $('editId').value;
+  const coverResult = customCoverData || $('coverUrl').value.trim();
+
   const newItem = {
     id: id ? parseInt(id) : Date.now(),
     type: $('type').value,
@@ -324,7 +340,7 @@ function saveData(e) {
     genre: $('genre').value.trim() || 'General',
     year: $('year').value,
     desc: $('desc').value.trim(),
-    cover: $('cover').value.trim(),
+    cover: coverResult,
     video: $('video').value.trim()
   };
 
@@ -369,12 +385,21 @@ function showDetail(id) {
   const vBox = $('videoBox');
   vBox.innerHTML = '';
 
-  if (item.video) {
-    if (item.video.includes('youtube.com') || item.video.includes('youtu.be')) {
-      let embed = item.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+  const vUrl = item.video || '';
+
+  if (vUrl) {
+    if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
+      // Redirección directa a Telegram
+      vBox.innerHTML = `
+        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.3; position:absolute;">
+        <a href="${esc(vUrl)}" target="_blank" class="btn-telegram" style="z-index:2;">
+          ✈️ Abrir y Ver en Telegram
+        </a>`;
+    } else if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
+      let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
       vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
     } else {
-      vBox.innerHTML = `<video src="${item.video}" controls poster="${item.cover || NO_COVER}"></video>`;
+      vBox.innerHTML = `<video src="${vUrl}" controls poster="${item.cover || NO_COVER}"></video>`;
     }
   } else {
     vBox.innerHTML = `<img src="${esc(item.cover || NO_COVER)}" alt="Portada">`;
