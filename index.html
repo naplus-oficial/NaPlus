@@ -3,322 +3,402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>StreamVibe Pro - Enterprise Streaming Engine</title>
+<title>NaPlus - La Neuro Página</title>
 <style>
   :root {
-    --primary: #e50914;
-    --primary-dark: #b20710;
-    --bg-app: #141414;
-    --bg-card: #1f1f1f;
-    --bg-glass: rgba(20, 20, 20, 0.85);
-    --text-main: #ffffff;
-    --text-muted: #808080;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --bg-main: #0a0612;
+    --bg-surface: #150d26;
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --accent: #f47521;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: rgba(139, 92, 246, 0.3);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-app); color: var(--text-main); padding-bottom: 75px; overflow-x: hidden; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 75px; overflow-x: hidden; }
 
-  /* Barra de Navegación Superior Fija con Efecto Glassmorphism */
-  header {
-    position: fixed; top: 0; left: 0; right: 0; height: 60px;
-    background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-    z-index: 1000; border-bottom: 1px solid var(--border-color);
-  }
-  .brand { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; }
-
-  /* Contenedor Principal */
-  .container { padding: 75px 16px 20px 16px; max-width: 1200px; margin: 0 auto; }
-
-  /* Hero Banner Destacado */
-  .hero-banner {
-    position: relative; width: 100%; height: 360px; border-radius: 12px; overflow: hidden;
-    margin-bottom: 25px; background: #000; display: flex; align-items: flex-end;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  }
-  .hero-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
-  .hero-gradient { position: absolute; inset: 0; background: linear-gradient(0deg, #141414 0%, transparent 60%); }
-  .hero-content { position: relative; z-index: 2; padding: 20px; width: 100%; }
-  .hero-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
-  .hero-desc { font-size: 0.85rem; color: #d1d1d1; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  
-  .btn-primary {
-    background: var(--primary); color: #fff; border: none; padding: 10px 24px;
-    border-radius: 6px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s, transform 0.1s;
-  }
-  .btn-primary:active { transform: scale(0.96); background: var(--primary-dark); }
-
-  /* Buscador Avanzado */
-  .search-wrapper { position: relative; margin-bottom: 25px; }
-  .search-input {
-    width: 100%; padding: 14px 16px 14px 42px; background: var(--bg-card);
-    border: 1px solid var(--border-color); color: #fff; border-radius: 8px;
-    font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .search-input:focus { border-color: var(--primary); box-shadow: 0 0 12px rgba(229, 9, 20, 0.25); }
-  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; }
-
-  /* Secciones y Carruseles */
-  .section-header { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 30px; }
-  
-  .media-card {
-    background: var(--bg-card); border-radius: 8px; overflow: hidden; cursor: pointer;
-    position: relative; border: 1px solid var(--border-color);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .media-card:hover { transform: translateY(-4px); }
-  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
-  .media-card-body { padding: 8px; }
-  .media-card-title { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-  .media-card-meta { font-size: 0.7rem; color: var(--text-muted); }
-
-  /* Navegación Móvil Inferior Estilo App Nativa */
-  .bottom-nav {
+  /* Navegación Inferior Móvil */
+  nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    display: flex; justify-content: space-around; align-items: center;
-    border-top: 1px solid var(--border-color); z-index: 1000;
+    background: rgba(10, 6, 18, 0.95); backdrop-filter: blur(10px);
+    display: none; justify-content: space-around; align-items: center;
+    border-top: 1px solid var(--border); z-index: 1000;
   }
-  .nav-item { background: none; border: none; color: var(--text-muted); font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; width: 50%; font-weight: 500; }
-  .nav-item span { font-size: 1.2rem; }
-  .nav-item.active { color: var(--primary); }
+  .nav-btn {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; width: 25%;
+  }
+  .nav-btn span { font-size: 1.2rem; }
+  .nav-btn.active { color: var(--accent); }
 
   /* Vistas */
-  .view { display: none; animation: fadeIn 0.25s ease-in-out; }
+  .view { display: none; padding: 15px; }
   .view.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Reproductor Multimedia Inmersivo Pantalla Completa */
-  .cinema-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
-  .cinema-modal.active { display: flex; }
-  .cinema-topbar { position: absolute; top: 0; left: 0; right: 0; padding: 20px; display: flex; align-items: center; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); z-index: 10; }
-  .btn-back { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; margin-right: 15px; backdrop-filter: blur(4px); }
-  
-  .video-viewport { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #000; }
-  .video-viewport video, .video-viewport iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
-  
-  .cinema-details { padding: 20px; background: var(--bg-app); max-height: 40vh; overflow-y: auto; border-top: 1px solid var(--border-color); }
-  .action-row { display: flex; gap: 12px; margin-top: 15px; }
-  .btn-secondary { background: #333; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; flex: 1; }
+  /* Header y Buscador */
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .logo { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .profile-avatar-sm { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); cursor: pointer; }
 
-  /* Toast Notificación */
-  #toastNotification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; z-index: 4000; display: none; box-shadow: 0 4px 15px rgba(229,9,20,0.4); }
+  .search-input {
+    width: 100%; padding: 12px 15px; background: var(--bg-surface);
+    border: 1px solid var(--border); color: #fff; border-radius: 10px;
+    font-size: 0.95rem; outline: none; margin-bottom: 15px;
+  }
+  .search-input:focus { border-color: var(--primary); }
+
+  /* Grilla de Contenido */
+  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
+  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); }
+  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
+  .media-info { padding: 6px; }
+  .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .media-sub { font-size: 0.65rem; color: var(--text-muted); }
+
+  /* Selector de Perfiles Estilo Crunchyroll */
+  .profiles-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; text-align: center; padding: 20px; }
+  .profiles-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin: 30px 0; width: 100%; max-width: 350px; }
+  .profile-card { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; width: 110px; }
+  .profile-avatar { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); }
+  .profile-name { font-size: 0.85rem; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+  .profile-add-btn { width: 85px; height: 85px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.4); background: transparent; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2rem; cursor: pointer; }
+
+  /* Ajustes y Creador */
+  .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
+  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--primary); }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 0.9rem; outline: none; }
+  
+  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+  .btn-action:active { background: var(--primary-hover); }
+
+  /* Reproductor Inmersivo */
+  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
+  .player-overlay.active { display: flex; }
+  .player-header { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
+  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
+  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; }
+
+  /* Modales Globales */
+  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
+  .modal-sheet.active { display: flex; }
+  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
+
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 4000; display: none; text-align: center; }
+  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 5000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 </style>
 </head>
 <body>
 
-  <!-- Cabecera -->
-  <header>
-    <div class="brand">StreamVibe</div>
-  </header>
+  <!-- Selección de Perfiles -->
+  <div id="viewProfiles" class="view active">
+    <div class="profiles-container">
+      <h1 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 700;">¿Quién se irá de aventura?</h1>
+      <p style="color: var(--text-muted); font-size: 0.8rem;">Seleccioná tu perfil para comenzar</p>
+      <div class="profiles-grid" id="profilesGrid"></div>
+    </div>
+  </div>
 
-  <!-- Vista Home / Explorar -->
-  <div id="viewHome" class="view active container">
-    <!-- Banner Principal Destacado -->
-    <div class="hero-banner" id="heroBanner">
-      <img id="heroImg" src="" alt="Hero">
-      <div class="hero-gradient"></div>
-      <div class="hero-content">
-        <h1 class="hero-title" id="heroTitle">Cargando...</h1>
-        <p class="hero-desc" id="heroDesc"></p>
-        <button class="btn-primary" onclick="app.playFeatured()">▶ Reproducir</button>
+  <!-- Vista Inicio -->
+  <div id="viewHome" class="view">
+    <div class="header">
+      <div class="logo">NaPlus Pro</div>
+      <img id="currentAvatar" class="profile-avatar-sm" onclick="app.switchProfile()" alt="Perfil">
+    </div>
+    <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
+    
+    <div class="section-title">Películas</div>
+    <div class="media-grid" id="moviesGrid"></div>
+
+    <div class="section-title" style="margin-top: 25px;">Series</div>
+    <div class="media-grid" id="seriesGrid"></div>
+  </div>
+
+  <!-- Vista Mi Lista -->
+  <div id="viewList" class="view">
+    <div class="header"><div class="logo">Mi Lista</div></div>
+    <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
+    <p id="emptyMsg" style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.85rem; display: none;">Tu lista está vacía.</p>
+  </div>
+
+  <!-- Vista Ajustes -->
+  <div id="viewSettings" class="view">
+    <div class="header"><div class="logo">Ajustes</div></div>
+    
+    <div class="settings-box">
+      <h3>Perfil Activo</h3>
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+        <img id="settingsAvatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" alt="Avatar">
+        <div>
+          <h4 id="settingsName" style="font-size: 0.95rem;"></h4>
+          <p style="font-size: 0.75rem; cursor: pointer; color: var(--accent);" onclick="app.switchProfile()">Cambiar de perfil</p>
+        </div>
       </div>
     </div>
 
-    <div class="search-wrapper">
-      <span class="search-icon">🔍</span>
-      <input type="search" class="search-input" id="searchBox" placeholder="Títulos, personas, géneros..." oninput="app.handleSearch()">
+    <div class="settings-box" id="adminPanel" style="display: none;">
+      <h3>Panel de Creador Avanzado</h3>
+      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido a la Nube</button>
     </div>
 
-    <div class="section-header">Catálogo de Películas y Series</div>
-    <div class="media-grid" id="catalogGrid"></div>
-  </div>
-
-  <!-- Vista Mi Biblioteca -->
-  <div id="viewLibrary" class="view container">
-    <div class="section-header" style="margin-top: 15px;">Mi Lista de Favoritos</div>
-    <div class="media-grid" id="libraryGrid"></div>
-    <p id="emptyLibText" style="color: var(--text-muted); text-align: center; margin-top: 60px; font-size: 0.9rem; display: none;">No hay títulos guardados en tu biblioteca.</p>
+    <div class="settings-box">
+      <h3>Seguridad y Modo Creador</h3>
+      <div class="field" style="margin-bottom: 0;">
+        <label>Clave de Administrador (9009) o Token GitHub</label>
+        <input type="password" placeholder="Ingresar clave..." oninput="app.verifyAdmin(this.value)">
+      </div>
+    </div>
   </div>
 
   <!-- Navegación Inferior -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
-    <button class="nav-item" onclick="app.switchView('Library', this)"><span>🔖</span>Mi Lista</button>
+  <nav id="bottomNav">
+    <button class="nav-btn active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
+    <button class="nav-btn" onclick="app.switchView('List', this)"><span>🔖</span>Mi Lista</button>
+    <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
   </nav>
 
-  <!-- Reproductor Dinámico Cinema -->
-  <div class="cinema-modal" id="cinemaModal">
-    <div class="cinema-topbar">
-      <button class="btn-back" onclick="app.closePlayer()">✕</button>
-      <h3 id="modalTopTitle" style="font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
+  <!-- Reproductor Nativo y OK.ru / Drive -->
+  <div class="player-overlay" id="playerModal">
+    <div class="player-header">
+      <button class="close-player" onclick="app.closePlayer()">✕</button>
+      <h3 id="playerTitleHeader" style="font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
     </div>
-    <div class="video-viewport" id="videoViewport"></div>
-    <div class="cinema-details">
-      <h2 id="modalMainTitle" style="font-size: 1.25rem; margin-bottom: 4px;"></h2>
-      <p id="modalMeta" style="color: #46d369; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;"></p>
-      <p id="modalDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
-      <div class="action-row">
-        <button class="btn-secondary" id="libToggleBtn" onclick="app.toggleLibrary()">+ Mi Lista</button>
-      </div>
+    <div class="video-container" id="videoContainer"></div>
+    <div class="player-details">
+      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
+      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
+      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
+      <button class="btn-action" id="listBtn" style="margin-top: 12px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
-  <div id="toastNotification"></div>
+  <!-- Modal Crear Perfil -->
+  <div class="modal-sheet" id="profileModal">
+    <div class="sheet-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="font-size: 1.1rem; color: var(--primary);">Nuevo Perfil</h3>
+        <button onclick="app.closeProfileModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
+      </div>
+      <form onsubmit="app.saveProfile(event)">
+        <div class="field"><label>Nombre</label><input type="text" id="pName" required placeholder="Nombre..."></div>
+        <div class="field"><label>Foto (Galería)</label><input type="file" id="pAvatarFile" accept="image/*"></div>
+        <button type="submit" class="btn-action" style="margin-top: 10px;">Crear Perfil</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Creador Subir Contenido -->
+  <div class="modal-sheet" id="adminModal">
+    <div class="sheet-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="font-size: 1.1rem; color: var(--primary);">Publicar Contenido Global</h3>
+        <button onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
+      </div>
+      <form onsubmit="app.saveItem(event)">
+        <div class="field"><label>Tipo</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+        <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
+        <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
+        <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
+        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
+        <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
+        <div class="field"><label>Link de Video (OK.ru, Google Drive, MP4...)</label><input type="url" id="fVideo" required placeholder="https://..."></div>
+        <button type="submit" class="btn-action" style="margin-top: 10px;">Guardar y Sincronizar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="syncStatus">Sincronizando con GitHub...</div>
 
 <script>
-class StreamVibeEngine {
+class NaPlusProEngine {
   constructor() {
-    this.storageKey = 'streamvibe_enterprise_db_v1';
-    this.libKey = 'streamvibe_enterprise_lib_v1';
-    
-    // Base de datos de ejemplo avanzada con metadatos extendidos
-    this.catalog = JSON.parse(localStorage.getItem(this.storageKey)) || [
-      { id: 101, title: "Interstellar Odyssey", genre: "Ciencia Ficción • 2024", rating: "98% Coincidencia", desc: "Un viaje a través de los límites del espacio conocido para asegurar el futuro de la humanidad en un entorno hostil.", cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
-      { id: 102, title: "Cyberpunk Rebellion", genre: "Acción • 2025", rating: "95% Coincidencia", desc: "En una metrópolis dominada por corporaciones corruptas, un grupo de resistencia hackea el sistema central.", cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-      { id: 103, title: "Nature's Symphony", Documental: "Naturaleza • 2023", genre: "Documental", rating: "91% Coincidencia", desc: "Una obra audiovisual inmersiva que retrata los ecosistemas más recónditos e inexplorados del planeta Tierra.", cover: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
+    this.repo = "ignacio12adrian-ux/NaPlus";
+    this.filePath = "index.html";
+    this.dbKey = 'naplus_pro_db_v5';
+    this.profilesKey = 'naplus_pro_profiles_v3';
+
+    this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
+      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
     ];
     
-    this.library = JSON.parse(localStorage.getItem(this.libKey)) || [];
-    this.currentActiveId = null;
-    this.featuredId = 101;
+    this.profiles = JSON.parse(localStorage.getItem(this.profilesKey)) || [];
+    this.activeProfileId = null;
+    this.currentId = null;
+    this.customAvatar = '';
     
     this.init();
   }
 
   init() {
-    this.renderHero();
-    this.renderCatalog(this.catalog, 'catalogGrid');
+    if (this.profiles.length === 0) {
+      this.profiles.push({ id: Date.now(), name: "Invitado", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200", list: [] });
+      localStorage.setItem(this.profilesKey, JSON.stringify(this.profiles));
+    }
+    this.renderProfiles();
   }
 
-  showToast(msg) {
-    const t = document.getElementById('toastNotification');
-    t.textContent = msg;
-    t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 2500);
+  toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2500);
+  }
+
+  renderProfiles() {
+    const grid = document.getElementById('profilesGrid');
+    grid.innerHTML = '';
+    this.profiles.forEach(p => {
+      const card = document.createElement('button');
+      card.className = 'profile-card';
+      card.onclick = () => this.selectProfile(p.id);
+      card.innerHTML = `
+        <img class="profile-avatar" src="${p.avatar}" alt="Avatar">
+        <span class="profile-name">${p.name}</span>
+      `;
+      grid.appendChild(card);
+    });
+
+    if(this.profiles.length < 4) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'profile-card';
+      addBtn.onclick = () => document.getElementById('profileModal').classList.add('active');
+      addBtn.innerHTML = `<div class="profile-add-btn">+</div><span class="profile-name">Añadir</span>`;
+      grid.appendChild(addBtn);
+    }
+  }
+
+  closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
+
+  saveProfile(e) {
+    e.preventDefault();
+    const name = document.getElementById('pName').value.trim();
+    const newP = { id: Date.now(), name, avatar: this.customAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200', list: [] };
+    this.profiles.push(newP);
+    localStorage.setItem(this.profilesKey, JSON.stringify(this.profiles));
+    this.closeProfileModal();
+    this.renderProfiles();
+    this.toast('Perfil creado');
+  }
+
+  selectProfile(id) {
+    this.activeProfileId = id;
+    const p = this.profiles.find(x => x.id === id);
+    document.getElementById('currentAvatar').src = p.avatar;
+    document.getElementById('settingsAvatar').src = p.avatar;
+    document.getElementById('settingsName').textContent = p.name;
+
+    document.getElementById('viewProfiles').classList.remove('active');
+    document.getElementById('viewHome').classList.add('active');
+    document.getElementById('bottomNav').style.display = 'flex';
+    this.renderHome();
+  }
+
+  switchProfile() {
+    this.activeProfileId = null;
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('viewProfiles').classList.add('active');
+    document.getElementById('bottomNav').style.display = 'none';
+    this.renderProfiles();
   }
 
   switchView(viewName, el) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
     document.getElementById(`view${viewName}`).classList.add('active');
     el.classList.add('active');
-    
-    if(viewName === 'Home') this.renderCatalog(this.catalog, 'catalogGrid');
-    if(viewName === 'Library') this.renderLibrary();
+    if (viewName === 'Home') this.renderHome();
+    if (viewName === 'List') this.renderList();
   }
 
-  renderHero() {
-    const item = this.catalog.find(x => x.id === this.featuredId) || this.catalog[0];
-    if(!item) return;
-    document.getElementById('heroImg').src = item.cover;
-    document.getElementById('heroTitle').textContent = item.title;
-    document.getElementById('heroDesc').textContent = item.desc;
+  createCard(item) {
+    const card = document.createElement('div');
+    card.className = 'media-card';
+    card.onclick = () => this.openPlayer(item.id);
+    card.innerHTML = `
+      <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
+      <div class="media-info">
+        <div class="media-title">${item.title}</div>
+        <div class="media-sub">${item.genre}</div>
+      </div>
+    `;
+    return card;
   }
 
-  playFeatured() {
-    this.openPlayer(this.featuredId);
+  renderHome() {
+    const q = document.getElementById('searchBox').value.toLowerCase().trim();
+    const mGrid = document.getElementById('moviesGrid');
+    const sGrid = document.getElementById('seriesGrid');
+    mGrid.innerHTML = ''; sGrid.innerHTML = '';
+
+    this.catalog
+      .filter(i => i.title.toLowerCase().includes(q) || i.genre.toLowerCase().includes(q))
+      .forEach(item => {
+        const card = this.createCard(item);
+        if (item.type === 'movie') mGrid.appendChild(card);
+        else sGrid.appendChild(card);
+      });
   }
 
-  renderCatalog(items, gridId) {
-    const grid = document.getElementById(gridId);
+  renderList() {
+    const grid = document.getElementById('listGrid');
     grid.innerHTML = '';
-    
-    items.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'media-card';
-      card.onclick = () => this.openPlayer(item.id);
-      card.innerHTML = `
-        <img src="${item.cover}" alt="${item.title}" loading="lazy">
-        <div class="media-card-body">
-          <div class="media-card-title">${item.title}</div>
-          <div class="media-card-meta">${item.genre}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
+    const p = this.profiles.find(x => x.id === this.activeProfileId);
+    const items = this.catalog.filter(i => p && p.list.includes(i.id));
+    const empty = document.getElementById('emptyMsg');
 
-  handleSearch() {
-    const query = document.getElementById('searchBox').value.toLowerCase().trim();
-    const results = this.catalog.filter(i => 
-      i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query)
-    );
-    this.renderCatalog(results, 'catalogGrid');
-  }
-
-  renderLibrary() {
-    const items = this.catalog.filter(i => this.library.includes(i.id));
-    const emptyText = document.getElementById('emptyLibText');
-    
-    if(items.length === 0) {
-      emptyText.style.display = 'block';
-      document.getElementById('libraryGrid').innerHTML = '';
-    } else {
-      emptyText.style.display = 'none';
-      this.renderCatalog(items, 'libraryGrid');
+    if (items.length === 0) { empty.style.display = 'block'; }
+    else {
+      empty.style.display = 'none';
+      items.forEach(item => grid.appendChild(this.createCard(item)));
     }
   }
 
   openPlayer(id) {
-    this.currentActiveId = id;
+    this.currentId = id;
     const item = this.catalog.find(x => x.id === id);
-    if(!item) return;
+    if (!item) return;
 
-    document.getElementById('modalTopTitle').textContent = item.title;
-    document.getElementById('modalMainTitle').textContent = item.title;
-    document.getElementById('modalMeta').textContent = item.rating + " | " + item.genre;
-    document.getElementById('modalDesc').textContent = item.desc;
-    
-    this.updateLibraryButtonState();
+    document.getElementById('playerTitleHeader').textContent = item.title;
+    document.getElementById('playerTitle').textContent = item.title;
+    document.getElementById('playerMeta').textContent = `${item.genre} • ${item.year}`;
+    document.getElementById('playerDesc').textContent = item.desc || 'Sin sinopsis.';
 
-    const viewport = document.getElementById('videoViewport');
-    viewport.innerHTML = `
-      <div style="color:var(--primary); font-size:0.85rem; display:flex; flex-direction:column; align-items:center; gap:8px;">
-        <div style="width:36px; height:36px; border:3px solid rgba(229,9,20,0.3); border-top-color:var(--primary); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-        Cargando buffer de alta definición...
-      </div>`;
+    this.updateListBtnState();
 
+    const container = document.getElementById('videoContainer');
+    container.innerHTML = `<div style="color:var(--accent); font-size:0.85rem;">Cargando video...</div>`;
+
+    const url = item.video || '';
     setTimeout(() => {
-      viewport.innerHTML = `<video src="${item.video}" controls autoplay playsinline style="width:100%; height:100%;"></video>`;
-    }, 250);
+      if (url.includes('ok.ru')) {
+        let embed = url;
+        if (!url.includes('videoembed')) {
+          const m = url.match(/\/video\/([0-9]+)/);
+          if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
+        }
+        container.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+      } else if (url.includes('drive.google.com')) {
+        let idVal = "";
+        const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (m && m[1]) idVal = m[1];
+        const embed = idVal ? `https://drive.google.com/file/d/${idVal}/preview` : url;
+        container.innerHTML = `<iframe src="${embed}" allow="autoplay" allowfullscreen></iframe>`;
+      } else if (url.includes('t.me') || url.includes('telegram')) {
+        container.innerHTML = `<a href="${url}" target="_blank" style="background:#0088cc; color:#fff; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold;">✈️ Abrir en Telegram</a>`;
+      } else {
+        container.innerHTML = `<video src="${url}" controls autoplay playsinline></video>`;
+      }
+    }, 200);
 
-    document.getElementById('cinemaModal').classList.add('active');
+    document.getElementById('playerModal').classList.add('active');
   }
 
   closePlayer() {
-    document.getElementById('videoViewport').innerHTML = '';
-    document.getElementById('cinemaModal').classList.remove('active');
-  }
-
-  updateLibraryButtonState() {
-    const isSaved = this.library.includes(this.currentActiveId);
-    const btn = document.getElementById('libToggleBtn');
-    btn.textContent = isSaved ? '✓ En Mi Lista' : '+ Mi Lista';
-    btn.style.background = isSaved ? '#2a2a2a' : '#333';
-  }
-
-  toggleLibrary() {
-    const idx = this.library.indexOf(this.currentActiveId);
-    if(idx > -1) {
-      this.library.splice(idx, 1);
-      this.showToast('Título eliminado de Mi Lista');
-    } else {
-      this.library.push(this.currentActiveId);
-      this.showToast('Título guardado en Mi Lista');
-    }
-    localStorage.setItem(this.libKey, JSON.stringify(this.library));
-    this.updateLibraryButtonState();
-  }
-}
-
-const app = new StreamVibeEngine();
-</script>
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
-</body>
-</html>
+    do
