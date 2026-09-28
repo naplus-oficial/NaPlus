@@ -157,7 +157,7 @@
   </header>
 
   <div class="hero">
-    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por nombre o género..." oninput="filtrar()">
+    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por nombre o géneros..." oninput="filtrar()">
     
     <!-- Filtro por Géneros -->
     <div class="genre-bar">
@@ -168,6 +168,7 @@
       <button class="genre-chip" onclick="seleccionarGenero('Drama', this)">Drama</button>
       <button class="genre-chip" onclick="seleccionarGenero('Ciencia Ficción', this)">Ciencia Ficción</button>
       <button class="genre-chip" onclick="seleccionarGenero('Animación', this)">Animación</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Aventura', this)">Aventura</button>
     </div>
   </div>
 
@@ -191,15 +192,8 @@
         <input type="text" id="tituloInput" required placeholder="Nombre del título">
       </div>
       <div class="form-group">
-        <label>Género</label>
-        <select id="generoInput">
-          <option value="Acción">Acción</option>
-          <option value="Terror">Terror</option>
-          <option value="Comedia">Comedia</option>
-          <option value="Drama">Drama</option>
-          <option value="Ciencia Ficción">Ciencia Ficción</option>
-          <option value="Animación">Animación</option>
-        </select>
+        <label>Géneros (separados por coma)</label>
+        <input type="text" id="generoInput" required placeholder="Ej: Acción, Terror, Comedia">
       </div>
       <div class="form-group">
         <label>Año</label>
@@ -247,27 +241,17 @@
     const FILE_PATH = "index.html";
 
     let catalog = [
-  {
-    "id": 1790598687063,
-    "tipo": "pelicula",
-    "titulo": "[REC]",
-    "genero": "Terror",
-    "anio": "2007",
-    "desc": "Película de terror basada en una periodista",
-    "portada": "https://image.tmdb.org/t/p/original/iMg9tfTZfA8qdTZNVim9Nsg9f4w.jpg",
-    "video": "https://t.me/c/3804641088/2/3335"
-  },
-  {
-    "id": 1,
-    "tipo": "pelicula",
-    "titulo": "Película Demo NaPlus",
-    "genero": "Acción",
-    "anio": "2026",
-    "desc": "Esta es una película de prueba para la plataforma NaPlus.",
-    "portada": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400",
-    "video": "https://www.w3schools.com/html/mov_bbb.mp4"
-  }
-];
+      {
+        id: 1,
+        tipo: 'pelicula',
+        titulo: 'Película Demo NaPlus',
+        genero: 'Acción, Aventura',
+        anio: '2026',
+        desc: 'Esta es una película de prueba para la plataforma NaPlus.',
+        portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
+      }
+    ];
 
     let favoritos = JSON.parse(localStorage.getItem('naplus_favs')) || [];
     let esCreador = false;
@@ -330,7 +314,8 @@
       const query = filtro.toLowerCase().trim();
 
       catalog.forEach((item, index) => {
-        const coincideGenero = (generoSeleccionado === 'Todos' || item.genero === generoSeleccionado);
+        // Lógica para evaluar múltiples géneros
+        const coincideGenero = (generoSeleccionado === 'Todos' || item.genero.toLowerCase().includes(generoSeleccionado.toLowerCase()));
         const coincideBusqueda = (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query));
 
         if (coincideGenero && coincideBusqueda) {
@@ -388,14 +373,12 @@
       box.innerHTML = '';
       const url = item.video;
 
-      // Redirección si es enlace de Telegram u otra web externa
       if (url.includes('t.me') || url.includes('telegram')) {
         box.innerHTML = `
           <p style="margin-bottom:15px; color:var(--muted);">Este contenido está alojado en Telegram.</p>
           <a href="${url}" target="_blank" class="btn-redirect">✈️ Abrir y Ver en Telegram</a>
         `;
       } 
-      // Soporte Nativo Google Drive
       else if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -404,7 +387,6 @@
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
       } 
-      // Reproductor Nativo HTML5 para videos directos (.mp4, etc.)
       else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
@@ -426,6 +408,7 @@
       document.getElementById('editIndex').value = '';
       document.getElementById('panelTitle').innerText = "Subir Nuevo Contenido";
       document.getElementById('tituloInput').value = '';
+      document.getElementById('generoInput').value = '';
       document.getElementById('descInput').value = '';
       document.getElementById('portadaInput').value = '';
       document.getElementById('videoInput').value = '';
@@ -461,7 +444,7 @@
         id: Date.now(),
         tipo: document.getElementById('tipoInput').value,
         titulo: document.getElementById('tituloInput').value.trim(),
-        genero: document.getElementById('generoInput').value,
+        genero: document.getElementById('generoInput').value.trim(),
         anio: document.getElementById('anioInput').value,
         desc: document.getElementById('descInput').value.trim(),
         portada: document.getElementById('portadaInput').value.trim(),
