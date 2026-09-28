@@ -17,14 +17,21 @@ body.creator .btn-exit{display:inline-block}
 .hero{padding:20px 15px;background:linear-gradient(180deg,#140d24 0%,#0a0612 100%);margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.05)}
 .hero h1{font-size:1.8rem;margin-bottom:5px}
 .hero p{font-size:.9rem;color:var(--text-muted)}
+.searchbar{display:flex;gap:8px;margin-top:12px}
+.searchbar input{flex:1;min-width:0;padding:10px 12px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
+.searchbar button{white-space:nowrap}
 .section-title{font-size:1.2rem;margin:20px 15px 10px;color:var(--accent-light)}
+#listSec,#searchSec{scroll-margin-top:70px}
 .empty{color:var(--text-muted);font-size:.85rem;padding:0 15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:0 15px}
 .card{background:var(--card-bg);border-radius:8px;overflow:hidden;position:relative;border:1px solid rgba(124,58,237,.2);cursor:pointer}
 .card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#0a0612}
 .card-info{padding:6px}
-.card-title{font-size:.8rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-title,.card-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-title{font-size:.8rem;font-weight:bold}
 .card-sub{font-size:.7rem;color:var(--text-muted)}
+.card-save{position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,.8);color:#fff;font-size:1rem;cursor:pointer}
+.card-save.on{background:var(--accent)}
 .card-admin-btns{position:absolute;top:4px;right:4px;display:none;gap:4px}
 body.creator .card-admin-btns{display:flex}
 .card-admin-btns button{background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.9rem;padding:6px 8px;border-radius:4px;cursor:pointer}
@@ -36,7 +43,10 @@ body.creator .card-admin-btns{display:flex}
 .form-group{margin-bottom:10px}
 .form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
-.form-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chip{background:#0a0612;color:var(--text-muted);border:1px solid var(--accent);border-radius:16px;padding:6px 12px;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--accent);color:#fff}
+.form-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:15px;flex-wrap:wrap}
 .btn-sec{background:transparent;color:var(--text-muted);border:none;padding:10px 12px;cursor:pointer;font-size:1rem}
 .btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:1rem}
 .video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:10px}
@@ -57,11 +67,24 @@ body.creator .card-admin-btns{display:flex}
 <div class="hero">
   <h1>NaPlus Streaming</h1>
   <p>Seleccioná cualquier película o serie para ver los detalles.</p>
+  <div class="searchbar">
+    <input type="search" id="search" placeholder="Buscar películas y series..." oninput="render()">
+    <button class="btn-creator" id="listBtn" onclick="goList()">🔖 Mi lista (0)</button>
+  </div>
 </div>
-<div class="section-title">Películas</div>
-<div class="grid" id="moviesGrid"></div>
-<div class="section-title">Series</div>
-<div class="grid" id="seriesGrid"></div>
+
+<div id="searchSec" style="display:none">
+  <div class="section-title">Resultados</div>
+  <div class="grid" id="resultsGrid"></div>
+</div>
+<div id="mainSecs">
+  <div id="recentSec"><div class="section-title">Recientes</div><div class="grid" id="recentGrid"></div></div>
+  <div id="listSec"><div class="section-title">Mi lista</div><div class="grid" id="listGrid"></div></div>
+  <div class="section-title">Películas</div>
+  <div class="grid" id="moviesGrid"></div>
+  <div class="section-title">Series</div>
+  <div class="grid" id="seriesGrid"></div>
+</div>
 
 <!-- Detalle -->
 <div class="modal" id="detailModal">
@@ -99,7 +122,9 @@ body.creator .card-admin-btns{display:flex}
       <div class="form-group"><label>Tipo</label>
         <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select></div>
       <div class="form-group"><label>Título</label><input type="text" id="title" required></div>
-      <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
+      <div class="form-group"><label>Géneros (podés elegir varios)</label>
+        <div class="chips" id="genreChips"></div>
+        <input type="text" id="genreOther" placeholder="Otros géneros (separados por coma)"></div>
       <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
       <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
       <div class="form-group"><label>Portada: link de imagen (opcional)</label><input type="url" id="cover" placeholder="https://..."></div>
@@ -129,11 +154,19 @@ body.creator .card-admin-btns{display:flex}
 <script>
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
-const CFG_KEY = 'naPlus_cfg';       // { repo, token } solo en el dispositivo del creador
-const DATA_FILE = 'content.json';   // catálogo público, guardado en el repositorio
+const CFG_KEY = 'naPlus_cfg';        // { repo, token } solo en el dispositivo del creador
+const LIST_KEY = 'naPlus_list';      // "Mi lista" de cada visitante
+const DATA_FILE = 'content.json';    // catálogo público, guardado en el repositorio
+const GENRES = ['Acción','Aventura','Comedia','Drama','Terror','Romance','Ciencia ficción','Fantasía','Suspenso','Misterio','Animación','Documental','Familiar','Musical'];
 
 let catalog = [], isCreator = false, pendingCover = '', existingCover = '';
+let loadFailed = false, dirty = false, currentId = null, saved = [];
+try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
+
+const genresOf = item => Array.isArray(item.genres) ? item.genres : String(item.genre || '').split(',').map(s => s.trim()).filter(Boolean);
+const isSaved = id => saved.some(x => x == id);
 
 /* ---------- Configuración del creador ---------- */
 function getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
@@ -146,11 +179,18 @@ function guessRepo() {
 
 /* ---------- Carga del catálogo ---------- */
 async function loadCatalog() {
-  try {
-    const res = await fetch(DATA_FILE + '?t=' + Date.now(), { cache: 'no-store' });
-    if (res.ok) { const d = await res.json(); if (Array.isArray(d)) catalog = d; }
-  } catch (e) {}
-  render();
+  const tries = [[DATA_FILE + '?t=' + Date.now(), { cache: 'no-store' }]];
+  const repo = (getCfg() || {}).repo || guessRepo();
+  if (repo) tries.push([`https://api.github.com/repos/${repo}/contents/${DATA_FILE}`, { headers: { Accept: 'application/vnd.github.raw+json' } }]);
+  let missing = false;
+  for (const [url, opt] of tries) {
+    try {
+      const r = await fetch(url, opt);
+      if (r.ok) { const d = await r.json(); if (Array.isArray(d)) { catalog = d; loadFailed = false; render(); return; } }
+      else if (r.status === 404) missing = true;
+    } catch (e) {}
+  }
+  loadFailed = !missing; render();
 }
 
 /* ---------- Guardado en GitHub ---------- */
@@ -167,29 +207,37 @@ function gh(cfg, method, body) {
     body: body ? JSON.stringify(body) : undefined
   });
 }
+async function ghMsg(res) { try { return (await res.json()).message || ''; } catch (e) { return ''; } }
+
 async function persist() {
   const cfg = getCfg();
-  if (!cfg) { toast('Falta iniciar sesión en Modo Creador.'); return; }
+  if (!cfg) { openLogin(); return; }
   try {
-    let sha;
-    const g = await gh(cfg, 'GET');
-    if (g.ok) sha = (await g.json()).sha;
-    else if (g.status !== 404) throw g.status;
-    const p = await gh(cfg, 'PUT', { message: 'Actualizar catálogo', content: b64(JSON.stringify(catalog, null, 1)), ...(sha ? { sha } : {}) });
-    if (!p.ok) throw p.status;
-    toast('Guardado. Los demás lo verán en 1 o 2 minutos.');
-  } catch (e) {
-    if (e === 401 || e === 403) { localStorage.removeItem(CFG_KEY); setCreator(false); toast('Token inválido, vencido o sin permiso. Volvé a entrar.'); }
-    else if (e === 404) toast('No se encontró el repositorio. Revisá el nombre.');
-    else toast('No se pudo guardar. Probá de nuevo.');
-  }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let sha;
+      const g = await gh(cfg, 'GET');
+      if (g.ok) sha = (await g.json()).sha;
+      else if (g.status !== 404) throw { status: g.status, msg: await ghMsg(g) };
+      const p = await gh(cfg, 'PUT', { message: 'Actualizar catálogo', content: b64(JSON.stringify(catalog, null, 1)), ...(sha ? { sha } : {}) });
+      if (p.ok) { dirty = false; toast('Guardado. Los demás lo verán en 1 o 2 minutos.'); return; }
+      if ((p.status === 409 || p.status === 422) && attempt === 0) continue; // versión desactualizada: reintenta
+      throw { status: p.status, msg: await ghMsg(p) };
+    }
+  } catch (e) { ghFail(e); }
+}
+function ghFail(e) {
+  const s = e && e.status, m = (e && e.msg) || '';
+  if (s === 401) { toast('GitHub no aceptó el token (incorrecto o vencido). Pegá uno nuevo.', 7000); openLogin(); }
+  else if (s === 403) { toast('El token no tiene permiso para escribir. Creá uno con Contents: Read and write. ' + m, 8000); openLogin(); }
+  else if (s === 404) { toast('No se encontró el repositorio o el token no tiene acceso a él. Revisá el nombre.', 7000); openLogin(); }
+  else toast('No se pudo guardar' + (s ? ' (error ' + s + ')' : '') + '. Probá de nuevo.', 6000);
 }
 
 /* ---------- Interfaz ---------- */
 let toastTimer;
-function toast(msg) {
+function toast(msg, ms = 3500) {
   const t = $('toast'); t.textContent = msg; t.style.display = 'block';
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', 3500);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', ms);
 }
 function confirmDialog(title, msg) {
   return new Promise(resolve => {
@@ -201,53 +249,121 @@ function confirmDialog(title, msg) {
   });
 }
 
-function render() {
-  const mGrid = $('moviesGrid'), sGrid = $('seriesGrid');
-  mGrid.innerHTML = ''; sGrid.innerHTML = '';
-  catalog.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <div class="card-admin-btns">
-        <button class="edit" aria-label="Editar">✏️</button>
-        <button class="del" aria-label="Eliminar">🗑️</button>
-      </div>
-      <img src="${esc(item.cover || NO_COVER)}" alt="Portada de ${esc(item.title)}">
-      <div class="card-info">
-        <div class="card-title">${esc(item.title)}</div>
-        <div class="card-sub">${esc(item.genre)} • ${esc(item.year)}</div>
-      </div>`;
-    div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
-    div.onclick = () => showDetail(item.id);
-    div.querySelector('.edit').onclick = e => { e.stopPropagation(); editItem(item.id); };
-    div.querySelector('.del').onclick = e => { e.stopPropagation(); deleteItem(item.id); };
-    (item.type === 'movie' ? mGrid : sGrid).appendChild(div);
-  });
-  [mGrid, sGrid].forEach(g => { if (!g.children.length) g.innerHTML = '<p class="empty">Todavía no hay contenido acá.</p>'; });
+function makeCard(item) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  const on = isSaved(item.id);
+  div.innerHTML = `
+    <button class="card-save${on ? ' on' : ''}" aria-label="Mi lista">${on ? '✓' : '＋'}</button>
+    <div class="card-admin-btns">
+      <button class="edit" aria-label="Editar">✏️</button>
+      <button class="del" aria-label="Eliminar">🗑️</button>
+    </div>
+    <img src="${esc(item.cover || NO_COVER)}" alt="Portada de ${esc(item.title)}">
+    <div class="card-info">
+      <div class="card-title">${esc(item.title)}</div>
+      <div class="card-sub">${esc(genresOf(item).join(', '))} • ${esc(item.year)}</div>
+    </div>`;
+  div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
+  div.onclick = () => showDetail(item.id);
+  div.querySelector('.card-save').onclick = e => { e.stopPropagation(); toggleSaved(item.id); };
+  div.querySelector('.edit').onclick = e => { e.stopPropagation(); editItem(item.id); };
+  div.querySelector('.del').onclick = e => { e.stopPropagation(); deleteItem(item.id); };
+  return div;
 }
 
+function fillGrid(id, items, emptyMsg) {
+  const g = $(id);
+  g.innerHTML = '';
+  items.forEach(i => g.appendChild(makeCard(i)));
+  if (!items.length && emptyMsg) g.innerHTML = `<p class="empty">${emptyMsg}</p>`;
+}
+
+function render() {
+  const q = norm($('search').value.trim());
+  const sorted = catalog.slice().sort((a, b) => b.id - a.id);
+  const savedItems = saved.map(id => catalog.find(x => x.id == id)).filter(Boolean);
+  $('listBtn').textContent = `🔖 Mi lista (${savedItems.length})`;
+  $('searchSec').style.display = q ? 'block' : 'none';
+  $('mainSecs').style.display = q ? 'none' : 'block';
+  if (q) {
+    fillGrid('resultsGrid', sorted.filter(i => norm([i.title, genresOf(i).join(' '), i.desc, i.year, i.type === 'movie' ? 'pelicula' : 'serie'].join(' ')).includes(q)), 'No encontramos nada con esa búsqueda.');
+    return;
+  }
+  const empty = loadFailed ? 'No se pudo cargar el catálogo. Recargá la página.' : 'Todavía no hay contenido acá.';
+  $('recentSec').style.display = sorted.length ? 'block' : 'none';
+  fillGrid('recentGrid', sorted.slice(0, 10));
+  $('listSec').style.display = savedItems.length ? 'block' : 'none';
+  fillGrid('listGrid', savedItems);
+  fillGrid('moviesGrid', sorted.filter(i => i.type === 'movie'), empty);
+  fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), empty);
+}
+
+/* ---------- Mi lista ---------- */
+function toggleSaved(id) {
+  const i = saved.findIndex(x => x == id);
+  if (i > -1) saved.splice(i, 1); else saved.push(id);
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(saved)); } catch (e) { toast('No se pudo guardar tu lista en este navegador.'); }
+  render(); updateDetailSave();
+}
+function updateDetailSave() {
+  const b = $('detailSave');
+  if (b && currentId != null) b.textContent = isSaved(currentId) ? '✓ En mi lista' : '＋ Mi lista';
+}
+function goList() {
+  if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía. Tocá ＋ en una película o serie para guardarla.'); return; }
+  $('search').value = ''; render();
+  $('listSec').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ---------- Modo creador ---------- */
 function setCreator(on) {
   isCreator = on;
   document.body.classList.toggle('creator', on);
   $('btnAdmin').textContent = on ? '+ Agregar' : 'Modo Creador';
 }
-
 function toggleCreator() {
   if (isCreator) { openAdmin(); return; }
-  const cfg = getCfg();
-  if (cfg) { setCreator(true); toast('Modo creador activado'); return; }
-  $('repoInput').value = guessRepo();
+  if (getCfg()) { setCreator(true); toast('Modo creador activado'); return; }
+  openLogin();
+}
+function openLogin() {
+  $('repoInput').value = (getCfg() || {}).repo || guessRepo();
   $('tokenInput').value = '';
   $('loginModal').style.display = 'flex';
 }
 function closeLogin() { $('loginModal').style.display = 'none'; $('tokenInput').value = ''; }
-function doLogin(e) {
+
+async function doLogin(e) {
   e.preventDefault();
   const repo = $('repoInput').value.trim().replace(/^\/+|\/+$/g, '');
   const token = $('tokenInput').value.trim();
   if (!/^[\w.-]+\/[\w.-]+$/.test(repo) || !token) { toast('Revisá el repositorio y el token.'); return; }
+  toast('Comprobando token...');
+  try {
+    const r = await fetch('https://api.github.com/repos/' + repo, { headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token } });
+    if (r.status === 401) { toast('GitHub no aceptó el token. Revisá que lo copiaste completo y que no esté vencido.', 7000); return; }
+    if (r.status === 404) { toast('No se encontró ese repositorio con este token. Revisá el nombre y que el token tenga acceso.', 7000); return; }
+    if (r.ok) { const d = await r.json(); if (d.permissions && d.permissions.push === false) { toast('Este token no tiene permiso de escritura. Activá Contents: Read and write.', 7000); return; } }
+  } catch (err) {}
   localStorage.setItem(CFG_KEY, JSON.stringify({ repo, token }));
   closeLogin(); setCreator(true); toast('Modo creador activado');
+  if (dirty) persist(); // reintenta los cambios que no se habían guardado
+}
+
+/* ---------- Formulario ---------- */
+function buildChips(sel) {
+  const box = $('genreChips');
+  box.innerHTML = '';
+  GENRES.forEach(g => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (sel.includes(g) ? ' on' : '');
+    b.textContent = g;
+    b.onclick = () => b.classList.toggle('on');
+    box.appendChild(b);
+  });
+  $('genreOther').value = sel.filter(g => !GENRES.includes(g)).join(', ');
 }
 
 function openAdmin(item = null) {
@@ -255,116 +371,9 @@ function openAdmin(item = null) {
   $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
   $('type').value = item ? item.type : 'movie';
   $('title').value = item ? item.title : '';
-  $('genre').value = item ? item.genre : '';
+  buildChips(item ? genresOf(item) : []);
   $('year').value = item ? item.year : '2026';
   $('desc').value = item ? item.desc : '';
   $('video').value = item ? item.video : '';
   existingCover = item ? (item.cover || '') : '';
-  $('cover').value = existingCover.startsWith('data:') ? '' : existingCover;
-  $('coverFile').value = ''; pendingCover = '';
-  $('adminModal').style.display = 'flex';
-}
-function closeAdmin() { $('adminModal').style.display = 'none'; }
-
-// Reduce la imagen elegida a ~300x450 para que el catálogo quede liviano
-function fileToCover(file) {
-  return new Promise((resolve, reject) => {
-    const fr = new FileReader();
-    fr.onerror = reject;
-    fr.onload = () => {
-      const img = new Image();
-      img.onerror = reject;
-      img.onload = () => {
-        const w = 300, h = 450, c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        const s = Math.max(w / img.width, h / img.height);
-        c.getContext('2d').drawImage(img, (w - img.width * s) / 2, (h - img.height * s) / 2, img.width * s, img.height * s);
-        resolve(c.toDataURL('image/jpeg', 0.8));
-      };
-      img.src = fr.result;
-    };
-    fr.readAsDataURL(file);
-  });
-}
-$('coverFile').addEventListener('change', async e => {
-  if (!e.target.files[0]) return;
-  try { pendingCover = await fileToCover(e.target.files[0]); toast('Portada lista'); }
-  catch (err) { toast('No se pudo leer la imagen'); }
-});
-
-async function saveData(e) {
-  e.preventDefault();
-  if (!isCreator) return;
-  const id = $('editId').value;
-  const typed = $('cover').value.trim();
-  const newItem = {
-    id: id ? parseInt(id, 10) : Date.now(),
-    type: $('type').value, title: $('title').value.trim(), genre: $('genre').value.trim(),
-    year: $('year').value, desc: $('desc').value.trim(),
-    cover: pendingCover || typed || (existingCover.startsWith('data:') ? existingCover : ''),
-    video: $('video').value.trim()
-  };
-  const idx = id ? catalog.findIndex(x => x.id == id) : -1;
-  if (idx !== -1) catalog[idx] = newItem; else catalog.unshift(newItem);
-  render(); closeAdmin(); toast('Guardando...');
-  await persist();
-}
-
-function editItem(id) { const item = catalog.find(x => x.id == id); if (item) openAdmin(item); }
-
-async function deleteItem(id) {
-  const item = catalog.find(x => x.id == id);
-  if (!item || !(await confirmDialog('Eliminar', `¿Eliminar "${item.title}"?`))) return;
-  catalog = catalog.filter(x => x.id != id);
-  render(); toast('Guardando...');
-  await persist();
-}
-
-/* ---------- Detalle y reproductor ---------- */
-function safeUrl(url) {
-  try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? u : null; } catch (e) { return null; }
-}
-function playerHTML(u, cover) {
-  const host = u.hostname.replace(/^www\./, '');
-  let yt = null;
-  if (host === 'youtu.be') yt = u.pathname.slice(1);
-  else if (host.endsWith('youtube.com')) {
-    if (u.pathname === '/watch') yt = u.searchParams.get('v');
-    else { const m = u.pathname.match(/^\/(embed|shorts|live)\/([^/?]+)/); if (m) yt = m[2]; }
-  }
-  if (yt) return `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(yt)}" allow="fullscreen; encrypted-media" allowfullscreen></iframe>`;
-  if (host === 't.me' && /^\/[A-Za-z0-9_]+\/\d+$/.test(u.pathname))
-    return `<iframe src="https://t.me${u.pathname}?embed=1&mode=tme" allow="fullscreen" allowfullscreen></iframe>`;
-  if (/\.(mp4|webm|mov|m4v)$/i.test(u.pathname)) return `<video src="${esc(u.href)}" controls playsinline poster="${esc(cover || '')}"></video>`;
-  return null;
-}
-function showDetail(id) {
-  const item = catalog.find(x => x.id == id);
-  if (!item) return;
-  $('detailTitle').textContent = item.title;
-  $('detailMeta').textContent = `${item.genre} • ${item.year}`;
-  $('detailDesc').textContent = item.desc || 'Sin descripción.';
-  const u = item.video ? safeUrl(item.video) : null;
-  const player = u ? playerHTML(u, item.cover) : null;
-  $('videoBox').innerHTML = player || `<img src="${esc(item.cover || NO_COVER)}" alt="">`;
-  $('detailBtns').innerHTML = (u
-    ? `<a class="btn-pri" href="${esc(u.href)}" target="_blank" rel="noopener noreferrer">▶ Abrir video</a>`
-    : '<span style="color:#aaa;font-size:.8rem;margin-right:auto">Video no disponible</span>')
-    + '<button class="btn-sec" onclick="closeDetail()">Cerrar</button>';
-  $('detailModal').style.display = 'flex';
-}
-function closeDetail() { $('videoBox').innerHTML = ''; $('detailModal').style.display = 'none'; }
-
-$('detailModal').addEventListener('click', e => { if (e.target === $('detailModal')) closeDetail(); });
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  if ($('dialogModal').style.display === 'flex') $('dlgCancel').click();
-  else if ($('loginModal').style.display === 'flex') closeLogin();
-  else if ($('adminModal').style.display === 'flex') closeAdmin();
-  else if ($('detailModal').style.display === 'flex') closeDetail();
-});
-
-loadCatalog();
-</script>
-</body>
-</html>
+  $('cover').value = existingCover.startsWith('dat
