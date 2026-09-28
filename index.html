@@ -276,7 +276,7 @@ class NaPlusProEngine {
 
   renderHome() {
     const q = norm($('searchBox').value.trim());
-    const mGrid = $('moviesGrid'), sGrid = $('seriesGrid');
+    const mGrid = $('moviesGrid'), sGrid =$('seriesGrid');
     mGrid.innerHTML = ''; sGrid.innerHTML = '';
 
     this.catalog
@@ -316,8 +316,7 @@ class NaPlusProEngine {
   }
 
   closePlayer() {
-    $('videoContainer').innerHTML = '';
-    $('playerModal').classList.remove('active');
+    $('videoContainer').innerHTML = '';$('playerModal').classList.remove('active');
   }
 
   updateListBtnState() {
@@ -362,29 +361,22 @@ class NaPlusProEngine {
   }
 
   openModal() {
-    $('modalTitleText').textContent = 'Publicar Contenido Global';
-    $('fEditId').value = '';
-    $('fType').value = 'movie';
-    $('fTitle').value = '';
-    $('fGenre').value = '';
-    $('fYear').value = '2026';
-    $('fDesc').value = '';
-    $('fCover').value = '';
-    $('fVideo').value = '';
-    $('adminModal').classList.add('active');
+    $('modalTitleText').textContent = 'Publicar Contenido Global';$('fEditId').value = '';
+    $('fType').value = 'movie';$('fTitle').value = '';
+    $('fGenre').value = '';$('fYear').value = '2026';
+    $('fDesc').value = '';$('fCover').value = '';
+    $('fVideo').value = '';$('adminModal').classList.add('active');
   }
 
   openEditModal(id) {
     const item = this.catalog.find(x => x.id === id);
     if (!item) return;
-    $('modalTitleText').textContent = 'Editar Contenido';
-    $('fEditId').value = item.id;
+    $('modalTitleText').textContent = 'Editar Contenido';$('fEditId').value = item.id;
     $('fType').value = item.type;
     $('fTitle').value = item.title;
     $('fGenre').value = item.genre;
     $('fYear').value = item.year;
-    $('fDesc').value = item.desc || '';
-    $('fCover').value = item.cover;
+    $('fDesc').value = item.desc \vert{}\vert{} '';$('fCover').value = item.cover;
     $('fVideo').value = item.video;
     $('adminModal').classList.add('active');
   }
@@ -440,6 +432,8 @@ class NaPlusProEngine {
   ghError(status) {
     if (status === 401) {
       store.del('naplus_token');
-      alert('GitHub no aceptó el token: está vencido o quedó mal copiado. Creá uno nuevo (Expiration: No expiration) y pegalo en Ajustes.');
+      alert('GitHub no aceptó el token: está vencido o quedó mal copiado. Creá uno nuevo y pégalo en Ajustes.');
     } else if (status === 403) {
-      alert('El token
+      alert('El token no tiene permisos suficientes (marcar repo).');
+    }
+  
