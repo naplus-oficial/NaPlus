@@ -1,410 +1,444 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NaPlus</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: #0b0714; color: #f8fafc; padding-bottom: 50px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaPlus - Streaming</title>
+<style>
+:root{--bg-dark:#0a0612;--card-bg:#140d24;--accent:#7c3aed;--accent-light:#c084fc;--text:#f8fafc;--text-muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:var(--bg-dark);color:var(--text);padding-top:65px;padding-bottom:40px}
+header{position:fixed;top:0;left:0;right:0;height:60px;padding:0 15px;background:#0a0612;display:flex;justify-content:space-between;align-items:center;z-index:100;border-bottom:1px solid rgba(124,58,237,.3)}
+.logo{font-size:1.5rem;font-weight:900;color:var(--accent-light)}
+.header-btns{display:flex;gap:8px}
+.btn-creator{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:6px;font-size:.85rem;font-weight:bold;cursor:pointer}
+.btn-exit{background:transparent;border:1px solid var(--accent);display:none}
+body.creator .btn-exit{display:inline-block}
+.hero{padding:20px 15px;background:linear-gradient(180deg,#140d24 0%,#0a0612 100%);margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.05)}
+.hero h1{font-size:1.8rem;margin-bottom:5px}
+.hero p{font-size:.9rem;color:var(--text-muted)}
+.searchbar{display:flex;gap:8px;margin-top:12px}
+.searchbar input{flex:1;min-width:0;padding:10px 12px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
+.searchbar button{white-space:nowrap}
+.section-title{font-size:1.2rem;margin:20px 15px 10px;color:var(--accent-light)}
+#listSec,#searchSec{scroll-margin-top:70px}
+.empty{color:var(--text-muted);font-size:.85rem;padding:0 15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:0 15px}
+.card{background:var(--card-bg);border-radius:8px;overflow:hidden;position:relative;border:1px solid rgba(124,58,237,.2);cursor:pointer}
+.card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#0a0612}
+.card-info{padding:6px}
+.card-title,.card-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-title{font-size:.8rem;font-weight:bold}
+.card-sub{font-size:.7rem;color:var(--text-muted)}
+.card-save{position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,.8);color:#fff;font-size:1rem;cursor:pointer}
+.card-save.on{background:var(--accent)}
+.card-admin-btns{position:absolute;top:4px;right:4px;display:none;gap:4px}
+body.creator .card-admin-btns{display:flex}
+.card-admin-btns button{background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.9rem;padding:6px 8px;border-radius:4px;cursor:pointer}
 
-    header {
-      position: sticky; top: 0; height: 60px; background: #140d24;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 15px; border-bottom: 1px solid rgba(124, 58, 237, 0.3); z-index: 100;
-    }
-    .logo { font-size: 1.5rem; font-weight: 900; color: #a78bfa; }
-    .btn-admin {
-      background: #7c3aed; color: #fff; border: none; padding: 8px 14px;
-      border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
-    }
+/* Modales */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);z-index:200;padding:15px;overflow-y:auto;align-items:center;justify-content:center}
+#dialogModal{z-index:300}
+.modal-content{background:var(--card-bg);padding:20px;border-radius:14px;width:100%;max-width:550px;border:1px solid var(--accent);margin:auto;position:relative;box-shadow:0 20px 40px rgba(0,0,0,0.8)}
+.modal-content h3{margin-bottom:8px;padding-right:25px}
 
-    .hero { padding: 15px; background: linear-gradient(180deg, #140d24 0%, #0b0714 100%); }
-    .search-input {
-      width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(124, 58, 237, 0.3); color: #fff;
-      border-radius: 8px; font-size: 0.95rem; outline: none; margin-bottom: 12px;
-    }
+.btn-close-modal{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.1);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background 0.2s}
+.btn-close-modal:active{background:var(--accent)}
 
-    .section-title { font-size: 1.1rem; margin: 20px 15px 10px; color: #a78bfa; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px; }
+.hint{color:var(--text-muted);font-size:.8rem;margin-bottom:12px;line-height:1.4}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
 
-    .card {
-      background: #140d24; border-radius: 8px; overflow: hidden;
-      border: 1px solid rgba(124, 58, 237, 0.3); cursor: pointer; position: relative;
-    }
-    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-    .card-body { padding: 8px; }
-    .card-title { font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-sub { font-size: 0.75rem; color: #94a3b8; }
+.form-btns{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px;width:100%}
+.btn-sec{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.1);padding:10px 16px;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:600}
+.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:.9rem;text-align:center}
 
-    .card-actions { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
-    body.admin-active .card-actions { display: flex; }
-    .card-actions button {
-      background: rgba(0,0,0,0.85); border: 1px solid #7c3aed;
-      color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
-    }
+/* Reproductor Estético */
+.video-container{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:15px;border-radius:10px;overflow:hidden;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.6);border:1px solid rgba(124,58,237,0.3)}
+.video-container video,.video-container iframe{width:100%;height:100%;border:none;object-fit:contain}
+.video-container img{width:100%;height:100%;object-fit:cover}
 
-    /* Modal Player */
-    .player-view {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-      z-index: 5000; flex-direction: column; padding: 15px; overflow-y: auto;
-    }
-    .player-view.active { display: flex; }
+/* Indicador de carga estilizado */
+.video-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,6,18,0.85);color:var(--accent-light);font-size:0.85rem;gap:8px;z-index:2;pointer-events:none;transition:opacity 0.3s}
+.spinner{width:36px;height:36px;border:3px solid rgba(124,58,237,0.3);border-top-color:var(--accent-light);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    .video-wrapper {
-      width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px;
-      overflow: hidden; margin-bottom: 15px; position: relative;
-      display: flex; align-items: center; justify-content: center; flex-direction: column;
-    }
-    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; }
-
-    .btn-close {
-      align-self: flex-end; background: #7c3aed; color: #fff; border: none;
-      padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px;
-    }
-
-    .btn-alt-link {
-      background: #0088cc; color: #fff; padding: 10px 18px; border-radius: 6px;
-      text-decoration: none; font-weight: bold; margin-top: 10px; display: inline-block;
-    }
-
-    /* Modal Formulario */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      z-index: 2000; padding: 15px; align-items: center; justify-content: center;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-card {
-      background: #140d24; border: 1px solid #7c3aed; border-radius: 12px;
-      width: 100%; max-width: 480px; padding: 20px; position: relative;
-    }
-    .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; }
-    .field input, .field select, .field textarea {
-      width: 100%; padding: 10px; background: #0b0714; border: 1px solid rgba(124, 58, 237, 0.3);
-      color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
-    }
-    
-    #syncStatus {
-      display: none;
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background: #7c3aed;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      z-index: 9999;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-  </style>
+.btn-telegram{background:#0088cc;color:#fff;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:10px;font-size:1rem;box-shadow:0 4px 15px rgba(0,136,204,0.5)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
+</style>
 </head>
 <body>
-
-  <header>
-    <div class="logo">NaPlus</div>
-    <button class="btn-admin" id="btnAdmin" onclick="abrirCreador()">Modo Creador</button>
-  </header>
-
-  <div class="hero">
-    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por título o género..." oninput="filtrar()">
+<header>
+  <div class="logo">NaPlus</div>
+  <div class="header-btns">
+    <button class="btn-creator btn-exit" onclick="setCreator(false)">Salir</button>
+    <button class="btn-creator" id="btnAdmin" onclick="toggleCreator()">Modo Creador</button>
   </div>
+</header>
 
-  <div class="section-title">🎬 Películas</div>
-  <div class="grid" id="peliculasGrid"></div>
+<div class="hero">
+  <h1>NaPlus Streaming</h1>
+  <p>Seleccioná cualquier película o serie para ver los detalles.</p>
+  <div class="searchbar">
+    <input type="search" id="search" placeholder="Buscar películas y series..." oninput="render()">
+    <button class="btn-creator" id="listBtn" onclick="goList()">🔖 Mi lista (0)</button>
+  </div>
+</div>
 
-  <div class="section-title">📺 Series</div>
+<div id="searchSec" style="display:none">
+  <div class="section-title">Resultados</div>
+  <div class="grid" id="resultsGrid"></div>
+</div>
+<div id="mainSecs">
+  <div id="recentSec"><div class="section-title">Recientes</div><div class="grid" id="recentGrid"></div></div>
+  <div id="listSec"><div class="section-title">Mi lista</div><div class="grid" id="listGrid"></div></div>
+  <div class="section-title">Películas</div>
+  <div class="grid" id="moviesGrid"></div>
+  <div class="section-title">Series</div>
   <div class="grid" id="seriesGrid"></div>
+</div>
 
-  <!-- Formulario Modal -->
-  <div class="modal-overlay" id="formModal">
-    <div class="modal-card">
-      <h3 id="formTitle" style="margin-bottom:12px; color:#a78bfa;">Subir Contenido</h3>
-      <form onsubmit="guardarContenido(event)">
-        <input type="hidden" id="editIndex">
-        <div class="field">
-          <label>Tipo</label>
-          <select id="tipoInput">
-            <option value="pelicula">Película</option>
-            <option value="serie">Serie</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Título</label>
-          <input type="text" id="tituloInput" required>
-        </div>
-        <div class="field">
-          <label>Género</label>
-          <input type="text" id="generoInput" required>
-        </div>
-        <div class="field">
-          <label>Portada (URL)</label>
-          <input type="url" id="portadaInput" required>
-        </div>
-        <div class="field">
-          <label>Enlace del Video (OK.ru, Google Drive, MP4, Telegram)</label>
-          <input type="url" id="videoInput" required>
-        </div>
-        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
-          <button type="button" onclick="cerrarModal()" style="background:transparent; color:#94a3b8; border:none; cursor:pointer;">Cancelar</button>
-          <button type="submit" class="btn-admin" id="btnGuardar">Guardar y Publicar</button>
-        </div>
-      </form>
+<!-- Detalle y Reproductor -->
+<div class="modal" id="detailModal" onclick="closeDetailOnBackdrop(event)">
+  <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeDetail()">✕</button>
+    <div class="video-container" id="videoContainer">
+      <div class="video-loading" id="videoLoading" style="display:none;">
+        <div class="spinner"></div>
+        <span>Cargando reproductor...</span>
+      </div>
+    </div>
+    <h3 id="detailTitle"></h3>
+    <p id="detailMeta" style="color:var(--accent-light);font-size:.85rem;margin-bottom:8px"></p>
+    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px;line-height:1.4"></p>
+    <div class="form-btns" id="detailBtns"></div>
+  </div>
+</div>
+
+<!-- Acceso creador -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeLogin()">✕</button>
+    <h3>Modo Creador</h3>
+    <p class="hint">Ingresá la clave de acceso de administrador.</p>
+    <form onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label>Clave de Creador</label>
+        <input type="password" id="passInput" required autocomplete="off" placeholder="Clave...">
+      </div>
+      <div class="form-btns" style="justify-content:flex-end;">
+        <button type="button" class="btn-sec" onclick="closeLogin()">Cancelar</button>
+        <button type="submit" class="btn-pri">Entrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Formulario contenido -->
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <button class="btn-close-modal" onclick="closeAdmin()">✕</button>
+    <h3 id="formTitle">Subir contenido</h3>
+    <form onsubmit="saveData(event)">
+      <input type="hidden" id="editId">
+      <div class="form-group"><label>Tipo</label>
+        <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+      <div class="form-group"><label>Título</label><input type="text" id="title" required></div>
+      <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
+      <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
+      <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
+      
+      <div class="form-group">
+        <label>Portada (Seleccionar de Galería)</label>
+        <input type="file" id="coverFile" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>o Link de Portada (URL de Imagen)</label>
+        <input type="url" id="coverUrl" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label>Link del video (Google Drive directo, YouTube, MP4...)</label>
+        <input type="url" id="video" placeholder="https://..." required>
+      </div>
+      <div class="form-btns" style="justify-content:flex-end;">
+        <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
+        <button type="submit" class="btn-pri">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmar -->
+<div class="modal" id="dialogModal">
+  <div class="modal-content">
+    <button class="btn-close-modal" onclick="$('dialogModal').style.display='none'">✕</button>
+    <h3 id="dlgTitle"></h3>
+    <p id="dlgMsg" class="hint"></p>
+    <div class="form-btns" style="justify-content:flex-end;">
+      <button class="btn-sec" id="dlgCancel">Cancelar</button>
+      <button class="btn-pri" id="dlgOk">Eliminar</button>
     </div>
   </div>
+</div>
+<div id="toast"></div>
 
-  <!-- Reproductor -->
-  <div class="player-view" id="playerView">
-    <button class="btn-close" onclick="cerrarReproductor()">✕ Volver al Catálogo</button>
-    <div class="video-wrapper" id="videoContainer"></div>
-    <h2 id="playerTitle" style="margin-top:10px;"></h2>
-    <p id="playerSub" style="color:#a78bfa; margin-top:4px; font-size:0.9rem;"></p>
-    <div id="altBtnBox"></div>
-  </div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
+const LIST_KEY = 'naPlus_list';
+const DB_KEY = 'naPlus_db_v5';
 
-  <div id="syncStatus">Sincronizando con GitHub...</div>
+let isCreator = false, currentId = null, saved = [], customCoverData = '';
+try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
 
-  <script>
-    const GITHUB_REPO = "ignacio12adrian-ux/NaPlus";
-    const FILE_PATH = "index.html";
-
-    // CATALOGO GLOBAL BASE
-    let catalog = [
+let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
   {
-    "id": 1790609481929,
-    "tipo": "pelicula",
-    "titulo": "Rec",
-    "genero": "Terror",
-    "portada": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
-    "video": "https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920"
-  },
-  {
-    "id": 1,
-    "tipo": "pelicula",
-    "titulo": "[REC]",
-    "genero": "Terror",
-    "portada": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-    "video": "https://ok.ru/videoembed/237592963750"
+    id: 1,
+    type: 'movie',
+    title: 'Rec',
+    genre: 'Terror',
+    year: '2007',
+    desc: 'Película de prueba con reproductor nativo.',
+    cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+    video: 'https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920'
   }
 ];
 
-    let esCreador = false;
+const isSaved = id => saved.some(x => x == id);
 
-    function renderizar(filtro = '') {
-      const pGrid = document.getElementById('peliculasGrid');
-      const sGrid = document.getElementById('seriesGrid');
-      pGrid.innerHTML = ''; sGrid.innerHTML = '';
+let toastTimer;
+function toast(msg, ms = 3000) {
+  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', ms);
+}
 
-      const query = filtro.toLowerCase().trim();
+function confirmDialog(title, msg) {
+  return new Promise(resolve => {
+    $('dlgTitle').textContent = title; $('dlgMsg').textContent = msg;
+    $('dialogModal').style.display = 'flex';
+    const done = v => { $('dialogModal').style.display = 'none'; $('dlgOk').onclick =$('dlgCancel').onclick = null; resolve(v); };
+    $('dlgOk').onclick = () => done(true);$('dlgCancel').onclick = () => done(false);
+  });
+}
 
-      catalog.forEach((item, index) => {
-        if (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query)) {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.onclick = () => reproducir(index);
+function makeCard(item) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  const on = isSaved(item.id);
+  div.innerHTML = `
+    <button class="card-save${on ? ' on' : ''}" aria-label="Mi lista">${on ? '✓' : '＋'}</button>
+    <div class="card-admin-btns">
+      <button class="edit" aria-label="Editar">✏️</button>
+      <button class="del" aria-label="Eliminar">🗑️</button>
+    </div>
+    <img src="${esc(item.cover || NO_COVER)}" alt="Portada">
+    <div class="card-info">
+      <div class="card-title">${esc(item.title)}</div>
+      <div class="card-sub">${esc(item.genre || 'General')} • ${esc(item.year)}</div>
+    </div>`;
+  div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
+  div.onclick = () => showDetail(item.id);
+  div.querySelector('.card-save').onclick = e => { e.stopPropagation(); toggleSaved(item.id); };
+  div.querySelector('.edit').onclick = e => { e.stopPropagation(); editItem(item.id); };
+  div.querySelector('.del').onclick = e => { e.stopPropagation(); deleteItem(item.id); };
+  return div;
+}
 
-          card.innerHTML = `
-            <div class="card-actions">
-              <button onclick="event.stopPropagation(); editar(${index})">✏️</button>
-              <button onclick="event.stopPropagation(); eliminar(${index})">🗑️</button>
-            </div>
-            <img src="${item.portada}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
-            <div class="card-body">
-              <div class="card-title">${item.titulo}</div>
-              <div class="card-sub">${item.genero}</div>
-            </div>
-          `;
+function fillGrid(id, items, emptyMsg) {
+  const g = $(id); g.innerHTML = '';
+  items.forEach(i => g.appendChild(makeCard(i)));
+  if (!items.length && emptyMsg) g.innerHTML = `<p class="empty">${emptyMsg}</p>`;
+}
 
-          if (item.tipo === 'pelicula') pGrid.appendChild(card);
-          else sGrid.appendChild(card);
-        }
-      });
-    }
+function render() {
+  const q = norm($('search').value.trim());
+  const sorted = catalog.slice().sort((a, b) => b.id - a.id);
+  const savedItems = saved.map(id => catalog.find(x => x.id == id)).filter(Boolean);
+  $('listBtn').textContent = `🔖 Mi lista (${savedItems.length})`;
+  $('searchSec').style.display = q ? 'block' : 'none';
+  $('mainSecs').style.display = q ? 'none' : 'block';
+  
+  if (q) {
+    fillGrid('resultsGrid', sorted.filter(i => norm([i.title, i.genre, i.desc, i.year].join(' ')).includes(q)), 'No encontramos nada.');
+    return;
+  }
+  
+  $('recentSec').style.display = sorted.length ? 'block' : 'none';
+  fillGrid('recentGrid', sorted.slice(0, 10));
+  $('listSec').style.display = savedItems.length ? 'block' : 'none';
+  fillGrid('listGrid', savedItems);
+  fillGrid('moviesGrid', sorted.filter(i => i.type === 'movie'), 'No hay películas cargadas.');
+  fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), 'No hay series cargadas.');
+}
 
-    function filtrar() {
-      renderizar(document.getElementById('searchBar').value);
-    }
+function toggleSaved(id) {
+  const i = saved.findIndex(x => x == id);
+  if (i > -1) saved.splice(i, 1); else saved.push(id);
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(saved)); } catch (e) {}
+  render(); updateDetailSave();
+}
 
-    function reproducir(index) {
-      const item = catalog[index];
-      if (!item) return;
+function updateDetailSave() {
+  const b = $('detailSave');
+  if (b && currentId != null) b.textContent = isSaved(currentId) ? '✓ En mi lista' : '＋ Mi lista';
+}
 
-      document.getElementById('playerTitle').innerText = item.titulo;
-      document.getElementById('playerSub').innerText = item.genero;
+function goList() {
+  if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía.'); return; }
+  $('search').value = ''; render();$('listSec').scrollIntoView({ behavior: 'smooth' });
+}
 
-      const box = document.getElementById('videoContainer');
-      const altBox = document.getElementById('altBtnBox');
-      box.innerHTML = '';
-      altBox.innerHTML = '';
-      const url = item.video;
+function setCreator(on) {
+  isCreator = on;
+  document.body.classList.toggle('creator', on);
+  $('btnAdmin').textContent = on ? '+ Agregar' : 'Modo Creador';
+}
 
-      if (url.includes('ok.ru')) {
-        let embed = url;
-        if (!url.includes('videoembed')) {
-          const m = url.match(/\/video\/([0-9]+)/);
-          if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
-        }
-        box.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-        altBox.innerHTML = `<a href="${url}" target="_blank" class="btn-alt-link">↗ Si no carga, abrir directamente en OK.ru</a>`;
-      } 
-      else if (url.includes('drive.google.com')) {
-        let id = "";
-        const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-        if (m && m[1]) id = m[1];
-        const embed = id ? `https://drive.google.com/file/d/${id}/preview` : url;
-        box.innerHTML = `<iframe src="${embed}" allow="autoplay" allowfullscreen></iframe>`;
-      } 
-      else if (url.includes('t.me') || url.includes('telegram')) {
-        altBox.innerHTML = `<a href="${url}" target="_blank" class="btn-alt-link">✈️ Abrir película en Telegram</a>`;
-      }
-      else {
-        box.innerHTML = `<video controls autoplay style="width:100%; height:100%;"><source src="${url}" type="video/mp4"></video>`;
-      }
+function toggleCreator() {
+  if (isCreator) { openAdmin(); return; }
+  openLogin();
+}
 
-      document.getElementById('playerView').classList.add('active');
-    }
+function openLogin() {
+  $('passInput').value = '';$('loginModal').style.display = 'flex';
+}
 
-    function cerrarReproductor() {
-      document.getElementById('videoContainer').innerHTML = '';
-      document.getElementById('playerView').classList.remove('active');
-    }
+function closeLogin() { $('loginModal').style.display = 'none'; }
 
-    function abrirCreador() {
-      if (!esCreador) {
-        let pass = prompt("Clave de Creador (9009) o pegá tu Token de GitHub directamente:");
-        if (!pass) return;
-        pass = pass.trim();
+function doLogin(e) {
+  e.preventDefault();
+  const pass = $('passInput').value.trim();
+  if (pass === "9009") {
+    closeLogin();
+    setCreator(true);
+    toast('Modo creador activado');
+    render();
+    openAdmin();
+  } else {
+    toast('Clave incorrecta');
+  }
+}
 
-        if (pass === "9009" || pass.startsWith("ghp_")) {
-          if (pass.startsWith("ghp_")) {
-            localStorage.setItem('naplus_token', pass);
-          }
-          esCreador = true;
-          document.body.classList.add('admin-active');
-          document.getElementById('btnAdmin').innerText = "+ Agregar";
-        } else {
-          alert("Clave o Token incorrecto.");
-          return;
-        }
-      }
-      document.getElementById('editIndex').value = '';
-      document.getElementById('tituloInput').value = '';
-      document.getElementById('generoInput').value = '';
-      document.getElementById('portadaInput').value = '';
-      document.getElementById('videoInput').value = '';
-      document.getElementById('formModal').classList.add('active');
-    }
-
-    function cerrarModal() {
-      document.getElementById('formModal').classList.remove('active');
-    }
-
-    function editar(index) {
-      const item = catalog[index];
-      document.getElementById('editIndex').value = index;
-      document.getElementById('tipoInput').value = item.tipo;
-      document.getElementById('tituloInput').value = item.titulo;
-      document.getElementById('generoInput').value = item.genero;
-      document.getElementById('portadaInput').value = item.portada;
-      document.getElementById('videoInput').value = item.video;
-      document.getElementById('formModal').classList.add('active');
-    }
-
-    async function eliminar(index) {
-      if (confirm("¿Eliminar este título para TODOS los usuarios?")) {
-        catalog.splice(index, 1);
-        renderizar();
-        await autoSincronizarGitHub();
-      }
-    }
-
-    async function guardarContenido(e) {
-      e.preventDefault();
-      const idx = document.getElementById('editIndex').value;
-      const nuevo = {
-        id: Date.now(),
-        tipo: document.getElementById('tipoInput').value,
-        titulo: document.getElementById('tituloInput').value.trim(),
-        genero: document.getElementById('generoInput').value.trim(),
-        portada: document.getElementById('portadaInput').value.trim(),
-        video: document.getElementById('videoInput').value.trim()
+$('coverFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 500;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        customCoverData = canvas.toDataURL('image/jpeg', 0.8);
       };
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
 
-      if (idx !== '') catalog[parseInt(idx)] = nuevo;
-      else catalog.unshift(nuevo);
+function openAdmin(item = null) {
+  customCoverData = '';
+  $('editId').value = item ? item.id : '';
+  $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
+  $('type').value = item ? item.type : 'movie';
+  $('title').value = item ? item.title : '';
+  $('genre').value = item ? item.genre : '';
+  $('year').value = item ? item.year : '2026';
+  $('desc').value = item ? item.desc : '';
+  $('coverUrl').value = item ? (item.cover.startsWith('data:') ? '' : item.cover) : '';
+  $('coverFile').value = '';$('video').value = item ? item.video : '';
+  $('adminModal').style.display = 'flex';
+}
 
-      renderizar();
-      cerrarModal();
-      await autoSincronizarGitHub();
+function closeAdmin() { $('adminModal').style.display = 'none'; }
+
+function saveData(e) {
+  e.preventDefault();
+  const id = $('editId').value;
+  const coverResult = customCoverData || $('coverUrl').value.trim() || NO_COVER;
+
+  const newItem = {
+    id: id ? parseInt(id) : Date.now(),
+    type: $('type').value,
+    title: $('title').value.trim(),
+    genre: $('genre').value.trim() || 'General',
+    year: $('year').value,
+    desc: $('desc').value.trim(),
+    cover: coverResult,
+    video: $('video').value.trim()
+  };
+
+  if (id) {
+    const idx = catalog.findIndex(x => x.id == id);
+    if (idx !== -1) catalog[idx] = newItem;
+  } else {
+    catalog.unshift(newItem);
+  }
+
+  try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
+  render();
+  closeAdmin();
+  toast('Contenido guardado correctamente');
+}
+
+function editItem(id) {
+  const item = catalog.find(x => x.id == id);
+  if (item) openAdmin(item);
+}
+
+async function deleteItem(id) {
+  const item = catalog.find(x => x.id == id);
+  if (!item) return;
+  if (await confirmDialog('Eliminar contenido', `¿Querés eliminar "${item.title}"?`)) {
+    catalog = catalog.filter(x => x.id != id);
+    try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
+    render();
+    toast('Eliminado correctamente');
+  }
+}
+
+function showDetail(id) {
+  currentId = id;
+  const item = catalog.find(x => x.id == id);
+  if (!item) return;
+
+  $('detailTitle').textContent = item.title;
+  $('detailMeta').textContent = `${item.genre} • ${item.year}`;
+  $('detailDesc').textContent = item.desc || 'Sin descripción.';
+
+  const container = $('videoContainer');
+  container.innerHTML = `
+    <div class="video-loading" id="videoLoading">
+      <div class="spinner"></div>
+      <span>Cargando streaming...</span>
+    </div>`;
+
+  const vUrl = item.video || '';
+
+  if (vUrl) {
+    if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
+      let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+      container.innerHTML += `<iframe src="${embed}" allowfullscreen onload="$('videoLoading').style.display='none'"></iframe>`;
+    } else {
+      const vid = document.createElement('video');
+      vid.src = vUrl;
+      vid.controls = true;
+      vid.autoplay = false;
+      vid.poster = item.cover || NO_COVER;
+      vid.onloadeddata = () => { $('videoLoading').style.display = 'none'; };
+      vid.onerror = () => { 
+        $('videoLoading').innerHTML = '<span style="color:#f87171;">Error al cargar el video de Google Drive. Verificá el enlace.</span>'; 
+      };
+      container.appendChild(vid);
     }
-
-    async function autoSincronizarGitHub() {
-      let token = localStorage.getItem('naplus_token');
-      if (!token || !token.startsWith("ghp_")) {
-        token = prompt("Para publicar automáticamente a TODOS los usuarios, ingresá tu Personal Access Token de GitHub (ghp_...):");
-        if (token && token.trim().startsWith("ghp_")) {
-          token = token.trim();
-          localStorage.setItem('naplus_token', token);
-        } else {
-          alert("Sin el token de GitHub, los cambios solo se guardaron en tu pantalla actual.");
-          return;
-        }
-      }
-
-      const statusEl = document.getElementById('syncStatus');
-      statusEl.innerText = "⏳ Sincronizando con GitHub...";
-      statusEl.style.display = "block";
-
-      try {
-        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
-          headers: { 'Authorization': `token ${token}` }
-        });
-
-        if (!getRes.ok) {
-          statusEl.innerText = "❌ Error al conectar con GitHub";
-          setTimeout(() => statusEl.style.display = "none", 3000);
-          return;
-        }
-
-        const getData = await getRes.json();
-        const sha = getData.sha;
-
-        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
-
-        const catalogJson = JSON.stringify(catalog, null, 2);
-        fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
-
-        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
-
-        const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Actualización automática catálogo NaPlus',
-            content: updatedBase64,
-            sha: sha
-          })
-        });
-
-        if (putRes.ok) {
-          statusEl.innerText = "✅ ¡Publicado con éxito para TODOS los usuarios!";
-        } else {
-          statusEl.innerText = "❌ Token inválido o sin permisos 'repo'";
-        }
-      } catch (err) {
-        statusEl.innerText = "❌ Error de conexión al sincronizar";
-      }
-
-      setTimeout(() => { statusEl.style.display = "none"; }, 4000);
-    }
-
-    renderizar();
-  </script>
-</body>
-</html>
+  } else {
+    container.inne
