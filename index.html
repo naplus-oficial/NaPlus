@@ -208,8 +208,8 @@
         <input type="url" id="portadaInput" required placeholder="https://...">
       </div>
       <div class="form-group">
-        <label>Enlace del Contenido (Google Drive, Telegram, MP4, Web...)</label>
-        <input type="url" id="videoInput" required placeholder="https://t.me/... o https://drive.google.com/...">
+        <label>Enlace del Contenido (OK.ru, Google Drive, MP4, Telegram...)</label>
+        <input type="url" id="videoInput" required placeholder="https://ok.ru/videoembed/... o https://drive.google.com/...">
       </div>
       <button type="submit" class="btn-main" style="width:100%; margin-top:10px;">Publicar Cambios</button>
     </form>
@@ -314,7 +314,6 @@
       const query = filtro.toLowerCase().trim();
 
       catalog.forEach((item, index) => {
-        // Lógica para evaluar múltiples géneros
         const coincideGenero = (generoSeleccionado === 'Todos' || item.genero.toLowerCase().includes(generoSeleccionado.toLowerCase()));
         const coincideBusqueda = (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query));
 
@@ -373,12 +372,23 @@
       box.innerHTML = '';
       const url = item.video;
 
-      if (url.includes('t.me') || url.includes('telegram')) {
+      // Soporte Nativo para OK.ru (Odnoklassniki)
+      if (url.includes('ok.ru')) {
+        let embedUrl = url;
+        if (!url.includes('videoembed')) {
+          const match = url.match(/\/video\/([0-9]+)/);
+          if (match && match[1]) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
+        }
+        box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+      }
+      // Redirección para Telegram
+      else if (url.includes('t.me') || url.includes('telegram')) {
         box.innerHTML = `
           <p style="margin-bottom:15px; color:var(--muted);">Este contenido está alojado en Telegram.</p>
           <a href="${url}" target="_blank" class="btn-redirect">✈️ Abrir y Ver en Telegram</a>
         `;
       } 
+      // Soporte Nativo Google Drive
       else if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -387,6 +397,7 @@
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
       } 
+      // Reproductor Directo MP4
       else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
@@ -502,16 +513,3 @@
             sha: getData.sha
           })
         });
-
-        if (putRes.ok) alert("¡Catálogo actualizado globalmente!");
-        else alert("Error al subir cambios a GitHub.");
-
-      } catch (err) {
-        alert("Error de conexión al sincronizar.");
-      }
-    }
-
-    renderizar();
-  </script>
-</body>
-</html>
