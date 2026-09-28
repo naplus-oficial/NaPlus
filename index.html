@@ -68,22 +68,14 @@
   .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  /* Reproductor Inmersivo Optimizado */
+  /* Reproductor Inmersivo OK.ru */
   .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
   .player-overlay.active { display: flex; }
   .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
   .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
   
   .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
-  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; max-height: 100vh; }
-  
-  /* Botón flotante exclusivo de Pantalla Completa */
-  .btn-fullscreen-float {
-    position: absolute; bottom: 15px; right: 15px; background: rgba(139, 92, 246, 0.85);
-    color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.8rem;
-    font-weight: bold; cursor: pointer; z-index: 20; backdrop-filter: blur(5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  }
+  .video-container iframe { width: 100%; height: 100%; border: none; }
 
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
@@ -129,8 +121,8 @@
     <div class="settings-box">
       <h3>Seguridad y Modo Creador</h3>
       <div class="field" style="margin-bottom: 0;">
-        <label>Clave de Administrador (9009) o Token GitHub</label>
-        <input type="password" placeholder="Ingresar clave..." oninput="app.verifyAdmin(this.value)">
+        <label>Credencial de Acceso</label>
+        <input type="password" placeholder="Ingresar credencial..." oninput="app.verifyAdmin(this.value)">
       </div>
     </div>
   </div>
@@ -142,16 +134,14 @@
     <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
   </nav>
 
-  <!-- Reproductor Inmersivo Optimizado -->
+  <!-- Reproductor OK.ru -->
   <div class="player-overlay" id="playerModal">
     <div class="player-header">
       <h3 id="playerTitleHeader" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
       <button class="close-player" onclick="app.closePlayer()">✕</button>
     </div>
     
-    <div class="video-container" id="videoContainer">
-      <!-- Contenido multimedia dinámico -->
-    </div>
+    <div class="video-container" id="videoContainer"></div>
 
     <div class="player-details">
       <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
@@ -175,7 +165,7 @@
         <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
         <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
         <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
-        <div class="field"><label>Link de Video (OK.ru, Google Drive, MP4...)</label><input type="url" id="fVideo" required placeholder="https://..."></div>
+        <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="fVideo" required placeholder="https://ok.ru/video/..."></div>
         <button type="submit" class="btn-action" style="margin-top: 10px;">Guardar y Sincronizar</button>
       </form>
     </div>
@@ -189,41 +179,12 @@ class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v7';
-    this.listKey = 'naplus_pro_list_v2';
+    this.dbKey = 'naplus_pro_db_v8';
+    this.listKey = 'naplus_pro_list_v3';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-  {
-    "id": 1790615781889,
-    "type": "movie",
-    "title": "Rec 2",
-    "genre": "Terror",
-    "year": "2026",
-    "desc": "Película de terror en drive",
-    "cover": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
-    "video": "https://ok.ru/video/7118923106984"
-  },
-  {
-    "id": 1790615505095,
-    "type": "movie",
-    "title": "Rec",
-    "genre": "Terror",
-    "year": "2026",
-    "desc": "Película de terror en drive",
-    "cover": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
-    "video": "https://drive.google.com/file/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2/view?usp=drivesdk"
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de prueba en la Neuro Página.",
-    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-    "video": "https://ok.ru/videoembed/237592963750"
-  }
-];
+      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
+    ];
     
     this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
     this.currentId = null;
@@ -299,58 +260,21 @@ class NaPlusProEngine {
     this.updateListBtnState();
 
     const container = document.getElementById('videoContainer');
-    container.innerHTML = `<div style="color:var(--accent); font-size:0.85rem;">Cargando video...</div>`;
+    container.innerHTML = `<div style="color:var(--accent); font-size:0.85rem;">Cargando video de OK.ru...</div>`;
 
     const url = item.video || '';
     setTimeout(() => {
+      let embed = url;
       if (url.includes('ok.ru')) {
-        let embed = url;
         if (!url.includes('videoembed')) {
           const m = url.match(/\/video\/([0-9]+)/);
           if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
         }
-        container.innerHTML = `
-          <iframe id="mediaPlayerFrame" src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
-        `;
-      } else if (url.includes('drive.google.com')) {
-        let idVal = "";
-        const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-        if (m && m[1]) idVal = m[1];
-        const embed = idVal ? `https://drive.google.com/file/d/${idVal}/preview` : url;
-        container.innerHTML = `
-          <iframe id="mediaPlayerFrame" src="${embed}" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
-        `;
-      } else if (url.includes('t.me') || url.includes('telegram')) {
-        container.innerHTML = `<a href="${url}" target="_blank" style="background:#0088cc; color:#fff; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold;">✈️ Abrir en Telegram</a>`;
-      } else {
-        container.innerHTML = `
-          <video id="mediaPlayerVideo" src="${url}" controls autoplay playsinline webkit-playsinline></video>
-          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
-        `;
       }
+      container.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`;
     }, 200);
 
     document.getElementById('playerModal').classList.add('active');
-  }
-
-  triggerFullscreen() {
-    const videoEl = document.getElementById('mediaPlayerVideo');
-    const iframeEl = document.getElementById('mediaPlayerFrame');
-    const target = videoEl || iframeEl;
-
-    if (!target) return;
-
-    if (target.requestFullscreen) {
-      target.requestFullscreen();
-    } else if (target.webkitRequestFullscreen) { /* Safari / iOS */
-      target.webkitRequestFullscreen();
-    } else if (target.msRequestFullscreen) { /* IE/Edge */
-      target.msRequestFullscreen();
-    } else if (target.webkitEnterFullscreen) { /* iPhone nativo */
-      target.webkitEnterFullscreen();
-    }
   }
 
   closePlayer() {
@@ -379,8 +303,10 @@ class NaPlusProEngine {
   }
 
   verifyAdmin(val) {
-    if (val.trim() === '9009' || val.trim().startsWith('ghp_')) {
-      if (val.trim().startsWith('ghp_')) localStorage.setItem('naplus_token', val.trim());
+    // Clave oculta cifrada lógicamente
+    const cleanVal = val.trim();
+    if (cleanVal === String(90*100+9) || cleanVal.startsWith('ghp_')) {
+      if (cleanVal.startsWith('ghp_')) localStorage.setItem('naplus_token', cleanVal);
       document.getElementById('adminPanel').style.display = 'block';
       this.toast('¡Modo Creador Desbloqueado!');
     }
@@ -391,6 +317,14 @@ class NaPlusProEngine {
 
   async saveItem(e) {
     e.preventDefault();
+    const vUrl = document.getElementById('fVideo').value.trim();
+    
+    // Validar exclusivamente enlaces de OK.ru
+    if (!vUrl.includes('ok.ru')) {
+      alert("Por favor, ingresá únicamente un enlace válido de OK.ru");
+      return;
+    }
+
     const newItem = {
       id: Date.now(),
       type: document.getElementById('fType').value,
@@ -399,7 +333,7 @@ class NaPlusProEngine {
       year: document.getElementById('fYear').value,
       desc: document.getElementById('fDesc').value.trim(),
       cover: document.getElementById('fCover').value.trim(),
-      video: document.getElementById('fVideo').value.trim()
+      video: vUrl
     };
     this.catalog.unshift(newItem);
     localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
