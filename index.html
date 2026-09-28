@@ -665,4 +665,51 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-    
+            message: 'Actualización de catálogo NaPlus',
+            content: updatedBase64,
+            sha: sha
+          })
+        });
+
+        if (putRes.ok) {
+          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo en sus celulares.");
+        } else {
+          alert("Hubo un problema con el Token de GitHub. Verificalo de nuevo.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error de conexión al guardar públicamente.");
+      } finally {
+        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
+      }
+    }
+
+    // Abrir reproductor
+    function openDetail(id) {
+      const item = catalog.find(x => x.id == id);
+      if (!item) return;
+
+      document.getElementById('detailTitle').innerText = item.title;
+      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
+
+      const vBox = document.getElementById('videoBox');
+      const vUrl = item.video || '';
+
+      if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
+        vBox.innerHTML = `<a href="${vUrl}" target="_blank" class="btn-telegram">✈️ Abrir y Ver en Telegram</a>`;
+      } else if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
+        let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+        vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
+      } else {
+        vBox.innerHTML = `<video src="${vUrl}" controls autoplay poster="${item.cover}"></video>`;
+      }
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    // Inicializar catálogo al arrancar
+    renderCatalog();
+  </script>
+</body>
+</html>
