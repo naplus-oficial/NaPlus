@@ -42,7 +42,6 @@ body.creator .card-admin-btns{display:flex}
 .modal-content{background:var(--card-bg);padding:20px;border-radius:12px;width:100%;max-width:450px;border:1px solid var(--accent);margin:auto;position:relative}
 .modal-content h3{margin-bottom:8px;padding-right:25px}
 
-/* Botón X de cierre */
 .btn-close-modal{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.1);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
 .btn-close-modal:active{background:var(--accent)}
 
@@ -58,7 +57,7 @@ body.creator .card-admin-btns{display:flex}
 .video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:12px;border-radius:8px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .video-box video,.video-box iframe{width:100%;height:100%;border:none}
 .video-box img{width:100%;height:100%;object-fit:cover}
-.btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;font-size:0.95rem;box-shadow:0 4px 15px rgba(0,136,204,0.4)}
+.btn-telegram{background:#0088cc;color:#fff;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:10px;font-size:1rem;box-shadow:0 4px 15px rgba(0,136,204,0.5)}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
 </style>
 </head>
@@ -139,17 +138,17 @@ body.creator .card-admin-btns{display:flex}
       <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
       
       <div class="form-group">
-        <label>Seleccionar Portada de la Galería</label>
+        <label>Portada (Seleccionar de Galería)</label>
         <input type="file" id="coverFile" accept="image/*">
       </div>
       <div class="form-group">
-        <label>o Link de imagen (URL opcional)</label>
+        <label>o Link de Portada (URL de Imagen)</label>
         <input type="url" id="coverUrl" placeholder="https://...">
       </div>
 
       <div class="form-group">
-        <label>Link del video o de origen (Telegram, YouTube, MP4...)</label>
-        <input type="url" id="video" placeholder="https://t.me/...">
+        <label>Link del video (Telegram, YouTube, MP4 directos...)</label>
+        <input type="url" id="video" placeholder="https://t.me/..." required>
       </div>
       <div class="form-btns" style="justify-content:flex-end;">
         <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
@@ -178,7 +177,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
 const LIST_KEY = 'naPlus_list';
-const DB_KEY = 'naPlus_db_v3';
+const DB_KEY = 'naPlus_db_v4';
 
 let isCreator = false, currentId = null, saved = [], customCoverData = '';
 try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
@@ -192,7 +191,7 @@ let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
     year: '2007',
     desc: 'Sin descripción.',
     cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
-    video: ''
+    video: 'https://t.me/'
   }
 ];
 
@@ -311,12 +310,24 @@ function doLogin(e) {
   }
 }
 
+// Compresión de imagen para guardado ligero en Base64
 $('coverFile').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = function(evt) {
-      customCoverData = evt.target.result;
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 500;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        customCoverData = canvas.toDataURL('image/jpeg', 0.8);
+      };
+      img.src = evt.target.result;
     };
     reader.readAsDataURL(file);
   }
@@ -331,7 +342,7 @@ function openAdmin(item = null) {
   $('genre').value = item ? item.genre : '';
   $('year').value = item ? item.year : '2026';
   $('desc').value = item ? item.desc : '';
-  $('coverUrl').value = item ? item.cover : '';
+  $('coverUrl').value = item ? (item.cover.startsWith('data:') ? '' : item.cover) : '';
   $('coverFile').value = '';$('video').value = item ? item.video : '';
   $('adminModal').style.display = 'flex';
 }
@@ -341,7 +352,7 @@ function closeAdmin() { $('adminModal').style.display = 'none'; }
 function saveData(e) {
   e.preventDefault();
   const id = $('editId').value;
-  const coverResult = customCoverData || $('coverUrl').value.trim();
+  const coverResult = customCoverData || $('coverUrl').value.trim() || NO_COVER;
 
   const newItem = {
     id: id ? parseInt(id) : Date.now(),
@@ -400,7 +411,7 @@ function showDetail(id) {
   if (vUrl) {
     if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
       vBox.innerHTML = `
-        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.2; position:absolute; width:100%; height:100%; object-fit:cover;">
+        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.25; position:absolute; width:100%; height:100%; object-fit:cover;">
         <a href="${esc(vUrl)}" target="_blank" class="btn-telegram" style="z-index:2;">
           ✈️ Abrir y Ver en Telegram
         </a>`;
