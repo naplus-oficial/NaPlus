@@ -13,93 +13,384 @@
     --text: #f3f4f6;
     --muted: #9ca3af;
     --border: rgba(255, 255, 255, 0.1);
+    --danger: #ef4444;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-  /* Barra Superior Limpia */
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    padding-bottom: 90px;
+    line-height: 1.4;
+  }
+
+  /* Permitir selección de texto donde tiene sentido */
+  p, h1, h2, h3, .card-title, .card-sub, #pDesc, #pTitle, #pMeta {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* Barra Superior */
   header {
-    background: var(--surface); padding: 15px; display: flex;
-    justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+    background: var(--surface);
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
-  .logo { font-size: 1.4rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; }
 
-  .nav-tabs { display: flex; gap: 8px; }
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+  }
+
   .nav-tab {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
-  .nav-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-  /* Contenedores de Vistas */
-  .container { padding: 15px; }
-  .section { display: none; }
-  .section.active { display: block; }
+  .nav-tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
 
-  /* Buscador táctil rápido */
+  .nav-tab:active {
+    transform: scale(0.96);
+  }
+
+  /* Contenedores */
+  .container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section {
+    display: none;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  /* Buscador */
   .search-box {
-    width: 100%; padding: 14px; background: var(--surface);
-    border: 1px solid var(--border); color: #fff; border-radius: 10px;
-    font-size: 1rem; outline: none; margin-bottom: 20px;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
   }
-  .search-box:focus { border-color: var(--accent); }
 
-  .title { font-size: 1.1rem; font-weight: bold; margin: 20px 0 10px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 8px; }
-  
-  /* Grilla de Películas */
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .search-box:focus {
+    border-color: var(--accent);
+  }
+
+  .title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 24px 0 12px;
+    color: var(--text);
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+  }
+
+  /* Grilla responsive */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  /* Tarjetas */
   .card {
-    background: var(--surface); border-radius: 8px; overflow: hidden;
-    border: 1px solid var(--border); position: relative; cursor: pointer;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
   }
-  .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
-  .card-body { padding: 8px; }
-  .card-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card-sub { font-size: 0.65rem; color: var(--muted); }
 
-  /* Botones de Administrador Directos sobre la tarjeta */
+  .card:active {
+    transform: scale(0.97);
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+    background: #1a1c26;
+  }
+
+  .card-body {
+    padding: 9px 10px 11px;
+  }
+
+  .card-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+
+  .card-sub {
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* Botones Admin */
   .card-admin {
-    display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10;
+    display: none;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    gap: 5px;
+    z-index: 10;
   }
-  body.admin-on .card-admin { display: flex; }
+
+  body.admin-on .card-admin {
+    display: flex;
+  }
+
   .card-admin button {
-    background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff;
-    width: 30px; height: 30px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid var(--primary);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
   }
 
-  /* Formulario Panel Creador / Ajustes */
-  .panel-box { background: var(--surface); border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid var(--border); }
-  .panel-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--accent); }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; }
-  .field input, .field select, .field textarea {
-    width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border);
-    color: #fff; border-radius: 8px; font-size: 0.95rem; outline: none;
+  .card-admin button:active {
+    background: var(--primary);
   }
 
-  .btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
-  .btn:active { opacity: 0.8; }
+  .card-admin button.delete-btn {
+    border-color: var(--danger);
+  }
 
-  /* Reproductor Pantalla Completa */
+  .card-admin button.delete-btn:active {
+    background: var(--danger);
+  }
+
+  /* Panel */
+  .panel-box {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+
+  .panel-box h3 {
+    font-size: 1rem;
+    margin-bottom: 14px;
+    color: var(--accent);
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .btn:active {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+
+  /* Reproductor */
   .player-modal {
-    display: none; position: fixed; inset: 0; background: #000; z-index: 99999; flex-direction: column;
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+    flex-direction: column;
   }
-  .player-modal.active { display: flex; }
-  .player-top { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); }
-  .btn-close { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
-  
-  .player-screen { flex: 1; display: flex; align-items: center; justify-content: center; }
-  .player-screen iframe { width: 100%; height: 100%; border: none; }
 
-  .player-info { padding: 20px; background: var(--surface); max-height: 40vh; overflow-y: auto; }
+  .player-modal.active {
+    display: flex;
+  }
 
+  .player-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+
+  .player-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+
+  .player-screen iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .player-info {
+    padding: 18px 16px 24px;
+    background: var(--surface);
+    max-height: 42vh;
+    overflow-y: auto;
+  }
+
+  /* Modal Editor */
+  #editorModal {
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: flex-end;
+  }
+
+  #editorModal .editor-sheet {
+    background: var(--surface);
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 18px 30px;
+    overflow-y: auto;
+  }
+
+  /* Toast */
   #toast {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--accent); color: #000; padding: 10px 20px; border-radius: 20px;
-    font-size: 0.85rem; font-weight: bold; z-index: 999999; display: none; text-align: center;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #000;
+    padding: 11px 22px;
+    border-radius: 24px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    z-index: 999999;
+    display: none;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .empty-msg {
+    color: var(--muted);
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.95rem;
   }
 </style>
 </head>
@@ -115,25 +406,25 @@
   </header>
 
   <div class="container">
-    <!-- PESTAÑA INICIO -->
+    <!-- INICIO -->
     <div id="tab-home" class="section active">
       <input type="search" class="search-box" id="searchInput" placeholder="🔍 Buscar películas o series..." oninput="app.render()">
       
       <div class="title">Películas</div>
       <div class="grid" id="movieGrid"></div>
 
-      <div class="title" style="margin-top: 30px;">Series</div>
+      <div class="title" style="margin-top: 28px;">Series</div>
       <div class="grid" id="seriesGrid"></div>
     </div>
 
-    <!-- PESTAÑA MI LISTA -->
+    <!-- MI LISTA -->
     <div id="tab-list" class="section">
       <div class="title">Mi Lista Guardada</div>
       <div class="grid" id="listGrid"></div>
-      <p id="emptyListMsg" style="color:var(--muted); text-align:center; margin-top:30px; display:none;">No guardaste nada todavía.</p>
+      <p id="emptyListMsg" class="empty-msg" style="display:none;">No guardaste nada todavía.</p>
     </div>
 
-    <!-- PESTAÑA AJUSTES / ADMIN -->
+    <!-- AJUSTES -->
     <div id="tab-settings" class="section">
       <div class="panel-box" id="creatorCard" style="display:none;">
         <h3>Panel de Creador</h3>
@@ -144,7 +435,7 @@
         <h3>Modo Administrador</h3>
         <div class="field">
           <label>Clave (9009) o Token de GitHub (ghp_...)</label>
-          <input type="password" placeholder="Ingresar credencial..." oninput="app.auth(this.value)">
+          <input type="password" id="authInput" placeholder="Ingresar credencial..." oninput="app.auth(this.value)">
         </div>
       </div>
     </div>
@@ -153,35 +444,59 @@
   <!-- REPRODUCTOR -->
   <div class="player-modal" id="playerModal">
     <div class="player-top">
-      <h3 id="pTitleTop" style="font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80%;"></h3>
+      <h3 id="pTitleTop" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:82%; margin:0;"></h3>
       <button class="btn-close" onclick="app.closePlayer()">✕</button>
     </div>
     <div class="player-screen" id="pScreen"></div>
     <div class="player-info">
-      <h2 id="pTitle" style="font-size:1.2rem; margin-bottom:5px;"></h2>
-      <p id="pMeta" style="color:var(--accent); font-size:0.85rem; margin-bottom:10px;"></p>
-      <p id="pDesc" style="color:var(--muted); font-size:0.9rem; line-height:1.4;"></p>
-      <button class="btn" id="listBtn" style="margin-top:15px;" onclick="app.toggleMyList()">+ Agregar a Mi Lista</button>
+      <h2 id="pTitle" style="font-size:1.25rem; margin-bottom:6px;"></h2>
+      <p id="pMeta" style="color:var(--accent); font-size:0.88rem; margin-bottom:12px;"></p>
+      <p id="pDesc" style="color:var(--muted); font-size:0.92rem; line-height:1.5;"></p>
+      <button class="btn" id="listBtn" style="margin-top:18px;" onclick="app.toggleMyList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
-  <!-- MODAL EDITAR / SUBIR -->
-  <div class="player-modal" id="editorModal" style="background:rgba(0,0,0,0.85); justify-content:flex-end;">
-    <div style="background:var(--surface); width:100%; max-height:90vh; border-radius:20px 20px 0 0; padding:20px; overflow-y:auto;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 id="editorHeading" style="color:var(--accent);">Subir Contenido</h3>
+  <!-- EDITOR -->
+  <div class="player-modal" id="editorModal">
+    <div class="editor-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h3 id="editorHeading" style="color:var(--accent); margin:0;">Subir Contenido</h3>
         <button class="btn-close" onclick="app.closeEditor()">✕</button>
       </div>
       <form onsubmit="app.saveContent(event)">
         <input type="hidden" id="eId">
-        <div class="field"><label>Tipo</label><select id="eType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
-        <div class="field"><label>Título</label><input type="text" id="eTitle" required></div>
-        <div class="field"><label>Género</label><input type="text" id="eGenre" required placeholder="Terror, Acción..."></div>
-        <div class="field"><label>Año</label><input type="number" id="eYear" required value="2026"></div>
-        <div class="field"><label>Sinopsis</label><textarea id="eDesc" rows="3"></textarea></div>
-        <div class="field"><label>URL de Portada</label><input type="url" id="eCover" required placeholder="https://..."></div>
-        <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="eVideo" required placeholder="https://ok.ru/video/..."></div>
-        <button type="submit" class="btn" style="margin-top:10px;">Guardar y Sincronizar</button>
+        <div class="field">
+          <label>Tipo</label>
+          <select id="eType">
+            <option value="movie">Película</option>
+            <option value="series">Serie</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Título</label>
+          <input type="text" id="eTitle" required>
+        </div>
+        <div class="field">
+          <label>Género</label>
+          <input type="text" id="eGenre" required placeholder="Terror, Acción, Drama...">
+        </div>
+        <div class="field">
+          <label>Año</label>
+          <input type="number" id="eYear" required value="2026">
+        </div>
+        <div class="field">
+          <label>Sinopsis</label>
+          <textarea id="eDesc" rows="3" placeholder="Breve descripción..."></textarea>
+        </div>
+        <div class="field">
+          <label>URL de Portada</label>
+          <input type="url" id="eCover" required placeholder="https://...">
+        </div>
+        <div class="field">
+          <label>Link de Video (OK.ru)</label>
+          <input type="url" id="eVideo" required placeholder="https://ok.ru/video/...">
+        </div>
+        <button type="submit" class="btn" style="margin-top:8px;">Guardar y Sincronizar</button>
       </form>
     </div>
   </div>
@@ -216,16 +531,17 @@ const b64enc = s => {
   for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
   return btoa(bin);
 };
+
 const storage = {
-  get(k) { try { return localStorage.getItem(k); } catch(e){return null;} },
+  get(k) { try { return localStorage.getItem(k); } catch(e){ return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch(e){} },
   del(k) { try { localStorage.removeItem(k); } catch(e){} }
 };
 
 function parseOk(url) {
   let u;
-  try { u = new URL(url); } catch(e){return null;}
-  if(u.hostname.replace(/^(www\.|m\.)/, '') !== 'ok.ru') return null;
+  try { u = new URL(url); } catch(e){ return null; }
+  if (u.hostname.replace(/^(www\.|m\.)/, '') !== 'ok.ru') return null;
   const m = u.pathname.match(/\/(?:video|videoembed)\/(\d+)/);
   return m ? 'https://ok.ru/videoembed/' + m[1] : null;
 }
@@ -236,7 +552,9 @@ class NaPlusApp {
     this.file = "index.html";
     this.catalog = DEFAULT_CATALOG.slice();
     this.myList = [];
-    try { this.myList = JSON.parse(storage.get('naplus_favs_v2')) || []; } catch(e){}
+    try {
+      this.myList = JSON.parse(storage.get('naplus_favs_v2')) || [];
+    } catch(e) {}
     this.currentId = null;
     this.isAdmin = false;
   }
@@ -245,7 +563,8 @@ class NaPlusApp {
     const t = $('toast');
     t.textContent = msg;
     t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 3000);
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => t.style.display = 'none', 2800);
   }
 
   switchTab(tabName, btn) {
@@ -253,24 +572,24 @@ class NaPlusApp {
     document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
     $('tab-' + tabName).classList.add('active');
     btn.classList.add('active');
-    window.scrollTo(0,0);
-    if(tabName === 'home') this.render();
-    if(tabName === 'list') this.renderList();
+    window.scrollTo(0, 0);
+    if (tabName === 'home') this.render();
+    if (tabName === 'list') this.renderList();
   }
 
   createCard(item) {
     const div = document.createElement('div');
     div.className = 'card';
     const id = Number(item.id);
-    
+
     div.onclick = () => this.openPlayer(id);
 
     div.innerHTML = `
       <div class="card-admin">
-        <button onclick="event.stopPropagation(); app.openEditor(${id})">✏️</button>
-        <button onclick="event.stopPropagation(); app.deleteItem(${id})">🗑️</button>
+        <button title="Editar" onclick="event.stopPropagation(); app.openEditor(${id})">✏️</button>
+        <button class="delete-btn" title="Eliminar" onclick="event.stopPropagation(); app.deleteItem(${id})">🗑️</button>
       </div>
-      <img src="${esc(item.cover)}" alt="Poster" loading="lazy">
+      <img src="\( {esc(item.cover)}" alt=" \){esc(item.title)}" loading="lazy" onerror="this.src='https://placehold.co/300x450/1a1c26/9ca3af?text=Sin+imagen'">
       <div class="card-body">
         <div class="card-title">${esc(item.title)}</div>
         <div class="card-sub">${esc(item.genre)} • ${item.year}</div>
@@ -281,27 +600,36 @@ class NaPlusApp {
 
   render() {
     const q = norm($('searchInput').value);
-    const mGrid = $('movieGrid'), sGrid =$('seriesGrid');
-    mGrid.innerHTML = ''; sGrid.innerHTML = '';
+    const mGrid = $('movieGrid');
+    const sGrid = $('seriesGrid');
+    mGrid.innerHTML = '';
+    sGrid.innerHTML = '';
 
-    const filtered = this.catalog.filter(i => norm(i.title).includes(q) || norm(i.genre).includes(q));
+    const filtered = this.catalog.filter(i =>
+      norm(i.title).includes(q) || norm(i.genre).includes(q)
+    );
+
     const movies = filtered.filter(i => i.type === 'movie');
     const series = filtered.filter(i => i.type === 'series');
 
     movies.forEach(i => mGrid.appendChild(this.createCard(i)));
     series.forEach(i => sGrid.appendChild(this.createCard(i)));
 
-    if(!movies.length) mGrid.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">Sin resultados.</p>';
-    if(!series.length) sGrid.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">Sin resultados.</p>';
+    if (!movies.length) {
+      mGrid.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;grid-column:1/-1;">Sin resultados.</p>';
+    }
+    if (!series.length) {
+      sGrid.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;grid-column:1/-1;">Sin resultados.</p>';
+    }
   }
 
   renderList() {
     const grid = $('listGrid');
     grid.innerHTML = '';
-    const items = this.catalog.filter(i => this.myList.includes(i.id));
+    const items = this.catalog.filter(i => this.myList.includes(Number(i.id)));
     const msg = $('emptyListMsg');
 
-    if(!items.length) {
+    if (!items.length) {
       msg.style.display = 'block';
     } else {
       msg.style.display = 'none';
@@ -311,22 +639,26 @@ class NaPlusApp {
 
   openPlayer(id) {
     this.currentId = id;
-    const item = this.catalog.find(x => x.id === id);
-    if(!item) return;
+    const item = this.catalog.find(x => Number(x.id) === id);
+    if (!item) return;
 
     $('pTitleTop').textContent = item.title;
     $('pTitle').textContent = item.title;
-    $('pMeta').textContent = `${item.genre} • ${item.year}`;
+    \( ('pMeta').textContent = ` \){item.genre} • ${item.year}`;
     $('pDesc').textContent = item.desc || 'Sin sinopsis.';
     this.updateListBtn();
 
     const embed = parseOk(item.video);
-    $('pScreen').innerHTML = embed ? `<iframe src="${esc(embed)}" allowfullscreen allow="autoplay"></iframe>` : '<div style="color:var(--accent);">Video no disponible</div>';
+    $('pScreen').innerHTML = embed
+      ? `<iframe src="${esc(embed)}" allowfullscreen allow="autoplay; fullscreen"></iframe>`
+      : '<div style="color:var(--accent);padding:20px;text-align:center;">Video no disponible</div>';
+
     $('playerModal').classList.add('active');
   }
 
   closePlayer() {
-    $('pScreen').innerHTML = '';$('playerModal').classList.remove('active');
+    $('pScreen').innerHTML = '';
+    $('playerModal').classList.remove('active');
   }
 
   updateListBtn() {
@@ -338,7 +670,7 @@ class NaPlusApp {
 
   toggleMyList() {
     const idx = this.myList.indexOf(this.currentId);
-    if(idx > -1) {
+    if (idx > -1) {
       this.myList.splice(idx, 1);
       this.showToast('Eliminado de Mi Lista');
     } else {
@@ -352,14 +684,14 @@ class NaPlusApp {
 
   auth(val) {
     const v = val.trim();
-    if(v === ADMIN_PASS || isToken(v)) {
-      if(isToken(v)) storage.set('naplus_token', v);
+    if (v === ADMIN_PASS || isToken(v)) {
+      if (isToken(v)) storage.set('naplus_token', v);
       this.activateAdmin();
     }
   }
 
   activateAdmin() {
-    if(this.isAdmin) return;
+    if (this.isAdmin) return;
     this.isAdmin = true;
     $('creatorCard').style.display = 'block';
     document.body.classList.add('admin-on');
@@ -367,31 +699,39 @@ class NaPlusApp {
   }
 
   openEditor(id = null) {
-    if(id) {
-      const item = this.catalog.find(x => x.id === id);
-      if(!item) return;
-      $('editorHeading').textContent = 'Editar Contenido';$('eId').value = item.id;
+    if (id) {
+      const item = this.catalog.find(x => Number(x.id) === id);
+      if (!item) return;
+      $('editorHeading').textContent = 'Editar Contenido';
+      $('eId').value = item.id;
       $('eType').value = item.type;
       $('eTitle').value = item.title;
       $('eGenre').value = item.genre;
       $('eYear').value = item.year;
-      $('eDesc').value = item.desc \vert{}\vert{} '';$('eCover').value = item.cover;
+      $('eDesc').value = item.desc || '';
+      $('eCover').value = item.cover;
       $('eVideo').value = item.video;
     } else {
       $('editorHeading').textContent = 'Subir Contenido';
-      $('eId').value = '';$('eType').value = 'movie';
-      $('eTitle').value = '';$('eGenre').value = '';
-      $('eYear').value = '2026';$('eDesc').value = '';
-      $('eCover').value = '';$('eVideo').value = '';
+      $('eId').value = '';
+      $('eType').value = 'movie';
+      $('eTitle').value = '';
+      $('eGenre').value = '';
+      $('eYear').value = new Date().getFullYear();
+      $('eDesc').value = '';
+      $('eCover').value = '';
+      $('eVideo').value = '';
     }
     $('editorModal').classList.add('active');
   }
 
-  closeEditor() { $('editorModal').classList.remove('active'); }
+  closeEditor() {
+    $('editorModal').classList.remove('active');
+  }
 
   async deleteItem(id) {
-    if(!confirm("¿Eliminar este título?")) return;
-    this.catalog = this.catalog.filter(x => x.id !== id);
+    if (!confirm('¿Eliminar este título?')) return;
+    this.catalog = this.catalog.filter(x => Number(x.id) !== id);
     this.myList = this.myList.filter(x => x !== id);
     storage.set('naplus_favs_v2', JSON.stringify(this.myList));
     this.render();
@@ -403,8 +743,8 @@ class NaPlusApp {
   async saveContent(e) {
     e.preventDefault();
     const vUrl = $('eVideo').value.trim();
-    if(!parseOk(vUrl)) {
-      alert("El enlace debe ser de OK.ru (ej: https://ok.ru/video/...)");
+    if (!parseOk(vUrl)) {
+      alert('El enlace debe ser de OK.ru (ej: https://ok.ru/video/...)');
       return;
     }
 
@@ -420,8 +760,8 @@ class NaPlusApp {
       video: vUrl
     };
 
-    const idx = eId ? this.catalog.findIndex(x => x.id == eId) : -1;
-    if(idx !== -1) this.catalog[idx] = item;
+    const idx = eId ? this.catalog.findIndex(x => Number(x.id) === Number(eId)) : -1;
+    if (idx !== -1) this.catalog[idx] = item;
     else this.catalog.unshift(item);
 
     this.closeEditor();
@@ -433,9 +773,9 @@ class NaPlusApp {
 
   async syncGitHub() {
     let token = storage.get('naplus_token');
-    if(!isToken(token)) {
-      token = prompt("Ingresá tu Token de GitHub (ghp_...) para publicar globalmente:");
-      if(isToken(token)) {
+    if (!isToken(token)) {
+      token = prompt('Ingresá tu Token de GitHub (ghp_...) para publicar globalmente:');
+      if (isToken(token)) {
         token = token.trim();
         storage.set('naplus_token', token);
         this.activateAdmin();
@@ -445,17 +785,25 @@ class NaPlusApp {
     }
 
     this.showToast('Sincronizando con GitHub...');
-    const url = `https://api.github.com/repos/${this.repo}/contents/${this.file}`;
-    const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
+    const url = `https://api.github.com/repos/\( {this.repo}/contents/ \){this.file}`;
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json'
+    };
 
     try {
       const res = await fetch(url, { headers });
-      if(!res.ok) { this.showToast('Error de Token'); return; }
+      if (!res.ok) {
+        this.showToast('Error de Token');
+        return;
+      }
       const data = await res.json();
       const code = b64dec(data.content);
 
       const jsonStr = JSON.stringify(this.catalog, null, 2);
-      const newCode = MARK_REGEX.test(code) ? code.replace(MARK_REGEX, wrapCatalog(jsonStr)) : code;
+      const newCode = MARK_REGEX.test(code)
+        ? code.replace(MARK_REGEX, wrapCatalog(jsonStr))
+        : code;
 
       const putRes = await fetch(url, {
         method: 'PUT',
@@ -467,33 +815,36 @@ class NaPlusApp {
         })
       });
 
-      if(putRes.ok) this.showToast('✅ ¡Publicado globalmente!');
+      if (putRes.ok) this.showToast('✅ ¡Publicado globalmente!');
       else this.showToast('❌ Error al publicar');
-    } catch(err) {
+    } catch (err) {
       this.showToast('❌ Error de red');
     }
   }
 
   async initCloud() {
     const token = storage.get('naplus_token');
-    if(!isToken(token)) return;
+    if (!isToken(token)) return;
     try {
-      const res = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.file}`, {
-        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+      const res = await fetch(`https://api.github.com/repos/\( {this.repo}/contents/ \){this.file}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json'
+        }
       });
-      if(!res.ok) return;
+      if (!res.ok) return;
       const data = await res.json();
       const code = b64dec(data.content);
       const match = code.match(MARK_REGEX);
-      if(match) {
+      if (match) {
         const remote = JSON.parse(match[1]);
-        if(Array.isArray(remote) && remote.length) {
+        if (Array.isArray(remote) && remote.length) {
           this.catalog = remote;
           this.render();
           this.renderList();
         }
       }
-    } catch(e){}
+    } catch (e) {}
   }
 }
 
@@ -501,7 +852,7 @@ const app = new NaPlusApp();
 app.initCloud();
 app.render();
 
-if(isToken(storage.get('naplus_token'))) {
+if (isToken(storage.get('naplus_token'))) {
   app.activateAdmin();
 }
 </script>
