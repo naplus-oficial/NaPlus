@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NaPlus - Plataforma Streaming</title>
+  <title>NaPlus - Streaming</title>
   <style>
     :root {
       --bg-dark: #0a0612;
@@ -29,7 +29,6 @@
       padding-bottom: 40px;
     }
 
-    /* Barra Superior */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -64,7 +63,6 @@
       cursor: pointer;
     }
 
-    /* Encabezado y Buscador */
     .hero {
       padding: 20px 15px;
       background: linear-gradient(180deg, #140d24 0%, #0a0612 100%);
@@ -85,7 +83,6 @@
     .search-box {
       width: 100%;
       max-width: 500px;
-      position: relative;
     }
 
     .search-box input {
@@ -99,11 +96,6 @@
       outline: none;
     }
 
-    .search-box input:focus {
-      border-color: var(--accent-light);
-    }
-
-    /* Secciones */
     .section-title {
       font-size: 1.2rem;
       margin: 20px 15px 10px;
@@ -122,14 +114,6 @@
       border-radius: 2px;
     }
 
-    .empty-msg {
-      font-size: 0.85rem;
-      color: var(--text-gray);
-      padding: 0 15px;
-      font-style: italic;
-    }
-
-    /* Grilla de Películas */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -192,6 +176,7 @@
       position: absolute;
       top: 5px; right: 5px;
       gap: 4px;
+      z-index: 10;
     }
 
     body.creator-mode .admin-btns {
@@ -292,7 +277,6 @@
       cursor: pointer;
     }
 
-    /* Contenedor de Video */
     .video-box {
       width: 100%;
       aspect-ratio: 16/9;
@@ -310,53 +294,40 @@
       height: 100%;
       border: none;
     }
-
-    .btn-telegram {
-      background: #0088cc;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Encabezado NaPlus -->
   <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnCreator" onclick="handleCreatorClick()">Modo Creador</button>
+    <button class="btn-creator" id="btnCreator" onclick="openLoginModal()">Modo Creador</button>
   </header>
 
   <div class="hero">
     <h1>NaPlus Streaming</h1>
-    <p>Películas y series exclusivas directamente en tu pantalla.</p>
+    <p>Películas y series exclusivas en tu pantalla.</p>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por título o género..." oninput="handleSearch()">
     </div>
   </div>
 
-  <!-- Mi Lista (Favoritos) -->
+  <!-- Sección Mi Lista -->
   <div id="myListContainer" style="display: none;">
-    <div class="section-title">Mi Lista - Películas Guardadas</div>
+    <div class="section-title">Mi Lista - Películas</div>
     <div class="grid" id="myListMoviesGrid"></div>
-    <div class="section-title">Mi Lista - Series Guardadas</div>
+    <div class="section-title">Mi Lista - Series</div>
     <div class="grid" id="myListSeriesGrid"></div>
-    <hr style="border: 0; border-top: 1px solid var(--border-purple); margin: 25px 15px 10px 15px;">
+    <hr style="border: 0; border-top: 1px solid var(--border-purple); margin: 20px 15px 10px 15px;">
   </div>
 
-  <!-- Catálogo General -->
+  <!-- Catálogo Principal -->
   <div class="section-title">Películas</div>
   <div class="grid" id="moviesGrid"></div>
 
   <div class="section-title">Series</div>
   <div class="grid" id="seriesGrid"></div>
 
-  <!-- Modal Reproductor / Detalle -->
+  <!-- Modal Reproductor -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
@@ -377,8 +348,8 @@
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Ingresá la clave de creador (o tu Token de GitHub)</label>
-          <input type="password" id="passInput" placeholder="Clave de creador..." required autocomplete="off">
+          <label>Clave de Creador (9009) o Token de GitHub</label>
+          <input type="password" id="passInput" placeholder="Ingresá la clave..." required autocomplete="off">
         </div>
         <div class="form-actions">
           <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">Cancelar</button>
@@ -404,7 +375,7 @@
         </div>
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="titleInput" required placeholder="Nombre de la obra">
+          <input type="text" id="titleInput" required placeholder="Nombre del título">
         </div>
         <div class="form-group">
           <label>Género</label>
@@ -416,11 +387,11 @@
         </div>
         <div class="form-group">
           <label>Sinopsis / Descripción</label>
-          <textarea id="descInput" rows="2" placeholder="Resumen del contenido..."></textarea>
+          <textarea id="descInput" rows="2" placeholder="Resumen..."></textarea>
         </div>
         <div class="form-group">
           <label>URL de Imagen de Portada</label>
-          <input type="url" id="coverInput" required placeholder="https://ejemplo.com/imagen.jpg">
+          <input type="url" id="coverInput" required placeholder="https://...">
         </div>
         <div class="form-group">
           <label>URL del Video (MP4, YouTube, Telegram...)</label>
@@ -438,7 +409,6 @@
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
 
-    /* BASE DE DATOS PÚBLICA DEL CATÁLOGO */
     let catalog = [
       {
         id: 1,
@@ -455,7 +425,6 @@
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
 
-    // Alternar Favorito
     function toggleFavorite(id, e) {
       e.stopPropagation();
       if (myFavorites.includes(id)) {
@@ -467,7 +436,6 @@
       renderCatalog();
     }
 
-    // Renderizar tarjetas
     function renderCatalog(filterText = '') {
       const mGrid = document.getElementById('moviesGrid');
       const sGrid = document.getElementById('seriesGrid');
@@ -486,14 +454,12 @@
         item.genre.toLowerCase().includes(query)
       );
 
-      // Render Catálogo General
       filtered.forEach(item => {
         const card = createCardElement(item);
         if (item.type === 'movie') mGrid.appendChild(card);
         else sGrid.appendChild(card);
       });
 
-      // Render Mi Lista (Favoritos)
       const favoriteItems = catalog.filter(item => myFavorites.includes(item.id));
       if (favoriteItems.length > 0 && query === '') {
         myListContainer.style.display = 'block';
@@ -502,9 +468,6 @@
           if (item.type === 'movie') myListMGrid.appendChild(card);
           else myListSGrid.appendChild(card);
         });
-
-        if (myListMGrid.children.length === 0) myListMGrid.innerHTML = '<div class="empty-msg">No tenés películas guardadas.</div>';
-        if (myListSGrid.children.length === 0) myListSGrid.innerHTML = '<div class="empty-msg">No tenés series guardadas.</div>';
       } else {
         myListContainer.style.display = 'none';
       }
@@ -539,7 +502,7 @@
       renderCatalog(text);
     }
 
-    function handleCreatorClick() {
+    function openLoginModal() {
       if (isCreatorMode) {
         openUploadModal();
       } else {
@@ -625,22 +588,21 @@
       await publishToGitHub();
     }
 
-    // Publicación automática a GitHub
     async function publishToGitHub() {
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token) {
-        token = prompt("Para publicar los cambios de forma PERMANENTE para todos los espectadores, ingresá tu Token de GitHub (ghp_...):");
+        token = prompt("Ingresá tu Token de GitHub (ghp_...) para guardar globalmente:");
         if (token && token.startsWith("ghp_")) {
           token = token.trim();
           localStorage.setItem('naPlus_gh_token', token);
         } else {
-          alert("Los cambios se guardaron temporalmente en tu pantalla, pero los demás usuarios no los verán sin el Token de GitHub.");
+          alert("Sin el token de GitHub los cambios solo se ven en tu pantalla local.");
           return;
         }
       }
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Sincronizando...";
+      if (saveBtn) saveBtn.innerText = "Publicando...";
 
       try {
         const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`);
@@ -660,11 +622,46 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: 'Actualización de catálogo NaPlus',
+            message: 'Actualización NaPlus',
             content: updatedBase64,
             sha: sha
           })
         });
 
         if (putRes.ok) {
-          alert("¡Publicado globalmente! En 1 minuto le aparecerá a to
+          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todos los usuarios.");
+        } else {
+          alert("Error con el Token de GitHub. Verificalo.");
+        }
+      } catch (err) {
+        alert("Error al conectar con GitHub.");
+      } finally {
+        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
+      }
+    }
+
+    function openDetail(id) {
+      const item = catalog.find(x => x.id == id);
+      if (!item) return;
+
+      document.getElementById('detailTitle').innerText = item.title;
+      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
+
+      const vBox = document.getElementById('videoBox');
+      const vUrl = item.video || '';
+
+      if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
+        let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+        vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
+      } else {
+        vBox.innerHTML = `<video src="${vUrl}" controls autoplay poster="${item.cover}"></video>`;
+      }
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    renderCatalog();
+  </script>
+</body>
+</html>
