@@ -7,30 +7,30 @@
   
   <style>
     :root {
-      --bg: #0b0712;
-      --card: #160f24;
+      --bg: #0a0612;
+      --card: #150d26;
       --purple: #8b5cf6;
       --purple-dark: #6d28d9;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --border: rgba(139, 92, 246, 0.25);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(139, 92, 246, 0.3);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 60px; }
 
-    /* Encabezado */
+    /* Header */
     header {
       position: sticky; top: 0; left: 0; right: 0;
-      height: 60px; background: rgba(11, 7, 18, 0.95);
+      height: 60px; background: rgba(10, 6, 18, 0.95);
       backdrop-filter: blur(10px);
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 15px; border-bottom: 1px solid var(--border);
       z-index: 1000;
     }
 
-    .brand { font-size: 1.4rem; font-weight: 900; color: var(--purple); letter-spacing: 1px; }
-    
+    .brand { font-size: 1.5rem; font-weight: 900; color: var(--purple); letter-spacing: 1px; }
+
     .btn-main {
       background: linear-gradient(135deg, var(--purple), var(--purple-dark));
       color: #fff; border: none; padding: 8px 14px;
@@ -38,26 +38,36 @@
       cursor: pointer;
     }
 
-    /* Hero / Buscador */
-    .hero { padding: 20px 15px; background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); }
-    .hero h1 { font-size: 1.6rem; margin-bottom: 6px; }
-    .hero p { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; }
-
+    /* Buscador y Filtro por Géneros */
+    .hero { padding: 15px; background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); }
+    
     .search-input {
-      width: 100%; padding: 12px; background: rgba(0,0,0,0.5);
+      width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
       border: 1px solid var(--border); color: #fff;
-      border-radius: 8px; font-size: 0.95rem; outline: none;
+      border-radius: 8px; font-size: 0.95rem; outline: none; margin-bottom: 12px;
     }
 
-    /* Panel Creador Integrado */
+    .genre-bar {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .genre-bar::-webkit-scrollbar { display: none; }
+
+    .genre-chip {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--muted); padding: 6px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer;
+    }
+    .genre-chip.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+    /* Panel de Creador Integrado */
     .creator-panel {
       display: none; background: var(--card); margin: 15px;
       padding: 15px; border-radius: 12px; border: 1px solid var(--purple);
     }
-
     .creator-panel.active { display: block; }
-    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .form-group { margin-bottom: 10px; }
     .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea {
@@ -67,7 +77,11 @@
     }
 
     /* Grillas y Tarjetas */
-    .section-title { font-size: 1.1rem; margin: 20px 15px 10px; color: var(--purple); }
+    .section-title {
+      font-size: 1.1rem; margin: 20px 15px 10px; color: var(--purple);
+      display: flex; align-items: center; gap: 8px;
+    }
+
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px; }
 
     .card {
@@ -80,19 +94,27 @@
     .card-title { font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 0.75rem; color: var(--muted); }
 
+    .card-fav-btn {
+      position: absolute; top: 5px; left: 5px;
+      background: rgba(0,0,0,0.7); border: 1px solid var(--border);
+      color: #fff; width: 28px; height: 28px; border-radius: 50%;
+      font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10;
+    }
+
     .card-actions {
-      display: none; position: absolute; top: 5px; right: 5px; gap: 4px;
+      display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10;
     }
     body.creator-active .card-actions { display: flex; }
 
     .card-actions button {
-      background: rgba(0,0,0,0.8); border: 1px solid var(--purple);
+      background: rgba(0,0,0,0.85); border: 1px solid var(--purple);
       color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
     }
 
-    /* Pantalla Reproductor */
+    /* Vista del Reproductor */
     .player-view {
-      display: none; fixed: inset 0; position: fixed; inset: 0;
+      display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.95); z-index: 20000;
       flex-direction: column; padding: 15px; overflow-y: auto;
     }
@@ -104,9 +126,7 @@
       position: relative; display: flex; align-items: center; justify-content: center;
     }
 
-    .video-wrapper iframe, .video-wrapper video {
-      width: 100%; height: 100%; border: none;
-    }
+    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; }
 
     .btn-close {
       align-self: flex-end; background: var(--purple); color: #fff;
@@ -123,9 +143,18 @@
   </header>
 
   <div class="hero">
-    <h1>Catálogo NaPlus</h1>
-    <p>Películas y series en alta definición.</p>
-    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar títulos o géneros..." oninput="filtrar()">
+    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por nombre o género..." oninput="filtrar()">
+    
+    <!-- Filtro por Géneros -->
+    <div class="genre-bar">
+      <button class="genre-chip active" onclick="seleccionarGenero('Todos', this)">Todos</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Acción', this)">Acción</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Terror', this)">Terror</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Comedia', this)">Comedia</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Drama', this)">Drama</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Ciencia Ficción', this)">Ciencia Ficción</button>
+      <button class="genre-chip" onclick="seleccionarGenero('Animación', this)">Animación</button>
+    </div>
   </div>
 
   <!-- Panel Integrado de Creador -->
@@ -149,7 +178,14 @@
       </div>
       <div class="form-group">
         <label>Género</label>
-        <input type="text" id="generoInput" required placeholder="Acción, Terror, etc.">
+        <select id="generoInput">
+          <option value="Acción">Acción</option>
+          <option value="Terror">Terror</option>
+          <option value="Comedia">Comedia</option>
+          <option value="Drama">Drama</option>
+          <option value="Ciencia Ficción">Ciencia Ficción</option>
+          <option value="Animación">Animación</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Año</label>
@@ -167,13 +203,19 @@
     </form>
   </div>
 
-  <div class="section-title">Películas</div>
+  <!-- Sección Mi Lista -->
+  <div id="favSection" style="display:none;">
+    <div class="section-title">🔖 Mi Lista</div>
+    <div class="grid" id="favGrid"></div>
+  </div>
+
+  <div class="section-title">🎬 Películas</div>
   <div class="grid" id="peliculasGrid"></div>
 
-  <div class="section-title">Series</div>
+  <div class="section-title">📺 Series</div>
   <div class="grid" id="seriesGrid"></div>
 
-  <!-- Vista del Reproductor -->
+  <!-- Vista Reproductor -->
   <div class="player-view" id="playerView">
     <button class="btn-close" onclick="cerrarReproductor()">✕ Volver al Catálogo</button>
     <div class="video-wrapper" id="videoContainer"></div>
@@ -197,7 +239,9 @@
       }
     ];
 
+    let favoritos = JSON.parse(localStorage.getItem('naplus_favs')) || [];
     let esCreador = false;
+    let generoSeleccionado = 'Todos';
 
     function toggleCreador() {
       if (esCreador) {
@@ -223,6 +267,24 @@
       }
     }
 
+    function toggleFavorito(id, event) {
+      event.stopPropagation();
+      if (favoritos.includes(id)) {
+        favoritos = favoritos.filter(fId => fId !== id);
+      } else {
+        favoritos.push(id);
+      }
+      localStorage.setItem('naplus_favs', JSON.stringify(favoritos));
+      renderizar();
+    }
+
+    function seleccionarGenero(genero, el) {
+      generoSeleccionado = genero;
+      document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      filtrar();
+    }
+
     function cerrarPanel() {
       document.getElementById('creatorPanel').classList.remove('active');
     }
@@ -230,32 +292,54 @@
     function renderizar(filtro = '') {
       const pGrid = document.getElementById('peliculasGrid');
       const sGrid = document.getElementById('seriesGrid');
-      pGrid.innerHTML = ''; sGrid.innerHTML = '';
+      const fGrid = document.getElementById('favGrid');
+      const favSection = document.getElementById('favSection');
+
+      pGrid.innerHTML = ''; sGrid.innerHTML = ''; fGrid.innerHTML = '';
 
       const query = filtro.toLowerCase().trim();
 
       catalog.forEach((item, index) => {
-        if (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query)) {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.onclick = () => reproducir(index);
+        const coincideGenero = (generoSeleccionado === 'Todos' || item.genero === generoSeleccionado);
+        const coincideBusqueda = (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query));
 
-          card.innerHTML = `
-            <div class="card-actions">
-              <button onclick="event.stopPropagation(); editar(${index})">✏️</button>
-              <button onclick="event.stopPropagation(); eliminar(${index})">🗑️</button>
-            </div>
-            <img src="${item.portada}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
-            <div class="card-body">
-              <div class="card-title">${item.titulo}</div>
-              <div class="card-sub">${item.genero} • ${item.anio}</div>
-            </div>
-          `;
-
+        if (coincideGenero && coincideBusqueda) {
+          const card = crearTarjeta(item, index);
           if (item.tipo === 'pelicula') pGrid.appendChild(card);
           else sGrid.appendChild(card);
         }
+
+        if (favoritos.includes(item.id)) {
+          const cardFav = crearTarjeta(item, index);
+          fGrid.appendChild(cardFav);
+        }
       });
+
+      favSection.style.display = (favoritos.length > 0 && query === '' && generoSeleccionado === 'Todos') ? 'block' : 'none';
+    }
+
+    function crearTarjeta(item, index) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => reproducir(index);
+
+      const esFav = favoritos.includes(item.id);
+
+      card.innerHTML = `
+        <button class="card-fav-btn" onclick="toggleFavorito(${item.id}, event)">
+          ${esFav ? '❤️' : '🔖'}
+        </button>
+        <div class="card-actions">
+          <button onclick="event.stopPropagation(); editar(${index})">✏️</button>
+          <button onclick="event.stopPropagation(); eliminar(${index})">🗑️</button>
+        </div>
+        <img src="${item.portada}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
+        <div class="card-body">
+          <div class="card-title">${item.titulo}</div>
+          <div class="card-sub">${item.genero} • ${item.anio}</div>
+        </div>
+      `;
+      return card;
     }
 
     function filtrar() {
@@ -273,7 +357,6 @@
       box.innerHTML = '';
       const url = item.video;
 
-      // Detección directa de Google Drive
       if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -281,9 +364,7 @@
 
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
-      } 
-      // Reproductor Nativo HTML5 para videos directos
-      else {
+      } else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
             <source src="${url}" type="video/mp4">
@@ -304,7 +385,6 @@
       document.getElementById('editIndex').value = '';
       document.getElementById('panelTitle').innerText = "Subir Nuevo Contenido";
       document.getElementById('tituloInput').value = '';
-      document.getElementById('generoInput').value = '';
       document.getElementById('portadaInput').value = '';
       document.getElementById('videoInput').value = '';
     }
@@ -338,7 +418,7 @@
         id: Date.now(),
         tipo: document.getElementById('tipoInput').value,
         titulo: document.getElementById('tituloInput').value.trim(),
-        genero: document.getElementById('generoInput').value.trim(),
+        genero: document.getElementById('generoInput').value,
         anio: document.getElementById('anioInput').value,
         portada: document.getElementById('portadaInput').value.trim(),
         video: document.getElementById('videoInput').value.trim()
