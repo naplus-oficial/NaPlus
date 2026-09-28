@@ -68,14 +68,24 @@
   .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  /* Reproductor Inmersivo */
+  /* Reproductor Inmersivo Optimizado */
   .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
   .player-overlay.active { display: flex; }
-  .player-header { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
-  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
-  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; }
+  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+  
+  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
+  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; max-height: 100vh; }
+  
+  /* Botón flotante exclusivo de Pantalla Completa */
+  .btn-fullscreen-float {
+    position: absolute; bottom: 15px; right: 15px; background: rgba(139, 92, 246, 0.85);
+    color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.8rem;
+    font-weight: bold; cursor: pointer; z-index: 20; backdrop-filter: blur(5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+
+  .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
   /* Modal Creador Subir Contenido */
   .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
@@ -132,13 +142,17 @@
     <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
   </nav>
 
-  <!-- Reproductor Nativo y OK.ru / Drive -->
+  <!-- Reproductor Inmersivo Optimizado -->
   <div class="player-overlay" id="playerModal">
     <div class="player-header">
+      <h3 id="playerTitleHeader" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
       <button class="close-player" onclick="app.closePlayer()">✕</button>
-      <h3 id="playerTitleHeader" style="font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
     </div>
-    <div class="video-container" id="videoContainer"></div>
+    
+    <div class="video-container" id="videoContainer">
+      <!-- Contenido multimedia dinámico -->
+    </div>
+
     <div class="player-details">
       <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
       <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
@@ -175,31 +189,12 @@ class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v6';
-    this.listKey = 'naplus_pro_list_v1';
+    this.dbKey = 'naplus_pro_db_v7';
+    this.listKey = 'naplus_pro_list_v2';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-  {
-    "id": 1790615069077,
-    "type": "movie",
-    "title": "Rec",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de rec",
-    "cover": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
-    "video": "https://drive.google.com/file/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2/view?usp=drivesdk"
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de prueba en la Neuro Página.",
-    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-    "video": "https://ok.ru/videoembed/237592963750"
-  }
-];
+      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
+    ];
     
     this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
     this.currentId = null;
@@ -285,21 +280,48 @@ class NaPlusProEngine {
           const m = url.match(/\/video\/([0-9]+)/);
           if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
         }
-        container.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+        container.innerHTML = `
+          <iframe id="mediaPlayerFrame" src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
+        `;
       } else if (url.includes('drive.google.com')) {
         let idVal = "";
         const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
         if (m && m[1]) idVal = m[1];
         const embed = idVal ? `https://drive.google.com/file/d/${idVal}/preview` : url;
-        container.innerHTML = `<iframe src="${embed}" allow="autoplay" allowfullscreen></iframe>`;
+        container.innerHTML = `
+          <iframe id="mediaPlayerFrame" src="${embed}" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
+        `;
       } else if (url.includes('t.me') || url.includes('telegram')) {
         container.innerHTML = `<a href="${url}" target="_blank" style="background:#0088cc; color:#fff; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold;">✈️ Abrir en Telegram</a>`;
       } else {
-        container.innerHTML = `<video src="${url}" controls autoplay playsinline></video>`;
+        container.innerHTML = `
+          <video id="mediaPlayerVideo" src="${url}" controls autoplay playsinline webkit-playsinline></video>
+          <button class="btn-fullscreen-float" onclick="app.triggerFullscreen()">⛶ Pantalla Completa</button>
+        `;
       }
     }, 200);
 
     document.getElementById('playerModal').classList.add('active');
+  }
+
+  triggerFullscreen() {
+    const videoEl = document.getElementById('mediaPlayerVideo');
+    const iframeEl = document.getElementById('mediaPlayerFrame');
+    const target = videoEl || iframeEl;
+
+    if (!target) return;
+
+    if (target.requestFullscreen) {
+      target.requestFullscreen();
+    } else if (target.webkitRequestFullscreen) { /* Safari / iOS */
+      target.webkitRequestFullscreen();
+    } else if (target.msRequestFullscreen) { /* IE/Edge */
+      target.msRequestFullscreen();
+    } else if (target.webkitEnterFullscreen) { /* iPhone nativo */
+      target.webkitEnterFullscreen();
+    }
   }
 
   closePlayer() {
