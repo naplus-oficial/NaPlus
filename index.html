@@ -97,14 +97,16 @@ body.creator .card-admin-btns{display:flex}
   </div>
 </div>
 
-<!-- Acceso creador -->
+<!-- Acceso creador con clave simple -->
 <div class="modal" id="loginModal">
   <div class="modal-content">
     <h3>Modo Creador</h3>
-    <p class="hint">Pegá tu token de GitHub. Se guarda solo en este dispositivo y nunca está en el código de la página.</p>
+    <p class="hint">Ingresá la clave de acceso de administrador.</p>
     <form onsubmit="doLogin(event)">
-      <div class="form-group"><label>Repositorio (usuario/repositorio)</label><input type="text" id="repoInput" required placeholder="tuusuario/turepo" autocapitalize="off" autocomplete="off"></div>
-      <div class="form-group"><label>Token de GitHub</label><input type="password" id="tokenInput" required autocomplete="off"></div>
+      <div class="form-group">
+        <label>Clave de Creador</label>
+        <input type="password" id="passInput" required autocomplete="off" placeholder="Clave...">
+      </div>
       <div class="form-btns">
         <button type="button" class="btn-sec" onclick="closeLogin()">Cancelar</button>
         <button type="submit" class="btn-pri">Entrar</button>
@@ -122,14 +124,11 @@ body.creator .card-admin-btns{display:flex}
       <div class="form-group"><label>Tipo</label>
         <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select></div>
       <div class="form-group"><label>Título</label><input type="text" id="title" required></div>
-      <div class="form-group"><label>Géneros (podés elegir varios)</label>
-        <div class="chips" id="genreChips"></div>
-        <input type="text" id="genreOther" placeholder="Otros géneros (separados por coma)"></div>
+      <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
       <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
       <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
-      <div class="form-group"><label>Portada: link de imagen (opcional)</label><input type="url" id="cover" placeholder="https://..."></div>
-      <div class="form-group"><label>o elegí una imagen de tu galería</label><input type="file" id="coverFile" accept="image/*"></div>
-      <div class="form-group"><label>Link del video (Telegram, YouTube...)</label><input type="url" id="video" placeholder="https://t.me/..."></div>
+      <div class="form-group"><label>Portada: link de imagen</label><input type="url" id="cover" placeholder="https://..."></div>
+      <div class="form-group"><label>Link del video (YouTube, MP4, etc.)</label><input type="url" id="video" placeholder="https://..."></div>
       <div class="form-btns">
         <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
         <button type="submit" class="btn-pri">Guardar</button>
@@ -156,85 +155,39 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
-const CFG_KEY = 'naPlus_cfg';
 const LIST_KEY = 'naPlus_list';
-const DATA_FILE = 'content.json';
-const GENRES = ['Acción','Aventura','Comedia','Drama','Terror','Romance','Ciencia ficción','Fantasía','Suspenso','Misterio','Animación','Documental','Familiar','Musical'];
+const DB_KEY = 'naPlus_db_v2';
 
-let catalog = [], isCreator = false, pendingCover = '', existingCover = '';
-let loadFailed = false, dirty = false, currentId = null, saved = [];
+let isCreator = false, currentId = null, saved = [];
 try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
 
-const genresOf = item => Array.isArray(item.genres) ? item.genres : String(item.genre || '').split(',').map(s => s.trim()).filter(Boolean);
+let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
+  {
+    id: 1,
+    type: 'movie',
+    title: 'Película Ejercicio',
+    genre: 'Acción',
+    year: '2026',
+    desc: 'Ejemplo de película en NaPlus.',
+    cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+    video: ''
+  },
+  {
+    id: 2,
+    type: 'series',
+    title: 'Serie Ejercicio',
+    genre: 'Drama',
+    year: '2026',
+    desc: 'Ejemplo de serie en NaPlus.',
+    cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400',
+    video: ''
+  }
+];
+
 const isSaved = id => saved.some(x => x == id);
 
-function getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
-function guessRepo() {
-  const h = location.hostname;
-  if (!h.endsWith('.github.io')) return '';
-  const r = location.pathname.split('/')[1];
-  return h.split('.')[0] + '/' + (r && !r.includes('.') ? r : h);
-}
-
-async function loadCatalog() {
-  const tries = [[DATA_FILE + '?t=' + Date.now(), { cache: 'no-store' }]];
-  const repo = (getCfg() || {}).repo || guessRepo();
-  if (repo) tries.push([`https://api.github.com/repos/${repo}/contents/${DATA_FILE}`, { headers: { Accept: 'application/vnd.github.raw+json' } }]);
-  let missing = false;
-  for (const [url, opt] of tries) {
-    try {
-      const r = await fetch(url, opt);
-      if (r.ok) { const d = await r.json(); if (Array.isArray(d)) { catalog = d; loadFailed = false; render(); return; } }
-      else if (r.status === 404) missing = true;
-    } catch (e) {}
-  }
-  loadFailed = !missing; render();
-}
-
-function b64(str) {
-  const bytes = new TextEncoder().encode(str);
-  let s = '';
-  for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
-  return btoa(s);
-}
-
-function gh(cfg, method, body) {
-  return fetch(`https://api.github.com/repos/${cfg.repo}/contents/${DATA_FILE}`, {
-    method,
-    headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined
-  });
-}
-
-async function ghMsg(res) { try { return (await res.json()).message || ''; } catch (e) { return ''; } }
-
-async function persist() {
-  const cfg = getCfg();
-  if (!cfg) { openLogin(); return; }
-  try {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      let sha;
-      const g = await gh(cfg, 'GET');
-      if (g.ok) sha = (await g.json()).sha;
-      else if (g.status !== 404) throw { status: g.status, msg: await ghMsg(g) };
-      const p = await gh(cfg, 'PUT', { message: 'Actualizar catálogo', content: b64(JSON.stringify(catalog, null, 1)), ...(sha ? { sha } : {}) });
-      if (p.ok) { dirty = false; toast('Guardado. Los demás lo verán en 1 o 2 minutos.'); return; }
-      if ((p.status === 409 || p.status === 422) && attempt === 0) continue;
-      throw { status: p.status, msg: await ghMsg(p) };
-    }
-  } catch (e) { ghFail(e); }
-}
-
-function ghFail(e) {
-  const s = e && e.status, m = (e && e.msg) || '';
-  if (s === 401) { toast('GitHub no aceptó el token. Pegá uno nuevo.', 7000); openLogin(); }
-  else if (s === 403) { toast('El token no tiene permiso para escribir. Activá Contents: Read and write.', 8000); openLogin(); }
-  else if (s === 404) { toast('No se encontró el repositorio o no tenés acceso.', 7000); openLogin(); }
-  else toast('No se pudo guardar' + (s ? ' (error ' + s + ')' : '') + '. Probá de nuevo.', 6000);
-}
-
 let toastTimer;
-function toast(msg, ms = 3500) {
+function toast(msg, ms = 3000) {
   const t = $('toast'); t.textContent = msg; t.style.display = 'block';
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', ms);
 }
@@ -243,9 +196,8 @@ function confirmDialog(title, msg) {
   return new Promise(resolve => {
     $('dlgTitle').textContent = title; $('dlgMsg').textContent = msg;
     $('dialogModal').style.display = 'flex';
-    const done = v => { $('dialogModal').style.display = 'none'; $('dlgOk').onclick = $('dlgCancel').onclick = null; resolve(v); };
-    $('dlgOk').onclick = () => done(true);
-    $('dlgCancel').onclick = () => done(false);
+    const done = v => { $('dialogModal').style.display = 'none'; $('dlgOk').onclick =$('dlgCancel').onclick = null; resolve(v); };
+    $('dlgOk').onclick = () => done(true);$('dlgCancel').onclick = () => done(false);
   });
 }
 
@@ -259,10 +211,10 @@ function makeCard(item) {
       <button class="edit" aria-label="Editar">✏️</button>
       <button class="del" aria-label="Eliminar">🗑️</button>
     </div>
-    <img src="${esc(item.cover || NO_COVER)}" alt="Portada de ${esc(item.title)}">
+    <img src="${esc(item.cover || NO_COVER)}" alt="Portada">
     <div class="card-info">
       <div class="card-title">${esc(item.title)}</div>
-      <div class="card-sub">${esc(genresOf(item).join(', '))} •${esc(item.year)}</div>
+      <div class="card-sub">${esc(item.genre || 'General')} • ${esc(item.year)}</div>
     </div>`;
   div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
   div.onclick = () => showDetail(item.id);
@@ -285,17 +237,18 @@ function render() {
   $('listBtn').textContent = `🔖 Mi lista (${savedItems.length})`;
   $('searchSec').style.display = q ? 'block' : 'none';
   $('mainSecs').style.display = q ? 'none' : 'block';
+  
   if (q) {
-    fillGrid('resultsGrid', sorted.filter(i => norm([i.title, genresOf(i).join(' '), i.desc, i.year, i.type === 'movie' ? 'pelicula' : 'serie'].join(' ')).includes(q)), 'No encontramos nada con esa búsqueda.');
+    fillGrid('resultsGrid', sorted.filter(i => norm([i.title, i.genre, i.desc, i.year].join(' ')).includes(q)), 'No encontramos nada.');
     return;
   }
-  const empty = loadFailed ? 'No se pudo cargar el catálogo. Recargá la página.' : 'Todavía no hay contenido acá.';
+  
   $('recentSec').style.display = sorted.length ? 'block' : 'none';
   fillGrid('recentGrid', sorted.slice(0, 10));
   $('listSec').style.display = savedItems.length ? 'block' : 'none';
   fillGrid('listGrid', savedItems);
-  fillGrid('moviesGrid', sorted.filter(i => i.type === 'movie'), empty);
-  fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), empty);
+  fillGrid('moviesGrid', sorted.filter(i => i.type === 'movie'), 'No hay películas cargadas.');
+  fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), 'No hay series cargadas.');
 }
 
 function toggleSaved(id) {
@@ -312,8 +265,7 @@ function updateDetailSave() {
 
 function goList() {
   if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía.'); return; }
-  $('search').value = ''; render();
-  $('listSec').scrollIntoView({ behavior: 'smooth' });
+  $('search').value = ''; render();$('listSec').scrollIntoView({ behavior: 'smooth' });
 }
 
 function setCreator(on) {
@@ -324,44 +276,27 @@ function setCreator(on) {
 
 function toggleCreator() {
   if (isCreator) { openAdmin(); return; }
-  if (getCfg()) { setCreator(true); toast('Modo creador activado'); return; }
   openLogin();
 }
 
 function openLogin() {
-  $('repoInput').value = (getCfg() || {}).repo || guessRepo();
-  $('tokenInput').value = '';
-  $('loginModal').style.display = 'flex';
+  $('passInput').value = '';$('loginModal').style.display = 'flex';
 }
 
-function closeLogin() { $('loginModal').style.display = 'none'; $('tokenInput').value = ''; }
+function closeLogin() { $('loginModal').style.display = 'none'; }
 
-async function doLogin(e) {
+function doLogin(e) {
   e.preventDefault();
-  const repo = $('repoInput').value.trim().replace(/^\/+|\/+$/g, '');
-  const token = $('tokenInput').value.trim();
-  if (!/^[\w.-]+\/[\w.-]+$/.test(repo) || !token) { toast('Revisá el repositorio y el token.'); return; }
-  toast('Comprobando token...');
-  try {
-    const r = await fetch('https://api.github.com/repos/' + repo, { headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token } });
-    if (r.status === 401) { toast('GitHub no aceptó el token.', 7000); return; }
-    if (r.status === 404) { toast('No se encontró ese repositorio.', 7000); return; }
-    if (r.ok) { const d = await r.json(); if (d.permissions && d.permissions.push === false) { toast('Este token no tiene permiso de escritura.', 7000); return; } }
-  } catch (err) {}
-  localStorage.setItem(CFG_KEY, JSON.stringify({ repo, token }));
-  closeLogin(); setCreator(true); toast('Modo creador activado');
-  if (dirty) persist();
-}
-
-function buildChips(sel) {
-  const box = $('genreChips'); box.innerHTML = '';
-  GENRES.forEach(g => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'chip' + (sel.includes(g) ? ' on' : '');
-    b.textContent = g; b.onclick = () => b.classList.toggle('on');
-    box.appendChild(b);
-  });
-  $('genreOther').value = sel.filter(g => !GENRES.includes(g)).join(', ');
+  const pass = $('passInput').value.trim();
+  if (pass === "9009") {
+    closeLogin();
+    setCreator(true);
+    toast('Modo creador activado');
+    render();
+    openAdmin();
+  } else {
+    toast('Clave incorrecta');
+  }
 }
 
 function openAdmin(item = null) {
@@ -369,33 +304,97 @@ function openAdmin(item = null) {
   $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
   $('type').value = item ? item.type : 'movie';
   $('title').value = item ? item.title : '';
-  buildChips(item ? genresOf(item) : []);
+  $('genre').value = item ? item.genre : '';
   $('year').value = item ? item.year : '2026';
   $('desc').value = item ? item.desc : '';
+  $('cover').value = item ? item.cover : '';
   $('video').value = item ? item.video : '';
-  existingCover = item ? (item.cover || '') : '';
-  $('cover').value = existingCover.startsWith('data:') ? '' : existingCover;
-  $('coverFile').value = ''; pendingCover = '';
   $('adminModal').style.display = 'flex';
 }
 
 function closeAdmin() { $('adminModal').style.display = 'none'; }
 
-$('coverFile').onchange = e => {
-  const f = e.target.files[0];
-  if (!f) { pendingCover = ''; return; }
-  const reader = new FileReader();
-  reader.onload = () => { pendingCover = reader.result; };
-  reader.readAsDataURL(f);
-};
-
 function saveData(e) {
   e.preventDefault();
   const id = $('editId').value;
-  const chipSel = Array.from($('genreChips').querySelectorAll('.chip.on')).map(c => c.textContent);
-  const otherSel = $('genreOther').value.split(',').map(s => s.trim()).filter(Boolean);
-  const genres = Array.from(new Set([...chipSel, ...otherSel]));
-  const coverUrl = $('cover').value.trim();
-  const cover = pendingCover || coverUrl || existingCover;
+  const newItem = {
+    id: id ? parseInt(id) : Date.now(),
+    type: $('type').value,
+    title: $('title').value.trim(),
+    genre: $('genre').value.trim() || 'General',
+    year: $('year').value,
+    desc: $('desc').value.trim(),
+    cover: $('cover').value.trim(),
+    video: $('video').value.trim()
+  };
 
-  const newI
+  if (id) {
+    const idx = catalog.findIndex(x => x.id == id);
+    if (idx !== -1) catalog[idx] = newItem;
+  } else {
+    catalog.unshift(newItem);
+  }
+
+  try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
+  render();
+  closeAdmin();
+  toast('Contenido guardado correctamente');
+}
+
+function editItem(id) {
+  const item = catalog.find(x => x.id == id);
+  if (item) openAdmin(item);
+}
+
+async function deleteItem(id) {
+  const item = catalog.find(x => x.id == id);
+  if (!item) return;
+  if (await confirmDialog('Eliminar contenido', `¿Querés eliminar "${item.title}"?`)) {
+    catalog = catalog.filter(x => x.id != id);
+    try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
+    render();
+    toast('Eliminado correctamente');
+  }
+}
+
+function showDetail(id) {
+  currentId = id;
+  const item = catalog.find(x => x.id == id);
+  if (!item) return;
+
+  $('detailTitle').textContent = item.title;
+  $('detailMeta').textContent = `${item.genre} • ${item.year}`;
+  $('detailDesc').textContent = item.desc || 'Sin descripción.';
+
+  const vBox = $('videoBox');
+  vBox.innerHTML = '';
+
+  if (item.video) {
+    if (item.video.includes('youtube.com') || item.video.includes('youtu.be')) {
+      let embed = item.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+      vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
+    } else {
+      vBox.innerHTML = `<video src="${item.video}" controls poster="${item.cover || NO_COVER}"></video>`;
+    }
+  } else {
+    vBox.innerHTML = `<img src="${esc(item.cover || NO_COVER)}" alt="Portada">`;
+  }
+
+  const btnBox = $('detailBtns');
+  btnBox.innerHTML = `
+    <button class="btn-sec" id="detailSave" onclick="toggleSaved(${item.id})"></button>
+    <button class="btn-pri" onclick="closeDetail()">Cerrar</button>
+  `;
+  updateDetailSave();
+
+  $('detailModal').style.display = 'flex';
+}
+
+function closeDetail() {
+  $('videoBox').innerHTML = '';$('detailModal').style.display = 'none';
+}
+
+render();
+</script>
+</body>
+</html>
