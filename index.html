@@ -3,114 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus Pro - Streaming</title>
+<title>NaPlus - Películas y Series Online</title>
 <style>
   :root {
-    --bg-main: #0a0612;
-    --bg-surface: #150d26;
-    --primary: #8b5cf6;
-    --primary-hover: #7c3aed;
-    --accent: #f47521;
-    --text: #f8fafc;
-    --text-muted: #94a3b8;
-    --border: rgba(139, 92, 246, 0.3);
+    --bg-main: #0f1015;
+    --bg-surface: #1a1c23;
+    --primary: #6c5ce7;
+    --accent: #00cec9;
+    --text: #f5f6fa;
+    --text-muted: #b2bec3;
+    --border: rgba(255, 255, 255, 0.08);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
+  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
 
-  /* Navegación Inferior */
+  /* Barra de Navegación Inferior Estilo App */
   nav {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
-    background: #0a0612; display: flex; justify-content: space-around; align-items: center;
+    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+    background: rgba(15, 16, 21, 0.95); backdrop-filter: blur(10px);
+    display: flex; justify-content: space-around; align-items: center;
     border-top: 1px solid var(--border); z-index: 99999;
   }
   .nav-btn {
     background: none; border: none; color: var(--text-muted);
-    font-size: 0.75rem; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; width: 33.33%; padding: 10px 0;
+    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; width: 33.33%; padding: 8px 0;
   }
-  .nav-btn span { font-size: 1.25rem; }
+  .nav-btn span { font-size: 1.2rem; }
   .nav-btn.active { color: var(--accent); font-weight: bold; }
 
   /* Vistas */
   .view { display: none; padding: 15px; }
   .view.active { display: block; }
 
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-  .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-top: 5px; }
+  .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; }
 
-  .search-input {
-    width: 100%; padding: 14px 16px; background: var(--bg-surface);
-    border: 1px solid var(--border); color: #fff; border-radius: 12px;
-    font-size: 1rem; outline: none; margin-bottom: 20px;
+  .search-box {
+    width: 100%; padding: 12px 16px; background: var(--bg-surface);
+    border: 1px solid var(--border); color: #fff; border-radius: 8px;
+    font-size: 0.95rem; outline: none; margin-bottom: 20px;
   }
-  .search-input:focus { border-color: var(--primary); }
+  .search-box:focus { border-color: var(--accent); }
 
-  .section-title { font-size: 1.1rem; font-weight: 700; margin: 20px 0 12px; color: var(--text); }
-  .empty-note { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
+  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
+  .empty-note { color: var(--text-muted); font-size: 0.85rem; font-style: italic; text-align: center; margin: 20px 0; }
   
-  /* Grilla de Tarjetas con toque libre garantizado */
-  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  /* Grilla Estilo Cuevana (Optimizada para móviles) */
+  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .media-card { 
-    background: var(--bg-surface); border-radius: 10px; overflow: hidden; 
+    background: var(--bg-surface); border-radius: 6px; overflow: hidden; 
     position: relative; border: 1px solid var(--border); cursor: pointer;
   }
   .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; pointer-events: none; }
-  .media-info { padding: 8px; pointer-events: none; }
+  .media-info { padding: 6px; pointer-events: none; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* Controles de Creador en Tarjetas */
-  .admin-controls { display: none; position: absolute; top: 6px; right: 6px; gap: 6px; z-index: 10; }
+  /* Controles Creador */
+  .admin-controls { display: none; position: absolute; top: 4px; right: 4px; gap: 4px; z-index: 10; }
   body.creator-mode .admin-controls { display: flex; }
   .admin-controls button { 
-    background: rgba(0, 0, 0, 0.9); border: 1px solid var(--primary); color: #fff; 
-    width: 32px; height: 32px; border-radius: 6px; font-size: 0.85rem; 
+    background: rgba(0, 0, 0, 0.85); border: 1px solid var(--accent); color: #fff; 
+    width: 28px; height: 28px; border-radius: 4px; font-size: 0.75rem; 
     cursor: pointer; display: flex; align-items: center; justify-content: center; 
   }
 
   /* Ajustes */
-  .settings-box { background: var(--bg-surface); border-radius: 14px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border); }
-  .settings-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--primary); }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
-  .field input, .field select, .field textarea { width: 100%; padding: 12px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 10px; font-size: 0.95rem; outline: none; }
+  .settings-box { background: var(--bg-surface); border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
+  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--accent); }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none; }
 
-  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer; }
-  .btn-action:active { background: var(--primary-hover); }
+  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+  .btn-action:active { opacity: 0.8; }
 
-  /* Reproductor */
+  /* Reproductor Inmersivo */
   .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999999; flex-direction: column; }
   .player-overlay.active { display: flex; }
-  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .close-player { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 5px; }
+  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .close-player { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 4px; }
 
   .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
   .video-container iframe { width: 100%; height: 100%; border: none; }
 
-  .player-details { padding: 18px; background: var(--bg-surface); max-height: 38vh; overflow-y: auto; border-top: 1px solid var(--border); }
+  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; border-top: 1px solid var(--border); }
 
   /* Modal de Creador */
   .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
-  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; padding: 22px; overflow-y: auto; border-top: 1px solid var(--border); }
+  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 90vh; border-radius: 16px 16px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; z-index: 9999999; display: none; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-  #syncStatus { position: fixed; bottom: 75px; right: 15px; background: var(--primary); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; z-index: 999999; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 9999999; display: none; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; z-index: 999999; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 </style>
 </head>
 <body>
 
   <!-- Vista Inicio -->
   <div id="viewHome" class="view active">
-    <div class="header"><div class="logo">NaPlus Pro</div></div>
-    <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
+    <div class="header"><div class="logo">NaPlus</div></div>
+    <input type="search" class="search-box" id="searchBox" placeholder="Buscar películas o series..." oninput="app.renderHome()">
 
     <div class="section-title">Películas</div>
     <div class="media-grid" id="moviesGrid"></div>
 
-    <div class="section-title" style="margin-top: 30px;">Series</div>
+    <div class="section-title" style="margin-top: 25px;">Series</div>
     <div class="media-grid" id="seriesGrid"></div>
   </div>
 
@@ -118,7 +118,7 @@
   <div id="viewList" class="view">
     <div class="header"><div class="logo">Mi Lista</div></div>
     <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
-    <p id="emptyMsg" class="empty-note" style="text-align: center; margin-top: 40px; display: none;">Tu lista está vacía.</p>
+    <p id="emptyMsg" class="empty-note" style="display: none;">Tu lista está vacía.</p>
   </div>
 
   <!-- Vista Ajustes -->
@@ -126,15 +126,15 @@
     <div class="header"><div class="logo">Ajustes</div></div>
 
     <div class="settings-box" id="adminPanel" style="display: none;">
-      <h3>Panel de Creador Avanzado</h3>
+      <h3>Panel de Creador</h3>
       <button class="btn-action" onclick="app.openModal()">+ Subir Contenido Nuevo</button>
     </div>
 
     <div class="settings-box">
-      <h3>Seguridad y Modo Creador</h3>
+      <h3>Modo Creador</h3>
       <div class="field" style="margin-bottom: 0;">
-        <label>Credencial de Acceso (clave o token de GitHub)</label>
-        <input type="password" placeholder="Ingresar credencial..." autocomplete="off" oninput="app.verifyAdmin(this.value)">
+        <label>Clave (9009) o Token de GitHub</label>
+        <input type="password" placeholder="Ingresar clave..." autocomplete="off" oninput="app.verifyAdmin(this.value)">
       </div>
     </div>
   </div>
@@ -149,26 +149,26 @@
   <!-- Reproductor -->
   <div class="player-overlay" id="playerModal">
     <div class="player-header">
-      <h3 id="playerTitleHeader" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
+      <h3 id="playerTitleHeader" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
       <button class="close-player" onclick="app.closePlayer()">✕</button>
     </div>
 
     <div class="video-container" id="videoContainer"></div>
 
     <div class="player-details">
-      <h3 id="playerTitle" style="font-size: 1.15rem; margin-bottom: 6px;"></h3>
-      <p id="playerMeta" style="color: var(--accent); font-size: 0.85rem; margin-bottom: 10px;"></p>
-      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;"></p>
-      <button class="btn-action" id="listBtn" style="margin-top: 15px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
+      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
+      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
+      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
+      <button class="btn-action" id="listBtn" style="margin-top: 12px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
   <!-- Modal Creador Subir/Editar -->
   <div class="modal-sheet" id="adminModal">
     <div class="sheet-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-        <h3 id="modalTitleText" style="font-size: 1.15rem; color: var(--primary);">Publicar Contenido Global</h3>
-        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;">✕</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 id="modalTitleText" style="font-size: 1.1rem; color: var(--accent);">Publicar Contenido</h3>
+        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">✕</button>
       </div>
       <form onsubmit="app.saveItem(event)">
         <input type="hidden" id="fEditId">
@@ -176,10 +176,10 @@
         <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
         <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
         <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
-        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="3"></textarea></div>
+        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
         <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
         <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="fVideo" required placeholder="https://ok.ru/video/..."></div>
-        <button type="submit" class="btn-action" style="margin-top: 15px;">Guardar y Sincronizar</button>
+        <button type="submit" class="btn-action" style="margin-top: 10px;">Guardar y Sincronizar</button>
       </form>
     </div>
   </div>
@@ -195,7 +195,7 @@ const DEFAULT_CATALOG = /*CATALOG_START*/[
     "title": "[REC]",
     "genre": "Terror",
     "year": "2007",
-    "desc": "Película de prueba en la Neuro Página.",
+    "desc": "Película de prueba.",
     "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
     "video": "https://ok.ru/videoembed/237592963750"
   }
@@ -204,7 +204,7 @@ const DEFAULT_CATALOG = /*CATALOG_START*/[
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23150d26'/><text x='50%' y='50%' fill='%2394a3b8' font-size='18' text-anchor='middle' font-family='sans-serif'>NaPlus</text></svg>";
+const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%231a1c23'/><text x='50%' y='50%' fill='%23b2bec3' font-size='16' text-anchor='middle' font-family='sans-serif'>NaPlus</text></svg>";
 const ADMIN_CODE = String(90 * 100 + 9);
 const isToken = t => /^(ghp_|github_pat_)[A-Za-z0-9_]{20,}$/.test(t || '');
 const MARK_RE = /\/\*CATALOG_START\*\/([\s\S]*?)\/\*CATALOG_END\*\//;
@@ -231,11 +231,11 @@ function okEmbed(url) {
   return m ? 'https://ok.ru/videoembed/' + m[1] : null;
 }
 
-class NaPlusProEngine {
+class NaPlusEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.listKey = 'naplus_pro_list_v5';
+    this.listKey = 'naplus_list_v1';
     this.catalog = DEFAULT_CATALOG.slice();
     this.myList = [];
     try { this.myList = JSON.parse(store.get(this.listKey)) || []; } catch (e) {}
@@ -267,7 +267,6 @@ class NaPlusProEngine {
     card.className = 'media-card';
     const id = Number(item.id);
 
-    // Evento táctil y de clic directo garantizado
     card.onclick = () => this.openPlayer(id);
 
     card.innerHTML = `
@@ -278,17 +277,14 @@ class NaPlusProEngine {
       <img src="${esc(item.cover || NO_COVER)}" alt="Portada" loading="lazy" decoding="async">
       <div class="media-info">
         <div class="media-title">${esc(item.title)}</div>
-        <div class="media-sub">${esc(item.genre)}</div>
+        <div class="media-sub">${esc(item.genre)} (${esc(item.year)})</div>
       </div>`;
 
     const img = card.querySelector('img');
     img.onerror = () => { img.onerror = null; img.src = NO_COVER; };
 
-    const editBtn = card.querySelector('.edit-action');
-    const delBtn = card.querySelector('.del-action');
-
-    editBtn.onclick = (e) => { e.stopPropagation(); this.openEditModal(id); };
-    delBtn.onclick = (e) => { e.stopPropagation(); this.deleteItem(id); };
+    card.querySelector('.edit-action').onclick = (e) => { e.stopPropagation(); this.openEditModal(id); };
+    card.querySelector('.del-action').onclick = (e) => { e.stopPropagation(); this.deleteItem(id); };
 
     return card;
   }
@@ -336,7 +332,7 @@ class NaPlusProEngine {
     const embed = okEmbed(item.video);
     $('videoContainer').innerHTML = embed
       ? `<iframe src="${esc(embed)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`
-      : '<div style="color:var(--accent); font-size:0.9rem; padding:20px; text-align:center;">Video no disponible o enlace incorrecto</div>';
+      : '<div style="color:var(--accent); font-size:0.9srem; padding:20px; text-align:center;">Video no disponible</div>';
 
     $('playerModal').classList.add('active');
   }
@@ -349,7 +345,7 @@ class NaPlusProEngine {
     const inList = this.myList.includes(this.currentId);
     const btn = $('listBtn');
     btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
-    btn.style.background = inList ? '#332b4a' : 'var(--primary)';
+    btn.style.background = inList ? '#2d3436' : 'var(--primary)';
   }
 
   toggleList() {
@@ -371,7 +367,7 @@ class NaPlusProEngine {
     this.creator = true;
     $('adminPanel').style.display = 'block';
     document.body.classList.add('creator-mode');
-    if (!silent) this.toast('¡Modo Creador Desbloqueado!');
+    if (!silent) this.toast('¡Modo Creador Activado!');
   }
 
   verifyAdmin(val) {
@@ -386,7 +382,7 @@ class NaPlusProEngine {
   }
 
   openModal() {
-    $('modalTitleText').textContent = 'Publicar Contenido Global';$('fEditId').value = '';
+    $('modalTitleText').textContent = 'Publicar Contenido';$('fEditId').value = '';
     $('fType').value = 'movie';$('fTitle').value = '';
     $('fGenre').value = '';$('fYear').value = '2026';
     $('fDesc').value = '';$('fCover').value = '';
@@ -409,7 +405,7 @@ class NaPlusProEngine {
   closeModal() { $('adminModal').classList.remove('active'); }
 
   async deleteItem(id) {
-    if (!confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) return;
+    if (!confirm("¿Eliminar este título del catálogo?")) return;
     this.catalog = this.catalog.filter(x => x.id !== id);
     this.myList = this.myList.filter(x => x !== id);
     store.set(this.listKey, JSON.stringify(this.myList));
@@ -423,7 +419,7 @@ class NaPlusProEngine {
     e.preventDefault();
     const vUrl = $('fVideo').value.trim();
     if (!okEmbed(vUrl)) {
-      alert("Ingresá un enlace válido de OK.ru (ej: https://ok.ru/video/123456789)");
+      alert("Enlace de OK.ru inválido. Usá el formato correcto.");
       return;
     }
 
@@ -453,21 +449,12 @@ class NaPlusProEngine {
   ghUrl() { return `https://api.github.com/repos/${this.repo}/contents/${this.filePath}`; }
   ghHeaders(token) { return { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }; }
 
-  ghError(status) {
-    if (status === 401) {
-      store.del('naplus_token');
-      alert('GitHub rechazó el token. Verificá que siga activo.');
-    } else if (status === 403) {
-      alert('El token no tiene permisos de escritura (repo).');
-    }
-  }
-
   async loadFromGitHub() {
     const token = store.get('naplus_token');
     if (!isToken(token)) return;
     try {
       const res = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
-      if (!res.ok) { this.ghError(res.status); return; }
+      if (!res.ok) return;
       const data = await res.json();
       const code = b64decode(data.content);
       const match = code.match(MARK_RE);
@@ -485,7 +472,7 @@ class NaPlusProEngine {
   async autoSyncGitHub() {
     let token = store.get('naplus_token');
     if (!isToken(token)) {
-      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar globalmente:");
+      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar:");
       if (isToken(token)) {
         token = token.trim();
         store.set('naplus_token', token);
@@ -500,38 +487,25 @@ class NaPlusProEngine {
 
     try {
       const getRes = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
-      if (!getRes.ok) {
-        statusEl.style.display = "none";
-        this.ghError(getRes.status);
-        return;
-      }
+      if (!getRes.ok) { statusEl.style.display = "none"; return; }
       const getData = await getRes.json();
       const currentCode = b64decode(getData.content);
 
       const newJson = JSON.stringify(this.catalog, null, 2);
-      let updatedCode;
-      if (MARK_RE.test(currentCode)) {
-        updatedCode = currentCode.replace(MARK_RE, wrap(newJson));
-      } else {
-        updatedCode = currentCode;
-      }
+      let updatedCode = MARK_RE.test(currentCode) ? currentCode.replace(MARK_RE, wrap(newJson)) : currentCode;
 
       const putRes = await fetch(this.ghUrl(), {
         method: 'PUT',
         headers: { ...this.ghHeaders(token), 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: 'Actualización catálogo NaPlus Pro',
+          message: 'Actualización NaPlus',
           content: b64encode(updatedCode),
           sha: getData.sha
         })
       });
 
-      if (putRes.ok) {
-        statusEl.innerText = "✅ ¡Sincronizado con éxito!";
-      } else {
-        statusEl.innerText = "❌ Error al sincronizar";
-        this.ghError(putRes.status);
-      }
+      if (putRes.ok) statusEl.innerText = "✅ ¡Sincronizado!";
+      else statusEl.innerText = "❌ Error al sincronizar";
     } catch (err) {
       statusEl.innerText = "❌ Error de red";
     }
@@ -539,7 +513,7 @@ class NaPlusProEngine {
   }
 }
 
-const app = new NaPlusProEngine();
+const app = new NaPlusEngine();
 app.loadFromGitHub();
 app.renderHome();
 
