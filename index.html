@@ -5,47 +5,324 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
 
+  <!-- Aviso de errores (temporal, se puede borrar cuando todo funcione) -->
+  <script>
+  window.addEventListener('error', function (e) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#b91c1c;color:#fff;padding:10px;font:12px monospace';
+    d.textContent = 'Error: ' + e.message + ' (línea ' + e.lineno + ')';
+    (document.body || document.documentElement).appendChild(d);
+  });
+  </script>
+
   <!-- Estilos del Reproductor Video.js -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
   <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/city/index.css" rel="stylesheet" />
 
   <style>
-    :root{--bg-dark:#0a0612;--card-bg:#140d24;--accent-purple:#7c3aed;--accent-light:#c084fc;--text-white:#f8fafc;--text-gray:#94a3b8;--border-purple:rgba(124,58,237,.3)}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-    body{background-color:var(--bg-dark);color:var(--text-white);padding-top:65px;padding-bottom:40px}
-    header{position:fixed;top:0;left:0;right:0;height:60px;padding:0 15px;background:rgba(10,6,18,.95);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;z-index:1000;border-bottom:1px solid var(--border-purple)}
-    .logo{font-size:1.5rem;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,var(--accent-light),var(--accent-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .btn-creator{background:linear-gradient(135deg,var(--accent-purple),#6d28d9);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;font-size:.85rem;cursor:pointer}
-    .hero{padding:20px 15px;background:linear-gradient(180deg,#140d24 0%,#0a0612 100%);margin-bottom:10px}
-    .hero h1{font-size:1.8rem;margin-bottom:5px}
-    .hero p{font-size:.85rem;color:var(--text-gray);margin-bottom:12px}
-    .search-box{width:100%;max-width:500px}
-    .search-box input{width:100%;padding:10px 14px;background:rgba(10,6,18,.8);border:1px solid var(--border-purple);color:#fff;border-radius:8px;font-size:.95rem;outline:none}
-    .section-title{font-size:1.2rem;margin:20px 15px 10px;color:var(--accent-light);display:flex;align-items:center;gap:8px}
-    .section-title::before{content:'';display:inline-block;width:4px;height:16px;background:var(--accent-purple);border-radius:2px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;padding:0 15px}
-    .card{background:var(--card-bg);border-radius:8px;overflow:hidden;border:1px solid var(--border-purple);cursor:pointer;position:relative}
-    .card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#000}
-    .card-info{padding:8px}
-    .card-title{font-size:.85rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .card-sub{font-size:.75rem;color:var(--text-gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .card-fav-btn{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.7);border:1px solid var(--border-purple);color:#fff;width:28px;height:28px;border-radius:50%;font-size:.85rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
-    .admin-btns{display:none;position:absolute;top:5px;right:5px;gap:4px;z-index:10}
-    body.creator-mode .admin-btns{display:flex}
-    .admin-btns button{background:rgba(0,0,0,.85);border:1px solid var(--accent-purple);color:#fff;padding:4px 6px;border-radius:4px;font-size:.8rem}
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;padding:20px;overflow-y:auto}
-    .modal-box{background:var(--card-bg);padding:20px;border-radius:12px;width:100%;max-width:500px;border:1px solid var(--border-purple);position:relative;margin:auto}
-    .btn-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);color:#fff;border:none;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:100}
-    .modal-box h3{margin-bottom:12px;padding-right:30px}
-    .form-group{margin-bottom:12px}
-    .form-group label{display:block;font-size:.8rem;color:var(--text-gray);margin-bottom:4px}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--border-purple);color:#fff;border-radius:6px;font-size:.95rem}
-    .form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
-    .btn-cancel{background:transparent;color:var(--text-gray);border:none;padding:8px 12px;cursor:pointer}
-    .btn-submit{background:var(--accent-purple);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer}
-    .video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:12px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-    .video-box video,.video-box iframe,.video-box .video-js{width:100%!important;height:100%!important;border:none}
-    .btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px}
+    :root {
+      --bg-dark: #0a0612;
+      --card-bg: #140d24;
+      --accent-purple: #7c3aed;
+      --accent-light: #c084fc;
+      --text-white: #f8fafc;
+      --text-gray: #94a3b8;
+      --border-purple: rgba(124, 58, 237, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      padding-top: 65px;
+      padding-bottom: 40px;
+    }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      padding: 0 15px;
+      background: rgba(10, 6, 18, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-purple);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-creator {
+      background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .hero {
+      padding: 20px 15px;
+      background: linear-gradient(180deg, #140d24 0%, #0a0612 100%);
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+
+    .hero p {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      margin-bottom: 12px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(10, 6, 18, 0.8);
+      border: 1px solid var(--border-purple);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      margin: 20px 15px 10px;
+      color: var(--accent-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--accent-purple);
+      border-radius: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 12px;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-purple);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .card-info {
+      padding: 8px;
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      color: var(--text-gray);
+    }
+
+    .card-fav-btn {
+      position: absolute;
+      top: 5px; left: 5px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--border-purple);
+      color: #fff;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .admin-btns {
+      display: none;
+      position: absolute;
+      top: 5px; right: 5px;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    body.creator-mode .admin-btns {
+      display: flex;
+    }
+
+    .admin-btns button {
+      background: rgba(0,0,0,0.85);
+      border: 1px solid var(--accent-purple);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    /* Modales */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 2000;
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid var(--border-purple);
+      position: relative;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: none;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .modal-box h3 {
+      margin-bottom: 12px;
+      padding-right: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-gray);
+      margin-bottom: 4px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      background: #0a0612;
+      border: 1px solid var(--border-purple);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: var(--text-gray);
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background: var(--accent-purple);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .video-box {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .video-box video, .video-box iframe, .video-box .video-js {
+      width: 100% !important;
+      height: 100% !important;
+      border: none;
+    }
+
+    .btn-telegram {
+      background: #0088cc;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -98,7 +375,7 @@
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Ingresá la clave de creador (9009) o tu Token de GitHub (ghp_... o github_pat_...)</label>
+          <label>Ingresá la clave de creador (9009) o tu Token de GitHub (ghp_...)</label>
           <input type="password" id="passInput" placeholder="Clave o Token..." required autocomplete="off">
         </div>
         <div class="form-actions">
@@ -162,9 +439,6 @@
     const USER_REPO = "naplus-oficial/NaPlus";
     const FILE_PATH = "index.html";
 
-    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const isToken = t => /^(ghp_|github_pat_)/.test(t || '');
-
     let catalog = [
       {
         id: 1,
@@ -178,10 +452,10 @@
       }
     ];
 
-    let myFavorites = [];
-    try { myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || []; } catch (e) {}
     let isCreatorMode = false;
     let activePlayer = null;
+    let myFavorites = [];
+    try { myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || []; } catch (e) {}
 
     function toggleFavorite(id, e) {
       e.stopPropagation();
@@ -191,7 +465,7 @@
         myFavorites.push(id);
       }
       try { localStorage.setItem('naPlus_my_list', JSON.stringify(myFavorites)); } catch (e) {}
-      handleSearch();
+      renderCatalog();
     }
 
     function renderCatalog(filterText = '') {
@@ -207,9 +481,9 @@
       myListSGrid.innerHTML = '';
 
       const query = filterText.toLowerCase().trim();
-      const filtered = catalog.filter(item =>
-        String(item.title).toLowerCase().includes(query) ||
-        String(item.genre).toLowerCase().includes(query)
+      const filtered = catalog.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.genre.toLowerCase().includes(query)
       );
 
       filtered.forEach(item => {
@@ -239,17 +513,17 @@
       const isFav = myFavorites.includes(item.id);
 
       card.innerHTML = `
-        <button class="card-fav-btn" onclick="toggleFavorite(${Number(item.id)}, event)">
+        <button class="card-fav-btn" onclick="toggleFavorite(${item.id}, event)">
           ${isFav ? '❤️' : '🔖'}
         </button>
         <div class="admin-btns">
-          <button onclick="event.stopPropagation(); editItem(${Number(item.id)})">✏️</button>
-          <button onclick="event.stopPropagation(); deleteItem(${Number(item.id)})">🗑️</button>
+          <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
+          <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
         </div>
-        <img src="${esc(item.cover)}" alt="Portada" onerror="this.onerror=null;this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
+        <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
         <div class="card-info">
-          <div class="card-title">${esc(item.title)}</div>
-          <div class="card-sub">${esc(item.genre)} • ${esc(item.year)}</div>
+          <div class="card-title">${item.title}</div>
+          <div class="card-sub">${item.genre} • ${item.year}</div>
         </div>
       `;
       return card;
@@ -259,65 +533,6 @@
       renderCatalog(document.getElementById('searchInput').value);
     }
 
-    /* ---------- Reproductor ---------- */
-    function buildPlayer(item) {
-      let u;
-      try { u = new URL(item.video); } catch (e) { return null; }
-      if (!/^https?:$/.test(u.protocol)) return null;
-      const host = u.hostname.replace(/^www\./, '');
-
-      let yt = null;
-      if (host === 'youtu.be') yt = u.pathname.slice(1);
-      else if (host.endsWith('youtube.com')) {
-        if (u.pathname === '/watch') yt = u.searchParams.get('v');
-        else { const m = u.pathname.match(/^\/(embed|shorts|live)\/([^/?]+)/); if (m) yt = m[2]; }
-      }
-      if (yt) return `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(yt)}" allow="fullscreen; encrypted-media" allowfullscreen></iframe>`;
-
-      if (host === 'drive.google.com') {
-        const m = u.pathname.match(/\/file\/d\/([^/]+)/);
-        const id = m ? m[1] : u.searchParams.get('id');
-        if (id) return `<iframe src="https://drive.google.com/file/d/${encodeURIComponent(id)}/preview" allow="fullscreen" allowfullscreen></iframe>`;
-      }
-
-      if (host === 't.me' || host === 'telegram.me') {
-        return `<a class="btn-telegram" href="${esc(u.href)}" target="_blank" rel="noopener noreferrer">✈️ Ver en Telegram</a>`;
-      }
-
-      const type = /\.webm$/i.test(u.pathname) ? 'video/webm' : 'video/mp4';
-      return `<video id="vjsPlayer" class="video-js vjs-theme-city" controls playsinline preload="metadata" poster="${esc(item.cover)}"><source src="${esc(u.href)}" type="${type}"></video>`;
-    }
-
-    function openDetail(id) {
-      const item = catalog.find(x => x.id == id);
-      if (!item) return;
-
-      document.getElementById('detailTitle').textContent = item.title;
-      document.getElementById('detailMeta').textContent = `${item.genre} • ${item.year}`;
-      document.getElementById('detailDesc').textContent = item.desc || 'Sin descripción.';
-
-      const box = document.getElementById('videoBox');
-      const html = buildPlayer(item);
-      box.innerHTML = html || '<span style="color:#aaa;font-size:.85rem;">Contenido no disponible</span>';
-
-      if (window.videojs && document.getElementById('vjsPlayer')) {
-        try { activePlayer = videojs('vjsPlayer'); } catch (e) { activePlayer = null; }
-      }
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-      if (id === 'detailModal') {
-        if (activePlayer) {
-          try { activePlayer.dispose(); } catch (e) {}
-          activePlayer = null;
-        }
-        document.getElementById('videoBox').innerHTML = '';
-      }
-    }
-
-    /* ---------- Modo Creador ---------- */
     function handleCreatorButton() {
       if (isCreatorMode) {
         openUploadModal();
@@ -327,12 +542,23 @@
       }
     }
 
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+      if (id === 'detailModal') {
+        if (activePlayer) {
+          activePlayer.dispose();
+          activePlayer = null;
+        }
+        document.getElementById('videoBox').innerHTML = '';
+      }
+    }
+
     function submitLogin(e) {
       e.preventDefault();
       const val = document.getElementById('passInput').value.trim();
 
-      if (val === "9009" || isToken(val)) {
-        if (isToken(val)) {
+      if (val === "9009" || val.startsWith("ghp_")) {
+        if (val.startsWith("ghp_")) {
           localStorage.setItem('naPlus_gh_token', val);
         }
         isCreatorMode = true;
@@ -366,7 +592,7 @@
     async function deleteItem(id) {
       if (confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) {
         catalog = catalog.filter(x => x.id != id);
-        handleSearch();
+        renderCatalog();
         await publishToGitHub();
       }
     }
@@ -375,7 +601,7 @@
       e.preventDefault();
       const id = document.getElementById('editId').value;
       const newItem = {
-        id: id ? parseInt(id, 10) : Date.now(),
+        id: id ? parseInt(id) : Date.now(),
         type: document.getElementById('typeInput').value,
         title: document.getElementById('titleInput').value.trim(),
         genre: document.getElementById('genreInput').value.trim(),
@@ -392,37 +618,45 @@
         catalog.unshift(newItem);
       }
 
-      handleSearch();
+      renderCatalog();
       closeModal('uploadModal');
       await publishToGitHub();
     }
 
-    /* ---------- Publicar en GitHub ---------- */
     async function publishToGitHub() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!isToken(token)) {
-        token = (prompt("Pegá tu Token de GitHub (empieza por 'ghp_' o 'github_pat_') para guardar los cambios para todos:") || '').trim();
-        if (!isToken(token)) {
+      if (!token || !token.startsWith("ghp_")) {
+        token = prompt("Pegá tu Token de GitHub (que empieza por 'ghp_') para guardar los cambios para todos:");
+        if (token && token.trim().startsWith("ghp_")) {
+          token = token.trim();
+          localStorage.setItem('naPlus_gh_token', token);
+        } else {
           alert("El token ingresado no es válido. Los cambios no se enviaron a la nube.");
           return;
         }
-        localStorage.setItem('naPlus_gh_token', token);
       }
 
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) saveBtn.innerText = "Publicando...";
 
-      const url = `https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`;
-      const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
-
       try {
-        const getRes = await fetch(url, { headers });
+        const getRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
 
-        if (getRes.status === 401) {
+        if (getRes.status === 401 || getRes.status === 404) {
           localStorage.removeItem('naPlus_gh_token');
-          alert("GitHub no aceptó el token: está vencido o quedó mal copiado. Creá uno nuevo (Expiration: No expiration) y volvé a ingresarlo.");
+          alert("Error: El Token expiró o no tiene permiso de escritura 'repo'. Volvé a ingresarlo.");
           return;
         }
-        if (getRes.status === 403) {
-          alert("El token no tiene permiso de escritura. Activá Contents: Read and write (o el permiso 'repo').");
-          retur
+
+        const getData = await getRes.json();
+        const sha = getData.sha;
+
+        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+        const catalogJson = JSON.stringify(catalog, null, 2);
+        fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
+
+        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
+
+        const putRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/
