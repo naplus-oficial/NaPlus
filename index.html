@@ -3,189 +3,190 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus - Películas y Series Online</title>
+<title>NaPlus - Películas y Series</title>
 <style>
   :root {
-    --bg-main: #0f1015;
-    --bg-surface: #1a1c23;
-    --primary: #6c5ce7;
-    --accent: #00cec9;
-    --text: #f5f6fa;
-    --text-muted: #b2bec3;
-    --border: rgba(255, 255, 255, 0.08);
+    --bg: #090a0f;
+    --surface: #13151f;
+    --primary: #7c3aed;
+    --accent: #06b6d4;
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --border: rgba(255, 255, 255, 0.1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+  body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
 
-  /* Barra de Navegación Inferior Estilo App */
-  nav {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: rgba(15, 16, 21, 0.95); backdrop-filter: blur(10px);
-    display: flex; justify-content: space-around; align-items: center;
-    border-top: 1px solid var(--border); z-index: 99999;
+  /* Barra Superior Limpia */
+  header {
+    background: var(--surface); padding: 15px; display: flex;
+    justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
   }
-  .nav-btn {
-    background: none; border: none; color: var(--text-muted);
-    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; width: 33.33%; padding: 8px 0;
+  .logo { font-size: 1.4rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; }
+
+  .nav-tabs { display: flex; gap: 8px; }
+  .nav-tab {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
   }
-  .nav-btn span { font-size: 1.2rem; }
-  .nav-btn.active { color: var(--accent); font-weight: bold; }
+  .nav-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-  /* Vistas */
-  .view { display: none; padding: 15px; }
-  .view.active { display: block; }
+  /* Contenedores de Vistas */
+  .container { padding: 15px; }
+  .section { display: none; }
+  .section.active { display: block; }
 
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-top: 5px; }
-  .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; }
-
+  /* Buscador táctil rápido */
   .search-box {
-    width: 100%; padding: 12px 16px; background: var(--bg-surface);
-    border: 1px solid var(--border); color: #fff; border-radius: 8px;
-    font-size: 0.95rem; outline: none; margin-bottom: 20px;
+    width: 100%; padding: 14px; background: var(--surface);
+    border: 1px solid var(--border); color: #fff; border-radius: 10px;
+    font-size: 1rem; outline: none; margin-bottom: 20px;
   }
   .search-box:focus { border-color: var(--accent); }
 
-  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
-  .empty-note { color: var(--text-muted); font-size: 0.85rem; font-style: italic; text-align: center; margin: 20px 0; }
+  .title { font-size: 1.1rem; font-weight: bold; margin: 20px 0 10px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 8px; }
   
-  /* Grilla Estilo Cuevana (Optimizada para móviles) */
-  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .media-card { 
-    background: var(--bg-surface); border-radius: 6px; overflow: hidden; 
-    position: relative; border: 1px solid var(--border); cursor: pointer;
+  /* Grilla de Películas */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .card {
+    background: var(--surface); border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border); position: relative; cursor: pointer;
   }
-  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; pointer-events: none; }
-  .media-info { padding: 6px; pointer-events: none; }
-  .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .media-sub { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
+  .card-body { padding: 8px; }
+  .card-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-sub { font-size: 0.65rem; color: var(--muted); }
 
-  /* Controles Creador */
-  .admin-controls { display: none; position: absolute; top: 4px; right: 4px; gap: 4px; z-index: 10; }
-  body.creator-mode .admin-controls { display: flex; }
-  .admin-controls button { 
-    background: rgba(0, 0, 0, 0.85); border: 1px solid var(--accent); color: #fff; 
-    width: 28px; height: 28px; border-radius: 4px; font-size: 0.75rem; 
-    cursor: pointer; display: flex; align-items: center; justify-content: center; 
+  /* Botones de Administrador Directos sobre la tarjeta */
+  .card-admin {
+    display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10;
+  }
+  body.admin-on .card-admin { display: flex; }
+  .card-admin button {
+    background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff;
+    width: 30px; height: 30px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  /* Ajustes */
-  .settings-box { background: var(--bg-surface); border-radius: 10px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
-  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--accent); }
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
-  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none; }
+  /* Formulario Panel Creador / Ajustes */
+  .panel-box { background: var(--surface); border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid var(--border); }
+  .panel-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--accent); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border);
+    color: #fff; border-radius: 8px; font-size: 0.95rem; outline: none;
+  }
 
-  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
-  .btn-action:active { opacity: 0.8; }
+  .btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
+  .btn:active { opacity: 0.8; }
 
-  /* Reproductor Inmersivo */
-  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999999; flex-direction: column; }
-  .player-overlay.active { display: flex; }
-  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .close-player { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 4px; }
+  /* Reproductor Pantalla Completa */
+  .player-modal {
+    display: none; position: fixed; inset: 0; background: #000; z-index: 99999; flex-direction: column;
+  }
+  .player-modal.active { display: flex; }
+  .player-top { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); }
+  .btn-close { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+  
+  .player-screen { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .player-screen iframe { width: 100%; height: 100%; border: none; }
 
-  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
-  .video-container iframe { width: 100%; height: 100%; border: none; }
+  .player-info { padding: 20px; background: var(--surface); max-height: 40vh; overflow-y: auto; }
 
-  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; border-top: 1px solid var(--border); }
-
-  /* Modal de Creador */
-  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: flex-end; }
-  .modal-sheet.active { display: flex; }
-  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 90vh; border-radius: 16px 16px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
-
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 9999999; display: none; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; z-index: 999999; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  #toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #000; padding: 10px 20px; border-radius: 20px;
+    font-size: 0.85rem; font-weight: bold; z-index: 999999; display: none; text-align: center;
+  }
 </style>
 </head>
 <body>
 
-  <!-- Vista Inicio -->
-  <div id="viewHome" class="view active">
-    <div class="header"><div class="logo">NaPlus</div></div>
-    <input type="search" class="search-box" id="searchBox" placeholder="Buscar películas o series..." oninput="app.renderHome()">
+  <header>
+    <div class="logo">NaPlus</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="app.switchTab('home', this)">Inicio</button>
+      <button class="nav-tab" onclick="app.switchTab('list', this)">Mi Lista</button>
+      <button class="nav-tab" onclick="app.switchTab('settings', this)">Ajustes</button>
+    </div>
+  </header>
 
-    <div class="section-title">Películas</div>
-    <div class="media-grid" id="moviesGrid"></div>
+  <div class="container">
+    <!-- PESTAÑA INICIO -->
+    <div id="tab-home" class="section active">
+      <input type="search" class="search-box" id="searchInput" placeholder="🔍 Buscar películas o series..." oninput="app.render()">
+      
+      <div class="title">Películas</div>
+      <div class="grid" id="movieGrid"></div>
 
-    <div class="section-title" style="margin-top: 25px;">Series</div>
-    <div class="media-grid" id="seriesGrid"></div>
-  </div>
-
-  <!-- Vista Mi Lista -->
-  <div id="viewList" class="view">
-    <div class="header"><div class="logo">Mi Lista</div></div>
-    <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
-    <p id="emptyMsg" class="empty-note" style="display: none;">Tu lista está vacía.</p>
-  </div>
-
-  <!-- Vista Ajustes -->
-  <div id="viewSettings" class="view">
-    <div class="header"><div class="logo">Ajustes</div></div>
-
-    <div class="settings-box" id="adminPanel" style="display: none;">
-      <h3>Panel de Creador</h3>
-      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido Nuevo</button>
+      <div class="title" style="margin-top: 30px;">Series</div>
+      <div class="grid" id="seriesGrid"></div>
     </div>
 
-    <div class="settings-box">
-      <h3>Modo Creador</h3>
-      <div class="field" style="margin-bottom: 0;">
-        <label>Clave (9009) o Token de GitHub</label>
-        <input type="password" placeholder="Ingresar clave..." autocomplete="off" oninput="app.verifyAdmin(this.value)">
+    <!-- PESTAÑA MI LISTA -->
+    <div id="tab-list" class="section">
+      <div class="title">Mi Lista Guardada</div>
+      <div class="grid" id="listGrid"></div>
+      <p id="emptyListMsg" style="color:var(--muted); text-align:center; margin-top:30px; display:none;">No guardaste nada todavía.</p>
+    </div>
+
+    <!-- PESTAÑA AJUSTES / ADMIN -->
+    <div id="tab-settings" class="section">
+      <div class="panel-box" id="creatorCard" style="display:none;">
+        <h3>Panel de Creador</h3>
+        <button class="btn" onclick="app.openEditor()">+ Subir Contenido Nuevo</button>
+      </div>
+
+      <div class="panel-box">
+        <h3>Modo Administrador</h3>
+        <div class="field">
+          <label>Clave (9009) o Token de GitHub (ghp_...)</label>
+          <input type="password" placeholder="Ingresar credencial..." oninput="app.auth(this.value)">
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Navegación Inferior -->
-  <nav id="bottomNav">
-    <button class="nav-btn active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
-    <button class="nav-btn" onclick="app.switchView('List', this)"><span>🔖</span>Mi Lista</button>
-    <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
-  </nav>
-
-  <!-- Reproductor -->
-  <div class="player-overlay" id="playerModal">
-    <div class="player-header">
-      <h3 id="playerTitleHeader" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
-      <button class="close-player" onclick="app.closePlayer()">✕</button>
+  <!-- REPRODUCTOR -->
+  <div class="player-modal" id="playerModal">
+    <div class="player-top">
+      <h3 id="pTitleTop" style="font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80%;"></h3>
+      <button class="btn-close" onclick="app.closePlayer()">✕</button>
     </div>
-
-    <div class="video-container" id="videoContainer"></div>
-
-    <div class="player-details">
-      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
-      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
-      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
-      <button class="btn-action" id="listBtn" style="margin-top: 12px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
+    <div class="player-screen" id="pScreen"></div>
+    <div class="player-info">
+      <h2 id="pTitle" style="font-size:1.2rem; margin-bottom:5px;"></h2>
+      <p id="pMeta" style="color:var(--accent); font-size:0.85rem; margin-bottom:10px;"></p>
+      <p id="pDesc" style="color:var(--muted); font-size:0.9rem; line-height:1.4;"></p>
+      <button class="btn" id="listBtn" style="margin-top:15px;" onclick="app.toggleMyList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
-  <!-- Modal Creador Subir/Editar -->
-  <div class="modal-sheet" id="adminModal">
-    <div class="sheet-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 id="modalTitleText" style="font-size: 1.1rem; color: var(--accent);">Publicar Contenido</h3>
-        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">✕</button>
+  <!-- MODAL EDITAR / SUBIR -->
+  <div class="player-modal" id="editorModal" style="background:rgba(0,0,0,0.85); justify-content:flex-end;">
+    <div style="background:var(--surface); width:100%; max-height:90vh; border-radius:20px 20px 0 0; padding:20px; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 id="editorHeading" style="color:var(--accent);">Subir Contenido</h3>
+        <button class="btn-close" onclick="app.closeEditor()">✕</button>
       </div>
-      <form onsubmit="app.saveItem(event)">
-        <input type="hidden" id="fEditId">
-        <div class="field"><label>Tipo</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
-        <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
-        <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
-        <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
-        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
-        <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
-        <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="fVideo" required placeholder="https://ok.ru/video/..."></div>
-        <button type="submit" class="btn-action" style="margin-top: 10px;">Guardar y Sincronizar</button>
+      <form onsubmit="app.saveContent(event)">
+        <input type="hidden" id="eId">
+        <div class="field"><label>Tipo</label><select id="eType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+        <div class="field"><label>Título</label><input type="text" id="eTitle" required></div>
+        <div class="field"><label>Género</label><input type="text" id="eGenre" required placeholder="Terror, Acción..."></div>
+        <div class="field"><label>Año</label><input type="number" id="eYear" required value="2026"></div>
+        <div class="field"><label>Sinopsis</label><textarea id="eDesc" rows="3"></textarea></div>
+        <div class="field"><label>URL de Portada</label><input type="url" id="eCover" required placeholder="https://..."></div>
+        <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="eVideo" required placeholder="https://ok.ru/video/..."></div>
+        <button type="submit" class="btn" style="margin-top:10px;">Guardar y Sincronizar</button>
       </form>
     </div>
   </div>
 
   <div id="toast"></div>
-  <div id="syncStatus">Sincronizando con GitHub...</div>
 
 <script>
 const DEFAULT_CATALOG = /*CATALOG_START*/[
@@ -204,321 +205,304 @@ const DEFAULT_CATALOG = /*CATALOG_START*/[
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%231a1c23'/><text x='50%' y='50%' fill='%23b2bec3' font-size='16' text-anchor='middle' font-family='sans-serif'>NaPlus</text></svg>";
-const ADMIN_CODE = String(90 * 100 + 9);
+const ADMIN_PASS = String(90 * 100 + 9);
 const isToken = t => /^(ghp_|github_pat_)[A-Za-z0-9_]{20,}$/.test(t || '');
-const MARK_RE = /\/\*CATALOG_START\*\/([\s\S]*?)\/\*CATALOG_END\*\//;
-const wrap = json => '/*CATALOG_' + 'START*/' + json + '/*CATALOG_' + 'END*/';
-const b64decode = b => new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0)));
-const b64encode = s => {
+const MARK_REGEX = /\/\*CATALOG_START\*\/([\s\S]*?)\/\*CATALOG_END\*\//;
+const wrapCatalog = json => '/*CATALOG_' + 'START*/' + json + '/*CATALOG_' + 'END*/';
+const b64dec = b => new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0)));
+const b64enc = s => {
   const bytes = new TextEncoder().encode(s);
   let bin = '';
   for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
   return btoa(bin);
 };
-const store = {
-  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
-  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+const storage = {
+  get(k) { try { return localStorage.getItem(k); } catch(e){return null;} },
+  set(k, v) { try { localStorage.setItem(k, v); } catch(e){} },
+  del(k) { try { localStorage.removeItem(k); } catch(e){} }
 };
 
-function okEmbed(url) {
+function parseOk(url) {
   let u;
-  try { u = new URL(url); } catch (e) { return null; }
-  if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
-  if (u.hostname.replace(/^(www\.|m\.)/, '') !== 'ok.ru') return null;
+  try { u = new URL(url); } catch(e){return null;}
+  if(u.hostname.replace(/^(www\.|m\.)/, '') !== 'ok.ru') return null;
   const m = u.pathname.match(/\/(?:video|videoembed)\/(\d+)/);
   return m ? 'https://ok.ru/videoembed/' + m[1] : null;
 }
 
-class NaPlusEngine {
+class NaPlusApp {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
-    this.filePath = "index.html";
-    this.listKey = 'naplus_list_v1';
+    this.file = "index.html";
     this.catalog = DEFAULT_CATALOG.slice();
     this.myList = [];
-    try { this.myList = JSON.parse(store.get(this.listKey)) || []; } catch (e) {}
-    if (!Array.isArray(this.myList)) this.myList = [];
+    try { this.myList = JSON.parse(storage.get('naplus_favs_v2')) || []; } catch(e){}
     this.currentId = null;
-    this.creator = false;
-    this.toastTimer = null;
+    this.isAdmin = false;
   }
 
-  toast(msg) {
+  showToast(msg) {
     const t = $('toast');
-    t.textContent = msg; t.style.display = 'block';
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => t.style.display = 'none', 3000);
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
   }
 
-  switchView(viewName, el) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-    $('view' + viewName).classList.add('active');
-    el.classList.add('active');
-    window.scrollTo(0, 0);
-    if (viewName === 'Home') this.renderHome();
-    if (viewName === 'List') this.renderList();
+  switchTab(tabName, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    $('tab-' + tabName).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo(0,0);
+    if(tabName === 'home') this.render();
+    if(tabName === 'list') this.renderList();
   }
 
   createCard(item) {
-    const card = document.createElement('div');
-    card.className = 'media-card';
+    const div = document.createElement('div');
+    div.className = 'card';
     const id = Number(item.id);
+    
+    div.onclick = () => this.openPlayer(id);
 
-    card.onclick = () => this.openPlayer(id);
-
-    card.innerHTML = `
-      <div class="admin-controls">
-        <button type="button" class="edit-action" title="Editar">✏️</button>
-        <button type="button" class="del-action" title="Eliminar">🗑️</button>
+    div.innerHTML = `
+      <div class="card-admin">
+        <button onclick="event.stopPropagation(); app.openEditor(${id})">✏️</button>
+        <button onclick="event.stopPropagation(); app.deleteItem(${id})">🗑️</button>
       </div>
-      <img src="${esc(item.cover || NO_COVER)}" alt="Portada" loading="lazy" decoding="async">
-      <div class="media-info">
-        <div class="media-title">${esc(item.title)}</div>
-        <div class="media-sub">${esc(item.genre)} (${esc(item.year)})</div>
-      </div>`;
-
-    const img = card.querySelector('img');
-    img.onerror = () => { img.onerror = null; img.src = NO_COVER; };
-
-    card.querySelector('.edit-action').onclick = (e) => { e.stopPropagation(); this.openEditModal(id); };
-    card.querySelector('.del-action').onclick = (e) => { e.stopPropagation(); this.deleteItem(id); };
-
-    return card;
+      <img src="${esc(item.cover)}" alt="Poster" loading="lazy">
+      <div class="card-body">
+        <div class="card-title">${esc(item.title)}</div>
+        <div class="card-sub">${esc(item.genre)} • ${item.year}</div>
+      </div>
+    `;
+    return div;
   }
 
-  renderHome() {
-    const q = norm($('searchBox').value.trim());
-    const mGrid = $('moviesGrid'), sGrid =$('seriesGrid');
+  render() {
+    const q = norm($('searchInput').value);
+    const mGrid = $('movieGrid'), sGrid =$('seriesGrid');
     mGrid.innerHTML = ''; sGrid.innerHTML = '';
 
-    const movies = this.catalog.filter(i => i.type === 'movie' && (norm(i.title).includes(q) || norm(i.genre).includes(q)));
-    const series = this.catalog.filter(i => i.type === 'series' && (norm(i.title).includes(q) || norm(i.genre).includes(q)));
+    const filtered = this.catalog.filter(i => norm(i.title).includes(q) || norm(i.genre).includes(q));
+    const movies = filtered.filter(i => i.type === 'movie');
+    const series = filtered.filter(i => i.type === 'series');
 
-    movies.forEach(item => mGrid.appendChild(this.createCard(item)));
-    series.forEach(item => sGrid.appendChild(this.createCard(item)));
+    movies.forEach(i => mGrid.appendChild(this.createCard(i)));
+    series.forEach(i => sGrid.appendChild(this.createCard(i)));
 
-    if (!movies.length) mGrid.innerHTML = '<p class="empty-note">No hay películas.</p>';
-    if (!series.length) sGrid.innerHTML = '<p class="empty-note">No hay series.</p>';
+    if(!movies.length) mGrid.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">Sin resultados.</p>';
+    if(!series.length) sGrid.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">Sin resultados.</p>';
   }
 
   renderList() {
     const grid = $('listGrid');
     grid.innerHTML = '';
     const items = this.catalog.filter(i => this.myList.includes(i.id));
-    const empty = $('emptyMsg');
+    const msg = $('emptyListMsg');
 
-    if (items.length === 0) {
-      empty.style.display = 'block';
+    if(!items.length) {
+      msg.style.display = 'block';
     } else {
-      empty.style.display = 'none';
-      items.forEach(item => grid.appendChild(this.createCard(item)));
+      msg.style.display = 'none';
+      items.forEach(i => grid.appendChild(this.createCard(i)));
     }
   }
 
   openPlayer(id) {
     this.currentId = id;
     const item = this.catalog.find(x => x.id === id);
-    if (!item) return;
+    if(!item) return;
 
-    $('playerTitleHeader').textContent = item.title;
-    $('playerTitle').textContent = item.title;
-    $('playerMeta').textContent = `${item.genre} • ${item.year}`;
-    $('playerDesc').textContent = item.desc || 'Sin sinopsis.';
-    this.updateListBtnState();
+    $('pTitleTop').textContent = item.title;
+    $('pTitle').textContent = item.title;
+    $('pMeta').textContent = `${item.genre} • ${item.year}`;
+    $('pDesc').textContent = item.desc || 'Sin sinopsis.';
+    this.updateListBtn();
 
-    const embed = okEmbed(item.video);
-    $('videoContainer').innerHTML = embed
-      ? `<iframe src="${esc(embed)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`
-      : '<div style="color:var(--accent); font-size:0.9srem; padding:20px; text-align:center;">Video no disponible</div>';
-
+    const embed = parseOk(item.video);
+    $('pScreen').innerHTML = embed ? `<iframe src="${esc(embed)}" allowfullscreen allow="autoplay"></iframe>` : '<div style="color:var(--accent);">Video no disponible</div>';
     $('playerModal').classList.add('active');
   }
 
   closePlayer() {
-    $('videoContainer').innerHTML = '';$('playerModal').classList.remove('active');
+    $('pScreen').innerHTML = '';$('playerModal').classList.remove('active');
   }
 
-  updateListBtnState() {
+  updateListBtn() {
     const inList = this.myList.includes(this.currentId);
     const btn = $('listBtn');
     btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
-    btn.style.background = inList ? '#2d3436' : 'var(--primary)';
+    btn.style.background = inList ? '#332b4a' : 'var(--primary)';
   }
 
-  toggleList() {
+  toggleMyList() {
     const idx = this.myList.indexOf(this.currentId);
-    if (idx > -1) {
+    if(idx > -1) {
       this.myList.splice(idx, 1);
-      this.toast('Eliminado de Mi Lista');
+      this.showToast('Eliminado de Mi Lista');
     } else {
       this.myList.push(this.currentId);
-      this.toast('Agregado a Mi Lista');
+      this.showToast('Agregado a Mi Lista');
     }
-    store.set(this.listKey, JSON.stringify(this.myList));
-    this.updateListBtnState();
+    storage.set('naplus_favs_v2', JSON.stringify(this.myList));
+    this.updateListBtn();
     this.renderList();
   }
 
-  enableCreator(silent) {
-    if (this.creator) return;
-    this.creator = true;
-    $('adminPanel').style.display = 'block';
-    document.body.classList.add('creator-mode');
-    if (!silent) this.toast('¡Modo Creador Activado!');
-  }
-
-  verifyAdmin(val) {
+  auth(val) {
     const v = val.trim();
-    if (v === ADMIN_CODE) {
-      this.enableCreator();
-    } else if (isToken(v)) {
-      store.set('naplus_token', v);
-      this.enableCreator();
-      this.loadFromGitHub();
+    if(v === ADMIN_PASS || isToken(v)) {
+      if(isToken(v)) storage.set('naplus_token', v);
+      this.activateAdmin();
     }
   }
 
-  openModal() {
-    $('modalTitleText').textContent = 'Publicar Contenido';$('fEditId').value = '';
-    $('fType').value = 'movie';$('fTitle').value = '';
-    $('fGenre').value = '';$('fYear').value = '2026';
-    $('fDesc').value = '';$('fCover').value = '';
-    $('fVideo').value = '';$('adminModal').classList.add('active');
+  activateAdmin() {
+    if(this.isAdmin) return;
+    this.isAdmin = true;
+    $('creatorCard').style.display = 'block';
+    document.body.classList.add('admin-on');
+    this.showToast('Modo Administrador Activo');
   }
 
-  openEditModal(id) {
-    const item = this.catalog.find(x => x.id === id);
-    if (!item) return;
-    $('modalTitleText').textContent = 'Editar Contenido';$('fEditId').value = item.id;
-    $('fType').value = item.type;
-    $('fTitle').value = item.title;
-    $('fGenre').value = item.genre;
-    $('fYear').value = item.year;
-    $('fDesc').value = item.desc \vert{}\vert{} '';$('fCover').value = item.cover;
-    $('fVideo').value = item.video;
-    $('adminModal').classList.add('active');
+  openEditor(id = null) {
+    if(id) {
+      const item = this.catalog.find(x => x.id === id);
+      if(!item) return;
+      $('editorHeading').textContent = 'Editar Contenido';$('eId').value = item.id;
+      $('eType').value = item.type;
+      $('eTitle').value = item.title;
+      $('eGenre').value = item.genre;
+      $('eYear').value = item.year;
+      $('eDesc').value = item.desc \vert{}\vert{} '';$('eCover').value = item.cover;
+      $('eVideo').value = item.video;
+    } else {
+      $('editorHeading').textContent = 'Subir Contenido';
+      $('eId').value = '';$('eType').value = 'movie';
+      $('eTitle').value = '';$('eGenre').value = '';
+      $('eYear').value = '2026';$('eDesc').value = '';
+      $('eCover').value = '';$('eVideo').value = '';
+    }
+    $('editorModal').classList.add('active');
   }
 
-  closeModal() { $('adminModal').classList.remove('active'); }
+  closeEditor() { $('editorModal').classList.remove('active'); }
 
   async deleteItem(id) {
-    if (!confirm("¿Eliminar este título del catálogo?")) return;
+    if(!confirm("¿Eliminar este título?")) return;
     this.catalog = this.catalog.filter(x => x.id !== id);
     this.myList = this.myList.filter(x => x !== id);
-    store.set(this.listKey, JSON.stringify(this.myList));
-    this.renderHome();
+    storage.set('naplus_favs_v2', JSON.stringify(this.myList));
+    this.render();
     this.renderList();
-    this.toast('Contenido eliminado');
-    await this.autoSyncGitHub();
+    this.showToast('Eliminado');
+    await this.syncGitHub();
   }
 
-  async saveItem(e) {
+  async saveContent(e) {
     e.preventDefault();
-    const vUrl = $('fVideo').value.trim();
-    if (!okEmbed(vUrl)) {
-      alert("Enlace de OK.ru inválido. Usá el formato correcto.");
+    const vUrl = $('eVideo').value.trim();
+    if(!parseOk(vUrl)) {
+      alert("El enlace debe ser de OK.ru (ej: https://ok.ru/video/...)");
       return;
     }
 
-    const editId = $('fEditId').value;
-    const data = {
-      id: editId ? parseInt(editId, 10) : Date.now(),
-      type: $('fType').value,
-      title: $('fTitle').value.trim(),
-      genre: $('fGenre').value.trim(),
-      year: $('fYear').value,
-      desc: $('fDesc').value.trim(),
-      cover: $('fCover').value.trim(),
+    const eId = $('eId').value;
+    const item = {
+      id: eId ? parseInt(eId, 10) : Date.now(),
+      type: $('eType').value,
+      title: $('eTitle').value.trim(),
+      genre: $('eGenre').value.trim(),
+      year: $('eYear').value,
+      desc: $('eDesc').value.trim(),
+      cover: $('eCover').value.trim(),
       video: vUrl
     };
 
-    const idx = editId ? this.catalog.findIndex(x => x.id == editId) : -1;
-    if (idx !== -1) this.catalog[idx] = data;
-    else this.catalog.unshift(data);
+    const idx = eId ? this.catalog.findIndex(x => x.id == eId) : -1;
+    if(idx !== -1) this.catalog[idx] = item;
+    else this.catalog.unshift(item);
 
-    this.closeModal();
-    this.renderHome();
+    this.closeEditor();
+    this.render();
     this.renderList();
-    this.toast('Contenido guardado');
-    await this.autoSyncGitHub();
+    this.showToast('Guardado con éxito');
+    await this.syncGitHub();
   }
 
-  ghUrl() { return `https://api.github.com/repos/${this.repo}/contents/${this.filePath}`; }
-  ghHeaders(token) { return { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }; }
-
-  async loadFromGitHub() {
-    const token = store.get('naplus_token');
-    if (!isToken(token)) return;
-    try {
-      const res = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
-      if (!res.ok) return;
-      const data = await res.json();
-      const code = b64decode(data.content);
-      const match = code.match(MARK_RE);
-      if (match) {
-        const remoteCatalog = JSON.parse(match[1]);
-        if (Array.isArray(remoteCatalog) && remoteCatalog.length) {
-          this.catalog = remoteCatalog;
-          this.renderHome();
-          this.renderList();
-        }
-      }
-    } catch (e) {}
-  }
-
-  async autoSyncGitHub() {
-    let token = store.get('naplus_token');
-    if (!isToken(token)) {
-      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar:");
-      if (isToken(token)) {
+  async syncGitHub() {
+    let token = storage.get('naplus_token');
+    if(!isToken(token)) {
+      token = prompt("Ingresá tu Token de GitHub (ghp_...) para publicar globalmente:");
+      if(isToken(token)) {
         token = token.trim();
-        store.set('naplus_token', token);
-        this.enableCreator(true);
+        storage.set('naplus_token', token);
+        this.activateAdmin();
       } else {
         return;
       }
     }
 
-    const statusEl = $('syncStatus');
-    statusEl.style.display = "block";
+    this.showToast('Sincronizando con GitHub...');
+    const url = `https://api.github.com/repos/${this.repo}/contents/${this.file}`;
+    const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
 
     try {
-      const getRes = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
-      if (!getRes.ok) { statusEl.style.display = "none"; return; }
-      const getData = await getRes.json();
-      const currentCode = b64decode(getData.content);
+      const res = await fetch(url, { headers });
+      if(!res.ok) { this.showToast('Error de Token'); return; }
+      const data = await res.json();
+      const code = b64dec(data.content);
 
-      const newJson = JSON.stringify(this.catalog, null, 2);
-      let updatedCode = MARK_RE.test(currentCode) ? currentCode.replace(MARK_RE, wrap(newJson)) : currentCode;
+      const jsonStr = JSON.stringify(this.catalog, null, 2);
+      const newCode = MARK_REGEX.test(code) ? code.replace(MARK_REGEX, wrapCatalog(jsonStr)) : code;
 
-      const putRes = await fetch(this.ghUrl(), {
+      const putRes = await fetch(url, {
         method: 'PUT',
-        headers: { ...this.ghHeaders(token), 'Content-Type': 'application/json' },
+        headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: 'Actualización NaPlus',
-          content: b64encode(updatedCode),
-          sha: getData.sha
+          content: b64enc(newCode),
+          sha: data.sha
         })
       });
 
-      if (putRes.ok) statusEl.innerText = "✅ ¡Sincronizado!";
-      else statusEl.innerText = "❌ Error al sincronizar";
-    } catch (err) {
-      statusEl.innerText = "❌ Error de red";
+      if(putRes.ok) this.showToast('✅ ¡Publicado globalmente!');
+      else this.showToast('❌ Error al publicar');
+    } catch(err) {
+      this.showToast('❌ Error de red');
     }
-    setTimeout(() => { statusEl.style.display = "none"; }, 3000);
+  }
+
+  async initCloud() {
+    const token = storage.get('naplus_token');
+    if(!isToken(token)) return;
+    try {
+      const res = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.file}`, {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+      });
+      if(!res.ok) return;
+      const data = await res.json();
+      const code = b64dec(data.content);
+      const match = code.match(MARK_REGEX);
+      if(match) {
+        const remote = JSON.parse(match[1]);
+        if(Array.isArray(remote) && remote.length) {
+          this.catalog = remote;
+          this.render();
+          this.renderList();
+        }
+      }
+    } catch(e){}
   }
 }
 
-const app = new NaPlusEngine();
-app.loadFromGitHub();
-app.renderHome();
+const app = new NaPlusApp();
+app.initCloud();
+app.render();
 
-if (isToken(store.get('naplus_token'))) {
-  app.enableCreator(true);
+if(isToken(storage.get('naplus_token'))) {
+  app.activateAdmin();
 }
 </script>
 </body>
