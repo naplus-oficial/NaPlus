@@ -64,7 +64,7 @@
       cursor: pointer;
     }
 
-    /* Encabezado */
+    /* Encabezado y Buscador */
     .hero {
       padding: 20px 15px;
       background: linear-gradient(180deg, #140d24 0%, #0a0612 100%);
@@ -79,8 +79,31 @@
     .hero p {
       font-size: 0.85rem;
       color: var(--text-gray);
+      margin-bottom: 12px;
     }
 
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(10, 6, 18, 0.8);
+      border: 1px solid var(--border-purple);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-light);
+    }
+
+    /* Secciones */
     .section-title {
       font-size: 1.2rem;
       margin: 20px 15px 10px;
@@ -97,6 +120,13 @@
       height: 16px;
       background: var(--accent-purple);
       border-radius: 2px;
+    }
+
+    .empty-msg {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      padding: 0 15px;
+      font-style: italic;
     }
 
     /* Grilla de Películas */
@@ -139,6 +169,22 @@
     .card-sub {
       font-size: 0.75rem;
       color: var(--text-gray);
+    }
+
+    .card-fav-btn {
+      position: absolute;
+      top: 5px; left: 5px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--border-purple);
+      color: #fff;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
     }
 
     .admin-btns {
@@ -289,8 +335,21 @@
   <div class="hero">
     <h1>NaPlus Streaming</h1>
     <p>Películas y series exclusivas directamente en tu pantalla.</p>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()">
+    </div>
   </div>
 
+  <!-- Mi Lista (Favoritos) -->
+  <div id="myListContainer" style="display: none;">
+    <div class="section-title">Mi Lista - Películas Guardadas</div>
+    <div class="grid" id="myListMoviesGrid"></div>
+    <div class="section-title">Mi Lista - Series Guardadas</div>
+    <div class="grid" id="myListSeriesGrid"></div>
+    <hr style="border: 0; border-top: 1px solid var(--border-purple); margin: 25px 15px 10px 15px;">
+  </div>
+
+  <!-- Catálogo General -->
   <div class="section-title">Películas</div>
   <div class="grid" id="moviesGrid"></div>
 
@@ -381,67 +440,103 @@
 
     /* BASE DE DATOS PÚBLICA DEL CATÁLOGO */
     let catalog = [
-  {
-    "id": 1790572639134,
-    "type": "movie",
-    "title": "[REC]²",
-    "genre": "Terror",
-    "year": "2009",
-    "desc": "Para determinar la situación en el interior, un supuesto jefe de medicina y un equipo de fuerzas especiales entran en la zona de cuarentena de un complejo de apartamentos infectados.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/97051b1f80866fb2ac0f19f1970d9b55ad2d27d527f729faf51903ef5c8ef7b2.jpg",
-    "video": "https://t.me/c/3804641088/2/3337"
-  },
-  {
-    "id": 1790572218247,
-    "type": "movie",
-    "title": "Rec",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de terror de zombies",
-    "cover": "https://www.clarin.com/img/2020/04/15/9OmNWiFE0_720x0__1.jpg",
-    "video": "https://t.me/c/3804641088/2/3335"
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "Mi Primera Película",
-    "genre": "Aventura",
-    "year": "2026",
-    "desc": "Bienvenido a NaPlus.",
-    "cover": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400",
-    "video": "https://www.w3schools.com/html/mov_bbb.mp4"
-  }
-];
+      {
+        id: 1,
+        type: 'movie',
+        title: 'Mi Primera Película',
+        genre: 'Aventura',
+        year: '2026',
+        desc: 'Bienvenido a NaPlus.',
+        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
+      }
+    ];
 
+    let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
 
+    // Alternar Favorito
+    function toggleFavorite(id, e) {
+      e.stopPropagation();
+      if (myFavorites.includes(id)) {
+        myFavorites = myFavorites.filter(favId => favId !== id);
+      } else {
+        myFavorites.push(id);
+      }
+      localStorage.setItem('naPlus_my_list', JSON.stringify(myFavorites));
+      renderCatalog();
+    }
+
     // Renderizar tarjetas
-    function renderCatalog() {
+    function renderCatalog(filterText = '') {
       const mGrid = document.getElementById('moviesGrid');
       const sGrid = document.getElementById('seriesGrid');
+      const myListContainer = document.getElementById('myListContainer');
+      const myListMGrid = document.getElementById('myListMoviesGrid');
+      const myListSGrid = document.getElementById('myListSeriesGrid');
+
       mGrid.innerHTML = '';
       sGrid.innerHTML = '';
+      myListMGrid.innerHTML = '';
+      myListSGrid.innerHTML = '';
 
-      catalog.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => openDetail(item.id);
+      const query = filterText.toLowerCase().trim();
+      const filtered = catalog.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.genre.toLowerCase().includes(query)
+      );
 
-        card.innerHTML = `
-          <div class="admin-btns">
-            <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
-            <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
-          </div>
-          <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
-          <div class="card-info">
-            <div class="card-title">${item.title}</div>
-            <div class="card-sub">${item.genre} • ${item.year}</div>
-          </div>
-        `;
-
+      // Render Catálogo General
+      filtered.forEach(item => {
+        const card = createCardElement(item);
         if (item.type === 'movie') mGrid.appendChild(card);
         else sGrid.appendChild(card);
       });
+
+      // Render Mi Lista (Favoritos)
+      const favoriteItems = catalog.filter(item => myFavorites.includes(item.id));
+      if (favoriteItems.length > 0 && query === '') {
+        myListContainer.style.display = 'block';
+        favoriteItems.forEach(item => {
+          const card = createCardElement(item);
+          if (item.type === 'movie') myListMGrid.appendChild(card);
+          else myListSGrid.appendChild(card);
+        });
+
+        if (myListMGrid.children.length === 0) myListMGrid.innerHTML = '<div class="empty-msg">No tenés películas guardadas.</div>';
+        if (myListSGrid.children.length === 0) myListSGrid.innerHTML = '<div class="empty-msg">No tenés series guardadas.</div>';
+      } else {
+        myListContainer.style.display = 'none';
+      }
+    }
+
+    function createCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openDetail(item.id);
+
+      const isFav = myFavorites.includes(item.id);
+
+      card.innerHTML = `
+        <button class="card-fav-btn" onclick="toggleFavorite(${item.id}, event)">
+          ${isFav ? '❤️' : '🔖'}
+        </button>
+        <div class="admin-btns">
+          <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
+          <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
+        </div>
+        <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
+        <div class="card-info">
+          <div class="card-title">${item.title}</div>
+          <div class="card-sub">${item.genre} • ${item.year}</div>
+        </div>
+      `;
+      return card;
+    }
+
+    function handleSearch() {
+      const text = document.getElementById('searchInput').value;
+      renderCatalog(text);
     }
 
     function handleCreatorClick() {
@@ -572,44 +667,4 @@
         });
 
         if (putRes.ok) {
-          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo en sus celulares.");
-        } else {
-          alert("Hubo un problema con el Token de GitHub. Verificalo de nuevo.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error de conexión al guardar públicamente.");
-      } finally {
-        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
-      }
-    }
-
-    // Abrir reproductor
-    function openDetail(id) {
-      const item = catalog.find(x => x.id == id);
-      if (!item) return;
-
-      document.getElementById('detailTitle').innerText = item.title;
-      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
-      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
-
-      const vBox = document.getElementById('videoBox');
-      const vUrl = item.video || '';
-
-      if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
-        vBox.innerHTML = `<a href="${vUrl}" target="_blank" class="btn-telegram">✈️ Abrir y Ver en Telegram</a>`;
-      } else if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
-        let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-        vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
-      } else {
-        vBox.innerHTML = `<video src="${vUrl}" controls autoplay poster="${item.cover}"></video>`;
-      }
-
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    // Inicializar
-    renderCatalog();
-  </script>
-</body>
-</html>
+          alert("¡Publicado globalmente! En 1 minuto le aparecerá a to
