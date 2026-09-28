@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NaPlus Pro - La Neuro Página</title>
 <style>
   :root {
@@ -19,7 +19,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
   body { background-color: var(--bg-main); color: var(--text); padding-bottom: 75px; overflow-x: hidden; }
 
-  /* Navegación Inferior Móvil */
   nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
     background: rgba(10, 6, 18, 0.98); backdrop-filter: blur(10px);
@@ -34,11 +33,9 @@
   .nav-btn span { font-size: 1.2rem; }
   .nav-btn.active { color: var(--accent); }
 
-  /* Vistas */
   .view { display: none; padding: 15px; }
   .view.active { display: block; }
 
-  /* Header y Buscador */
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
   .logo { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
@@ -49,47 +46,43 @@
   }
   .search-input:focus { border-color: var(--primary); }
 
-  /* Grilla de Contenido */
   .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
+  .empty-note { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; }
   .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); z-index: 10; }
   .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
   .media-info { padding: 6px; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .media-sub { font-size: 0.65rem; color: var(--text-muted); }
+  .media-sub { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* Botones de Administrador flotantes sobre la tarjeta */
   .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 20; }
   body.creator-mode .admin-controls { display: flex; }
   .admin-controls button { background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff; width: 30px; height: 30px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-  /* Ajustes y Creador */
   .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
   .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--primary); }
   .field { margin-bottom: 12px; }
   .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
   .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 0.9rem; outline: none; }
-  
+
   .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  /* Reproductor OK.ru */
   .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; }
   .player-overlay.active { display: flex; }
   .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
   .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
-  
+
   .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
   .video-container iframe { width: 100%; height: 100%; border: none; }
 
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
-  /* Modal Creador Subir/Editar Contenido */
   .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
   .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 6000; display: none; text-align: center; }
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 6000; display: none; text-align: center; max-width: 90%; }
   #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 6000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 </style>
 </head>
@@ -99,7 +92,7 @@
   <div id="viewHome" class="view active">
     <div class="header"><div class="logo">NaPlus Pro</div></div>
     <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
-    
+
     <div class="section-title">Películas</div>
     <div class="media-grid" id="moviesGrid"></div>
 
@@ -117,7 +110,7 @@
   <!-- Vista Ajustes -->
   <div id="viewSettings" class="view">
     <div class="header"><div class="logo">Ajustes</div></div>
-    
+
     <div class="settings-box" id="adminPanel" style="display: none;">
       <h3>Panel de Creador Avanzado</h3>
       <button class="btn-action" onclick="app.openModal()">+ Subir Contenido Nuevo</button>
@@ -126,8 +119,8 @@
     <div class="settings-box">
       <h3>Seguridad y Modo Creador</h3>
       <div class="field" style="margin-bottom: 0;">
-        <label>Credencial de Acceso</label>
-        <input type="password" placeholder="Ingresar credencial..." oninput="app.verifyAdmin(this.value)">
+        <label>Credencial de Acceso (clave o token de GitHub)</label>
+        <input type="password" placeholder="Ingresar credencial..." autocomplete="off" oninput="app.verifyAdmin(this.value)">
       </div>
     </div>
   </div>
@@ -145,7 +138,7 @@
       <h3 id="playerTitleHeader" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
       <button class="close-player" onclick="app.closePlayer()">✕</button>
     </div>
-    
+
     <div class="video-container" id="videoContainer"></div>
 
     <div class="player-details">
@@ -181,32 +174,79 @@
   <div id="syncStatus">Sincronizando con GitHub...</div>
 
 <script>
+/* Catálogo publicado. NO borres los marcadores: la página los usa para guardar cambios. */
+const DEFAULT_CATALOG = /*CATALOG_START*/[
+  {
+    "id": 1,
+    "type": "movie",
+    "title": "[REC]",
+    "genre": "Terror",
+    "year": "2007",
+    "desc": "Película de prueba en la Neuro Página.",
+    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
+    "video": "https://ok.ru/videoembed/237592963750"
+  }
+]/*CATALOG_END*/;
+
+/* ---------- Utilidades ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23150d26'/><text x='50%' y='50%' fill='%2394a3b8' font-size='18' text-anchor='middle' font-family='sans-serif'>NaPlus</text></svg>";
+const ADMIN_CODE = String(90 * 100 + 9);
+const isToken = t => /^(ghp_|github_pat_)[A-Za-z0-9_]{20,}$/.test(t || '');
+const MARK_RE = /\/\*CATALOG_START\*\/([\s\S]*?)\/\*CATALOG_END\*\//;
+const wrap = json => '/*CATALOG_' + 'START*/' + json + '/*CATALOG_' + 'END*/';
+const b64decode = b => new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0)));
+const b64encode = s => {
+  const bytes = new TextEncoder().encode(s);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+  return btoa(bin);
+};
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+
+function okEmbed(url) {
+  let u;
+  try { u = new URL(url); } catch (e) { return null; }
+  if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+  if (u.hostname.replace(/^(www\.|m\.)/, '') !== 'ok.ru') return null;
+  const m = u.pathname.match(/\/(?:video|videoembed)\/(\d+)/);
+  return m ? 'https://ok.ru/videoembed/' + m[1] : null;
+}
+
+/* ---------- Aplicación ---------- */
 class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v10';
     this.listKey = 'naplus_pro_list_v5';
-
-    this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
-    ];
-    
-    this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
+    this.catalog = DEFAULT_CATALOG.slice();
+    this.myList = [];
+    try { this.myList = JSON.parse(store.get(this.listKey)) || []; } catch (e) {}
+    if (!Array.isArray(this.myList)) this.myList = [];
     this.currentId = null;
+    this.creator = false;
+    this.toastTimer = null;
   }
 
   toast(msg) {
-    const t = document.getElementById('toast');
+    const t = $('toast');
     t.textContent = msg; t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 2500);
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => t.style.display = 'none', 3000);
   }
 
   switchView(viewName, el) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-    document.getElementById(`view${viewName}`).classList.add('active');
+    $('view' + viewName).classList.add('active');
     el.classList.add('active');
+    window.scrollTo(0, 0);
     if (viewName === 'Home') this.renderHome();
     if (viewName === 'List') this.renderList();
   }
@@ -215,46 +255,45 @@ class NaPlusProEngine {
     const card = document.createElement('div');
     card.className = 'media-card';
     card.onclick = () => this.openPlayer(item.id);
+    const id = Number(item.id);
     card.innerHTML = `
       <div class="admin-controls">
-        <button type="button" onclick="event.stopPropagation(); app.openEditModal(${item.id})" title="Editar">✏️</button>
-        <button type="button" onclick="event.stopPropagation(); app.deleteItem(${item.id})" title="Eliminar">🗑️</button>
+        <button type="button" title="Editar">✏️</button>
+        <button type="button" title="Eliminar">🗑️</button>
       </div>
-      <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
+      <img src="${esc(item.cover || NO_COVER)}" alt="Portada" loading="lazy" decoding="async">
       <div class="media-info">
-        <div class="media-title">${item.title}</div>
-        <div class="media-sub">${item.genre}</div>
-      </div>
-    `;
+        <div class="media-title">${esc(item.title)}</div>
+        <div class="media-sub">${esc(item.genre)}</div>
+      </div>`;
+    const img = card.querySelector('img');
+    img.onerror = () => { img.onerror = null; img.src = NO_COVER; };
+    const [editBtn, delBtn] = card.querySelectorAll('.admin-controls button');
+    editBtn.onclick = e => { e.stopPropagation(); this.openEditModal(id); };
+    delBtn.onclick = e => { e.stopPropagation(); this.deleteItem(id); };
     return card;
   }
 
   renderHome() {
-    const q = document.getElementById('searchBox').value.toLowerCase().trim();
-    const mGrid = document.getElementById('moviesGrid');
-    const sGrid = document.getElementById('seriesGrid');
+    const q = norm($('searchBox').value.trim());
+    const mGrid = $('moviesGrid'), sGrid = $('seriesGrid');
     mGrid.innerHTML = ''; sGrid.innerHTML = '';
 
     this.catalog
-      .filter(i => i.title.toLowerCase().includes(q) || i.genre.toLowerCase().includes(q))
-      .forEach(item => {
-        const card = this.createCard(item);
-        if (item.type === 'movie') mGrid.appendChild(card);
-        else sGrid.appendChild(card);
-      });
+      .filter(i => norm(i.title).includes(q) || norm(i.genre).includes(q))
+      .forEach(item => (item.type === 'movie' ? mGrid : sGrid).appendChild(this.createCard(item)));
+
+    [mGrid, sGrid].forEach(g => {
+      if (!g.children.length) g.innerHTML = '<p class="empty-note">No hay contenido para mostrar.</p>';
+    });
   }
 
   renderList() {
-    const grid = document.getElementById('listGrid');
+    const grid = $('listGrid');
     grid.innerHTML = '';
     const items = this.catalog.filter(i => this.myList.includes(i.id));
-    const empty = document.getElementById('emptyMsg');
-
-    if (items.length === 0) { empty.style.display = 'block'; }
-    else {
-      empty.style.display = 'none';
-      items.forEach(item => grid.appendChild(this.createCard(item)));
-    }
+    $('emptyMsg').style.display = items.length ? 'none' : 'block';
+    items.forEach(item => grid.appendChild(this.createCard(item)));
   }
 
   openPlayer(id) {
@@ -262,39 +301,28 @@ class NaPlusProEngine {
     const item = this.catalog.find(x => x.id === id);
     if (!item) return;
 
-    document.getElementById('playerTitleHeader').textContent = item.title;
-    document.getElementById('playerTitle').textContent = item.title;
-    document.getElementById('playerMeta').textContent = `${item.genre} • ${item.year}`;
-    document.getElementById('playerDesc').textContent = item.desc || 'Sin sinopsis.';
-
+    $('playerTitleHeader').textContent = item.title;
+    $('playerTitle').textContent = item.title;
+    $('playerMeta').textContent = `${item.genre} • ${item.year}`;
+    $('playerDesc').textContent = item.desc || 'Sin sinopsis.';
     this.updateListBtnState();
 
-    const container = document.getElementById('videoContainer');
-    container.innerHTML = `<div style="color:var(--accent); font-size:0.85rem;">Cargando video de OK.ru...</div>`;
+    const embed = okEmbed(item.video);
+    $('videoContainer').innerHTML = embed
+      ? `<iframe src="${esc(embed)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`
+      : '<div style="color:var(--accent); font-size:0.85rem; padding:20px; text-align:center;">Video no disponible</div>';
 
-    const url = item.video || '';
-    setTimeout(() => {
-      let embed = url;
-      if (url.includes('ok.ru')) {
-        if (!url.includes('videoembed')) {
-          const m = url.match(/\/video\/([0-9]+)/);
-          if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
-        }
-      }
-      container.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`;
-    }, 200);
-
-    document.getElementById('playerModal').classList.add('active');
+    $('playerModal').classList.add('active');
   }
 
   closePlayer() {
-    document.getElementById('videoContainer').innerHTML = '';
-    document.getElementById('playerModal').classList.remove('active');
+    $('videoContainer').innerHTML = '';
+    $('playerModal').classList.remove('active');
   }
 
   updateListBtnState() {
     const inList = this.myList.includes(this.currentId);
-    const btn = document.getElementById('listBtn');
+    const btn = $('listBtn');
     btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
     btn.style.background = inList ? '#332b4a' : 'var(--primary)';
   }
@@ -308,101 +336,96 @@ class NaPlusProEngine {
       this.myList.push(this.currentId);
       this.toast('Agregado a Mi Lista');
     }
-    localStorage.setItem(this.listKey, JSON.stringify(this.myList));
+    store.set(this.listKey, JSON.stringify(this.myList));
     this.updateListBtnState();
+    this.renderList();
+  }
+
+  /* ---------- Modo creador ---------- */
+  enableCreator(silent) {
+    if (this.creator) return;
+    this.creator = true;
+    $('adminPanel').style.display = 'block';
+    document.body.classList.add('creator-mode');
+    if (!silent) this.toast('¡Modo Creador Desbloqueado!');
   }
 
   verifyAdmin(val) {
-    const cleanVal = val.trim();
-    if (cleanVal === String(90*100+9) || cleanVal.startsWith('ghp_')) {
-      if (cleanVal.startsWith('ghp_')) localStorage.setItem('naplus_token', cleanVal);
-      document.getElementById('adminPanel').style.display = 'block';
-      document.body.classList.add('creator-mode');
-      this.toast('¡Modo Creador Desbloqueado!');
+    const v = val.trim();
+    if (v === ADMIN_CODE) {
+      this.enableCreator();
+    } else if (isToken(v)) {
+      store.set('naplus_token', v);
+      this.enableCreator();
+      this.loadFromGitHub();
     }
   }
 
   openModal() {
-    document.getElementById('modalTitleText').textContent = 'Publicar Contenido Global';
-    document.getElementById('fEditId').value = '';
-    document.getElementById('fType').value = 'movie';
-    document.getElementById('fTitle').value = '';
-    document.getElementById('fGenre').value = '';
-    document.getElementById('fYear').value = '2026';
-    document.getElementById('fDesc').value = '';
-    document.getElementById('fCover').value = '';
-    document.getElementById('fVideo').value = '';
-    document.getElementById('adminModal').classList.add('active');
+    $('modalTitleText').textContent = 'Publicar Contenido Global';
+    $('fEditId').value = '';
+    $('fType').value = 'movie';
+    $('fTitle').value = '';
+    $('fGenre').value = '';
+    $('fYear').value = '2026';
+    $('fDesc').value = '';
+    $('fCover').value = '';
+    $('fVideo').value = '';
+    $('adminModal').classList.add('active');
   }
 
   openEditModal(id) {
     const item = this.catalog.find(x => x.id === id);
     if (!item) return;
-    document.getElementById('modalTitleText').textContent = 'Editar Contenido';
-    document.getElementById('fEditId').value = item.id;
-    document.getElementById('fType').value = item.type;
-    document.getElementById('fTitle').value = item.title;
-    document.getElementById('fGenre').value = item.genre;
-    document.getElementById('fYear').value = item.year;
-    document.getElementById('fDesc').value = item.desc || '';
-    document.getElementById('fCover').value = item.cover;
-    document.getElementById('fVideo').value = item.video;
-    document.getElementById('adminModal').classList.add('active');
+    $('modalTitleText').textContent = 'Editar Contenido';
+    $('fEditId').value = item.id;
+    $('fType').value = item.type;
+    $('fTitle').value = item.title;
+    $('fGenre').value = item.genre;
+    $('fYear').value = item.year;
+    $('fDesc').value = item.desc || '';
+    $('fCover').value = item.cover;
+    $('fVideo').value = item.video;
+    $('adminModal').classList.add('active');
   }
 
-  closeModal() { document.getElementById('adminModal').classList.remove('active'); }
+  closeModal() { $('adminModal').classList.remove('active'); }
 
   async deleteItem(id) {
-    if (confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) {
-      this.catalog = this.catalog.filter(x => x.id !== id);
-      localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
-      this.renderHome();
-      this.renderList();
-      this.toast('Contenido eliminado');
-      await this.autoSyncGitHub();
-    }
+    if (!confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) return;
+    this.catalog = this.catalog.filter(x => x.id !== id);
+    this.myList = this.myList.filter(x => x !== id);
+    store.set(this.listKey, JSON.stringify(this.myList));
+    this.renderHome();
+    this.renderList();
+    this.toast('Contenido eliminado');
+    await this.autoSyncGitHub();
   }
 
   async saveItem(e) {
     e.preventDefault();
-    const vUrl = document.getElementById('fVideo').value.trim();
-    
-    if (!vUrl.includes('ok.ru')) {
-      alert("Por favor, ingresá únicamente un enlace válido de OK.ru");
+    const vUrl = $('fVideo').value.trim();
+    if (!okEmbed(vUrl)) {
+      alert("Ingresá un enlace válido de OK.ru, por ejemplo https://ok.ru/video/123456789");
       return;
     }
 
-    const editId = document.getElementById('fEditId').value;
+    const editId = $('fEditId').value;
+    const data = {
+      id: editId ? parseInt(editId, 10) : Date.now(),
+      type: $('fType').value,
+      title: $('fTitle').value.trim(),
+      genre: $('fGenre').value.trim(),
+      year: $('fYear').value,
+      desc: $('fDesc').value.trim(),
+      cover: $('fCover').value.trim(),
+      video: vUrl
+    };
 
-    if (editId) {
-      const idx = this.catalog.findIndex(x => x.id == editId);
-      if (idx !== -1) {
-        this.catalog[idx] = {
-          id: parseInt(editId),
-          type: document.getElementById('fType').value,
-          title: document.getElementById('fTitle').value.trim(),
-          genre: document.getElementById('fGenre').value.trim(),
-          year: document.getElementById('fYear').value,
-          desc: document.getElementById('fDesc').value.trim(),
-          cover: document.getElementById('fCover').value.trim(),
-          video: vUrl
-        };
-      }
-    } else {
-      const newItem = {
-        id: Date.now(),
-        type: document.getElementById('fType').value,
-        title: document.getElementById('fTitle').value.trim(),
-        genre: document.getElementById('fGenre').value.trim(),
-        year: document.getElementById('fYear').value,
-        desc: document.getElementById('fDesc').value.trim(),
-        cover: document.getElementById('fCover').value.trim(),
-        video: vUrl
-      };
-      this.catalog.unshift(newItem);
-    }
+    const idx = editId ? this.catalog.findIndex(x => x.id == editId) : -1;
+    if (idx !== -1) this.catalog[idx] = data;
+    else this.catalog.unshift(data);
 
-    localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
     this.closeModal();
     this.renderHome();
     this.renderList();
@@ -410,27 +433,13 @@ class NaPlusProEngine {
     await this.autoSyncGitHub();
   }
 
-  async autoSyncGitHub() {
-    let token = localStorage.getItem('naplus_token');
-    if (!token || !token.startsWith("ghp_")) {
-      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar globalmente:");
-      if (token && token.trim().startsWith("ghp_")) {
-        token = token.trim();
-        localStorage.setItem('naplus_token', token);
-      } else return;
-    }
+  /* ---------- GitHub ---------- */
+  ghUrl() { return `https://api.github.com/repos/${this.repo}/contents/${this.filePath}`; }
+  ghHeaders(token) { return { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }; }
 
-    const statusEl = document.getElementById('syncStatus');
-    statusEl.style.display = "block";
-
-    try {
-      const getRes = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.filePath}`, {
-        headers: { 'Authorization': `token ${token}` }
-      });
-      if (!getRes.ok) { statusEl.style.display = "none"; return; }
-      
-      const getData = await getRes.json();
-      let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
-
-      const catalogJson = JSON.stringify(this.catalog, null, 2);
-      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog = JSON.p
+  ghError(status) {
+    if (status === 401) {
+      store.del('naplus_token');
+      alert('GitHub no aceptó el token: está vencido o quedó mal copiado. Creá uno nuevo (Expiration: No expiration) y pegalo en Ajustes.');
+    } else if (status === 403) {
+      alert('El token
