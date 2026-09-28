@@ -22,7 +22,7 @@
   /* Navegación Inferior Móvil */
   nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: rgba(10, 6, 18, 0.95); backdrop-filter: blur(10px);
+    background: rgba(10, 6, 18, 0.98); backdrop-filter: blur(10px);
     display: flex; justify-content: space-around; align-items: center;
     border-top: 1px solid var(--border); z-index: 1000;
   }
@@ -52,16 +52,16 @@
   /* Grilla de Contenido */
   .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
   .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); }
+  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); z-index: 10; }
   .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
   .media-info { padding: 6px; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); }
 
   /* Botones de Administrador flotantes sobre la tarjeta */
-  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
+  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 20; }
   body.creator-mode .admin-controls { display: flex; }
-  .admin-controls button { background: rgba(0,0,0,0.85); border: 1px solid var(--primary); color: #fff; width: 28px; height: 28px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .admin-controls button { background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff; width: 30px; height: 30px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
   /* Ajustes y Creador */
   .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
@@ -74,7 +74,7 @@
   .btn-action:active { background: var(--primary-hover); }
 
   /* Reproductor OK.ru */
-  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
+  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; }
   .player-overlay.active { display: flex; }
   .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
   .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
@@ -85,12 +85,12 @@
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
   /* Modal Creador Subir/Editar Contenido */
-  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
+  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
   .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 4000; display: none; text-align: center; }
-  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 5000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 6000; display: none; text-align: center; }
+  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 6000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 </style>
 </head>
 <body>
@@ -185,8 +185,8 @@ class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v9';
-    this.listKey = 'naplus_pro_list_v4';
+    this.dbKey = 'naplus_pro_db_v10';
+    this.listKey = 'naplus_pro_list_v5';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
       { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
@@ -217,8 +217,8 @@ class NaPlusProEngine {
     card.onclick = () => this.openPlayer(item.id);
     card.innerHTML = `
       <div class="admin-controls">
-        <button onclick="event.stopPropagation(); app.openEditModal(${item.id})" title="Editar">✏️</button>
-        <button onclick="event.stopPropagation(); app.deleteItem(${item.id})" title="Eliminar">🗑️</button>
+        <button type="button" onclick="event.stopPropagation(); app.openEditModal(${item.id})" title="Editar">✏️</button>
+        <button type="button" onclick="event.stopPropagation(); app.deleteItem(${item.id})" title="Eliminar">🗑️</button>
       </div>
       <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
       <div class="media-info">
@@ -375,7 +375,6 @@ class NaPlusProEngine {
     const editId = document.getElementById('fEditId').value;
 
     if (editId) {
-      // Editar existente
       const idx = this.catalog.findIndex(x => x.id == editId);
       if (idx !== -1) {
         this.catalog[idx] = {
@@ -390,7 +389,6 @@ class NaPlusProEngine {
         };
       }
     } else {
-      // Crear nuevo
       const newItem = {
         id: Date.now(),
         type: document.getElementById('fType').value,
@@ -435,4 +433,4 @@ class NaPlusProEngine {
       let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
 
       const catalogJson = JSON.stringify(this.catalog, null, 2);
-      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog =
+      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog = JSON.p
