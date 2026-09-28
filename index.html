@@ -283,7 +283,6 @@
       cursor: pointer;
     }
 
-    /* Contenedor del Reproductor Estético */
     .video-box {
       width: 100%;
       aspect-ratio: 16/9;
@@ -320,7 +319,7 @@
 
   <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnCreator" onclick="openLoginModal()">Modo Creador</button>
+    <button class="btn-creator" id="btnCreator" onclick="handleCreatorButton()">Modo Creador</button>
   </header>
 
   <div class="hero">
@@ -359,14 +358,15 @@
     </div>
   </div>
 
+  <!-- Modal Clave Creador -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('loginModal')">✕</button>
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Pegá tu Token de GitHub (ghp_...) o clave 9009</label>
-          <input type="password" id="passInput" placeholder="ghp_..." required autocomplete="off">
+          <label>Ingresá la clave de creador (9009) o tu Token de GitHub (ghp_...)</label>
+          <input type="password" id="passInput" placeholder="Clave o Token..." required autocomplete="off">
         </div>
         <div class="form-actions">
           <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">Cancelar</button>
@@ -376,6 +376,7 @@
     </div>
   </div>
 
+  <!-- Modal Formulario Subir/Editar -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -521,7 +522,7 @@
       renderCatalog(document.getElementById('searchInput').value);
     }
 
-    function openLoginModal() {
+    function handleCreatorButton() {
       if (isCreatorMode) {
         openUploadModal();
       } else {
@@ -545,7 +546,7 @@
       e.preventDefault();
       const val = document.getElementById('passInput').value.trim();
 
-      if (val.startsWith("ghp_") || val === "9009") {
+      if (val === "9009" || val.startsWith("ghp_")) {
         if (val.startsWith("ghp_")) {
           localStorage.setItem('naPlus_gh_token', val);
         }
@@ -555,7 +556,7 @@
         closeModal('loginModal');
         openUploadModal();
       } else {
-        alert("Atención: Tenés que pegar tu Token de GitHub que empieza por 'ghp_' para publicar en la nube.");
+        alert("Clave incorrecta. Usá '9009' o tu Token de GitHub.");
       }
     }
 
@@ -664,4 +665,4 @@
           alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo.");
         } else {
           const errData = await putRes.json();
-          alert("Error de GitHub: " + (errData.message 
+          alert("Error de GitHub: 
