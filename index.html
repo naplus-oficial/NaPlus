@@ -124,14 +124,28 @@
       width: 100%; aspect-ratio: 16/9; background: #000;
       border-radius: 8px; overflow: hidden; margin-bottom: 15px;
       position: relative; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; padding: 10px; text-align: center;
     }
 
     .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; }
+
+    .btn-redirect {
+      background: #0088cc; color: #fff; padding: 14px 24px;
+      border-radius: 8px; text-decoration: none; font-weight: bold;
+      font-size: 1rem; display: inline-flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+    }
 
     .btn-close {
       align-self: flex-end; background: var(--purple); color: #fff;
       border: none; padding: 8px 16px; border-radius: 6px;
       font-weight: bold; cursor: pointer; margin-bottom: 10px;
+    }
+
+    .player-desc {
+      color: var(--muted); font-size: 0.9rem; margin-top: 10px;
+      line-height: 1.4; background: var(--card); padding: 12px;
+      border-radius: 8px; border: 1px solid var(--border);
     }
   </style>
 </head>
@@ -192,12 +206,16 @@
         <input type="number" id="anioInput" required value="2026">
       </div>
       <div class="form-group">
+        <label>Descripción / Sinopsis</label>
+        <textarea id="descInput" rows="3" placeholder="Resumen o detalles de la obra..."></textarea>
+      </div>
+      <div class="form-group">
         <label>Enlace de Imagen (Portada)</label>
         <input type="url" id="portadaInput" required placeholder="https://...">
       </div>
       <div class="form-group">
-        <label>Enlace de Video (Google Drive, MP4, etc.)</label>
-        <input type="url" id="videoInput" required placeholder="https://drive.google.com/file/d/...">
+        <label>Enlace del Contenido (Google Drive, Telegram, MP4, Web...)</label>
+        <input type="url" id="videoInput" required placeholder="https://t.me/... o https://drive.google.com/...">
       </div>
       <button type="submit" class="btn-main" style="width:100%; margin-top:10px;">Publicar Cambios</button>
     </form>
@@ -221,6 +239,7 @@
     <div class="video-wrapper" id="videoContainer"></div>
     <h2 id="playerTitle"></h2>
     <p id="playerSub" style="color:var(--purple); margin-top:5px;"></p>
+    <div class="player-desc" id="playerDesc">Sin descripción disponible.</div>
   </div>
 
   <script>
@@ -234,6 +253,7 @@
         titulo: 'Película Demo NaPlus',
         genero: 'Acción',
         anio: '2026',
+        desc: 'Esta es una película de prueba para la plataforma NaPlus.',
         portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
         video: 'https://www.w3schools.com/html/mov_bbb.mp4'
       }
@@ -352,19 +372,30 @@
 
       document.getElementById('playerTitle').innerText = item.titulo;
       document.getElementById('playerSub').innerText = `${item.genero} (${item.anio})`;
+      document.getElementById('playerDesc').innerText = item.desc || "Sin descripción disponible.";
 
       const box = document.getElementById('videoContainer');
       box.innerHTML = '';
       const url = item.video;
 
-      if (url.includes('drive.google.com')) {
+      // Redirección si es enlace de Telegram u otra web externa
+      if (url.includes('t.me') || url.includes('telegram')) {
+        box.innerHTML = `
+          <p style="margin-bottom:15px; color:var(--muted);">Este contenido está alojado en Telegram.</p>
+          <a href="${url}" target="_blank" class="btn-redirect">✈️ Abrir y Ver en Telegram</a>
+        `;
+      } 
+      // Soporte Nativo Google Drive
+      else if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
         if (match && match[1]) driveId = match[1];
 
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
-      } else {
+      } 
+      // Reproductor Nativo HTML5 para videos directos (.mp4, etc.)
+      else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
             <source src="${url}" type="video/mp4">
@@ -385,6 +416,7 @@
       document.getElementById('editIndex').value = '';
       document.getElementById('panelTitle').innerText = "Subir Nuevo Contenido";
       document.getElementById('tituloInput').value = '';
+      document.getElementById('descInput').value = '';
       document.getElementById('portadaInput').value = '';
       document.getElementById('videoInput').value = '';
     }
@@ -397,6 +429,7 @@
       document.getElementById('tituloInput').value = item.titulo;
       document.getElementById('generoInput').value = item.genero;
       document.getElementById('anioInput').value = item.anio;
+      document.getElementById('descInput').value = item.desc || '';
       document.getElementById('portadaInput').value = item.portada;
       document.getElementById('videoInput').value = item.video;
       document.getElementById('creatorPanel').classList.add('active');
@@ -420,6 +453,7 @@
         titulo: document.getElementById('tituloInput').value.trim(),
         genero: document.getElementById('generoInput').value,
         anio: document.getElementById('anioInput').value,
+        desc: document.getElementById('descInput').value.trim(),
         portada: document.getElementById('portadaInput').value.trim(),
         video: document.getElementById('videoInput').value.trim()
       };
