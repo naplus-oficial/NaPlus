@@ -3,335 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus - Mobile Streaming</title>
+<title>StreamApp - Open Source Template</title>
 <style>
   :root {
-    --bg-main: #0f0b1a;
-    --bg-surface: #19122c;
-    --accent: #f47521;
-    --accent-hover: #d25e10;
-    --text: #ffffff;
-    --text-muted: #a0a0ab;
-    --border: rgba(255, 255, 255, 0.08);
+    --bg-base: #121212;
+    --bg-surface: #1e1e1e;
+    --accent: #e50914;
+    --text-main: #ffffff;
+    --text-sec: #b3b3b3;
   }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background-color: var(--bg-base); color: var(--text-main); padding-bottom: 70px; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 75px; overflow-x: hidden; }
+  header { position: sticky; top: 0; background: rgba(18,18,18,0.95); backdrop-filter: blur(8px); padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid #282828; }
+  .logo { font-size: 1.25rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
 
-  /* Barra de Navegación Móvil */
-  nav {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: rgba(15, 11, 26, 0.95); backdrop-filter: blur(10px);
-    display: flex; justify-content: space-around; align-items: center;
-    border-top: 1px solid var(--border); z-index: 1000;
-  }
-  .nav-btn {
-    background: none; border: none; color: var(--text-muted);
-    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; width: 33.33%;
-  }
-  .nav-btn span { font-size: 1.2rem; }
-  .nav-btn.active { color: var(--accent); }
+  .container { padding: 15px; }
+  .search-bar { width: 100%; padding: 12px; background: var(--bg-surface); border: 1px solid #333; color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none; margin-bottom: 20px; }
+  .search-bar:focus { border-color: var(--accent); }
 
-  /* Vistas */
-  .view { display: none; padding: 15px; animation: fadeIn 0.2s ease-in-out; }
+  h2 { font-size: 1.1rem; margin-bottom: 12px; font-weight: 600; color: var(--text-main); }
+  
+  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+  .media-card { background: var(--bg-surface); border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; }
+  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+  .media-card-title { padding: 6px; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Bottom Navigation */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: var(--bg-surface); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #282828; z-index: 1000; }
+  .nav-link { background: none; border: none; color: var(--text-sec); font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 50%; }
+  .nav-link.active { color: var(--accent); }
+  .nav-link span { font-size: 1.2rem; }
+
+  /* Views */
+  .view { display: none; }
   .view.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  /* Header y Buscador */
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-  .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; }
-  .search-input {
-    width: 100%; padding: 12px 15px; background: var(--bg-surface);
-    border: 1px solid var(--border); color: #fff; border-radius: 10px;
-    font-size: 0.95rem; outline: none; margin-bottom: 15px;
-  }
-  .search-input:focus { border-color: var(--accent); }
-
-  /* Grilla de Contenido */
-  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
-  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); }
-  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
-  .media-info { padding: 6px; }
-  .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .media-sub { font-size: 0.65rem; color: var(--text-muted); }
-
-  /* Reproductor de Video Flotante / Pantalla Completa */
-  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
-  .player-overlay.active { display: flex; }
-  .player-header { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
-  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
-  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; }
-  .btn-action { background: var(--accent); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 12px; }
-
-  /* Panel Ajustes / Admin */
-  .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
-  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--accent); }
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
-  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 0.9rem; outline: none; }
-
-  /* Modal de Creador */
-  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
-  .modal-sheet.active { display: flex; }
-  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
-
-  /* Toast de alerta */
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 4000; display: none; text-align: center; }
+  /* Player Screen */
+  .player-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
+  .player-screen.active { display: flex; }
+  .player-nav { padding: 15px; display: flex; align-items: center; background: rgba(0,0,0,0.7); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .back-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
+  .player-box { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+  .player-box video, .player-box iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
+  .player-meta { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 </style>
 </head>
 <body>
 
-  <!-- Vista Inicio -->
-  <div id="viewHome" class="view active">
-    <div class="header"><div class="logo">NaPlus</div></div>
-    <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
+  <header>
+    <div class="logo">STREAMBOX</div>
+  </header>
+
+  <!-- Vista Principal -->
+  <div id="homeView" class="view active container">
+    <input type="search" class="search-bar" id="searchInput" placeholder="Explorar catálogos..." oninput="filterMedia()">
     
-    <div class="section-title">Películas</div>
-    <div class="media-grid" id="moviesGrid"></div>
-
-    <div class="section-title" style="margin-top: 25px;">Series</div>
-    <div class="media-grid" id="seriesGrid"></div>
+    <h2>Tendencias Actuales</h2>
+    <div class="media-grid" id="catalogGrid"></div>
   </div>
 
-  <!-- Vista Mi Lista -->
-  <div id="viewList" class="view">
-    <div class="header"><div class="logo">Mi Lista</div></div>
-    <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
-    <p id="emptyMsg" style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.85rem; display: none;">Tu lista está vacía.</p>
+  <!-- Vista Favoritos / Lista -->
+  <div id="listView" class="view container">
+    <h2>Mi Biblioteca</h2>
+    <div class="media-grid" id="listGrid"></div>
   </div>
 
-  <!-- Vista Ajustes -->
-  <div id="viewSettings" class="view">
-    <div class="header"><div class="logo">Ajustes</div></div>
-    
-    <div class="settings-box" id="adminPanel" style="display: none;">
-      <h3>Panel de Creador</h3>
-      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido</button>
-    </div>
-
-    <div class="settings-box">
-      <h3>Modo Administrador</h3>
-      <div class="field" style="margin-bottom: 0;">
-        <label>Clave Secreta</label>
-        <input type="password" placeholder="Ingresar clave (9009)..." oninput="app.verifyAdmin(this.value)">
-      </div>
-    </div>
-  </div>
-
-  <!-- Navegación -->
-  <nav>
-    <button class="nav-btn active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
-    <button class="nav-btn" onclick="app.switchView('List', this)"><span>🔖</span>Mi Lista</button>
-    <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
+  <!-- Navegación Inferior -->
+  <nav class="bottom-nav">
+    <button class="nav-link active" onclick="switchTab('home', this)"><span>🏠</span>Inicio</button>
+    <button class="nav-link" onclick="switchTab('list', this)"><span>⭐</span>Guardados</button>
   </nav>
 
-  <!-- Reproductor Nativo -->
-  <div class="player-overlay" id="playerModal">
-    <div class="player-header">
-      <button class="close-player" onclick="app.closePlayer()">✕</button>
-      <h3 id="playerTitleHeader" style="font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
+  <!-- Reproductor Exclusivo -->
+  <div class="player-screen" id="playerModal">
+    <div class="player-nav">
+      <button class="back-btn" onclick="closePlayer()">✕</button>
+      <h3 id="modalTitle" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
     </div>
-    <div class="video-container" id="videoContainer"></div>
-    <div class="player-details">
-      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
-      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
-      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
-      <button class="btn-action" id="listBtn" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
-    </div>
-  </div>
-
-  <!-- Modal Creador -->
-  <div class="modal-sheet" id="adminModal">
-    <div class="sheet-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="font-size: 1.1rem; color: var(--accent);">Nuevo Contenido</h3>
-        <button onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
-      </div>
-      <form onsubmit="app.saveItem(event)">
-        <div class="field"><label>Tipo</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
-        <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
-        <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
-        <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
-        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
-        <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
-        <div class="field"><label>Link de Video (Drive, MP4...)</label><input type="url" id="fVideo" required placeholder="https://..."></div>
-        <button type="submit" class="btn-action" style="margin-top: 10px;">Publicar</button>
-      </form>
+    <div class="player-box" id="playerContainer"></div>
+    <div class="player-meta">
+      <h3 id="modalName" style="font-size: 1rem; margin-bottom: 4px;"></h3>
+      <p id="modalDesc" style="color: var(--text-sec); font-size: 0.8rem; line-height: 1.3;"></p>
+      <button onclick="toggleFav()" id="favBtn" style="margin-top: 12px; width:100%; padding: 10px; background: var(--accent); color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.85rem; cursor:pointer;">Guardar en Biblioteca</button>
     </div>
   </div>
-
-  <div id="toast"></div>
 
 <script>
-class NaPlusApp {
-  constructor() {
-    this.dbKey = 'naplus_pro_db_v1';
-    this.listKey = 'naplus_pro_list_v1';
-    this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba optimizada.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920' }
-    ];
-    this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
-    this.currentId = null;
-    this.init();
-  }
+  // Base de datos de ejemplo abierta
+  const database = [
+    { id: 1, title: "Open Source Movie 1", desc: "Contenido multimedia libre de pruebas para reproducción web.", cover: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+    { id: 2, title: "Elephant Dream HD", desc: "Cortometraje de código abierto alojado en servidores públicos de prueba.", cover: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
+  ];
 
-  init() {
-    this.renderHome();
-  }
+  let currentId = null;
+  let savedList = JSON.parse(localStorage.getItem('open_source_favs')) || [];
 
-  toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 2500);
-  }
-
-  switchView(viewName, el) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-    document.getElementById(`view${viewName}`).classList.add('active');
-    el.classList.add('active');
-    if (viewName === 'Home') this.renderHome();
-    if (viewName === 'List') this.renderList();
-  }
-
-  createCard(item) {
-    const card = document.createElement('div');
-    card.className = 'media-card';
-    card.onclick = () => this.openPlayer(item.id);
-    card.innerHTML = `
-      <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
-      <div class="media-info">
-        <div class="media-title">${item.title}</div>
-        <div class="media-sub">${item.genre}</div>
-      </div>
-    `;
-    return card;
-  }
-
-  renderHome() {
-    const q = document.getElementById('searchBox').value.toLowerCase().trim();
-    const mGrid = document.getElementById('moviesGrid');
-    const sGrid = document.getElementById('seriesGrid');
-    mGrid.innerHTML = ''; sGrid.innerHTML = '';
-
-    this.catalog
-      .filter(i => i.title.toLowerCase().includes(q) || i.genre.toLowerCase().includes(q))
-      .forEach(item => {
-        const card = this.createCard(item);
-        if (item.type === 'movie') mGrid.appendChild(card);
-        else sGrid.appendChild(card);
-      });
-  }
-
-  renderList() {
-    const grid = document.getElementById('listGrid');
+  function renderGrid(items, elementId) {
+    const grid = document.getElementById(elementId);
     grid.innerHTML = '';
-    const items = this.catalog.filter(i => this.myList.includes(i.id));
-    const empty = document.getElementById('emptyMsg');
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'media-card';
+      card.onclick = () => openPlayer(item.id);
+      card.innerHTML = `
+        <img src="${item.cover}" alt="${item.title}">
+        <div class="media-card-title">${item.title}</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
 
-    if (items.length === 0) { empty.style.display = 'block'; }
-    else {
-      empty.style.display = 'none';
-      items.forEach(item => grid.appendChild(this.createCard(item)));
+  function filterMedia() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = database.filter(i => i.title.toLowerCase().includes(q));
+    renderGrid(filtered, 'catalogGrid');
+  }
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+    btn.classList.add('active');
+    if(tab === 'home') {
+      document.getElementById('homeView').classList.add('active');
+      renderGrid(database, 'catalogGrid');
+    } else {
+      document.getElementById('listView').classList.add('active');
+      const favItems = database.filter(i => savedList.includes(i.id));
+      renderGrid(favItems, 'listGrid');
     }
   }
 
-  openPlayer(id) {
-    this.currentId = id;
-    const item = this.catalog.find(x => x.id === id);
-    if (!item) return;
+  function openPlayer(id) {
+    currentId = id;
+    const item = database.find(x => x.id === id);
+    if(!item) return;
 
-    document.getElementById('playerTitleHeader').textContent = item.title;
-    document.getElementById('playerTitle').textContent = item.title;
-    document.getElementById('playerMeta').textContent = `${item.genre} • ${item.year}`;
-    document.getElementById('playerDesc').textContent = item.desc || 'Sin sinopsis.';
+    document.getElementById('modalTitle').textContent = item.title;
+    document.getElementById('modalName').textContent = item.title;
+    document.getElementById('modalDesc').textContent = item.desc;
+    updateFavButton();
 
-    this.updateListBtnState();
-
-    const container = document.getElementById('videoContainer');
-    container.innerHTML = `
-      <div style="color: var(--accent); font-size: 0.85rem; display:flex; flex-direction:column; align-items:center; gap:8px;">
-        <div style="width:30px; height:30px; border:3px solid rgba(244,117,33,0.3); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-        Cargando stream...
-      </div>`;
-
-    const url = item.video || '';
-    setTimeout(() => {
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        let embed = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-        container.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
-      } else {
-        container.innerHTML = `<video src="${url}" controls playsinline autoplay></video>`;
-      }
-    }, 300);
-
+    const container = document.getElementById('playerContainer');
+    container.innerHTML = `<video src="${item.video}" controls autoplay playsinline style="width:100%; height:100%;"></video>`;
+    
     document.getElementById('playerModal').classList.add('active');
   }
 
-  closePlayer() {
-    document.getElementById('videoContainer').innerHTML = '';
+  function closePlayer() {
+    document.getElementById('playerContainer').innerHTML = '';
     document.getElementById('playerModal').classList.remove('active');
   }
 
-  updateListBtnState() {
-    const inList = this.myList.includes(this.currentId);
-    const btn = document.getElementById('listBtn');
-    btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
-    btn.style.background = inList ? '#332b4a' : 'var(--accent)';
-  }
-
-  toggleList() {
-    const idx = this.myList.indexOf(this.currentId);
-    if (idx > -1) {
-      this.myList.splice(idx, 1);
-      this.toast('Eliminado de Mi Lista');
+  function updateFavButton() {
+    const btn = document.getElementById('favBtn');
+    if(savedList.includes(currentId)) {
+      btn.textContent = "Eliminar de Biblioteca";
+      btn.style.background = "#333";
     } else {
-      this.myList.push(this.currentId);
-      this.toast('Agregado a Mi Lista');
-    }
-    localStorage.setItem(this.listKey, JSON.stringify(this.myList));
-    this.updateListBtnState();
-  }
-
-  verifyAdmin(val) {
-    if (val.trim() === '9009') {
-      document.getElementById('adminPanel').style.display = 'block';
-      this.toast('¡Modo Creador Activo!');
+      btn.textContent = "Guardar en Biblioteca";
+      btn.style.background = "var(--accent)";
     }
   }
 
-  openModal() { document.getElementById('adminModal').classList.add('active'); }
-  closeModal() { document.getElementById('adminModal').classList.remove('active'); }
-
-  saveItem(e) {
-    e.preventDefault();
-    const newItem = {
-      id: Date.now(),
-      type: document.getElementById('fType').value,
-      title: document.getElementById('fTitle').value.trim(),
-      genre: document.getElementById('fGenre').value.trim(),
-      year: document.getElementById('fYear').value,
-      desc: document.getElementById('fDesc').value.trim(),
-      cover: document.getElementById('fCover').value.trim(),
-      video: document.getElementById('fVideo').value.trim()
-    };
-    this.catalog.unshift(newItem);
-    localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
-    this.closeModal();
-    this.renderHome();
-    this.toast('Contenido guardado');
+  function toggleFav() {
+    const index = savedList.indexOf(currentId);
+    if(index > -1) {
+      savedList.splice(index, 1);
+    } else {
+      savedList.push(currentId);
+    }
+    localStorage.setItem('open_source_favs', JSON.stringify(savedList));
+    updateFavButton();
   }
-}
 
-// Iniciar aplicación móvil optimizada
-const app = new NaPlusApp();
+  // Inicializar vista inicial
+  renderGrid(database, 'catalogGrid');
 </script>
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
 </body>
 </html>
