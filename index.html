@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -563,14 +564,14 @@
 
     function handleCreatorAccess() {
       if (!isCreatorMode) {
-        const code = prompt("Ingresá la clave de acceso de creador:");
+        const code = prompt("Acceso Administrador:");
         if (code === "9009") {
           isCreatorMode = true;
           document.getElementById('creatorBadge').style.display = 'inline-block';
           document.getElementById('btnAdmin').innerText = "+ Subir Video";
           openAdminModal();
         } else if (code !== null) {
-          alert("Clave incorrecta. Acceso denegado.");
+          alert("Acceso denegado.");
         }
       } else {
         openAdminModal();
@@ -656,7 +657,7 @@
         }
         playerModal.style.display = 'flex';
       } else {
-        alert("Activá el modo Creador (clave 9009) para subir o vincular tus videos.");
+        alert("El contenido seleccionado no está disponible por el momento.");
       }
     }
 
@@ -676,5 +677,4 @@
     renderCatalog();
   </script>
 </body>
-    </html>
-    
+</html>
