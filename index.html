@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus - La Neuro Página</title>
+<title>NaPlus Pro - La Neuro Página</title>
 <style>
   :root {
     --bg-main: #0a0612;
@@ -23,13 +23,13 @@
   nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
     background: rgba(10, 6, 18, 0.95); backdrop-filter: blur(10px);
-    display: none; justify-content: space-around; align-items: center;
+    display: flex; justify-content: space-around; align-items: center;
     border-top: 1px solid var(--border); z-index: 1000;
   }
   .nav-btn {
     background: none; border: none; color: var(--text-muted);
     font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; width: 25%;
+    gap: 3px; cursor: pointer; width: 33.33%;
   }
   .nav-btn span { font-size: 1.2rem; }
   .nav-btn.active { color: var(--accent); }
@@ -41,7 +41,6 @@
   /* Header y Buscador */
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
   .logo { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .profile-avatar-sm { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); cursor: pointer; }
 
   .search-input {
     width: 100%; padding: 12px 15px; background: var(--bg-surface);
@@ -58,14 +57,6 @@
   .media-info { padding: 6px; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); }
-
-  /* Selector de Perfiles Estilo Crunchyroll */
-  .profiles-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; text-align: center; padding: 20px; }
-  .profiles-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin: 30px 0; width: 100%; max-width: 350px; }
-  .profile-card { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; width: 110px; }
-  .profile-avatar { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); }
-  .profile-name { font-size: 0.85rem; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-  .profile-add-btn { width: 85px; height: 85px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.4); background: transparent; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2rem; cursor: pointer; }
 
   /* Ajustes y Creador */
   .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
@@ -86,7 +77,7 @@
   .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; }
 
-  /* Modales Globales */
+  /* Modal Creador Subir Contenido */
   .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
   .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
@@ -97,21 +88,9 @@
 </head>
 <body>
 
-  <!-- Selección de Perfiles -->
-  <div id="viewProfiles" class="view active">
-    <div class="profiles-container">
-      <h1 style="font-size: 1.4rem; margin-bottom: 6px; font-weight: 700;">¿Quién se irá de aventura?</h1>
-      <p style="color: var(--text-muted); font-size: 0.8rem;">Seleccioná tu perfil para comenzar</p>
-      <div class="profiles-grid" id="profilesGrid"></div>
-    </div>
-  </div>
-
   <!-- Vista Inicio -->
-  <div id="viewHome" class="view">
-    <div class="header">
-      <div class="logo">NaPlus Pro</div>
-      <img id="currentAvatar" class="profile-avatar-sm" onclick="app.switchProfile()" alt="Perfil">
-    </div>
+  <div id="viewHome" class="view active">
+    <div class="header"><div class="logo">NaPlus Pro</div></div>
     <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
     
     <div class="section-title">Películas</div>
@@ -132,17 +111,6 @@
   <div id="viewSettings" class="view">
     <div class="header"><div class="logo">Ajustes</div></div>
     
-    <div class="settings-box">
-      <h3>Perfil Activo</h3>
-      <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
-        <img id="settingsAvatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" alt="Avatar">
-        <div>
-          <h4 id="settingsName" style="font-size: 0.95rem;"></h4>
-          <p style="font-size: 0.75rem; cursor: pointer; color: var(--accent);" onclick="app.switchProfile()">Cambiar de perfil</p>
-        </div>
-      </div>
-    </div>
-
     <div class="settings-box" id="adminPanel" style="display: none;">
       <h3>Panel de Creador Avanzado</h3>
       <button class="btn-action" onclick="app.openModal()">+ Subir Contenido a la Nube</button>
@@ -179,21 +147,6 @@
     </div>
   </div>
 
-  <!-- Modal Crear Perfil -->
-  <div class="modal-sheet" id="profileModal">
-    <div class="sheet-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="font-size: 1.1rem; color: var(--primary);">Nuevo Perfil</h3>
-        <button onclick="app.closeProfileModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
-      </div>
-      <form onsubmit="app.saveProfile(event)">
-        <div class="field"><label>Nombre</label><input type="text" id="pName" required placeholder="Nombre..."></div>
-        <div class="field"><label>Foto (Galería)</label><input type="file" id="pAvatarFile" accept="image/*"></div>
-        <button type="submit" class="btn-action" style="margin-top: 10px;">Crear Perfil</button>
-      </form>
-    </div>
-  </div>
-
   <!-- Modal Creador Subir Contenido -->
   <div class="modal-sheet" id="adminModal">
     <div class="sheet-content">
@@ -222,90 +175,21 @@ class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v5';
-    this.profilesKey = 'naplus_pro_profiles_v3';
+    this.dbKey = 'naplus_pro_db_v6';
+    this.listKey = 'naplus_pro_list_v1';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
       { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
     ];
     
-    this.profiles = JSON.parse(localStorage.getItem(this.profilesKey)) || [];
-    this.activeProfileId = null;
+    this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
     this.currentId = null;
-    this.customAvatar = '';
-    
-    this.init();
-  }
-
-  init() {
-    if (this.profiles.length === 0) {
-      this.profiles.push({ id: Date.now(), name: "Invitado", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200", list: [] });
-      localStorage.setItem(this.profilesKey, JSON.stringify(this.profiles));
-    }
-    this.renderProfiles();
   }
 
   toast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.style.display = 'block';
     setTimeout(() => t.style.display = 'none', 2500);
-  }
-
-  renderProfiles() {
-    const grid = document.getElementById('profilesGrid');
-    grid.innerHTML = '';
-    this.profiles.forEach(p => {
-      const card = document.createElement('button');
-      card.className = 'profile-card';
-      card.onclick = () => this.selectProfile(p.id);
-      card.innerHTML = `
-        <img class="profile-avatar" src="${p.avatar}" alt="Avatar">
-        <span class="profile-name">${p.name}</span>
-      `;
-      grid.appendChild(card);
-    });
-
-    if(this.profiles.length < 4) {
-      const addBtn = document.createElement('button');
-      addBtn.className = 'profile-card';
-      addBtn.onclick = () => document.getElementById('profileModal').classList.add('active');
-      addBtn.innerHTML = `<div class="profile-add-btn">+</div><span class="profile-name">Añadir</span>`;
-      grid.appendChild(addBtn);
-    }
-  }
-
-  closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
-
-  saveProfile(e) {
-    e.preventDefault();
-    const name = document.getElementById('pName').value.trim();
-    const newP = { id: Date.now(), name, avatar: this.customAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200', list: [] };
-    this.profiles.push(newP);
-    localStorage.setItem(this.profilesKey, JSON.stringify(this.profiles));
-    this.closeProfileModal();
-    this.renderProfiles();
-    this.toast('Perfil creado');
-  }
-
-  selectProfile(id) {
-    this.activeProfileId = id;
-    const p = this.profiles.find(x => x.id === id);
-    document.getElementById('currentAvatar').src = p.avatar;
-    document.getElementById('settingsAvatar').src = p.avatar;
-    document.getElementById('settingsName').textContent = p.name;
-
-    document.getElementById('viewProfiles').classList.remove('active');
-    document.getElementById('viewHome').classList.add('active');
-    document.getElementById('bottomNav').style.display = 'flex';
-    this.renderHome();
-  }
-
-  switchProfile() {
-    this.activeProfileId = null;
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('viewProfiles').classList.add('active');
-    document.getElementById('bottomNav').style.display = 'none';
-    this.renderProfiles();
   }
 
   switchView(viewName, el) {
@@ -349,8 +233,7 @@ class NaPlusProEngine {
   renderList() {
     const grid = document.getElementById('listGrid');
     grid.innerHTML = '';
-    const p = this.profiles.find(x => x.id === this.activeProfileId);
-    const items = this.catalog.filter(i => p && p.list.includes(i.id));
+    const items = this.catalog.filter(i => this.myList.includes(i.id));
     const empty = document.getElementById('emptyMsg');
 
     if (items.length === 0) { empty.style.display = 'block'; }
@@ -401,4 +284,103 @@ class NaPlusProEngine {
   }
 
   closePlayer() {
-    do
+    document.getElementById('videoContainer').innerHTML = '';
+    document.getElementById('playerModal').classList.remove('active');
+  }
+
+  updateListBtnState() {
+    const inList = this.myList.includes(this.currentId);
+    const btn = document.getElementById('listBtn');
+    btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
+    btn.style.background = inList ? '#332b4a' : 'var(--primary)';
+  }
+
+  toggleList() {
+    const idx = this.myList.indexOf(this.currentId);
+    if (idx > -1) {
+      this.myList.splice(idx, 1);
+      this.toast('Eliminado de Mi Lista');
+    } else {
+      this.myList.push(this.currentId);
+      this.toast('Agregado a Mi Lista');
+    }
+    localStorage.setItem(this.listKey, JSON.stringify(this.myList));
+    this.updateListBtnState();
+  }
+
+  verifyAdmin(val) {
+    if (val.trim() === '9009' || val.trim().startsWith('ghp_')) {
+      if (val.trim().startsWith('ghp_')) localStorage.setItem('naplus_token', val.trim());
+      document.getElementById('adminPanel').style.display = 'block';
+      this.toast('¡Modo Creador Desbloqueado!');
+    }
+  }
+
+  openModal() { document.getElementById('adminModal').classList.add('active'); }
+  closeModal() { document.getElementById('adminModal').classList.remove('active'); }
+
+  async saveItem(e) {
+    e.preventDefault();
+    const newItem = {
+      id: Date.now(),
+      type: document.getElementById('fType').value,
+      title: document.getElementById('fTitle').value.trim(),
+      genre: document.getElementById('fGenre').value.trim(),
+      year: document.getElementById('fYear').value,
+      desc: document.getElementById('fDesc').value.trim(),
+      cover: document.getElementById('fCover').value.trim(),
+      video: document.getElementById('fVideo').value.trim()
+    };
+    this.catalog.unshift(newItem);
+    localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
+    this.closeModal();
+    this.renderHome();
+    this.toast('Contenido guardado');
+    await this.autoSyncGitHub();
+  }
+
+  async autoSyncGitHub() {
+    let token = localStorage.getItem('naplus_token');
+    if (!token || !token.startsWith("ghp_")) {
+      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar globalmente:");
+      if (token && token.trim().startsWith("ghp_")) {
+        token = token.trim();
+        localStorage.setItem('naplus_token', token);
+      } else return;
+    }
+
+    const statusEl = document.getElementById('syncStatus');
+    statusEl.style.display = "block";
+
+    try {
+      const getRes = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.filePath}`, {
+        headers: { 'Authorization': `token ${token}` }
+      });
+      if (!getRes.ok) { statusEl.style.display = "none"; return; }
+      
+      const getData = await getRes.json();
+      let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+
+      const catalogJson = JSON.stringify(this.catalog, null, 2);
+      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || ${catalogJson};`);
+
+      const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
+      await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.filePath}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Sincronización NaPlus Pro', content: updatedBase64, sha: getData.sha })
+      });
+
+      statusEl.innerText = "✅ ¡Sincronizado con éxito!";
+    } catch(err) {
+      statusEl.innerText = "❌ Error de red al sincronizar";
+    }
+    setTimeout(() => { statusEl.style.display = "none"; }, 3000);
+  }
+}
+
+const app = new NaPlusProEngine();
+app.renderHome();
+</script>
+</body>
+</html>
