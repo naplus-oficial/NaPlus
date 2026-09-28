@@ -3,32 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NaPlus - Streaming Gratuito</title>
+  <title>NaPlus - Plataforma de Streaming</title>
   <style>
     :root {
-      --bg: #0a0612;
-      --card: #150d26;
-      --purple: #8b5cf6;
-      --purple-dark: #6d28d9;
+      --bg: #0b0714;
+      --card-bg: #140d24;
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+      --purple-dark: #5b21b6;
       --text: #f8fafc;
       --muted: #94a3b8;
-      --border: rgba(139, 92, 246, 0.35);
+      --border: rgba(124, 58, 237, 0.3);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 60px; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
 
-    /* Navbar */
+    /* Header Navbar */
     header {
       position: sticky; top: 0; left: 0; right: 0;
-      height: 60px; background: rgba(10, 6, 18, 0.95);
+      height: 60px; background: rgba(11, 7, 20, 0.95);
       backdrop-filter: blur(10px);
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 15px; border-bottom: 1px solid var(--border);
       z-index: 1000;
     }
 
-    .brand { font-size: 1.5rem; font-weight: 900; color: var(--purple); letter-spacing: 1px; }
+    .brand { font-size: 1.5rem; font-weight: 900; color: var(--purple-light); letter-spacing: 1px; }
 
     .btn-main {
       background: linear-gradient(135deg, var(--purple), var(--purple-dark));
@@ -37,8 +38,8 @@
       cursor: pointer;
     }
 
-    /* Hero / Filtros */
-    .hero { padding: 15px; background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); }
+    /* Buscador y Filtro de Géneros */
+    .hero { padding: 15px; background: linear-gradient(180deg, var(--card-bg) 0%, var(--bg) 100%); }
     
     .search-input {
       width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
@@ -53,27 +54,27 @@
     .genre-bar::-webkit-scrollbar { display: none; }
 
     .genre-chip {
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--card-bg); border: 1px solid var(--border);
       color: var(--muted); padding: 6px 14px; border-radius: 20px;
       font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer;
     }
     .genre-chip.active { background: var(--purple); color: #fff; border-color: var(--purple); }
 
-    /* Modales */
+    /* Modal Formulario Creador */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
       z-index: 2000; padding: 15px; align-items: center; justify-content: center;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { display: flex !important; }
 
     .modal-card {
-      background: var(--card); border: 1px solid var(--purple);
+      background: var(--card-bg); border: 1px solid var(--purple);
       border-radius: 12px; width: 100%; max-width: 480px;
       padding: 20px; position: relative; max-height: 90vh; overflow-y: auto;
     }
 
-    .modal-title { font-size: 1.2rem; margin-bottom: 12px; color: var(--purple); }
+    .modal-title { font-size: 1.2rem; margin-bottom: 12px; color: var(--purple-light); }
     .btn-close-modal {
       position: absolute; top: 15px; right: 15px;
       background: transparent; border: none; color: var(--muted);
@@ -88,16 +89,16 @@
       border-radius: 6px; font-size: 0.9rem; outline: none;
     }
 
-    /* Grillas y Tarjetas */
+    /* Grilla de Tarjetas */
     .section-title {
-      font-size: 1.1rem; margin: 20px 15px 10px; color: var(--purple);
+      font-size: 1.1rem; margin: 20px 15px 10px; color: var(--purple-light);
       display: flex; align-items: center; gap: 8px;
     }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px; }
 
     .card {
-      background: var(--card); border-radius: 8px; overflow: hidden;
+      background: var(--card-bg); border-radius: 8px; overflow: hidden;
       border: 1px solid var(--border); cursor: pointer; position: relative;
     }
 
@@ -117,20 +118,20 @@
     .card-actions {
       display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10;
     }
-    body.creator-active .card-actions { display: flex; }
+    body.creator-active .card-actions { display: flex !important; }
 
     .card-actions button {
       background: rgba(0,0,0,0.85); border: 1px solid var(--purple);
       color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
     }
 
-    /* Reproductor Pantalla Completa */
+    /* Vista del Reproductor de Video */
     .player-view {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.95); z-index: 5000;
       flex-direction: column; padding: 15px; overflow-y: auto;
     }
-    .player-view.active { display: flex; }
+    .player-view.active { display: flex !important; }
 
     .video-wrapper {
       width: 100%; aspect-ratio: 16/9; background: #000;
@@ -155,7 +156,7 @@
 
     .player-desc {
       color: var(--muted); font-size: 0.9rem; margin-top: 10px;
-      line-height: 1.4; background: var(--card); padding: 12px;
+      line-height: 1.4; background: var(--card-bg); padding: 12px;
       border-radius: 8px; border: 1px solid var(--border);
     }
   </style>
@@ -164,11 +165,11 @@
 
   <header>
     <div class="brand">NaPlus</div>
-    <button class="btn-main" id="btnAdmin" onclick="abrirModalCreador()">Modo Creador</button>
+    <button class="btn-main" id="btnAdmin" onclick="abrirCreador()">Modo Creador</button>
   </header>
 
   <div class="hero">
-    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por nombre o géneros..." oninput="filtrar()">
+    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por título o género..." oninput="filtrar()">
     
     <div class="genre-bar">
       <button class="genre-chip active" onclick="seleccionarGenero('Todos', this)">Todos</button>
@@ -182,30 +183,15 @@
     </div>
   </div>
 
-  <!-- Modal Acceso Creador -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal-card">
-      <button class="btn-close-modal" onclick="cerrarModal('authModal')">✕</button>
-      <div class="modal-title">Acceso Creador</div>
-      <form onsubmit="autenticarCreador(event)">
-        <div class="form-group">
-          <label>Ingresá la clave (9009) o tu Token de GitHub</label>
-          <input type="password" id="passInput" placeholder="Clave o Token..." required>
-        </div>
-        <button type="submit" class="btn-main" style="width:100%;">Ingresar</button>
-      </form>
-    </div>
-  </div>
-
   <!-- Modal Formulario Creador -->
   <div class="modal-overlay" id="formModal">
     <div class="modal-card">
       <button class="btn-close-modal" onclick="cerrarModal('formModal')">✕</button>
-      <div class="modal-title" id="formModalTitle">Publicar Contenido</div>
+      <div class="modal-title" id="formModalTitle">Subir / Editar Contenido</div>
       <form onsubmit="guardarContenido(event)">
         <input type="hidden" id="editIndex">
         <div class="form-group">
-          <label>Tipo</label>
+          <label>Tipo de Contenido</label>
           <select id="tipoInput">
             <option value="pelicula">Película</option>
             <option value="serie">Serie</option>
@@ -213,7 +199,7 @@
         </div>
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="tituloInput" required placeholder="Nombre del título">
+          <input type="text" id="tituloInput" required placeholder="Nombre de la película o serie">
         </div>
         <div class="form-group">
           <label>Géneros (separados por comas)</label>
@@ -257,19 +243,19 @@
     <button class="btn-close" onclick="cerrarReproductor()">✕ Volver al Catálogo</button>
     <div class="video-wrapper" id="videoContainer"></div>
     <h2 id="playerTitle"></h2>
-    <p id="playerSub" style="color:var(--purple); margin-top:5px;"></p>
+    <p id="playerSub" style="color:var(--purple-light); margin-top:5px;"></p>
     <div class="player-desc" id="playerDesc">Sin descripción disponible.</div>
   </div>
 
   <script>
-    let catalog = JSON.parse(localStorage.getItem('naplus_db_v3')) || [
+    let catalog = JSON.parse(localStorage.getItem('naplus_db_v4')) || [
       {
         id: 1,
         tipo: 'pelicula',
-        titulo: 'Demo OK.ru - Película Novedad',
+        titulo: 'Película Demo NaPlus (OK.ru)',
         genero: 'Acción, Terror, Comedia',
         anio: '2026',
-        desc: 'Demostración de película con reproductor nativo incrustado directamente desde OK.ru.',
+        desc: 'Esta es una prueba de video incrustado nativamente desde OK.ru dentro de NaPlus.',
         portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750'
       }
@@ -284,41 +270,34 @@
       document.getElementById('btnAdmin').innerText = "+ Agregar Video";
     }
 
-    function abrirModalCreador() {
-      if (esCreador) {
-        limpiarFormulario();
-        document.getElementById('formModalTitle').innerText = "Publicar Contenido";
-        document.getElementById('formModal').classList.add('active');
-      } else {
-        document.getElementById('passInput').value = '';
-        document.getElementById('authModal').classList.add('active');
+    function abrirCreador() {
+      if (!esCreador) {
+        const pass = prompt("Ingresá la clave de creador (9009) o tu Token de GitHub:");
+        if (!pass) return;
+
+        const val = pass.trim();
+        if (val === "9009" || val.startsWith("ghp_")) {
+          if (val.startsWith("ghp_")) {
+            localStorage.setItem('naplus_token', val);
+          }
+          esCreador = true;
+          localStorage.setItem('naplus_is_creator', 'true');
+          document.body.classList.add('creator-active');
+          document.getElementById('btnAdmin').innerText = "+ Agregar Video";
+          renderizar();
+        } else {
+          alert("Clave incorrecta. Usá '9009'.");
+          return;
+        }
       }
+
+      limpiarFormulario();
+      document.getElementById('formModalTitle').innerText = "Subir Nuevo Contenido";
+      document.getElementById('formModal').classList.add('active');
     }
 
     function cerrarModal(id) {
       document.getElementById(id).classList.remove('active');
-    }
-
-    function autenticarCreador(e) {
-      e.preventDefault();
-      const val = document.getElementById('passInput').value.trim();
-
-      if (val === "9009" || val.startsWith("ghp_")) {
-        if (val.startsWith("ghp_")) {
-          localStorage.setItem('naplus_token', val);
-        }
-        esCreador = true;
-        localStorage.setItem('naplus_is_creator', 'true');
-        document.body.classList.add('creator-active');
-        document.getElementById('btnAdmin').innerText = "+ Agregar Video";
-        cerrarModal('authModal');
-        limpiarFormulario();
-        document.getElementById('formModalTitle').innerText = "Publicar Contenido";
-        document.getElementById('formModal').classList.add('active');
-        renderizar();
-      } else {
-        alert("Clave incorrecta. Usá '9009' o tu Token de GitHub.");
-      }
     }
 
     function toggleFavorito(id, event) {
@@ -477,7 +456,7 @@
     function eliminar(index) {
       if (confirm("¿Seguro que querés eliminar este contenido del catálogo?")) {
         catalog.splice(index, 1);
-        localStorage.setItem('naplus_db_v3', JSON.stringify(catalog));
+        localStorage.setItem('naplus_db_v4', JSON.stringify(catalog));
         renderizar();
         publicarEnNube();
       }
@@ -501,8 +480,28 @@
       if (editIdx !== '') catalog[parseInt(editIdx)] = nuevoItem;
       else catalog.unshift(nuevoItem);
 
-      localStorage.setItem('naplus_db_v3', JSON.stringify(catalog));
+      localStorage.setItem('naplus_db_v4', JSON.stringify(catalog));
       renderizar();
       cerrarModal('formModal');
       publicarEnNube();
-    
+    }
+
+    async function publicarEnNube() {
+      let token = localStorage.getItem('naplus_token');
+      if (!token || !token.startsWith("ghp_")) return;
+
+      try {
+        const repoPath = localStorage.getItem('naplus_repo') || prompt("Confirmá el repositorio (ejemplo: usuario/naplus):");
+        if (!repoPath) return;
+        localStorage.setItem('naplus_repo', repoPath);
+
+        const getRes = await fetch(`https://api.github.com/repos/${repoPath}/contents/index.html`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (!getRes.ok) return;
+
+        const getData = await getRes.json();
+        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+        
+        fileText = fileText.rep
