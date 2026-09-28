@@ -3,364 +3,400 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NaPlus Cinema</title>
+  <title>NaPlus</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0f0c20; color: #ffffff; padding-bottom: 40px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #0b0714; color: #f8fafc; padding-bottom: 50px; }
 
-    /* BARRA SUPERIOR */
-    .navbar {
-      background: #171233;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      position: sticky; top: 0; z-index: 100;
+    header {
+      position: sticky; top: 0; height: 60px; background: #140d24;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 15px; border-bottom: 1px solid rgba(124, 58, 237, 0.3); z-index: 100;
     }
-    .logo { font-size: 1.6rem; font-weight: 800; color: #a855f7; letter-spacing: 1px; }
+    .logo { font-size: 1.5rem; font-weight: 900; color: #a78bfa; }
     .btn-admin {
-      background: #8b5cf6; color: #fff; border: none; padding: 10px 16px;
-      border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
+      background: #7c3aed; color: #fff; border: none; padding: 8px 14px;
+      border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
     }
 
-    /* CONTENEDOR PRINCIPAL */
-    .container { padding: 20px 15px; max-width: 1200px; margin: auto; }
-
-    /* BUSCADOR */
-    .search-container { margin-bottom: 25px; }
-    .search-bar {
-      width: 100%; padding: 14px 18px; background: #1c163d;
-      border: 1px solid #3b2d70; border-radius: 10px; color: #fff;
-      font-size: 1rem; outline: none;
+    .hero { padding: 15px; background: linear-gradient(180deg, #140d24 0%, #0b0714 100%); }
+    .search-input {
+      width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(124, 58, 237, 0.3); color: #fff;
+      border-radius: 8px; font-size: 0.95rem; outline: none; margin-bottom: 12px;
     }
 
-    /* TITULOS DE SECCION */
-    .section-head { font-size: 1.3rem; margin-bottom: 15px; color: #c084fc; border-left: 4px solid #a855f7; padding-left: 10px; }
+    .section-title { font-size: 1.1rem; margin: 20px 15px 10px; color: #a78bfa; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px; }
 
-    /* GRILLA DE PELICULAS */
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 15px;
-      margin-bottom: 35px;
+    .card {
+      background: #140d24; border-radius: 8px; overflow: hidden;
+      border: 1px solid rgba(124, 58, 237, 0.3); cursor: pointer; position: relative;
+    }
+    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+    .card-body { padding: 8px; }
+    .card-title { font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-sub { font-size: 0.75rem; color: #94a3b8; }
+
+    .card-actions { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
+    body.admin-active .card-actions { display: flex; }
+    .card-actions button {
+      background: rgba(0,0,0,0.85); border: 1px solid #7c3aed;
+      color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
     }
 
-    .movie-card {
-      background: #1c163d; border-radius: 10px; overflow: hidden;
-      border: 1px solid #3b2d70; position: relative; cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .movie-card:active { transform: scale(0.97); }
-
-    .poster-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-    
-    .card-info { padding: 10px; }
-    .title { font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .genre { font-size: 0.75rem; color: #a1a1aa; margin-top: 3px; }
-
-    /* BOTONES DE ADMINISTRADOR EN TARJETA */
-    .card-admin-tools {
-      display: none; position: absolute; top: 6px; right: 6px; gap: 5px; z-index: 10;
-    }
-    body.admin-mode .card-admin-tools { display: flex; }
-    
-    .btn-tool {
-      background: rgba(0,0,0,0.85); border: 1px solid #a855f7; color: #fff;
-      padding: 5px 8px; border-radius: 5px; font-size: 0.75rem; cursor: pointer;
-    }
-
-    /* MODAL DE REPRODUCTOR DE VIDEO */
-    .player-modal {
+    /* Modal Player */
+    .player-view {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-      z-index: 1000; flex-direction: column; padding: 15px;
+      z-index: 5000; flex-direction: column; padding: 15px; overflow-y: auto;
     }
-    .player-modal.open { display: flex; }
+    .player-view.active { display: flex; }
 
-    .btn-close-player {
-      align-self: flex-end; background: #e11d48; color: #fff; border: none;
-      padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer;
-      margin-bottom: 15px;
+    .video-wrapper {
+      width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px;
+      overflow: hidden; margin-bottom: 15px; position: relative;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+    }
+    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; }
+
+    .btn-close {
+      align-self: flex-end; background: #7c3aed; color: #fff; border: none;
+      padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px;
     }
 
-    .iframe-box {
-      width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px;
-      overflow: hidden; border: 1px solid #3b2d70;
+    .btn-alt-link {
+      background: #0088cc; color: #fff; padding: 10px 18px; border-radius: 6px;
+      text-decoration: none; font-weight: bold; margin-top: 10px; display: inline-block;
     }
-    .iframe-box iframe, .iframe-box video { width: 100%; height: 100%; border: none; }
 
-    /* FORMULARIO DE CARGA */
-    .admin-modal {
+    /* Modal Formulario */
+    .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      z-index: 900; align-items: center; justify-content: center; padding: 15px;
+      z-index: 2000; padding: 15px; align-items: center; justify-content: center;
     }
-    .admin-modal.open { display: flex; }
-
-    .form-box {
-      background: #171233; padding: 20px; border-radius: 12px;
-      width: 100%; max-width: 450px; border: 1px solid #8b5cf6;
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #140d24; border: 1px solid #7c3aed; border-radius: 12px;
+      width: 100%; max-width: 480px; padding: 20px; position: relative;
     }
-    .form-box h3 { margin-bottom: 15px; color: #c084fc; }
-
     .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 0.8rem; color: #a1a1aa; margin-bottom: 4px; }
-    .field input, .field select {
-      width: 100%; padding: 10px; background: #0f0c20; border: 1px solid #3b2d70;
-      color: #fff; border-radius: 6px; outline: none;
+    .field label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 10px; background: #0b0714; border: 1px solid rgba(124, 58, 237, 0.3);
+      color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
-
-    .form-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-    .btn-cancel { background: transparent; color: #a1a1aa; border: none; padding: 8px; cursor: pointer; }
-    .btn-save { background: #8b5cf6; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    
+    #syncStatus {
+      display: none;
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: #7c3aed;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
   </style>
 </head>
 <body>
 
-  <!-- BARRA DE NAVEGACION -->
-  <div class="navbar">
+  <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-admin" id="btnAdmin" onclick="toggleModoCreador()">Modo Creador</button>
+    <button class="btn-admin" id="btnAdmin" onclick="abrirCreador()">Modo Creador</button>
+  </header>
+
+  <div class="hero">
+    <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por título o género..." oninput="filtrar()">
   </div>
 
-  <div class="container">
-    <!-- BUSCADOR -->
-    <div class="search-container">
-      <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="buscar()">
-    </div>
+  <div class="section-title">🎬 Películas</div>
+  <div class="grid" id="peliculasGrid"></div>
 
-    <!-- SECCION PELICULAS -->
-    <div class="section-head">Películas</div>
-    <div class="movie-grid" id="moviesGrid"></div>
+  <div class="section-title">📺 Series</div>
+  <div class="grid" id="seriesGrid"></div>
 
-    <!-- SECCION SERIES -->
-    <div class="section-head">Series</div>
-    <div class="movie-grid" id="seriesGrid"></div>
-  </div>
-
-  <!-- REPRODUCTOR EN PANTALLA COMPLETA -->
-  <div class="player-modal" id="playerModal">
-    <button class="btn-close-player" onclick="cerrarReproductor()">✕ Cerrar Video</button>
-    <div class="iframe-box" id="iframeBox"></div>
-    <h2 id="movieTitle" style="margin-top: 15px;"></h2>
-    <p id="movieGenre" style="color: #a1a1aa; font-size: 0.9rem; margin-top: 5px;"></p>
-  </div>
-
-  <!-- FORMULARIO CREADOR PARA SUBIR/EDITAR -->
-  <div class="admin-modal" id="adminModal">
-    <div class="form-box">
-      <h3 id="formTitle">Agregar a NaPlus</h3>
-      <form onsubmit="guardarPelicula(event)">
+  <!-- Formulario Modal -->
+  <div class="modal-overlay" id="formModal">
+    <div class="modal-card">
+      <h3 id="formTitle" style="margin-bottom:12px; color:#a78bfa;">Subir Contenido</h3>
+      <form onsubmit="guardarContenido(event)">
         <input type="hidden" id="editIndex">
         <div class="field">
-          <label>Tipo de Contenido</label>
-          <select id="typeInput">
-            <option value="movie">Película</option>
-            <option value="series">Serie</option>
+          <label>Tipo</label>
+          <select id="tipoInput">
+            <option value="pelicula">Película</option>
+            <option value="serie">Serie</option>
           </select>
         </div>
         <div class="field">
           <label>Título</label>
-          <input type="text" id="titleInput" required placeholder="Ej: Spider-Man">
+          <input type="text" id="tituloInput" required>
         </div>
         <div class="field">
           <label>Género</label>
-          <input type="text" id="genreInput" required placeholder="Ej: Acción, Terror">
+          <input type="text" id="generoInput" required>
         </div>
         <div class="field">
-          <label>URL Imagen de Portada</label>
-          <input type="url" id="coverInput" required placeholder="https://...">
+          <label>Portada (URL)</label>
+          <input type="url" id="portadaInput" required>
         </div>
         <div class="field">
-          <label>URL Video (OK.ru, Google Drive, MP4)</label>
-          <input type="url" id="videoInput" required placeholder="https://ok.ru/videoembed/...">
+          <label>Enlace del Video (OK.ru, Google Drive, MP4, Telegram)</label>
+          <input type="url" id="videoInput" required>
         </div>
-        <div class="form-btns">
-          <button type="button" class="btn-cancel" onclick="cerrarFormulario()">Cancelar</button>
-          <button type="submit" class="btn-save">Guardar Cambios</button>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+          <button type="button" onclick="cerrarModal()" style="background:transparent; color:#94a3b8; border:none; cursor:pointer;">Cancelar</button>
+          <button type="submit" class="btn-admin" id="btnGuardar">Guardar y Publicar</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Reproductor -->
+  <div class="player-view" id="playerView">
+    <button class="btn-close" onclick="cerrarReproductor()">✕ Volver al Catálogo</button>
+    <div class="video-wrapper" id="videoContainer"></div>
+    <h2 id="playerTitle" style="margin-top:10px;"></h2>
+    <p id="playerSub" style="color:#a78bfa; margin-top:4px; font-size:0.9rem;"></p>
+    <div id="altBtnBox"></div>
+  </div>
+
+  <div id="syncStatus">Sincronizando con GitHub...</div>
+
   <script>
-    // BASE DE DATOS INICIAL PREDETERMINADA
-    const CATALOGO_INICIAL = [
+    const GITHUB_REPO = "ignacio12adrian-ux/NaPlus";
+    const FILE_PATH = "index.html";
+
+    // CATALOGO GLOBAL BASE
+    let catalog = [
       {
         id: 1,
-        type: 'movie',
-        title: 'Ejemplo OK.ru Película',
-        genre: 'Acción / Terror',
-        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=500',
+        tipo: 'pelicula',
+        titulo: '[REC]',
+        genero: 'Terror',
+        portada: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750'
-      },
-      {
-        id: 2,
-        type: 'series',
-        title: 'Ejemplo Serie Demo',
-        genre: 'Drama',
-        cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=500',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
       }
     ];
 
-    let db = JSON.parse(localStorage.getItem('naplus_db_v2026')) || CATALOGO_INICIAL;
     let esCreador = false;
 
-    // RENDERIZAR CATALOGO EN PANTALLA
-    function cargarCatalogo(filtro = '') {
-      const mGrid = document.getElementById('moviesGrid');
+    function renderizar(filtro = '') {
+      const pGrid = document.getElementById('peliculasGrid');
       const sGrid = document.getElementById('seriesGrid');
-      mGrid.innerHTML = '';
-      sGrid.innerHTML = '';
+      pGrid.innerHTML = ''; sGrid.innerHTML = '';
 
       const query = filtro.toLowerCase().trim();
 
-      db.forEach((item, index) => {
-        if (item.title.toLowerCase().includes(query) || item.genre.toLowerCase().includes(query)) {
+      catalog.forEach((item, index) => {
+        if (item.titulo.toLowerCase().includes(query) || item.genero.toLowerCase().includes(query)) {
           const card = document.createElement('div');
-          card.className = 'movie-card';
-          card.onclick = () => verPelicula(index);
+          card.className = 'card';
+          card.onclick = () => reproducir(index);
 
           card.innerHTML = `
-            <div class="card-admin-tools">
-              <button class="btn-tool" onclick="event.stopPropagation(); editar(${index})">✏️</button>
-              <button class="btn-tool" onclick="event.stopPropagation(); borrar(${index})">🗑️</button>
+            <div class="card-actions">
+              <button onclick="event.stopPropagation(); editar(${index})">✏️</button>
+              <button onclick="event.stopPropagation(); eliminar(${index})">🗑️</button>
             </div>
-            <img class="poster-img" src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
-            <div class="card-info">
-              <div class="title">${item.title}</div>
-              <div class="genre">${item.genre}</div>
+            <img src="${item.portada}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
+            <div class="card-body">
+              <div class="card-title">${item.titulo}</div>
+              <div class="card-sub">${item.genero}</div>
             </div>
           `;
 
-          if (item.type === 'movie') mGrid.appendChild(card);
+          if (item.tipo === 'pelicula') pGrid.appendChild(card);
           else sGrid.appendChild(card);
         }
       });
     }
 
-    // BUSCADOR
-    function buscar() {
-      cargarCatalogo(document.getElementById('searchInput').value);
+    function filtrar() {
+      renderizar(document.getElementById('searchBar').value);
     }
 
-    // REPRODUCTOR NATIVO OK.RU / DRIVE / DIRECTO
-    function verPelicula(index) {
-      const item = db[index];
+    function reproducir(index) {
+      const item = catalog[index];
       if (!item) return;
 
-      document.getElementById('movieTitle').innerText = item.title;
-      document.getElementById('movieGenre').innerText = item.genre;
+      document.getElementById('playerTitle').innerText = item.titulo;
+      document.getElementById('playerSub').innerText = item.genero;
 
-      const box = document.getElementById('iframeBox');
+      const box = document.getElementById('videoContainer');
+      const altBox = document.getElementById('altBtnBox');
       box.innerHTML = '';
+      altBox.innerHTML = '';
       const url = item.video;
 
-      // SI ES LINK DE OK.RU
       if (url.includes('ok.ru')) {
         let embed = url;
         if (!url.includes('videoembed')) {
           const m = url.match(/\/video\/([0-9]+)/);
           if (m && m[1]) embed = `https://ok.ru/videoembed/${m[1]}`;
         }
-        box.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+        box.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+        altBox.innerHTML = `<a href="${url}" target="_blank" class="btn-alt-link">↗ Si no carga, abrir directamente en OK.ru</a>`;
       } 
-      // SI ES LINK DE GOOGLE DRIVE
       else if (url.includes('drive.google.com')) {
-        let id = '';
+        let id = "";
         const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
         if (m && m[1]) id = m[1];
         const embed = id ? `https://drive.google.com/file/d/${id}/preview` : url;
         box.innerHTML = `<iframe src="${embed}" allow="autoplay" allowfullscreen></iframe>`;
       } 
-      // CUALQUIER OTRO VIDEO DIRECTO (.MP4)
+      else if (url.includes('t.me') || url.includes('telegram')) {
+        altBox.innerHTML = `<a href="${url}" target="_blank" class="btn-alt-link">✈️ Abrir película en Telegram</a>`;
+      }
       else {
-        box.innerHTML = `<video src="${url}" controls autoplay></video>`;
+        box.innerHTML = `<video controls autoplay style="width:100%; height:100%;"><source src="${url}" type="video/mp4"></video>`;
       }
 
-      document.getElementById('playerModal').classList.add('open');
+      document.getElementById('playerView').classList.add('active');
     }
 
     function cerrarReproductor() {
-      document.getElementById('iframeBox').innerHTML = '';
-      document.getElementById('playerModal').classList.remove('open');
+      document.getElementById('videoContainer').innerHTML = '';
+      document.getElementById('playerView').classList.remove('active');
     }
 
-    // ACTIVAR MODO CREADOR
-    function toggleModoCreador() {
-      if (esCreador) {
-        abrirFormulario();
-        return;
-      }
+    function abrirCreador() {
+      if (!esCreador) {
+        let pass = prompt("Clave de Creador (9009) o pegá tu Token de GitHub directamente:");
+        if (!pass) return;
+        pass = pass.trim();
 
-      const pass = prompt("Ingresá la clave de creador (9009):");
-      if (pass === "9009") {
-        esCreador = true;
-        document.body.classList.add('admin-mode');
-        document.getElementById('btnAdmin').innerText = "+ Agregar Video";
-        abrirFormulario();
-      } else if (pass !== null) {
-        alert("Clave incorrecta. Usá 9009");
+        if (pass === "9009" || pass.startsWith("ghp_")) {
+          if (pass.startsWith("ghp_")) {
+            localStorage.setItem('naplus_token', pass);
+          }
+          esCreador = true;
+          document.body.classList.add('admin-active');
+          document.getElementById('btnAdmin').innerText = "+ Agregar";
+        } else {
+          alert("Clave o Token incorrecto.");
+          return;
+        }
       }
-    }
-
-    function abrirFormulario() {
       document.getElementById('editIndex').value = '';
-      document.getElementById('formTitle').innerText = "Subir Nuevo Contenido";
-      document.getElementById('titleInput').value = '';
-      document.getElementById('genreInput').value = '';
-      document.getElementById('coverInput').value = '';
+      document.getElementById('tituloInput').value = '';
+      document.getElementById('generoInput').value = '';
+      document.getElementById('portadaInput').value = '';
       document.getElementById('videoInput').value = '';
-      document.getElementById('adminModal').classList.add('open');
+      document.getElementById('formModal').classList.add('active');
     }
 
-    function cerrarFormulario() {
-      document.getElementById('adminModal').classList.remove('open');
+    function cerrarModal() {
+      document.getElementById('formModal').classList.remove('active');
     }
 
     function editar(index) {
-      const item = db[index];
+      const item = catalog[index];
       document.getElementById('editIndex').value = index;
-      document.getElementById('formTitle').innerText = "Editar Contenido";
-      document.getElementById('typeInput').value = item.type;
-      document.getElementById('titleInput').value = item.title;
-      document.getElementById('genreInput').value = item.genre;
-      document.getElementById('coverInput').value = item.cover;
+      document.getElementById('tipoInput').value = item.tipo;
+      document.getElementById('tituloInput').value = item.titulo;
+      document.getElementById('generoInput').value = item.genero;
+      document.getElementById('portadaInput').value = item.portada;
       document.getElementById('videoInput').value = item.video;
-      document.getElementById('adminModal').classList.add('open');
+      document.getElementById('formModal').classList.add('active');
     }
 
-    function borrar(index) {
-      if (confirm("¿Seguro que querés eliminar esta película?")) {
-        db.splice(index, 1);
-        localStorage.setItem('naplus_db_v2026', JSON.stringify(db));
-        cargarCatalogo();
+    async function eliminar(index) {
+      if (confirm("¿Eliminar este título para TODOS los usuarios?")) {
+        catalog.splice(index, 1);
+        renderizar();
+        await autoSincronizarGitHub();
       }
     }
 
-    function guardarPelicula(e) {
+    async function guardarContenido(e) {
       e.preventDefault();
       const idx = document.getElementById('editIndex').value;
-
       const nuevo = {
         id: Date.now(),
-        type: document.getElementById('typeInput').value,
-        title: document.getElementById('titleInput').value.trim(),
-        genre: document.getElementById('genreInput').value.trim(),
-        cover: document.getElementById('coverInput').value.trim(),
+        tipo: document.getElementById('tipoInput').value,
+        titulo: document.getElementById('tituloInput').value.trim(),
+        genero: document.getElementById('generoInput').value.trim(),
+        portada: document.getElementById('portadaInput').value.trim(),
         video: document.getElementById('videoInput').value.trim()
       };
 
-      if (idx !== '') db[parseInt(idx)] = nuevo;
-      else db.unshift(nuevo);
+      if (idx !== '') catalog[parseInt(idx)] = nuevo;
+      else catalog.unshift(nuevo);
 
-      localStorage.setItem('naplus_db_v2026', JSON.stringify(db));
-      cargarCatalogo();
-      cerrarFormulario();
+      renderizar();
+      cerrarModal();
+      await autoSincronizarGitHub();
     }
 
-    // INICIALIZAR
-    cargarCatalogo();
+    async function autoSincronizarGitHub() {
+      let token = localStorage.getItem('naplus_token');
+      if (!token || !token.startsWith("ghp_")) {
+        token = prompt("Para publicar automáticamente a TODOS los usuarios, ingresá tu Personal Access Token de GitHub (ghp_...):");
+        if (token && token.trim().startsWith("ghp_")) {
+          token = token.trim();
+          localStorage.setItem('naplus_token', token);
+        } else {
+          alert("Sin el token de GitHub, los cambios solo se guardaron en tu pantalla actual.");
+          return;
+        }
+      }
+
+      const statusEl = document.getElementById('syncStatus');
+      statusEl.innerText = "⏳ Sincronizando con GitHub...";
+      statusEl.style.display = "block";
+
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (!getRes.ok) {
+          statusEl.innerText = "❌ Error al conectar con GitHub";
+          setTimeout(() => statusEl.style.display = "none", 3000);
+          return;
+        }
+
+        const getData = await getRes.json();
+        const sha = getData.sha;
+
+        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+
+        const catalogJson = JSON.stringify(catalog, null, 2);
+        fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
+
+        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
+
+        const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Actualización automática catálogo NaPlus',
+            content: updatedBase64,
+            sha: sha
+          })
+        });
+
+        if (putRes.ok) {
+          statusEl.innerText = "✅ ¡Publicado con éxito para TODOS los usuarios!";
+        } else {
+          statusEl.innerText = "❌ Token inválido o sin permisos 'repo'";
+        }
+      } catch (err) {
+        statusEl.innerText = "❌ Error de conexión al sincronizar";
+      }
+
+      setTimeout(() => { statusEl.style.display = "none"; }, 4000);
+    }
+
+    renderizar();
   </script>
 </body>
 </html>
