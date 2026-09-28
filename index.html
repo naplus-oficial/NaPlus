@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming Gratuito</title>
-  
   <style>
     :root {
       --bg: #0a0612;
@@ -13,13 +12,13 @@
       --purple-dark: #6d28d9;
       --text: #f8fafc;
       --muted: #94a3b8;
-      --border: rgba(139, 92, 246, 0.3);
+      --border: rgba(139, 92, 246, 0.35);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 60px; }
 
-    /* Header */
+    /* Navbar */
     header {
       position: sticky; top: 0; left: 0; right: 0;
       height: 60px; background: rgba(10, 6, 18, 0.95);
@@ -38,7 +37,7 @@
       cursor: pointer;
     }
 
-    /* Buscador y Filtro por Géneros */
+    /* Hero / Filtros */
     .hero { padding: 15px; background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); }
     
     .search-input {
@@ -60,20 +59,33 @@
     }
     .genre-chip.active { background: var(--purple); color: #fff; border-color: var(--purple); }
 
-    /* Panel de Creador Integrado */
-    .creator-panel {
-      display: none; background: var(--card); margin: 15px;
-      padding: 15px; border-radius: 12px; border: 1px solid var(--purple);
+    /* Modales */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+      z-index: 2000; padding: 15px; align-items: center; justify-content: center;
     }
-    .creator-panel.active { display: block; }
-    
-    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .form-group { margin-bottom: 10px; }
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: var(--card); border: 1px solid var(--purple);
+      border-radius: 12px; width: 100%; max-width: 480px;
+      padding: 20px; position: relative; max-height: 90vh; overflow-y: auto;
+    }
+
+    .modal-title { font-size: 1.2rem; margin-bottom: 12px; color: var(--purple); }
+    .btn-close-modal {
+      position: absolute; top: 15px; right: 15px;
+      background: transparent; border: none; color: var(--muted);
+      font-size: 1.3rem; cursor: pointer;
+    }
+
+    .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 10px; background: var(--bg);
       border: 1px solid var(--border); color: #fff;
-      border-radius: 6px; font-size: 0.9rem;
+      border-radius: 6px; font-size: 0.9rem; outline: none;
     }
 
     /* Grillas y Tarjetas */
@@ -112,10 +124,10 @@
       color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
     }
 
-    /* Vista del Reproductor */
+    /* Reproductor Pantalla Completa */
     .player-view {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); z-index: 20000;
+      background: rgba(0,0,0,0.95); z-index: 5000;
       flex-direction: column; padding: 15px; overflow-y: auto;
     }
     .player-view.active { display: flex; }
@@ -133,7 +145,6 @@
       background: #0088cc; color: #fff; padding: 14px 24px;
       border-radius: 8px; text-decoration: none; font-weight: bold;
       font-size: 1rem; display: inline-flex; align-items: center; gap: 10px;
-      box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
     }
 
     .btn-close {
@@ -153,13 +164,12 @@
 
   <header>
     <div class="brand">NaPlus</div>
-    <button class="btn-main" id="btnAdmin" onclick="toggleCreador()">Modo Creador</button>
+    <button class="btn-main" id="btnAdmin" onclick="abrirModalCreador()">Modo Creador</button>
   </header>
 
   <div class="hero">
     <input type="text" class="search-input" id="searchBar" placeholder="🔍 Buscar por nombre o géneros..." oninput="filtrar()">
     
-    <!-- Filtro por Géneros -->
     <div class="genre-bar">
       <button class="genre-chip active" onclick="seleccionarGenero('Todos', this)">Todos</button>
       <button class="genre-chip" onclick="seleccionarGenero('Acción', this)">Acción</button>
@@ -172,47 +182,62 @@
     </div>
   </div>
 
-  <!-- Panel Integrado de Creador -->
-  <div class="creator-panel" id="creatorPanel">
-    <div class="panel-header">
-      <h3 id="panelTitle">Subir Nuevo Contenido</h3>
-      <button onclick="cerrarPanel()" style="background:none; border:none; color:var(--muted); font-size:1.2rem;">✕</button>
+  <!-- Modal Acceso Creador -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="btn-close-modal" onclick="cerrarModal('authModal')">✕</button>
+      <div class="modal-title">Acceso Creador</div>
+      <form onsubmit="autenticarCreador(event)">
+        <div class="form-group">
+          <label>Ingresá la clave (9009) o tu Token de GitHub</label>
+          <input type="password" id="passInput" placeholder="Clave o Token..." required>
+        </div>
+        <button type="submit" class="btn-main" style="width:100%;">Ingresar</button>
+      </form>
     </div>
-    <form onsubmit="guardarContenido(event)">
-      <input type="hidden" id="editIndex">
-      <div class="form-group">
-        <label>Tipo</label>
-        <select id="tipoInput">
-          <option value="pelicula">Película</option>
-          <option value="serie">Serie</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Título</label>
-        <input type="text" id="tituloInput" required placeholder="Nombre del título">
-      </div>
-      <div class="form-group">
-        <label>Géneros (separados por coma)</label>
-        <input type="text" id="generoInput" required placeholder="Ej: Acción, Terror, Comedia">
-      </div>
-      <div class="form-group">
-        <label>Año</label>
-        <input type="number" id="anioInput" required value="2026">
-      </div>
-      <div class="form-group">
-        <label>Descripción / Sinopsis</label>
-        <textarea id="descInput" rows="3" placeholder="Resumen o detalles de la obra..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>Enlace de Imagen (Portada)</label>
-        <input type="url" id="portadaInput" required placeholder="https://...">
-      </div>
-      <div class="form-group">
-        <label>Enlace del Contenido (OK.ru, Google Drive, MP4, Telegram...)</label>
-        <input type="url" id="videoInput" required placeholder="https://ok.ru/videoembed/... o https://drive.google.com/...">
-      </div>
-      <button type="submit" class="btn-main" style="width:100%; margin-top:10px;">Publicar Cambios</button>
-    </form>
+  </div>
+
+  <!-- Modal Formulario Creador -->
+  <div class="modal-overlay" id="formModal">
+    <div class="modal-card">
+      <button class="btn-close-modal" onclick="cerrarModal('formModal')">✕</button>
+      <div class="modal-title" id="formModalTitle">Publicar Contenido</div>
+      <form onsubmit="guardarContenido(event)">
+        <input type="hidden" id="editIndex">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="tipoInput">
+            <option value="pelicula">Película</option>
+            <option value="serie">Serie</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" id="tituloInput" required placeholder="Nombre del título">
+        </div>
+        <div class="form-group">
+          <label>Géneros (separados por comas)</label>
+          <input type="text" id="generoInput" required placeholder="Ej: Acción, Terror, Comedia">
+        </div>
+        <div class="form-group">
+          <label>Año</label>
+          <input type="number" id="anioInput" required value="2026">
+        </div>
+        <div class="form-group">
+          <label>Descripción / Sinopsis</label>
+          <textarea id="descInput" rows="3" placeholder="Resumen o detalles..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Enlace de Imagen (Portada)</label>
+          <input type="url" id="portadaInput" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Enlace del Video (OK.ru, Google Drive, MP4, Telegram...)</label>
+          <input type="url" id="videoInput" required placeholder="https://ok.ru/videoembed/... o https://drive.google.com/...">
+        </div>
+        <button type="submit" class="btn-main" style="width:100%; margin-top:10px;">Guardar y Publicar</button>
+      </form>
+    </div>
   </div>
 
   <!-- Sección Mi Lista -->
@@ -237,14 +262,14 @@
   </div>
 
   <script>
-    let catalog = JSON.parse(localStorage.getItem('naplus_db_v2')) || [
+    let catalog = JSON.parse(localStorage.getItem('naplus_db_v3')) || [
       {
         id: 1,
         tipo: 'pelicula',
-        titulo: 'Película Demo NaPlus',
-        genero: 'Acción, Aventura',
+        titulo: 'Demo OK.ru - Película Novedad',
+        genero: 'Acción, Terror, Comedia',
         anio: '2026',
-        desc: 'Esta es una película de prueba con un video demo cargado directamente en OK.ru.',
+        desc: 'Demostración de película con reproductor nativo incrustado directamente desde OK.ru.',
         portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750'
       }
@@ -256,33 +281,43 @@
 
     if (esCreador) {
       document.body.classList.add('creator-active');
-      document.getElementById('btnAdmin').innerText = "+ Panel Creador";
+      document.getElementById('btnAdmin').innerText = "+ Agregar Video";
     }
 
-    function toggleCreador() {
+    function abrirModalCreador() {
       if (esCreador) {
-        document.getElementById('creatorPanel').classList.toggle('active');
         limpiarFormulario();
-        return;
+        document.getElementById('formModalTitle').innerText = "Publicar Contenido";
+        document.getElementById('formModal').classList.add('active');
+      } else {
+        document.getElementById('passInput').value = '';
+        document.getElementById('authModal').classList.add('active');
       }
+    }
 
-      const pass = prompt("Ingresá la clave de creador (9009) o tu Token de GitHub:");
-      if (!pass) return;
+    function cerrarModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
 
-      const trimmedPass = pass.trim();
-      if (trimmedPass === "9009" || trimmedPass.startsWith("ghp_")) {
-        if (trimmedPass.startsWith("ghp_")) {
-          localStorage.setItem('naplus_token', trimmedPass);
+    function autenticarCreador(e) {
+      e.preventDefault();
+      const val = document.getElementById('passInput').value.trim();
+
+      if (val === "9009" || val.startsWith("ghp_")) {
+        if (val.startsWith("ghp_")) {
+          localStorage.setItem('naplus_token', val);
         }
         esCreador = true;
         localStorage.setItem('naplus_is_creator', 'true');
         document.body.classList.add('creator-active');
-        document.getElementById('btnAdmin').innerText = "+ Panel Creador";
-        document.getElementById('creatorPanel').classList.add('active');
+        document.getElementById('btnAdmin').innerText = "+ Agregar Video";
+        cerrarModal('authModal');
+        limpiarFormulario();
+        document.getElementById('formModalTitle').innerText = "Publicar Contenido";
+        document.getElementById('formModal').classList.add('active');
         renderizar();
-        alert("Modo creador activado correctamente.");
       } else {
-        alert("Clave incorrecta.");
+        alert("Clave incorrecta. Usá '9009' o tu Token de GitHub.");
       }
     }
 
@@ -302,10 +337,6 @@
       document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtrar();
-    }
-
-    function cerrarPanel() {
-      document.getElementById('creatorPanel').classList.remove('active');
     }
 
     function renderizar(filtro = '') {
@@ -377,7 +408,7 @@
       box.innerHTML = '';
       const url = item.video;
 
-      // Soporte Nativo para OK.ru (Odnoklassniki)
+      // Reproductor Nativo OK.ru
       if (url.includes('ok.ru')) {
         let embedUrl = url;
         if (!url.includes('videoembed')) {
@@ -393,7 +424,7 @@
           <a href="${url}" target="_blank" class="btn-redirect">✈️ Abrir y Ver en Telegram</a>
         `;
       } 
-      // Soporte Nativo Google Drive
+      // Reproductor Nativo Google Drive
       else if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -402,7 +433,7 @@
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
       } 
-      // Reproductor Directo MP4
+      // Reproductor Directo MP4 / WebM
       else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
@@ -422,7 +453,6 @@
 
     function limpiarFormulario() {
       document.getElementById('editIndex').value = '';
-      document.getElementById('panelTitle').innerText = "Subir Nuevo Contenido";
       document.getElementById('tituloInput').value = '';
       document.getElementById('generoInput').value = '';
       document.getElementById('descInput').value = '';
@@ -433,7 +463,7 @@
     function editar(index) {
       const item = catalog[index];
       document.getElementById('editIndex').value = index;
-      document.getElementById('panelTitle').innerText = "Editar Contenido";
+      document.getElementById('formModalTitle').innerText = "Editar Contenido";
       document.getElementById('tipoInput').value = item.tipo;
       document.getElementById('tituloInput').value = item.titulo;
       document.getElementById('generoInput').value = item.genero;
@@ -441,13 +471,13 @@
       document.getElementById('descInput').value = item.desc || '';
       document.getElementById('portadaInput').value = item.portada;
       document.getElementById('videoInput').value = item.video;
-      document.getElementById('creatorPanel').classList.add('active');
+      document.getElementById('formModal').classList.add('active');
     }
 
     function eliminar(index) {
       if (confirm("¿Seguro que querés eliminar este contenido del catálogo?")) {
         catalog.splice(index, 1);
-        localStorage.setItem('naplus_db_v2', JSON.stringify(catalog));
+        localStorage.setItem('naplus_db_v3', JSON.stringify(catalog));
         renderizar();
         publicarEnNube();
       }
@@ -471,35 +501,8 @@
       if (editIdx !== '') catalog[parseInt(editIdx)] = nuevoItem;
       else catalog.unshift(nuevoItem);
 
-      localStorage.setItem('naplus_db_v2', JSON.stringify(catalog));
+      localStorage.setItem('naplus_db_v3', JSON.stringify(catalog));
       renderizar();
-      limpiarFormulario();
-      cerrarPanel();
+      cerrarModal('formModal');
       publicarEnNube();
-    }
-
-    async function publicarEnNube() {
-      let token = localStorage.getItem('naplus_token');
-      if (!token || !token.startsWith("ghp_")) return;
-
-      try {
-        const repoPath = localStorage.getItem('naplus_repo') || prompt("Confirmá el repositorio (ejemplo: usuario/naplus):");
-        if (!repoPath) return;
-        localStorage.setItem('naplus_repo', repoPath);
-
-        const getRes = await fetch(`https://api.github.com/repos/${repoPath}/contents/index.html`, {
-          headers: { 'Authorization': `token ${token}` }
-        });
-
-        if (!getRes.ok) return;
-
-        const getData = await getRes.json();
-        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
-        
-        fileText = fileText.replace(/let catalog = JSON.parse\(localStorage.getItem\('naplus_db_v2'\)\) \|\| \[[\s\S]*?\];/, `let catalog = JSON.parse(localStorage.getItem('naplus_db_v2')) || ${JSON.stringify(catalog, null, 2)};`);
-
-        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
-
-        await fetch(`https://api.github.com/repos/${repoPath}/contents/index.html`, {
-          method: 'PUT',
-          heade
+    
