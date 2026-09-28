@@ -6,99 +6,89 @@
   <title>NaPlus - Plataforma de Streaming</title>
   <style>
     :root {
-      --bg: #0b0714;
-      --card-bg: #140d24;
-      --purple: #7c3aed;
-      --purple-light: #a78bfa;
-      --purple-dark: #5b21b6;
+      --bg-main: #0b0714;
+      --bg-card: #140d24;
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --accent-dark: #5b21b6;
       --text: #f8fafc;
       --muted: #94a3b8;
-      --border: rgba(124, 58, 237, 0.3);
+      --border: rgba(124, 58, 237, 0.35);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
+    body { background: var(--bg-main); color: var(--text); padding-bottom: 50px; }
 
-    /* Header Navbar */
+    /* Encabezado Navbar */
     header {
-      position: sticky; top: 0; left: 0; right: 0;
-      height: 60px; background: rgba(11, 7, 20, 0.95);
-      backdrop-filter: blur(10px);
+      position: sticky; top: 0; left: 0; right: 0; height: 60px;
+      background: rgba(11, 7, 20, 0.95); backdrop-filter: blur(10px);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0 15px; border-bottom: 1px solid var(--border);
-      z-index: 1000;
+      padding: 0 15px; border-bottom: 1px solid var(--border); z-index: 1000;
     }
 
-    .brand { font-size: 1.5rem; font-weight: 900; color: var(--purple-light); letter-spacing: 1px; }
+    .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent-light); letter-spacing: 1px; }
 
-    .btn-main {
-      background: linear-gradient(135deg, var(--purple), var(--purple-dark));
-      color: #fff; border: none; padding: 8px 14px;
-      border-radius: 6px; font-weight: bold; font-size: 0.85rem;
-      cursor: pointer;
+    .btn-creator-main {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #fff; border: 1px solid var(--accent-light); padding: 8px 14px;
+      border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer;
     }
 
-    /* Buscador y Filtro de Géneros */
-    .hero { padding: 15px; background: linear-gradient(180deg, var(--card-bg) 0%, var(--bg) 100%); }
-    
+    /* Buscador y Categorías */
+    .hero { padding: 15px; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-main) 100%); }
+
     .search-input {
       width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
-      border: 1px solid var(--border); color: #fff;
-      border-radius: 8px; font-size: 0.95rem; outline: none; margin-bottom: 12px;
+      border: 1px solid var(--border); color: #fff; border-radius: 8px;
+      font-size: 0.95rem; outline: none; margin-bottom: 12px;
     }
 
-    .genre-bar {
-      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
-      scrollbar-width: none;
-    }
+    .genre-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
     .genre-bar::-webkit-scrollbar { display: none; }
 
     .genre-chip {
-      background: var(--card-bg); border: 1px solid var(--border);
-      color: var(--muted); padding: 6px 14px; border-radius: 20px;
-      font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer;
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--muted);
+      padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+      white-space: nowrap; cursor: pointer;
     }
-    .genre-chip.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .genre-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    /* Modal Formulario Creador */
+    /* Formulario de Carga/Edición Modal */
     .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-      z-index: 2000; padding: 15px; align-items: center; justify-content: center;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px); z-index: 2000; padding: 15px; align-items: center; justify-content: center;
     }
     .modal-overlay.active { display: flex !important; }
 
     .modal-card {
-      background: var(--card-bg); border: 1px solid var(--purple);
-      border-radius: 12px; width: 100%; max-width: 480px;
-      padding: 20px; position: relative; max-height: 90vh; overflow-y: auto;
+      background: var(--bg-card); border: 1px solid var(--accent); border-radius: 12px;
+      width: 100%; max-width: 480px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto;
     }
 
-    .modal-title { font-size: 1.2rem; margin-bottom: 12px; color: var(--purple-light); }
+    .modal-title { font-size: 1.2rem; margin-bottom: 12px; color: var(--accent-light); }
     .btn-close-modal {
-      position: absolute; top: 15px; right: 15px;
-      background: transparent; border: none; color: var(--muted);
-      font-size: 1.3rem; cursor: pointer;
+      position: absolute; top: 15px; right: 15px; background: transparent;
+      border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer;
     }
 
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 10px; background: var(--bg);
-      border: 1px solid var(--border); color: #fff;
-      border-radius: 6px; font-size: 0.9rem; outline: none;
+      width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border);
+      color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
 
-    /* Grilla de Tarjetas */
+    /* Grillas */
     .section-title {
-      font-size: 1.1rem; margin: 20px 15px 10px; color: var(--purple-light);
+      font-size: 1.1rem; margin: 20px 15px 10px; color: var(--accent-light);
       display: flex; align-items: center; gap: 8px;
     }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px; }
 
     .card {
-      background: var(--card-bg); border-radius: 8px; overflow: hidden;
+      background: var(--bg-card); border-radius: 8px; overflow: hidden;
       border: 1px solid var(--border); cursor: pointer; position: relative;
     }
 
@@ -108,56 +98,49 @@
     .card-sub { font-size: 0.75rem; color: var(--muted); }
 
     .card-fav-btn {
-      position: absolute; top: 5px; left: 5px;
-      background: rgba(0,0,0,0.7); border: 1px solid var(--border);
-      color: #fff; width: 28px; height: 28px; border-radius: 50%;
-      font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 10;
+      position: absolute; top: 5px; left: 5px; background: rgba(0,0,0,0.7);
+      border: 1px solid var(--border); color: #fff; width: 28px; height: 28px;
+      border-radius: 50%; font-size: 0.8rem; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 10;
     }
 
-    .card-actions {
-      display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10;
-    }
+    .card-actions { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
     body.creator-active .card-actions { display: flex !important; }
 
     .card-actions button {
-      background: rgba(0,0,0,0.85); border: 1px solid var(--purple);
+      background: rgba(0,0,0,0.85); border: 1px solid var(--accent);
       color: #fff; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;
     }
 
-    /* Vista del Reproductor de Video */
+    /* Pantalla Reproductor */
     .player-view {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); z-index: 5000;
-      flex-direction: column; padding: 15px; overflow-y: auto;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+      z-index: 5000; flex-direction: column; padding: 15px; overflow-y: auto;
     }
     .player-view.active { display: flex !important; }
 
     .video-wrapper {
-      width: 100%; aspect-ratio: 16/9; background: #000;
-      border-radius: 8px; overflow: hidden; margin-bottom: 15px;
-      position: relative; display: flex; align-items: center; justify-content: center;
-      flex-direction: column; padding: 10px; text-align: center;
+      width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px;
+      overflow: hidden; margin-bottom: 15px; position: relative; display: flex;
+      align-items: center; justify-content: center; flex-direction: column; text-align: center;
     }
 
     .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; }
 
     .btn-redirect {
-      background: #0088cc; color: #fff; padding: 14px 24px;
-      border-radius: 8px; text-decoration: none; font-weight: bold;
-      font-size: 1rem; display: inline-flex; align-items: center; gap: 10px;
+      background: #0088cc; color: #fff; padding: 14px 24px; border-radius: 8px;
+      text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-flex;
+      align-items: center; gap: 10px;
     }
 
     .btn-close {
-      align-self: flex-end; background: var(--purple); color: #fff;
-      border: none; padding: 8px 16px; border-radius: 6px;
-      font-weight: bold; cursor: pointer; margin-bottom: 10px;
+      align-self: flex-end; background: var(--accent); color: #fff; border: none;
+      padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px;
     }
 
     .player-desc {
-      color: var(--muted); font-size: 0.9rem; margin-top: 10px;
-      line-height: 1.4; background: var(--card-bg); padding: 12px;
-      border-radius: 8px; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.9rem; margin-top: 10px; line-height: 1.4;
+      background: var(--bg-card); padding: 12px; border-radius: 8px; border: 1px solid var(--border);
     }
   </style>
 </head>
@@ -165,7 +148,7 @@
 
   <header>
     <div class="brand">NaPlus</div>
-    <button class="btn-main" id="btnAdmin" onclick="abrirCreador()">Modo Creador</button>
+    <button class="btn-creator-main" id="btnAdmin" onclick="gestionarModoCreador()">Modo Creador</button>
   </header>
 
   <div class="hero">
@@ -183,7 +166,7 @@
     </div>
   </div>
 
-  <!-- Modal Formulario Creador -->
+  <!-- Formulario Modal de Creador -->
   <div class="modal-overlay" id="formModal">
     <div class="modal-card">
       <button class="btn-close-modal" onclick="cerrarModal('formModal')">✕</button>
@@ -221,12 +204,12 @@
           <label>Enlace del Video (OK.ru, Google Drive, MP4, Telegram...)</label>
           <input type="url" id="videoInput" required placeholder="https://ok.ru/videoembed/... o https://drive.google.com/...">
         </div>
-        <button type="submit" class="btn-main" style="width:100%; margin-top:10px;">Guardar y Publicar</button>
+        <button type="submit" class="btn-creator-main" style="width:100%; margin-top:10px;">Guardar y Publicar</button>
       </form>
     </div>
   </div>
 
-  <!-- Sección Mi Lista -->
+  <!-- Mi Lista -->
   <div id="favSection" style="display:none;">
     <div class="section-title">🔖 Mi Lista</div>
     <div class="grid" id="favGrid"></div>
@@ -243,19 +226,19 @@
     <button class="btn-close" onclick="cerrarReproductor()">✕ Volver al Catálogo</button>
     <div class="video-wrapper" id="videoContainer"></div>
     <h2 id="playerTitle"></h2>
-    <p id="playerSub" style="color:var(--purple-light); margin-top:5px;"></p>
+    <p id="playerSub" style="color:var(--accent-light); margin-top:5px;"></p>
     <div class="player-desc" id="playerDesc">Sin descripción disponible.</div>
   </div>
 
   <script>
-    let catalog = JSON.parse(localStorage.getItem('naplus_db_v4')) || [
+    let catalog = JSON.parse(localStorage.getItem('naplus_db_v5')) || [
       {
         id: 1,
         tipo: 'pelicula',
         titulo: 'Película Demo NaPlus (OK.ru)',
         genero: 'Acción, Terror, Comedia',
         anio: '2026',
-        desc: 'Esta es una prueba de video incrustado nativamente desde OK.ru dentro de NaPlus.',
+        desc: 'Demostración de película con reproductor nativo incrustado directamente desde OK.ru.',
         portada: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750'
       }
@@ -270,7 +253,7 @@
       document.getElementById('btnAdmin').innerText = "+ Agregar Video";
     }
 
-    function abrirCreador() {
+    function gestionarModoCreador() {
       if (!esCreador) {
         const pass = prompt("Ingresá la clave de creador (9009) o tu Token de GitHub:");
         if (!pass) return;
@@ -396,14 +379,14 @@
         }
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
       }
-      // Redirección para Telegram
+      // Redirección Telegram
       else if (url.includes('t.me') || url.includes('telegram')) {
         box.innerHTML = `
           <p style="margin-bottom:15px; color:var(--muted);">Este contenido está alojado en Telegram.</p>
           <a href="${url}" target="_blank" class="btn-redirect">✈️ Abrir y Ver en Telegram</a>
         `;
       } 
-      // Reproductor Nativo Google Drive
+      // Reproductor Google Drive
       else if (url.includes('drive.google.com')) {
         let driveId = "";
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -412,7 +395,7 @@
         const embedUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : url;
         box.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
       } 
-      // Reproductor Directo MP4 / WebM
+      // Reproductor Directo MP4
       else {
         box.innerHTML = `
           <video controls autoplay style="width:100%; height:100%;">
@@ -456,7 +439,7 @@
     function eliminar(index) {
       if (confirm("¿Seguro que querés eliminar este contenido del catálogo?")) {
         catalog.splice(index, 1);
-        localStorage.setItem('naplus_db_v4', JSON.stringify(catalog));
+        localStorage.setItem('naplus_db_v5', JSON.stringify(catalog));
         renderizar();
         publicarEnNube();
       }
@@ -480,7 +463,7 @@
       if (editIdx !== '') catalog[parseInt(editIdx)] = nuevoItem;
       else catalog.unshift(nuevoItem);
 
-      localStorage.setItem('naplus_db_v4', JSON.stringify(catalog));
+      localStorage.setItem('naplus_db_v5', JSON.stringify(catalog));
       renderizar();
       cerrarModal('formModal');
       publicarEnNube();
@@ -504,4 +487,4 @@
         const getData = await getRes.json();
         let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
         
-        fileText = fileText.rep
+        fileText = fileText.replace(/let catalog = JSON.parse\(localStorage.getItem\('naplus_db_v
