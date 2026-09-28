@@ -21,7 +21,6 @@ body.creator .btn-exit{display:inline-block}
 .searchbar input{flex:1;min-width:0;padding:10px 12px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
 .searchbar button{white-space:nowrap}
 .section-title{font-size:1.2rem;margin:20px 15px 10px;color:var(--accent-light)}
-#listSec,#searchSec{scroll-margin-top:70px}
 .empty{color:var(--text-muted);font-size:.85rem;padding:0 15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:0 15px}
 .card{background:var(--card-bg);border-radius:8px;overflow:hidden;position:relative;border:1px solid rgba(124,58,237,.2);cursor:pointer}
@@ -30,35 +29,26 @@ body.creator .btn-exit{display:inline-block}
 .card-title,.card-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-title{font-size:.8rem;font-weight:bold}
 .card-sub{font-size:.7rem;color:var(--text-muted)}
-.card-save{position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,.8);color:#fff;font-size:1rem;cursor:pointer}
-.card-save.on{background:var(--accent)}
 .card-admin-btns{position:absolute;top:4px;right:4px;display:none;gap:4px}
 body.creator .card-admin-btns{display:flex}
 .card-admin-btns button{background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.9rem;padding:6px 8px;border-radius:4px;cursor:pointer}
 
-/* Modales */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;padding:15px;overflow-y:auto;align-items:center;justify-content:center}
-#dialogModal{z-index:300}
 .modal-content{background:var(--card-bg);padding:20px;border-radius:12px;width:100%;max-width:450px;border:1px solid var(--accent);margin:auto;position:relative}
 .modal-content h3{margin-bottom:8px;padding-right:25px}
-
-.btn-close-modal{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.1);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
-.btn-close-modal:active{background:var(--accent)}
-
+.btn-close-modal{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.1);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;font-weight:bold;cursor:pointer}
 .hint{color:var(--text-muted);font-size:.8rem;margin-bottom:12px;line-height:1.4}
 .form-group{margin-bottom:10px}
 .form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
-
 .form-btns{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px;width:100%}
 .btn-sec{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.1);padding:10px 16px;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:600}
-.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:.9rem;text-align:center}
+.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:.9rem}
 
-.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:12px;border-radius:8px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.video-box video,.video-box iframe{width:100%;height:100%;border:none}
-.video-box img{width:100%;height:100%;object-fit:cover}
-.btn-telegram{background:#0088cc;color:#fff;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:10px;font-size:1rem;box-shadow:0 4px 15px rgba(0,136,204,0.5)}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
+.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:12px;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+.video-box iframe,.video-box video{width:100%;height:100%;border:none}
+.btn-telegram{background:#0088cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none}
 </style>
 </head>
 <body>
@@ -74,46 +64,41 @@ body.creator .card-admin-btns{display:flex}
   <h1>NaPlus Streaming</h1>
   <p>Seleccioná cualquier película o serie para ver los detalles.</p>
   <div class="searchbar">
-    <input type="search" id="search" placeholder="Buscar películas y series..." oninput="render()">
-    <button class="btn-creator" id="listBtn" onclick="goList()">🔖 Mi lista (0)</button>
+    <input type="search" id="search" placeholder="Buscar..." oninput="render()">
   </div>
 </div>
 
-<div id="searchSec" style="display:none">
-  <div class="section-title">Resultados</div>
-  <div class="grid" id="resultsGrid"></div>
-</div>
 <div id="mainSecs">
-  <div id="recentSec"><div class="section-title">Recientes</div><div class="grid" id="recentGrid"></div></div>
-  <div id="listSec"><div class="section-title">Mi lista</div><div class="grid" id="listGrid"></div></div>
   <div class="section-title">Películas</div>
   <div class="grid" id="moviesGrid"></div>
   <div class="section-title">Series</div>
   <div class="grid" id="seriesGrid"></div>
 </div>
 
-<!-- Detalle -->
-<div class="modal" id="detailModal" onclick="closeDetailOnBackdrop(event)">
+<!-- Modal Detalle -->
+<div class="modal" id="detailModal">
   <div class="modal-content">
     <button class="btn-close-modal" onclick="closeDetail()">✕</button>
     <div class="video-box" id="videoBox"></div>
     <h3 id="detailTitle"></h3>
     <p id="detailMeta" style="color:var(--accent-light);font-size:.85rem;margin-bottom:8px"></p>
-    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px;line-height:1.4"></p>
-    <div class="form-btns" id="detailBtns"></div>
+    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px"></p>
+    <div class="form-btns">
+      <button class="btn-sec" onclick="closeDetail()">Cerrar</button>
+    </div>
   </div>
 </div>
 
-<!-- Acceso creador -->
+<!-- Modal Acceso -->
 <div class="modal" id="loginModal">
   <div class="modal-content">
     <button class="btn-close-modal" onclick="closeLogin()">✕</button>
     <h3>Modo Creador</h3>
-    <p class="hint">Ingresá la clave de acceso de administrador.</p>
+    <p class="hint">Ingresá la clave de acceso.</p>
     <form onsubmit="doLogin(event)">
       <div class="form-group">
-        <label>Clave de Creador</label>
-        <input type="password" id="passInput" required autocomplete="off" placeholder="Clave...">
+        <label>Clave</label>
+        <input type="password" id="passInput" required placeholder="Clave...">
       </div>
       <div class="form-btns" style="justify-content:flex-end;">
         <button type="button" class="btn-sec" onclick="closeLogin()">Cancelar</button>
@@ -123,245 +108,136 @@ body.creator .card-admin-btns{display:flex}
   </div>
 </div>
 
-<!-- Formulario contenido -->
+<!-- Modal Creador / Formulario -->
 <div class="modal" id="adminModal">
   <div class="modal-content">
     <button class="btn-close-modal" onclick="closeAdmin()">✕</button>
-    <h3 id="formTitle">Subir contenido</h3>
+    <h3 id="formTitle">Subir Contenido a la Nube</h3>
     <form onsubmit="saveData(event)">
       <input type="hidden" id="editId">
+      <div class="form-group"><label>Token de GitHub (Solo la primera vez)</label>
+        <input type="password" id="ghToken" placeholder="ghp_...">
+      </div>
       <div class="form-group"><label>Tipo</label>
-        <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+        <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select>
+      </div>
       <div class="form-group"><label>Título</label><input type="text" id="title" required></div>
-      <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
-      <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
-      <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
-      
-      <div class="form-group">
-        <label>Portada (Seleccionar de Galería)</label>
-        <input type="file" id="coverFile" accept="image/*">
+      <div class="form-group"><label>Género</label><input type="text" id="genre" required></div>
+      <div class="form-group"><label>Año</label><input type="number" id="year" required></div>
+      <div class="form-group"><label>Sinopsis</label><textarea id="desc" rows="2"></textarea></div>
+      <div class="form-group"><label>Portada (Link URL de Imagen)</label>
+        <input type="url" id="coverUrl" placeholder="https://..." required>
       </div>
-      <div class="form-group">
-        <label>o Link de Portada (URL de Imagen)</label>
-        <input type="url" id="coverUrl" placeholder="https://...">
-      </div>
-
-      <div class="form-group">
-        <label>Link del video (Telegram, YouTube, MP4 directos...)</label>
-        <input type="url" id="video" placeholder="https://t.me/..." required>
+      <div class="form-group"><label>Link del Video (Telegram, Drive, YouTube...)</label>
+        <input type="url" id="video" placeholder="https://..." required>
       </div>
       <div class="form-btns" style="justify-content:flex-end;">
         <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
-        <button type="submit" class="btn-pri">Guardar</button>
+        <button type="submit" class="btn-pri" id="btnSave">Guardar Globalmente</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Confirmar -->
-<div class="modal" id="dialogModal">
-  <div class="modal-content">
-    <h3 id="dlgTitle"></h3>
-    <p id="dlgMsg" class="hint"></p>
-    <div class="form-btns" style="justify-content:flex-end;">
-      <button class="btn-sec" id="dlgCancel">Cancelar</button>
-      <button class="btn-pri" id="dlgOk">Eliminar</button>
-    </div>
-  </div>
-</div>
 <div id="toast"></div>
 
 <script>
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
-const LIST_KEY = 'naPlus_list';
-const DB_KEY = 'naPlus_db_v4';
+const REPO = "ignacio12adrian-ux/NaPlus";
+const FILE_PATH = "index.html";
 
-let isCreator = false, currentId = null, saved = [], customCoverData = '';
-try { saved = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) {}
-
-let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
+/* BASE DE DATOS GLOBAL DE PELÍCULAS */
+let catalog = [
   {
     id: 1,
     type: 'movie',
     title: 'Rec',
     genre: 'Terror',
     year: '2007',
-    desc: 'Sin descripción.',
+    desc: 'Una reportera y su camarógrafo siguen a unos bomberos a un edificio en cuarentena.',
     cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
     video: 'https://t.me/'
   }
 ];
 
-const isSaved = id => saved.some(x => x == id);
-
-let toastTimer;
-function toast(msg, ms = 3000) {
+function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.style.display = 'block';
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', ms);
-}
-
-function confirmDialog(title, msg) {
-  return new Promise(resolve => {
-    $('dlgTitle').textContent = title; $('dlgMsg').textContent = msg;
-    $('dialogModal').style.display = 'flex';
-    const done = v => { $('dialogModal').style.display = 'none'; $('dlgOk').onclick =$('dlgCancel').onclick = null; resolve(v); };
-    $('dlgOk').onclick = () => done(true);$('dlgCancel').onclick = () => done(false);
-  });
+  setTimeout(() => t.style.display = 'none', 3000);
 }
 
 function makeCard(item) {
   const div = document.createElement('div');
   div.className = 'card';
-  const on = isSaved(item.id);
   div.innerHTML = `
-    <button class="card-save${on ? ' on' : ''}" aria-label="Mi lista">${on ? '✓' : '＋'}</button>
     <div class="card-admin-btns">
-      <button class="edit" aria-label="Editar">✏️</button>
-      <button class="del" aria-label="Eliminar">🗑️</button>
+      <button class="edit" onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
+      <button class="del" onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
     </div>
-    <img src="${esc(item.cover || NO_COVER)}" alt="Portada">
+    <img src="${item.cover}" alt="Portada">
     <div class="card-info">
-      <div class="card-title">${esc(item.title)}</div>
-      <div class="card-sub">${esc(item.genre || 'General')} • ${esc(item.year)}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-sub">${item.genre} • ${item.year}</div>
     </div>`;
-  div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
   div.onclick = () => showDetail(item.id);
-  div.querySelector('.card-save').onclick = e => { e.stopPropagation(); toggleSaved(item.id); };
-  div.querySelector('.edit').onclick = e => { e.stopPropagation(); editItem(item.id); };
-  div.querySelector('.del').onclick = e => { e.stopPropagation(); deleteItem(item.id); };
   return div;
 }
 
-function fillGrid(id, items, emptyMsg) {
-  const g = $(id); g.innerHTML = '';
-  items.forEach(i => g.appendChild(makeCard(i)));
-  if (!items.length && emptyMsg) g.innerHTML = `<p class="empty">${emptyMsg}</p>`;
-}
-
 function render() {
-  const q = norm($('search').value.trim());
-  const sorted = catalog.slice().sort((a, b) => b.id - a.id);
-  const savedItems = saved.map(id => catalog.find(x => x.id == id)).filter(Boolean);
-  $('listBtn').textContent = `🔖 Mi lista (${savedItems.length})`;
-  $('searchSec').style.display = q ? 'block' : 'none';
-  $('mainSecs').style.display = q ? 'none' : 'block';
-  
-  if (q) {
-    fillGrid('resultsGrid', sorted.filter(i => norm([i.title, i.genre, i.desc, i.year].join(' ')).includes(q)), 'No encontramos nada.');
-    return;
-  }
-  
-  $('recentSec').style.display = sorted.length ? 'block' : 'none';
-  fillGrid('recentGrid', sorted.slice(0, 10));
-  $('listSec').style.display = savedItems.length ? 'block' : 'none';
-  fillGrid('listGrid', savedItems);
-  fillGrid('moviesGrid', sorted.filter(i => i.type === 'movie'), 'No hay películas cargadas.');
-  fillGrid('seriesGrid', sorted.filter(i => i.type !== 'movie'), 'No hay series cargadas.');
-}
-
-function toggleSaved(id) {
-  const i = saved.findIndex(x => x == id);
-  if (i > -1) saved.splice(i, 1); else saved.push(id);
-  try { localStorage.setItem(LIST_KEY, JSON.stringify(saved)); } catch (e) {}
-  render(); updateDetailSave();
-}
-
-function updateDetailSave() {
-  const b = $('detailSave');
-  if (b && currentId != null) b.textContent = isSaved(currentId) ? '✓ En mi lista' : '＋ Mi lista';
-}
-
-function goList() {
-  if (!saved.some(id => catalog.find(x => x.id == id))) { toast('Tu lista está vacía.'); return; }
-  $('search').value = ''; render();$('listSec').scrollIntoView({ behavior: 'smooth' });
+  const mGrid = $('moviesGrid'); const sGrid =$('seriesGrid');
+  mGrid.innerHTML = ''; sGrid.innerHTML = '';
+  catalog.filter(i => i.type === 'movie').forEach(i => mGrid.appendChild(makeCard(i)));
+  catalog.filter(i => i.type !== 'movie').forEach(i => sGrid.appendChild(makeCard(i)));
 }
 
 function setCreator(on) {
-  isCreator = on;
   document.body.classList.toggle('creator', on);
   $('btnAdmin').textContent = on ? '+ Agregar' : 'Modo Creador';
 }
 
 function toggleCreator() {
-  if (isCreator) { openAdmin(); return; }
-  openLogin();
+  if (document.body.classList.contains('creator')) openAdmin();
+  else openLogin();
 }
 
-function openLogin() {
-  $('passInput').value = '';$('loginModal').style.display = 'flex';
-}
-
+function openLogin() { $('loginModal').style.display = 'flex'; }
 function closeLogin() { $('loginModal').style.display = 'none'; }
 
 function doLogin(e) {
   e.preventDefault();
-  const pass = $('passInput').value.trim();
-  if (pass === "9009") {
-    closeLogin();
-    setCreator(true);
-    toast('Modo creador activado');
-    render();
-    openAdmin();
-  } else {
-    toast('Clave incorrecta');
-  }
+  if ($('passInput').value === "9009") {
+    closeLogin(); setCreator(true); toast('Modo Creador activado'); openAdmin();
+  } else toast('Clave incorrecta');
 }
 
-// Compresión de imagen para guardado ligero en Base64
-$('coverFile').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 500;
-        const scaleSize = MAX_WIDTH / img.width;
-        canvas.width = MAX_WIDTH;
-        canvas.height = img.height * scaleSize;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        customCoverData = canvas.toDataURL('image/jpeg', 0.8);
-      };
-      img.src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
 function openAdmin(item = null) {
-  customCoverData = '';
   $('editId').value = item ? item.id : '';
-  $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
   $('type').value = item ? item.type : 'movie';
   $('title').value = item ? item.title : '';
   $('genre').value = item ? item.genre : '';
   $('year').value = item ? item.year : '2026';
   $('desc').value = item ? item.desc : '';
-  $('coverUrl').value = item ? (item.cover.startsWith('data:') ? '' : item.cover) : '';
-  $('coverFile').value = '';$('video').value = item ? item.video : '';
-  $('adminModal').style.display = 'flex';
+  $('coverUrl').value = item ? item.cover : '';
+  $('video').value = item ? item.video : '';
+  $('ghToken').value = localStorage.getItem('naPlus_gh_token') \vert{}\vert{} '';$('adminModal').style.display = 'flex';
 }
 
 function closeAdmin() { $('adminModal').style.display = 'none'; }
 
-function saveData(e) {
+async function saveData(e) {
   e.preventDefault();
-  const id = $('editId').value;
-  const coverResult = customCoverData || $('coverUrl').value.trim() || NO_COVER;
+  const token = $('ghToken').value.trim();
+  if (!token) { alert('Ingresá tu Token de GitHub (ghp_...) para guardar los cambios públicamente.'); return; }
+  localStorage.setItem('naPlus_gh_token', token);
 
+  const id = $('editId').value;
   const newItem = {
     id: id ? parseInt(id) : Date.now(),
     type: $('type').value,
     title: $('title').value.trim(),
-    genre: $('genre').value.trim() || 'General',
+    genre: $('genre').value.trim(),
     year: $('year').value,
     desc: $('desc').value.trim(),
-    cover: coverResult,
+    cover: $('coverUrl').value.trim(),
     video: $('video').value.trim()
   };
 
@@ -372,78 +248,78 @@ function saveData(e) {
     catalog.unshift(newItem);
   }
 
-  try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
-  render();
+  $('btnSave').textContent = "Publicando...";
+  await syncToGitHub(token);
+  $('btnSave').textContent = "Guardar Globalmente";
   closeAdmin();
-  toast('Contenido guardado correctamente');
-}
-
-function editItem(id) {
-  const item = catalog.find(x => x.id == id);
-  if (item) openAdmin(item);
+  render();
 }
 
 async function deleteItem(id) {
-  const item = catalog.find(x => x.id == id);
-  if (!item) return;
-  if (await confirmDialog('Eliminar contenido', `¿Querés eliminar "${item.title}"?`)) {
+  const token = localStorage.getItem('naPlus_gh_token');
+  if (!token) { alert('Iniciá sesión en el formulario con tu Token para eliminar.'); return; }
+  if (confirm('¿Eliminar esta película/serie globalmente?')) {
     catalog = catalog.filter(x => x.id != id);
-    try { localStorage.setItem(DB_KEY, JSON.stringify(catalog)); } catch(e) {}
+    await syncToGitHub(token);
     render();
-    toast('Eliminado correctamente');
+  }
+}
+
+async function syncToGitHub(token) {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`);
+    const data = await res.json();
+    const sha = data.sha;
+    
+    // Obtener contenido actual
+    let fileContent = new TextDecoder().decode(Uint8Array.from(atob(data.content), c => c.charCodeAt(0)));
+    
+    // Reemplazar el array catalog en el código
+    const catalogString = JSON.stringify(catalog, null, 2);
+    fileContent = fileContent.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogString};`);
+
+    // Guardar en GitHub
+    const updatedContent = btoa(unescape(encodeURIComponent(fileContent)));
+    const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'Actualización catálogo NaPlus',
+        content: updatedContent,
+        sha: sha
+      })
+    });
+
+    if (putRes.ok) toast('¡Publicado con éxito para todo el mundo!');
+    else toast('Error al sincronizar con GitHub.');
+  } catch(err) {
+    console.error(err);
+    toast('Error de conexión.');
   }
 }
 
 function showDetail(id) {
-  currentId = id;
   const item = catalog.find(x => x.id == id);
   if (!item) return;
-
   $('detailTitle').textContent = item.title;
   $('detailMeta').textContent = `${item.genre} • ${item.year}`;
   $('detailDesc').textContent = item.desc || 'Sin descripción.';
-
   const vBox = $('videoBox');
-  vBox.innerHTML = '';
-
-  const vUrl = item.video || '';
-
-  if (vUrl) {
-    if (vUrl.includes('t.me') || vUrl.includes('telegram')) {
-      vBox.innerHTML = `
-        <img src="${esc(item.cover || NO_COVER)}" style="opacity:0.25; position:absolute; width:100%; height:100%; object-fit:cover;">
-        <a href="${esc(vUrl)}" target="_blank" class="btn-telegram" style="z-index:2;">
-          ✈️ Abrir y Ver en Telegram
-        </a>`;
-    } else if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
-      let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-      vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
-    } else {
-      vBox.innerHTML = `<video src="${vUrl}" controls poster="${item.cover || NO_COVER}"></video>`;
-    }
+  if (item.video.includes('t.me') || item.video.includes('telegram')) {
+    vBox.innerHTML = `<a href="${item.video}" target="_blank" class="btn-telegram">✈️ Abrir en Telegram</a>`;
+  } else if (item.video.includes('youtube.com') || item.video.includes('youtu.be')) {
+    let embed = item.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+    vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
   } else {
-    vBox.innerHTML = `<img src="${esc(item.cover || NO_COVER)}" alt="Portada">`;
+    vBox.innerHTML = `<video src="${item.video}" controls poster="${item.cover}"></video>`;
   }
-
-  const btnBox = $('detailBtns');
-  btnBox.innerHTML = `
-    <button class="btn-sec" id="detailSave" onclick="toggleSaved(${item.id})"></button>
-    <button class="btn-sec" onclick="closeDetail()">Cerrar</button>
-  `;
-  updateDetailSave();
-
   $('detailModal').style.display = 'flex';
 }
 
-function closeDetail() {
-  $('videoBox').innerHTML = '';$('detailModal').style.display = 'none';
-}
-
-function closeDetailOnBackdrop(e) {
-  if (e.target.id === 'detailModal') {
-    closeDetail();
-  }
-}
+function closeDetail() { $('videoBox').innerHTML = '';$('detailModal').style.display = 'none'; }
 
 render();
 </script>
