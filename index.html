@@ -58,6 +58,11 @@
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); }
 
+  /* Botones de Administrador flotantes sobre la tarjeta */
+  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
+  body.creator-mode .admin-controls { display: flex; }
+  .admin-controls button { background: rgba(0,0,0,0.85); border: 1px solid var(--primary); color: #fff; width: 28px; height: 28px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
   /* Ajustes y Creador */
   .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
   .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--primary); }
@@ -68,7 +73,7 @@
   .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  /* Reproductor Inmersivo OK.ru */
+  /* Reproductor OK.ru */
   .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
   .player-overlay.active { display: flex; }
   .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
@@ -79,7 +84,7 @@
 
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
-  /* Modal Creador Subir Contenido */
+  /* Modal Creador Subir/Editar Contenido */
   .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
   .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
@@ -115,7 +120,7 @@
     
     <div class="settings-box" id="adminPanel" style="display: none;">
       <h3>Panel de Creador Avanzado</h3>
-      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido a la Nube</button>
+      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido Nuevo</button>
     </div>
 
     <div class="settings-box">
@@ -151,14 +156,15 @@
     </div>
   </div>
 
-  <!-- Modal Creador Subir Contenido -->
+  <!-- Modal Creador Subir/Editar Contenido -->
   <div class="modal-sheet" id="adminModal">
     <div class="sheet-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="font-size: 1.1rem; color: var(--primary);">Publicar Contenido Global</h3>
+        <h3 id="modalTitleText" style="font-size: 1.1rem; color: var(--primary);">Publicar Contenido Global</h3>
         <button onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
       </div>
       <form onsubmit="app.saveItem(event)">
+        <input type="hidden" id="fEditId">
         <div class="field"><label>Tipo</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
         <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
         <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
@@ -179,31 +185,12 @@ class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
     this.filePath = "index.html";
-    this.dbKey = 'naplus_pro_db_v8';
-    this.listKey = 'naplus_pro_list_v3';
+    this.dbKey = 'naplus_pro_db_v9';
+    this.listKey = 'naplus_pro_list_v4';
 
     this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
-  {
-    "id": 1790616377522,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de terror de uan reportera",
-    "cover": "https://images.jdmagicbox.com/comp/jd_social/news/2018jul16/image-77399-m2yapnlvsx.jpg",
-    "video": "https://ok.ru/video/16643535932123"
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de prueba en la Neuro Página.",
-    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-    "video": "https://ok.ru/videoembed/237592963750"
-  }
-];
+      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba en la Neuro Página.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://ok.ru/videoembed/237592963750' }
+    ];
     
     this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
     this.currentId = null;
@@ -229,6 +216,10 @@ class NaPlusProEngine {
     card.className = 'media-card';
     card.onclick = () => this.openPlayer(item.id);
     card.innerHTML = `
+      <div class="admin-controls">
+        <button onclick="event.stopPropagation(); app.openEditModal(${item.id})" title="Editar">✏️</button>
+        <button onclick="event.stopPropagation(); app.deleteItem(${item.id})" title="Eliminar">🗑️</button>
+      </div>
       <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
       <div class="media-info">
         <div class="media-title">${item.title}</div>
@@ -322,42 +313,101 @@ class NaPlusProEngine {
   }
 
   verifyAdmin(val) {
-    // Clave oculta cifrada lógicamente
     const cleanVal = val.trim();
     if (cleanVal === String(90*100+9) || cleanVal.startsWith('ghp_')) {
       if (cleanVal.startsWith('ghp_')) localStorage.setItem('naplus_token', cleanVal);
       document.getElementById('adminPanel').style.display = 'block';
+      document.body.classList.add('creator-mode');
       this.toast('¡Modo Creador Desbloqueado!');
     }
   }
 
-  openModal() { document.getElementById('adminModal').classList.add('active'); }
+  openModal() {
+    document.getElementById('modalTitleText').textContent = 'Publicar Contenido Global';
+    document.getElementById('fEditId').value = '';
+    document.getElementById('fType').value = 'movie';
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fGenre').value = '';
+    document.getElementById('fYear').value = '2026';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fCover').value = '';
+    document.getElementById('fVideo').value = '';
+    document.getElementById('adminModal').classList.add('active');
+  }
+
+  openEditModal(id) {
+    const item = this.catalog.find(x => x.id === id);
+    if (!item) return;
+    document.getElementById('modalTitleText').textContent = 'Editar Contenido';
+    document.getElementById('fEditId').value = item.id;
+    document.getElementById('fType').value = item.type;
+    document.getElementById('fTitle').value = item.title;
+    document.getElementById('fGenre').value = item.genre;
+    document.getElementById('fYear').value = item.year;
+    document.getElementById('fDesc').value = item.desc || '';
+    document.getElementById('fCover').value = item.cover;
+    document.getElementById('fVideo').value = item.video;
+    document.getElementById('adminModal').classList.add('active');
+  }
+
   closeModal() { document.getElementById('adminModal').classList.remove('active'); }
+
+  async deleteItem(id) {
+    if (confirm("¿Seguro que querés eliminar esta obra del catálogo global?")) {
+      this.catalog = this.catalog.filter(x => x.id !== id);
+      localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
+      this.renderHome();
+      this.renderList();
+      this.toast('Contenido eliminado');
+      await this.autoSyncGitHub();
+    }
+  }
 
   async saveItem(e) {
     e.preventDefault();
     const vUrl = document.getElementById('fVideo').value.trim();
     
-    // Validar exclusivamente enlaces de OK.ru
     if (!vUrl.includes('ok.ru')) {
       alert("Por favor, ingresá únicamente un enlace válido de OK.ru");
       return;
     }
 
-    const newItem = {
-      id: Date.now(),
-      type: document.getElementById('fType').value,
-      title: document.getElementById('fTitle').value.trim(),
-      genre: document.getElementById('fGenre').value.trim(),
-      year: document.getElementById('fYear').value,
-      desc: document.getElementById('fDesc').value.trim(),
-      cover: document.getElementById('fCover').value.trim(),
-      video: vUrl
-    };
-    this.catalog.unshift(newItem);
+    const editId = document.getElementById('fEditId').value;
+
+    if (editId) {
+      // Editar existente
+      const idx = this.catalog.findIndex(x => x.id == editId);
+      if (idx !== -1) {
+        this.catalog[idx] = {
+          id: parseInt(editId),
+          type: document.getElementById('fType').value,
+          title: document.getElementById('fTitle').value.trim(),
+          genre: document.getElementById('fGenre').value.trim(),
+          year: document.getElementById('fYear').value,
+          desc: document.getElementById('fDesc').value.trim(),
+          cover: document.getElementById('fCover').value.trim(),
+          video: vUrl
+        };
+      }
+    } else {
+      // Crear nuevo
+      const newItem = {
+        id: Date.now(),
+        type: document.getElementById('fType').value,
+        title: document.getElementById('fTitle').value.trim(),
+        genre: document.getElementById('fGenre').value.trim(),
+        year: document.getElementById('fYear').value,
+        desc: document.getElementById('fDesc').value.trim(),
+        cover: document.getElementById('fCover').value.trim(),
+        video: vUrl
+      };
+      this.catalog.unshift(newItem);
+    }
+
     localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
     this.closeModal();
     this.renderHome();
+    this.renderList();
     this.toast('Contenido guardado');
     await this.autoSyncGitHub();
   }
@@ -385,25 +435,4 @@ class NaPlusProEngine {
       let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
 
       const catalogJson = JSON.stringify(this.catalog, null, 2);
-      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || ${catalogJson};`);
-
-      const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
-      await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.filePath}`, {
-        method: 'PUT',
-        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Sincronización NaPlus Pro', content: updatedBase64, sha: getData.sha })
-      });
-
-      statusEl.innerText = "✅ ¡Sincronizado con éxito!";
-    } catch(err) {
-      statusEl.innerText = "❌ Error de red al sincronizar";
-    }
-    setTimeout(() => { statusEl.style.display = "none"; }, 3000);
-  }
-}
-
-const app = new NaPlusProEngine();
-app.renderHome();
-</script>
-</body>
-</html>
+      fileText = fileText.replace(/this\.catalog = JSON\.parse\(localStorage\.getItem\(this\.dbKey\)\) \|\| \[[\s\S]*?\];/, `this.catalog =
