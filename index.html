@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
   
-  <!-- Estilos del Reproductor Profesional Video.js -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
   <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/city/index.css" rel="stylesheet" />
 
@@ -30,7 +29,7 @@
     body {
       background-color: var(--bg-dark);
       color: var(--text-white);
-      padding-top: 65px;
+      padding-top: 70px;
       padding-bottom: 40px;
     }
 
@@ -39,12 +38,12 @@
       top: 0; left: 0; right: 0;
       height: 60px;
       padding: 0 15px;
-      background: rgba(10, 6, 18, 0.95);
+      background: rgba(10, 6, 18, 0.98);
       backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 1000;
+      z-index: 99999;
       border-bottom: 1px solid var(--border-purple);
     }
 
@@ -60,12 +59,14 @@
     .btn-creator {
       background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
       color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
+      border: 1px solid var(--accent-light);
+      padding: 10px 16px;
+      border-radius: 8px;
       font-weight: bold;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       cursor: pointer;
+      position: relative;
+      z-index: 100000;
     }
 
     .hero {
@@ -74,22 +75,10 @@
       margin-bottom: 10px;
     }
 
-    .hero h1 {
-      font-size: 1.8rem;
-      margin-bottom: 5px;
-    }
+    .hero h1 { font-size: 1.8rem; margin-bottom: 5px; }
+    .hero p { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 12px; }
 
-    .hero p {
-      font-size: 0.85rem;
-      color: var(--text-gray);
-      margin-bottom: 12px;
-    }
-
-    .search-box {
-      width: 100%;
-      max-width: 500px;
-    }
-
+    .search-box { width: 100%; max-width: 500px; }
     .search-box input {
       width: 100%;
       padding: 10px 14px;
@@ -113,8 +102,7 @@
     .section-title::before {
       content: '';
       display: inline-block;
-      width: 4px;
-      height: 16px;
+      width: 4px; height: 16px;
       background: var(--accent-purple);
       border-radius: 2px;
     }
@@ -143,10 +131,7 @@
       background: #000;
     }
 
-    .card-info {
-      padding: 8px;
-    }
-
+    .card-info { padding: 8px; }
     .card-title {
       font-size: 0.85rem;
       font-weight: bold;
@@ -154,11 +139,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .card-sub {
-      font-size: 0.75rem;
-      color: var(--text-gray);
-    }
+    .card-sub { font-size: 0.75rem; color: var(--text-gray); }
 
     .card-fav-btn {
       position: absolute;
@@ -184,9 +165,7 @@
       z-index: 10;
     }
 
-    body.creator-mode .admin-btns {
-      display: flex;
-    }
+    body.creator-mode .admin-btns { display: flex; }
 
     .admin-btns button {
       background: rgba(0,0,0,0.85);
@@ -197,20 +176,15 @@
       font-size: 0.8rem;
     }
 
-    /* Modales */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.85);
-      z-index: 3000;
+      z-index: 300000;
       padding: 20px;
       align-items: center;
       justify-content: center;
-    }
-
-    .modal-overlay.active {
-      display: flex !important;
     }
 
     .modal-box {
@@ -236,22 +210,9 @@
       z-index: 100;
     }
 
-    .modal-box h3 {
-      margin-bottom: 12px;
-      padding-right: 30px;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-gray);
-      margin-bottom: 4px;
-    }
-
+    .modal-box h3 { margin-bottom: 12px; padding-right: 30px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--text-gray); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
       padding: 10px;
@@ -262,30 +223,9 @@
       font-size: 0.95rem;
     }
 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn-cancel {
-      background: transparent;
-      color: var(--text-gray);
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-
-    .btn-submit {
-      background: var(--accent-purple);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+    .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; }
+    .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     .video-box {
       width: 100%;
@@ -323,7 +263,7 @@
 
   <header>
     <div class="logo">NaPlus</div>
-    <button class="btn-creator" id="btnCreator">Modo Creador</button>
+    <button class="btn-creator" id="btnCreator" onclick="activarModoCreador()">Modo Creador</button>
   </header>
 
   <div class="hero">
@@ -362,25 +302,7 @@
     </div>
   </div>
 
-  <!-- Modal Clave Creador -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal-box">
-      <button class="btn-close" onclick="closeModal('loginModal')">✕</button>
-      <h3>Acceso Creador</h3>
-      <form onsubmit="submitLogin(event)">
-        <div class="form-group">
-          <label>Ingresá la clave de creador (9009) o tu Token de GitHub (ghp_...)</label>
-          <input type="password" id="passInput" placeholder="Clave o Token..." required autocomplete="off">
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">Cancelar</button>
-          <button type="submit" class="btn-submit">Entrar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Formulario Subir/Editar -->
+  <!-- Modal Subir / Editar -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -426,7 +348,6 @@
     </div>
   </div>
 
-  <!-- Scripts del Reproductor Video.js -->
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
   <script>
@@ -450,10 +371,30 @@
     let isCreatorMode = false;
     let activePlayer = null;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("btnCreator").addEventListener("click", handleCreatorClick);
-      renderCatalog();
-    });
+    // ALGORITMO DIRECTO MODO CREADOR (SOPORTE 100% MÓVIL)
+    function activarModoCreador() {
+      if (isCreatorMode) {
+        openUploadModal();
+        return;
+      }
+
+      const input = prompt("Ingresá la clave de creador (9009) o tu Token de GitHub (ghp_...):");
+      if (input === null) return;
+
+      const val = input.trim();
+      if (val === "9009" || val.startsWith("ghp_")) {
+        if (val.startsWith("ghp_")) {
+          localStorage.setItem('naPlus_gh_token', val);
+        }
+        isCreatorMode = true;
+        document.body.classList.add('creator-mode');
+        document.getElementById('btnCreator').innerText = '+ Agregar Video';
+        alert("¡Modo Creador Activado con éxito!");
+        openUploadModal();
+      } else {
+        alert("Clave incorrecta. Usá '9009' o tu Token de GitHub.");
+      }
+    }
 
     function toggleFavorite(id, e) {
       e.stopPropagation();
@@ -473,7 +414,7 @@
       const myListMGrid = document.getElementById('myListMoviesGrid');
       const myListSGrid = document.getElementById('myListSeriesGrid');
 
-      if(!mGrid || !sGrid) return;
+      if (!mGrid || !sGrid) return;
 
       mGrid.innerHTML = '';
       sGrid.innerHTML = '';
@@ -533,47 +474,15 @@
       renderCatalog(document.getElementById('searchInput').value);
     }
 
-    function handleCreatorClick() {
-      if (isCreatorMode) {
-        openUploadModal();
-      } else {
-        document.getElementById('passInput').value = '';
-        openModal('loginModal');
-      }
-    }
-
-    function openModal(id) {
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.add('active');
-    }
-
     function closeModal(id) {
       const modal = document.getElementById(id);
-      if (modal) modal.classList.remove('active');
+      if (modal) modal.style.display = 'none';
       if (id === 'detailModal') {
         if (activePlayer) {
           activePlayer.dispose();
           activePlayer = null;
         }
         document.getElementById('videoBox').innerHTML = '';
-      }
-    }
-
-    function submitLogin(e) {
-      e.preventDefault();
-      const val = document.getElementById('passInput').value.trim();
-
-      if (val === "9009" || val.startsWith("ghp_")) {
-        if (val.startsWith("ghp_")) {
-          localStorage.setItem('naPlus_gh_token', val);
-        }
-        isCreatorMode = true;
-        document.body.classList.add('creator-mode');
-        document.getElementById('btnCreator').innerText = '+ Agregar Video';
-        closeModal('loginModal');
-        openUploadModal();
-      } else {
-        alert("Clave incorrecta. Usá '9009' o tu Token de GitHub.");
       }
     }
 
@@ -587,7 +496,7 @@
       document.getElementById('descInput').value = item ? item.desc : '';
       document.getElementById('coverInput').value = item ? item.cover : '';
       document.getElementById('videoInput').value = item ? item.video : '';
-      openModal('uploadModal');
+      document.getElementById('uploadModal').style.display = 'flex';
     }
 
     function editItem(id) {
@@ -671,4 +580,44 @@
             'Authorization': `token ${token}`,
             'Content-Type': 'application/json'
           },
-      
+          body: JSON.stringify({
+            message: 'Actualización NaPlus',
+            content: updatedBase64,
+            sha: sha
+          })
+        });
+
+        if (putRes.ok) {
+          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo.");
+        } else {
+          const errData = await putRes.json();
+          alert("Error de GitHub: " + (errData.message || "No se pudo actualizar. Verificá los permisos del token."));
+        }
+      } catch (err) {
+        alert("Error de red al conectar con GitHub.");
+      } finally {
+        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
+      }
+    }
+
+    function openDetail(id) {
+      const item = catalog.find(x => x.id == id);
+      if (!item) return;
+
+      document.getElementById('detailTitle').innerText = item.title;
+      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
+
+      const vBox = document.getElementById('videoBox');
+      vBox.innerHTML = '';
+      const vUrl = item.video || '';
+
+      if (activePlayer) {
+        activePlayer.dispose();
+        activePlayer = null;
+      }
+
+      // Soporte Nativo Google Drive
+      if (vUrl.includes('drive.google.com')) {
+        let driveId = "";
+        const match = vUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) |
