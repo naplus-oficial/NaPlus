@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus Pro - La Neuro Página</title>
+<title>NaPlus Pro - Streaming</title>
 <style>
   :root {
     --bg-main: #0a0612;
@@ -17,78 +17,87 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
 
+  /* Navegación Inferior */
   nav {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: #0a0612;
-    display: flex; justify-content: space-around; align-items: center;
-    border-top: 1px solid var(--border); z-index: 9999;
+    position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
+    background: #0a0612; display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid var(--border); z-index: 99999;
   }
   .nav-btn {
     background: none; border: none; color: var(--text-muted);
-    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+    font-size: 0.75rem; display: flex; flex-direction: column; align-items: center;
     gap: 3px; cursor: pointer; width: 33.33%; padding: 10px 0;
   }
-  .nav-btn span { font-size: 1.2rem; }
-  .nav-btn.active { color: var(--accent); }
+  .nav-btn span { font-size: 1.25rem; }
+  .nav-btn.active { color: var(--accent); font-weight: bold; }
 
-  .view { display: none; padding: 15px; position: relative; z-index: 1; }
+  /* Vistas */
+  .view { display: none; padding: 15px; }
   .view.active { display: block; }
 
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-  .logo { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; background: linear-gradient(135deg, #c084fc, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
   .search-input {
-    width: 100%; padding: 12px 15px; background: var(--bg-surface);
-    border: 1px solid var(--border); color: #fff; border-radius: 10px;
-    font-size: 0.95rem; outline: none; margin-bottom: 15px;
+    width: 100%; padding: 14px 16px; background: var(--bg-surface);
+    border: 1px solid var(--border); color: #fff; border-radius: 12px;
+    font-size: 1rem; outline: none; margin-bottom: 20px;
   }
   .search-input:focus { border-color: var(--primary); }
 
-  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
-  .empty-note { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; }
-  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .section-title { font-size: 1.1rem; font-weight: 700; margin: 20px 0 12px; color: var(--text); }
+  .empty-note { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
   
+  /* Grilla de Tarjetas con toque libre garantizado */
+  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .media-card { 
-    background: var(--bg-surface); border-radius: 8px; overflow: hidden; 
-    position: relative; cursor: pointer; border: 1px solid var(--border); 
-    z-index: 2; pointer-events: auto;
+    background: var(--bg-surface); border-radius: 10px; overflow: hidden; 
+    position: relative; border: 1px solid var(--border); cursor: pointer;
   }
-  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
-  .media-info { padding: 6px; }
+  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; pointer-events: none; }
+  .media-info { padding: 8px; pointer-events: none; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
+  /* Controles de Creador en Tarjetas */
+  .admin-controls { display: none; position: absolute; top: 6px; right: 6px; gap: 6px; z-index: 10; }
   body.creator-mode .admin-controls { display: flex; }
-  .admin-controls button { background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff; width: 30px; height: 30px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
+  .admin-controls button { 
+    background: rgba(0, 0, 0, 0.9); border: 1px solid var(--primary); color: #fff; 
+    width: 32px; height: 32px; border-radius: 6px; font-size: 0.85rem; 
+    cursor: pointer; display: flex; align-items: center; justify-content: center; 
+  }
 
-  .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
-  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--primary); }
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
-  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 0.9rem; outline: none; }
+  /* Ajustes */
+  .settings-box { background: var(--bg-surface); border-radius: 14px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border); }
+  .settings-box h3 { font-size: 1rem; margin-bottom: 12px; color: var(--primary); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 12px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 10px; font-size: 0.95rem; outline: none; }
 
-  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+  .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 20000; flex-direction: column; }
+  /* Reproductor */
+  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999999; flex-direction: column; }
   .player-overlay.active { display: flex; }
-  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+  .player-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .close-player { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 5px; }
 
   .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; height: 100%; background: #000; }
   .video-container iframe { width: 100%; height: 100%; border: none; }
 
-  .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
+  .player-details { padding: 18px; background: var(--bg-surface); max-height: 38vh; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 30000; align-items: flex-end; }
+  /* Modal de Creador */
+  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
-  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
+  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; padding: 22px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 40000; display: none; text-align: center; max-width: 90%; }
-  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 40000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; z-index: 9999999; display: none; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  #syncStatus { position: fixed; bottom: 75px; right: 15px; background: var(--primary); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; z-index: 999999; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 </style>
 </head>
 <body>
@@ -101,7 +110,7 @@
     <div class="section-title">Películas</div>
     <div class="media-grid" id="moviesGrid"></div>
 
-    <div class="section-title" style="margin-top: 25px;">Series</div>
+    <div class="section-title" style="margin-top: 30px;">Series</div>
     <div class="media-grid" id="seriesGrid"></div>
   </div>
 
@@ -109,7 +118,7 @@
   <div id="viewList" class="view">
     <div class="header"><div class="logo">Mi Lista</div></div>
     <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
-    <p id="emptyMsg" style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.85rem; display: none;">Tu lista está vacía.</p>
+    <p id="emptyMsg" class="empty-note" style="text-align: center; margin-top: 40px; display: none;">Tu lista está vacía.</p>
   </div>
 
   <!-- Vista Ajustes -->
@@ -137,7 +146,7 @@
     <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
   </nav>
 
-  <!-- Reproductor OK.ru -->
+  <!-- Reproductor -->
   <div class="player-overlay" id="playerModal">
     <div class="player-header">
       <h3 id="playerTitleHeader" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;"></h3>
@@ -147,19 +156,19 @@
     <div class="video-container" id="videoContainer"></div>
 
     <div class="player-details">
-      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
-      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
-      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
-      <button class="btn-action" id="listBtn" style="margin-top: 12px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
+      <h3 id="playerTitle" style="font-size: 1.15rem; margin-bottom: 6px;"></h3>
+      <p id="playerMeta" style="color: var(--accent); font-size: 0.85rem; margin-bottom: 10px;"></p>
+      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;"></p>
+      <button class="btn-action" id="listBtn" style="margin-top: 15px;" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
-  <!-- Modal Creador Subir/Editar Contenido -->
+  <!-- Modal Creador Subir/Editar -->
   <div class="modal-sheet" id="adminModal">
     <div class="sheet-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 id="modalTitleText" style="font-size: 1.1rem; color: var(--primary);">Publicar Contenido Global</h3>
-        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">✕</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 id="modalTitleText" style="font-size: 1.15rem; color: var(--primary);">Publicar Contenido Global</h3>
+        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;">✕</button>
       </div>
       <form onsubmit="app.saveItem(event)">
         <input type="hidden" id="fEditId">
@@ -167,10 +176,10 @@
         <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
         <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
         <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
-        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
+        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="3"></textarea></div>
         <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
         <div class="field"><label>Link de Video (OK.ru)</label><input type="url" id="fVideo" required placeholder="https://ok.ru/video/..."></div>
-        <button type="submit" class="btn-action" style="margin-top: 10px;">Guardar y Sincronizar</button>
+        <button type="submit" class="btn-action" style="margin-top: 15px;">Guardar y Sincronizar</button>
       </form>
     </div>
   </div>
@@ -256,23 +265,31 @@ class NaPlusProEngine {
   createCard(item) {
     const card = document.createElement('div');
     card.className = 'media-card';
-    card.onclick = () => this.openPlayer(item.id);
     const id = Number(item.id);
+
+    // Evento táctil y de clic directo garantizado
+    card.onclick = () => this.openPlayer(id);
+
     card.innerHTML = `
       <div class="admin-controls">
-        <button type="button" title="Editar">✏️</button>
-        <button type="button" title="Eliminar">🗑️</button>
+        <button type="button" class="edit-action" title="Editar">✏️</button>
+        <button type="button" class="del-action" title="Eliminar">🗑️</button>
       </div>
       <img src="${esc(item.cover || NO_COVER)}" alt="Portada" loading="lazy" decoding="async">
       <div class="media-info">
         <div class="media-title">${esc(item.title)}</div>
         <div class="media-sub">${esc(item.genre)}</div>
       </div>`;
+
     const img = card.querySelector('img');
     img.onerror = () => { img.onerror = null; img.src = NO_COVER; };
-    const [editBtn, delBtn] = card.querySelectorAll('.admin-controls button');
-    editBtn.onclick = e => { e.stopPropagation(); this.openEditModal(id); };
-    delBtn.onclick = e => { e.stopPropagation(); this.deleteItem(id); };
+
+    const editBtn = card.querySelector('.edit-action');
+    const delBtn = card.querySelector('.del-action');
+
+    editBtn.onclick = (e) => { e.stopPropagation(); this.openEditModal(id); };
+    delBtn.onclick = (e) => { e.stopPropagation(); this.deleteItem(id); };
+
     return card;
   }
 
@@ -281,21 +298,28 @@ class NaPlusProEngine {
     const mGrid = $('moviesGrid'), sGrid =$('seriesGrid');
     mGrid.innerHTML = ''; sGrid.innerHTML = '';
 
-    this.catalog
-      .filter(i => norm(i.title).includes(q) || norm(i.genre).includes(q))
-      .forEach(item => (item.type === 'movie' ? mGrid : sGrid).appendChild(this.createCard(item)));
+    const movies = this.catalog.filter(i => i.type === 'movie' && (norm(i.title).includes(q) || norm(i.genre).includes(q)));
+    const series = this.catalog.filter(i => i.type === 'series' && (norm(i.title).includes(q) || norm(i.genre).includes(q)));
 
-    [mGrid, sGrid].forEach(g => {
-      if (!g.children.length) g.innerHTML = '<p class="empty-note">No hay contenido para mostrar.</p>';
-    });
+    movies.forEach(item => mGrid.appendChild(this.createCard(item)));
+    series.forEach(item => sGrid.appendChild(this.createCard(item)));
+
+    if (!movies.length) mGrid.innerHTML = '<p class="empty-note">No hay películas.</p>';
+    if (!series.length) sGrid.innerHTML = '<p class="empty-note">No hay series.</p>';
   }
 
   renderList() {
     const grid = $('listGrid');
     grid.innerHTML = '';
     const items = this.catalog.filter(i => this.myList.includes(i.id));
-    $('emptyMsg').style.display = items.length ? 'none' : 'block';
-    items.forEach(item => grid.appendChild(this.createCard(item)));
+    const empty = $('emptyMsg');
+
+    if (items.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      items.forEach(item => grid.appendChild(this.createCard(item)));
+    }
   }
 
   openPlayer(id) {
@@ -312,7 +336,7 @@ class NaPlusProEngine {
     const embed = okEmbed(item.video);
     $('videoContainer').innerHTML = embed
       ? `<iframe src="${esc(embed)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`
-      : '<div style="color:var(--accent); font-size:0.85rem; padding:20px; text-align:center;">Video no disponible</div>';
+      : '<div style="color:var(--accent); font-size:0.9rem; padding:20px; text-align:center;">Video no disponible o enlace incorrecto</div>';
 
     $('playerModal').classList.add('active');
   }
@@ -399,7 +423,7 @@ class NaPlusProEngine {
     e.preventDefault();
     const vUrl = $('fVideo').value.trim();
     if (!okEmbed(vUrl)) {
-      alert("Ingresá un enlace válido de OK.ru, por ejemplo https://ok.ru/video/123456789");
+      alert("Ingresá un enlace válido de OK.ru (ej: https://ok.ru/video/123456789)");
       return;
     }
 
@@ -432,9 +456,9 @@ class NaPlusProEngine {
   ghError(status) {
     if (status === 401) {
       store.del('naplus_token');
-      alert('GitHub no aceptó el token: está vencido o quedó mal copiado.');
+      alert('GitHub rechazó el token. Verificá que siga activo.');
     } else if (status === 403) {
-      alert('El token no tiene permisos suficientes (marcar repo).');
+      alert('El token no tiene permisos de escritura (repo).');
     }
   }
 
@@ -519,7 +543,6 @@ const app = new NaPlusProEngine();
 app.loadFromGitHub();
 app.renderHome();
 
-// Restaurar token guardado automáticamente si ya existía
 if (isToken(store.get('naplus_token'))) {
   app.enableCreator(true);
 }
