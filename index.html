@@ -1,451 +1,370 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NaPlus - Streaming</title>
-  <style>
-    :root {
-      --bg-dark: #0a0612;
-      --card-bg: #140d24;
-      --accent: #7c3aed;
-      --accent-light: #c084fc;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text);
-      padding-top: 65px;
-      padding-bottom: 40px;
-    }
-
-    /* Navbar */
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 60px;
-      padding: 0 15px;
-      background: #0a0612;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      border-bottom: 1px solid rgba(124, 58, 237, 0.3);
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--accent-light);
-    }
-
-    .btn-creator {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* Banner */
-    .hero {
-      padding: 20px 15px;
-      background: linear-gradient(180deg, #140d24 0%, #0a0612 100%);
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .hero h1 { font-size: 1.8rem; margin-bottom: 5px; }
-    .hero p { font-size: 0.9rem; color: var(--text-muted); }
-
-    /* Catálogo */
-    .section-title {
-      font-size: 1.2rem;
-      margin: 20px 15px 10px 15px;
-      color: var(--accent-light);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 10px;
-      padding: 0 15px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-      border: 1px solid rgba(124, 58, 237, 0.2);
-    }
-
-    .card img {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-info {
-      padding: 6px;
-    }
-
-    .card-title {
-      font-size: 0.8rem;
-      font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-sub {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .card-admin-btns {
-      position: absolute;
-      top: 4px; right: 4px;
-      display: none;
-      gap: 4px;
-    }
-
-    .card-admin-btns button {
-      background: rgba(0,0,0,0.8);
-      border: none;
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 4px 6px;
-      border-radius: 4px;
-    }
-
-    /* Modales */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 200;
-      padding: 15px;
-      overflow-y: auto;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid var(--accent);
-    }
-
-    .modal-content h3 {
-      margin-bottom: 12px;
-    }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-      color: var(--text-muted);
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 8px;
-      background: #0a0612;
-      border: 1px solid var(--accent);
-      color: #fff;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .form-btns {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn-sec {
-      background: transparent;
-      color: var(--text-muted);
-      border: none;
-      padding: 8px 12px;
-    }
-
-    .btn-pri {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    .video-box {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      margin-bottom: 10px;
-    }
-
-    .video-box video, .video-box iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaPlus - Streaming</title>
+<style>
+:root{--bg-dark:#0a0612;--card-bg:#140d24;--accent:#7c3aed;--accent-light:#c084fc;--text:#f8fafc;--text-muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:var(--bg-dark);color:var(--text);padding-top:65px;padding-bottom:40px}
+header{position:fixed;top:0;left:0;right:0;height:60px;padding:0 15px;background:#0a0612;display:flex;justify-content:space-between;align-items:center;z-index:100;border-bottom:1px solid rgba(124,58,237,.3)}
+.logo{font-size:1.5rem;font-weight:900;color:var(--accent-light)}
+.header-btns{display:flex;gap:8px}
+.btn-creator{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:6px;font-size:.85rem;font-weight:bold;cursor:pointer}
+.btn-exit{background:transparent;border:1px solid var(--accent);display:none}
+body.creator .btn-exit{display:inline-block}
+.hero{padding:20px 15px;background:linear-gradient(180deg,#140d24 0%,#0a0612 100%);margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.05)}
+.hero h1{font-size:1.8rem;margin-bottom:5px}
+.hero p{font-size:.9rem;color:var(--text-muted)}
+.section-title{font-size:1.2rem;margin:20px 15px 10px;color:var(--accent-light)}
+.empty{color:var(--text-muted);font-size:.85rem;padding:0 15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:0 15px}
+.card{background:var(--card-bg);border-radius:8px;overflow:hidden;position:relative;border:1px solid rgba(124,58,237,.2);cursor:pointer}
+.card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#0a0612}
+.card-info{padding:6px}
+.card-title{font-size:.8rem;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub{font-size:.7rem;color:var(--text-muted)}
+.card-admin-btns{position:absolute;top:4px;right:4px;display:none;gap:4px}
+body.creator .card-admin-btns{display:flex}
+.card-admin-btns button{background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.9rem;padding:6px 8px;border-radius:4px;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;padding:15px;overflow-y:auto}
+#dialogModal{z-index:300}
+.modal-content{background:var(--card-bg);padding:20px;border-radius:10px;width:100%;max-width:500px;border:1px solid var(--accent);margin:auto}
+.modal-content h3{margin-bottom:12px}
+.hint{color:var(--text-muted);font-size:.8rem;margin-bottom:12px;line-height:1.4}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text-muted)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:#0a0612;border:1px solid var(--accent);color:#fff;border-radius:6px;font-size:1rem}
+.form-btns{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
+.btn-sec{background:transparent;color:var(--text-muted);border:none;padding:10px 12px;cursor:pointer;font-size:1rem}
+.btn-pri{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:1rem}
+.video-box{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:10px}
+.video-box video,.video-box iframe{width:100%;height:100%;border:none}
+.video-box img{width:100%;height:100%;object-fit:contain}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;font-size:.85rem;z-index:400;display:none;max-width:90%;text-align:center}
+</style>
 </head>
 <body>
-
-  <header>
-    <div class="logo">NaPlus</div>
+<header>
+  <div class="logo">NaPlus</div>
+  <div class="header-btns">
+    <button class="btn-creator btn-exit" onclick="setCreator(false)">Salir</button>
     <button class="btn-creator" id="btnAdmin" onclick="toggleCreator()">Modo Creador</button>
-  </header>
-
-  <div class="hero">
-    <h1>NaPlus Streaming</h1>
-    <p>Seleccioná cualquier película o serie para ver los detalles.</p>
   </div>
+</header>
 
-  <div class="section-title">Películas</div>
-  <div class="grid" id="moviesGrid"></div>
+<div class="hero">
+  <h1>NaPlus Streaming</h1>
+  <p>Seleccioná cualquier película o serie para ver los detalles.</p>
+</div>
+<div class="section-title">Películas</div>
+<div class="grid" id="moviesGrid"></div>
+<div class="section-title">Series</div>
+<div class="grid" id="seriesGrid"></div>
 
-  <div class="section-title">Series</div>
-  <div class="grid" id="seriesGrid"></div>
+<!-- Detalle -->
+<div class="modal" id="detailModal">
+  <div class="modal-content">
+    <div class="video-box" id="videoBox"></div>
+    <h3 id="detailTitle"></h3>
+    <p id="detailMeta" style="color:var(--accent-light);font-size:.85rem;margin-bottom:8px"></p>
+    <p id="detailDesc" style="color:var(--text-muted);font-size:.85rem;margin-bottom:15px"></p>
+    <div class="form-btns" id="detailBtns"></div>
+  </div>
+</div>
 
-  <!-- Modal Detalle -->
-  <div class="modal" id="detailModal">
-    <div class="modal-content">
-      <div class="video-box" id="videoBox"></div>
-      <h3 id="detailTitle"></h3>
-      <p id="detailMeta" style="color: var(--accent-light); font-size:0.85rem; margin-bottom:8px;"></p>
-      <p id="detailDesc" style="color: var(--text-muted); font-size:0.85rem; margin-bottom:15px;"></p>
+<!-- Acceso creador -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <h3>Modo Creador</h3>
+    <p class="hint">Pegá tu token de GitHub. Se guarda solo en este dispositivo y nunca está en el código de la página.</p>
+    <form onsubmit="doLogin(event)">
+      <div class="form-group"><label>Repositorio (usuario/repositorio)</label><input type="text" id="repoInput" required placeholder="tuusuario/turepo" autocapitalize="off" autocomplete="off"></div>
+      <div class="form-group"><label>Token de GitHub</label><input type="password" id="tokenInput" required autocomplete="off"></div>
       <div class="form-btns">
-        <button class="btn-pri" onclick="closeDetail()">Cerrar</button>
+        <button type="button" class="btn-sec" onclick="closeLogin()">Cancelar</button>
+        <button type="submit" class="btn-pri">Entrar</button>
       </div>
+    </form>
+  </div>
+</div>
+
+<!-- Formulario contenido -->
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <h3 id="formTitle">Subir contenido</h3>
+    <form onsubmit="saveData(event)">
+      <input type="hidden" id="editId">
+      <div class="form-group"><label>Tipo</label>
+        <select id="type"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+      <div class="form-group"><label>Título</label><input type="text" id="title" required></div>
+      <div class="form-group"><label>Género</label><input type="text" id="genre" required placeholder="Acción, Drama..."></div>
+      <div class="form-group"><label>Año</label><input type="number" id="year" required placeholder="2026"></div>
+      <div class="form-group"><label>Sinopsis / Descripción</label><textarea id="desc" rows="3"></textarea></div>
+      <div class="form-group"><label>Portada: link de imagen (opcional)</label><input type="url" id="cover" placeholder="https://..."></div>
+      <div class="form-group"><label>o elegí una imagen de tu galería</label><input type="file" id="coverFile" accept="image/*"></div>
+      <div class="form-group"><label>Link del video (Telegram, YouTube...)</label><input type="url" id="video" placeholder="https://t.me/..."></div>
+      <div class="form-btns">
+        <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
+        <button type="submit" class="btn-pri">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmar -->
+<div class="modal" id="dialogModal">
+  <div class="modal-content">
+    <h3 id="dlgTitle"></h3>
+    <p id="dlgMsg" class="hint"></p>
+    <div class="form-btns">
+      <button class="btn-sec" id="dlgCancel">Cancelar</button>
+      <button class="btn-pri" id="dlgOk">Eliminar</button>
     </div>
   </div>
+</div>
+<div id="toast"></div>
 
-  <!-- Modal Formulario Creador -->
-  <div class="modal" id="adminModal">
-    <div class="modal-content">
-      <h3 id="formTitle">Subir Contenido</h3>
-      <form onsubmit="saveData(event)">
-        <input type="hidden" id="editId">
-        <div class="form-group">
-          <label>Tipo</label>
-          <select id="type">
-            <option value="movie">Película</option>
-            <option value="series">Serie</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Título</label>
-          <input type="text" id="title" required>
-        </div>
-        <div class="form-group">
-          <label>Género</label>
-          <input type="text" id="genre" required placeholder="Acción, Drama...">
-        </div>
-        <div class="form-group">
-          <label>Año</label>
-          <input type="number" id="year" required placeholder="2026">
-        </div>
-        <div class="form-group">
-          <label>Sinopsis / Descripción</label>
-          <textarea id="desc" rows="2"></textarea>
-        </div>
-        <div class="form-group">
-          <label>URL / Link de Portada</label>
-          <input type="url" id="cover" placeholder="https://..." required>
-        </div>
-        <div class="form-group">
-          <label>URL / Link de Video (YouTube, MP4, etc.)</label>
-          <input type="url" id="video" placeholder="https://...">
-        </div>
-        <div class="form-btns">
-          <button type="button" class="btn-sec" onclick="closeAdmin()">Cancelar</button>
-          <button type="submit" class="btn-pri">Guardar</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NO_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='%23140d24'/><text x='50%' y='50%' fill='%2394a3b8' font-size='16' text-anchor='middle' font-family='sans-serif'>Sin portada</text></svg>";
+const CFG_KEY = 'naPlus_cfg';       // { repo, token } solo en el dispositivo del creador
+const DATA_FILE = 'content.json';   // catálogo público, guardado en el repositorio
 
-  <script>
-    let isCreator = false;
-    let catalog = JSON.parse(localStorage.getItem('naPlus_db')) || [
-      {
-        id: 1,
-        type: 'movie',
-        title: 'Película Ejemplo',
-        genre: 'Aventura',
-        year: '2026',
-        desc: 'Sinopsis de la película de prueba.',
-        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
-        video: ''
-      },
-      {
-        id: 2,
-        type: 'series',
-        title: 'Serie Ejemplo',
-        genre: 'Drama',
-        year: '2026',
-        desc: 'Sinopsis de la serie de prueba.',
-        cover: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400',
-        video: ''
-      }
-    ];
+let catalog = [], isCreator = false, pendingCover = '', existingCover = '';
 
-    function render() {
-      const mGrid = document.getElementById('moviesGrid');
-      const sGrid = document.getElementById('seriesGrid');
-      mGrid.innerHTML = '';
-      sGrid.innerHTML = '';
+/* ---------- Configuración del creador ---------- */
+function getCfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
+function guessRepo() {
+  const h = location.hostname;
+  if (!h.endsWith('.github.io')) return '';
+  const r = location.pathname.split('/')[1];
+  return h.split('.')[0] + '/' + (r && !r.includes('.') ? r : h);
+}
 
-      catalog.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.onclick = () => showDetail(item.id);
+/* ---------- Carga del catálogo ---------- */
+async function loadCatalog() {
+  try {
+    const res = await fetch(DATA_FILE + '?t=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) { const d = await res.json(); if (Array.isArray(d)) catalog = d; }
+  } catch (e) {}
+  render();
+}
 
-        div.innerHTML = `
-          <div class="card-admin-btns" style="display:${isCreator ? 'flex' : 'none'}">
-            <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
-            <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
-          </div>
-          <img src="${item.cover}" alt="cover">
-          <div class="card-info">
-            <div class="card-title">${item.title}</div>
-            <div class="card-sub">${item.genre} • ${item.year}</div>
-          </div>
-        `;
+/* ---------- Guardado en GitHub ---------- */
+function b64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+  return btoa(s);
+}
+function gh(cfg, method, body) {
+  return fetch(`https://api.github.com/repos/${cfg.repo}/contents/${DATA_FILE}`, {
+    method,
+    headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined
+  });
+}
+async function persist() {
+  const cfg = getCfg();
+  if (!cfg) { toast('Falta iniciar sesión en Modo Creador.'); return; }
+  try {
+    let sha;
+    const g = await gh(cfg, 'GET');
+    if (g.ok) sha = (await g.json()).sha;
+    else if (g.status !== 404) throw g.status;
+    const p = await gh(cfg, 'PUT', { message: 'Actualizar catálogo', content: b64(JSON.stringify(catalog, null, 1)), ...(sha ? { sha } : {}) });
+    if (!p.ok) throw p.status;
+    toast('Guardado. Los demás lo verán en 1 o 2 minutos.');
+  } catch (e) {
+    if (e === 401 || e === 403) { localStorage.removeItem(CFG_KEY); setCreator(false); toast('Token inválido, vencido o sin permiso. Volvé a entrar.'); }
+    else if (e === 404) toast('No se encontró el repositorio. Revisá el nombre.');
+    else toast('No se pudo guardar. Probá de nuevo.');
+  }
+}
 
-        if (item.type === 'movie') mGrid.appendChild(div);
-        else sGrid.appendChild(div);
-      });
-    }
+/* ---------- Interfaz ---------- */
+let toastTimer;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', 3500);
+}
+function confirmDialog(title, msg) {
+  return new Promise(resolve => {
+    $('dlgTitle').textContent = title; $('dlgMsg').textContent = msg;
+    $('dialogModal').style.display = 'flex';
+    const done = v => { $('dialogModal').style.display = 'none'; $('dlgOk').onclick = $('dlgCancel').onclick = null; resolve(v); };
+    $('dlgOk').onclick = () => done(true);
+    $('dlgCancel').onclick = () => done(false);
+  });
+}
 
-    function toggleCreator() {
-      if (!isCreator) {
-        const pass = prompt("Acceso Administrador:");
-        if (pass === "9009") {
-          isCreator = true;
-          document.getElementById('btnAdmin').innerText = "+ Agregar";
-          render();
-          openAdmin();
-        } else if (pass !== null) {
-          alert("Acceso denegado.");
-        }
-      } else {
-        openAdmin();
-      }
-    }
+function render() {
+  const mGrid = $('moviesGrid'), sGrid = $('seriesGrid');
+  mGrid.innerHTML = ''; sGrid.innerHTML = '';
+  catalog.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="card-admin-btns">
+        <button class="edit" aria-label="Editar">✏️</button>
+        <button class="del" aria-label="Eliminar">🗑️</button>
+      </div>
+      <img src="${esc(item.cover || NO_COVER)}" alt="Portada de ${esc(item.title)}">
+      <div class="card-info">
+        <div class="card-title">${esc(item.title)}</div>
+        <div class="card-sub">${esc(item.genre)} • ${esc(item.year)}</div>
+      </div>`;
+    div.querySelector('img').onerror = function () { this.onerror = null; this.src = NO_COVER; };
+    div.onclick = () => showDetail(item.id);
+    div.querySelector('.edit').onclick = e => { e.stopPropagation(); editItem(item.id); };
+    div.querySelector('.del').onclick = e => { e.stopPropagation(); deleteItem(item.id); };
+    (item.type === 'movie' ? mGrid : sGrid).appendChild(div);
+  });
+  [mGrid, sGrid].forEach(g => { if (!g.children.length) g.innerHTML = '<p class="empty">Todavía no hay contenido acá.</p>'; });
+}
 
-    function openAdmin(item = null) {
-      document.getElementById('editId').value = item ? item.id : '';
-      document.getElementById('formTitle').innerText = item ? 'Editar' : 'Subir Contenido';
-      document.getElementById('type').value = item ? item.type : 'movie';
-      document.getElementById('title').value = item ? item.title : '';
-      document.getElementById('genre').value = item ? item.genre : '';
-      document.getElementById('year').value = item ? item.year : '2026';
-      document.getElementById('desc').value = item ? item.desc : '';
-      document.getElementById('cover').value = item ? item.cover : '';
-      document.getElementById('video').value = item ? item.video : '';
-      document.getElementById('adminModal').style.display = 'flex';
-    }
+function setCreator(on) {
+  isCreator = on;
+  document.body.classList.toggle('creator', on);
+  $('btnAdmin').textContent = on ? '+ Agregar' : 'Modo Creador';
+}
 
-    function closeAdmin() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
+function toggleCreator() {
+  if (isCreator) { openAdmin(); return; }
+  const cfg = getCfg();
+  if (cfg) { setCreator(true); toast('Modo creador activado'); return; }
+  $('repoInput').value = guessRepo();
+  $('tokenInput').value = '';
+  $('loginModal').style.display = 'flex';
+}
+function closeLogin() { $('loginModal').style.display = 'none'; $('tokenInput').value = ''; }
+function doLogin(e) {
+  e.preventDefault();
+  const repo = $('repoInput').value.trim().replace(/^\/+|\/+$/g, '');
+  const token = $('tokenInput').value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo) || !token) { toast('Revisá el repositorio y el token.'); return; }
+  localStorage.setItem(CFG_KEY, JSON.stringify({ repo, token }));
+  closeLogin(); setCreator(true); toast('Modo creador activado');
+}
 
-    function saveData(e) {
-      e.preventDefault();
-      const id = document.getElementById('editId').value;
-      const newItem = {
-        id: id ? parseInt(id) : Date.now(),
-        type: document.getElementById('type').value,
-        title: document.getElementById('title').value,
-        genre: document.getElementById('genre').value,
-        year: document.getElementById('year').value,
-        desc: document.getElementById('desc').value,
-        cover: document.getElementById('cover').value,
-        video: document.getElementById('video').value
+function openAdmin(item = null) {
+  $('editId').value = item ? item.id : '';
+  $('formTitle').textContent = item ? 'Editar contenido' : 'Subir contenido';
+  $('type').value = item ? item.type : 'movie';
+  $('title').value = item ? item.title : '';
+  $('genre').value = item ? item.genre : '';
+  $('year').value = item ? item.year : '2026';
+  $('desc').value = item ? item.desc : '';
+  $('video').value = item ? item.video : '';
+  existingCover = item ? (item.cover || '') : '';
+  $('cover').value = existingCover.startsWith('data:') ? '' : existingCover;
+  $('coverFile').value = ''; pendingCover = '';
+  $('adminModal').style.display = 'flex';
+}
+function closeAdmin() { $('adminModal').style.display = 'none'; }
+
+// Reduce la imagen elegida a ~300x450 para que el catálogo quede liviano
+function fileToCover(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = reject;
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const w = 300, h = 450, c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const s = Math.max(w / img.width, h / img.height);
+        c.getContext('2d').drawImage(img, (w - img.width * s) / 2, (h - img.height * s) / 2, img.width * s, img.height * s);
+        resolve(c.toDataURL('image/jpeg', 0.8));
       };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+$('coverFile').addEventListener('change', async e => {
+  if (!e.target.files[0]) return;
+  try { pendingCover = await fileToCover(e.target.files[0]); toast('Portada lista'); }
+  catch (err) { toast('No se pudo leer la imagen'); }
+});
 
-      if (id) {
-        const idx = catalog.findIndex(x => x.id == id);
-        if (idx !== -1) catalog[idx] = newItem;
-      } else {
-        catalog.unshift(newItem);
-      }
+async function saveData(e) {
+  e.preventDefault();
+  if (!isCreator) return;
+  const id = $('editId').value;
+  const typed = $('cover').value.trim();
+  const newItem = {
+    id: id ? parseInt(id, 10) : Date.now(),
+    type: $('type').value, title: $('title').value.trim(), genre: $('genre').value.trim(),
+    year: $('year').value, desc: $('desc').value.trim(),
+    cover: pendingCover || typed || (existingCover.startsWith('data:') ? existingCover : ''),
+    video: $('video').value.trim()
+  };
+  const idx = id ? catalog.findIndex(x => x.id == id) : -1;
+  if (idx !== -1) catalog[idx] = newItem; else catalog.unshift(newItem);
+  render(); closeAdmin(); toast('Guardando...');
+  await persist();
+}
 
-      localStorage.setItem('naPlus_db', JSON.stringify(catalog));
-      render();
-      closeAdmin();
-    }
+function editItem(id) { const item = catalog.find(x => x.id == id); if (item) openAdmin(item); }
 
-    function editItem(id) {
-      const item = catalog.find(x => x.id == id);
-      if (item) openAdmin(item);
-    }
+async function deleteItem(id) {
+  const item = catalog.find(x => x.id == id);
+  if (!item || !(await confirmDialog('Eliminar', `¿Eliminar "${item.title}"?`))) return;
+  catalog = catalog.filter(x => x.id != id);
+  render(); toast('Guardando...');
+  await persist();
+}
 
-    function deleteItem(id) {
-      if (confirm("¿Eliminar este contenido?")) {
-        catalog = catalog.filter(x => x.id != id);
-        localStorage.setItem('naPlus_db', JSON.stringify(catalog));
-        render();
-      }
-    }
+/* ---------- Detalle y reproductor ---------- */
+function safeUrl(url) {
+  try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? u : null; } catch (e) { return null; }
+}
+function playerHTML(u, cover) {
+  const host = u.hostname.replace(/^www\./, '');
+  let yt = null;
+  if (host === 'youtu.be') yt = u.pathname.slice(1);
+  else if (host.endsWith('youtube.com')) {
+    if (u.pathname === '/watch') yt = u.searchParams.get('v');
+    else { const m = u.pathname.match(/^\/(embed|shorts|live)\/([^/?]+)/); if (m) yt = m[2]; }
+  }
+  if (yt) return `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(yt)}" allow="fullscreen; encrypted-media" allowfullscreen></iframe>`;
+  if (host === 't.me' && /^\/[A-Za-z0-9_]+\/\d+$/.test(u.pathname))
+    return `<iframe src="https://t.me${u.pathname}?embed=1&mode=tme" allow="fullscreen" allowfullscreen></iframe>`;
+  if (/\.(mp4|webm|mov|m4v)$/i.test(u.pathname)) return `<video src="${esc(u.href)}" controls playsinline poster="${esc(cover || '')}"></video>`;
+  return null;
+}
+function showDetail(id) {
+  const item = catalog.find(x => x.id == id);
+  if (!item) return;
+  $('detailTitle').textContent = item.title;
+  $('detailMeta').textContent = `${item.genre} • ${item.year}`;
+  $('detailDesc').textContent = item.desc || 'Sin descripción.';
+  const u = item.video ? safeUrl(item.video) : null;
+  const player = u ? playerHTML(u, item.cover) : null;
+  $('videoBox').innerHTML = player || `<img src="${esc(item.cover || NO_COVER)}" alt="">`;
+  $('detailBtns').innerHTML = (u
+    ? `<a class="btn-pri" href="${esc(u.href)}" target="_blank" rel="noopener noreferrer">▶ Abrir video</a>`
+    : '<span style="color:#aaa;font-size:.8rem;margin-right:auto">Video no disponible</span>')
+    + '<button class="btn-sec" onclick="closeDetail()">Cerrar</button>';
+  $('detailModal').style.display = 'flex';
+}
+function closeDetail() { $('videoBox').innerHTML = ''; $('detailModal').style.display = 'none'; }
 
-    function showDetail(id) {
-      const item = catalog.find(x => x.id == id);
-      if (!item) return;
+$('detailModal').addEventListener('click', e => { if (e.target === $('detailModal')) closeDetail(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if ($('dialogModal').style.display === 'flex') $('dlgCancel').click();
+  else if ($('loginModal').style.display === 'flex') closeLogin();
+  else if ($('adminModal').style.display === 'flex') closeAdmin();
+  else if ($('detailModal').style.display === 'flex') closeDetail();
+});
 
-      document.getElementById('detailTitle').innerText = item.title;
-      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
-      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
-
-      const vBox = document.getElementById('videoBox');
-      if (item.video) {
-        if (item.video.includes('youtube.com') || item.video.includes('youtu.be')) {
-          let embed = item.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-          vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
-        } else {
-          vBox.innerHTML = `<video src="${item.video}" controls poster="${item.cover}"></video>`;
-        }
-      } else {
-        vBox.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:0.8rem;">Contenido no disponible</div>`;
-      }
-
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    function closeDetail() {
-      document.getElementById('videoBox').innerHTML = '';
-      document.getElementById('detailModal').style.display = 'none';
-    }
-
-    render();
-  </script>
+loadCatalog();
+</script>
 </body>
 </html>
