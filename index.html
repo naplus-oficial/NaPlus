@@ -10,274 +10,124 @@
     --surface: #181818;
     --card: #1f1f1f;
     --red: #e50914;
-    --red-hover: #f40612;
     --text: #ffffff;
     --muted: #b3b3b3;
-    --border: rgba(255,255,255,0.1);
+    --border: rgba(255,255,255,0.12);
   }
 
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
     padding-bottom: 40px;
   }
 
   /* HEADER */
   header {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+    z-index: 100;
+    background: rgba(20,20,20,0.95);
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 3%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
-    transition: background 0.3s;
-  }
-
-  header.scrolled {
-    background: rgba(20,20,20,0.97);
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
   }
 
   .logo {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     font-weight: 900;
     color: var(--red);
-    letter-spacing: -1px;
     cursor: pointer;
-    flex-shrink: 0;
   }
 
   .nav {
     display: flex;
     gap: 6px;
     overflow-x: auto;
-    flex: 1;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
   }
 
-  .nav::-webkit-scrollbar { display: none; }
-
   .nav-btn {
-    background: none;
-    border: none;
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--muted);
-    font-size: 0.82rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    padding: 6px 10px;
-    border-radius: 4px;
-    transition: color 0.2s, background 0.2s;
   }
 
-  .nav-btn:hover,
   .nav-btn.active {
-    color: #fff;
-    background: rgba(255,255,255,0.1);
-  }
-
-  .search-wrap {
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .search-input {
-    background: rgba(0,0,0,0.65);
-    border: 1px solid var(--border);
-    color: #fff;
-    padding: 7px 12px 7px 32px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    width: 140px;
-    outline: none;
-  }
-
-  .search-input:focus {
-    border-color: #fff;
-    width: 170px;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.85rem;
-    color: var(--muted);
-    pointer-events: none;
-  }
-
-  /* MAIN */
-  main {
-    padding-top: 65px;
-  }
-
-  .section {
-    display: none;
-    padding: 0 3% 40px;
-  }
-
-  .section.active {
-    display: block;
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    height: 52vw;
-    max-height: 480px;
-    min-height: 280px;
-    margin: 0 -3% 28px;
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center top;
-    filter: brightness(0.5);
-  }
-
-  .hero-gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--bg) 0%, transparent 55%),
-                linear-gradient(to right, rgba(0,0,0,0.75) 0%, transparent 55%);
-  }
-
-  .hero-content {
-    position: absolute;
-    bottom: 16%;
-    left: 4%;
-    max-width: 480px;
-    z-index: 2;
-  }
-
-  .hero-title {
-    font-size: clamp(1.6rem, 4.5vw, 2.8rem);
-    font-weight: 800;
-    margin-bottom: 8px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
-  }
-
-  .hero-meta {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-
-  .hero-desc {
-    color: #ddd;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 10px;
-  }
-
-  .btn {
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-
-  .btn:active { transform: scale(0.97); }
-
-  .btn-play {
-    background: #fff;
-    color: #000;
-  }
-
-  .btn-info {
-    background: rgba(109,109,110,0.7);
-    color: #fff;
-  }
-
-  .btn-red {
     background: var(--red);
     color: #fff;
-    width: 100%;
-    justify-content: center;
   }
 
-  .btn-red:hover { background: var(--red-hover); }
+  /* CONTENEDOR */
+  .container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-  .btn-outline {
-    background: transparent;
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* BUSCADOR */
+  .search-box {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface);
     border: 1px solid var(--border);
     color: #fff;
-    width: 100%;
-    justify-content: center;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 20px;
   }
 
-  /* ROWS */
-  .row {
-    margin-bottom: 32px;
-  }
+  .search-box:focus { border-color: #fff; }
 
-  .row-title {
-    font-size: 1.2rem;
+  .title {
+    font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin: 20px 0 12px;
+    border-left: 3px solid var(--red);
+    padding-left: 10px;
   }
 
-  .row-scroll {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+  /* GRILLA */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
 
-  .row-scroll::-webkit-scrollbar { height: 5px; }
-  .row-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+  @media (min-width: 600px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: repeat(5, 1fr); }
+  }
 
-  /* CARDS */
+  /* TARJETAS */
   .card {
-    flex: 0 0 auto;
-    width: 130px;
-    scroll-snap-align: start;
-    cursor: pointer;
-    position: relative;
-    border-radius: 6px;
-    overflow: hidden;
     background: var(--card);
-    transition: transform 0.22s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--border);
   }
-
-  @media (min-width: 600px) { .card { width: 150px; } }
-  @media (min-width: 900px) { .card { width: 170px; } }
-
-  .card:hover { transform: scale(1.07); z-index: 5; }
 
   .card img {
     width: 100%;
@@ -287,13 +137,13 @@
     background: #2a2a2a;
   }
 
-  .card-info {
-    padding: 7px 8px 9px;
+  .card-body {
+    padding: 8px;
   }
 
   .card-title {
     font-size: 0.78rem;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -308,80 +158,40 @@
   .card-admin {
     display: none;
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 6px;
+    right: 6px;
     gap: 4px;
     z-index: 10;
   }
 
-  body.admin-on .card-admin { display: flex; }
+  body.admin-on .card-admin {
+    display: flex;
+  }
 
   .card-admin button {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     background: rgba(0,0,0,0.85);
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  .card-admin button:hover { background: var(--red); }
-
-  /* GRID */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-  }
-
-  @media (min-width: 700px) {
-    .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  }
-
-  .grid .card { width: 100%; }
-
-  /* GÉNEROS */
-  .genre-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-  }
-
-  .genre-card {
-    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-    border-radius: 8px;
-    padding: 24px 14px;
-    text-align: center;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    font-weight: 700;
-    font-size: 1rem;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-
-  .genre-card:hover {
-    transform: scale(1.04);
-    border-color: var(--red);
-  }
-
-  /* SETTINGS */
-  .settings-box {
+  /* PANEL */
+  .panel {
     background: var(--surface);
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 460px;
+    border-radius: 12px;
+    padding: 18px;
     margin-bottom: 18px;
     border: 1px solid var(--border);
   }
 
-  .settings-box h3 {
-    font-size: 1.1rem;
+  .panel h3 {
+    font-size: 1rem;
     margin-bottom: 12px;
+    color: var(--red);
   }
 
   .field {
@@ -390,75 +200,57 @@
 
   .field label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--muted);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   .field input,
   .field select,
   .field textarea {
     width: 100%;
-    padding: 12px 14px;
+    padding: 12px;
     background: #0f0f0f;
     border: 1px solid var(--border);
     color: #fff;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
   }
 
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    border-color: #fff;
-  }
-
-  .status-badge {
-    display: inline-block;
-    background: #1a7f37;
+  .btn {
+    background: var(--red);
     color: #fff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
-
-  /* MODALS */
-  .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    background: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-
-  .modal.active { display: flex; }
-
-  .modal-content {
-    background: var(--surface);
-    border-radius: 10px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 22px;
-    position: relative;
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    background: none;
     border: none;
-    color: #fff;
-    font-size: 1.5rem;
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
+  }
+
+  .btn:active { opacity: 0.85; }
+
+  /* GÉNEROS */
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .genre-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 12px;
+    text-align: center;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .genre-card:active {
+    border-color: var(--red);
   }
 
   /* PLAYER */
@@ -466,8 +258,8 @@
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 3000;
     background: #000;
+    z-index: 9999;
     flex-direction: column;
   }
 
@@ -477,8 +269,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: rgba(0,0,0,0.9);
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
   }
 
   .player-screen {
@@ -486,7 +286,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000;
   }
 
   .player-screen iframe {
@@ -496,150 +295,152 @@
   }
 
   .player-info {
-    padding: 16px 18px 24px;
+    padding: 18px 16px 24px;
     background: var(--surface);
-    max-height: 36vh;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+
+  /* EDITOR */
+  .editor-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 10000;
+    justify-content: flex-end;
+  }
+
+  .editor-modal.active { display: flex; }
+
+  .editor-sheet {
+    background: var(--surface);
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px 30px;
     overflow-y: auto;
   }
 
   /* TOAST */
   #toast {
     position: fixed;
-    bottom: 28px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     background: #fff;
     color: #000;
-    padding: 12px 22px;
-    border-radius: 6px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 700;
-    font-size: 0.9rem;
-    z-index: 9999;
+    z-index: 99999;
     display: none;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
   .empty {
     color: var(--muted);
     text-align: center;
-    padding: 50px 20px;
-    font-size: 1rem;
+    margin-top: 40px;
+    font-size: 0.95rem;
   }
 </style>
 </head>
 <body>
 
-<header id="header">
-  <div class="logo" onclick="app.switchTab('home')">NaPlus</div>
-  <nav class="nav">
-    <button class="nav-btn active" data-tab="home" onclick="app.switchTab('home')">Inicio</button>
-    <button class="nav-btn" data-tab="movies" onclick="app.switchTab('movies')">Películas</button>
-    <button class="nav-btn" data-tab="series" onclick="app.switchTab('series')">Series</button>
-    <button class="nav-btn" data-tab="genres" onclick="app.switchTab('genres')">Géneros</button>
-    <button class="nav-btn" data-tab="list" onclick="app.switchTab('list')">Mi Lista</button>
-    <button class="nav-btn" data-tab="settings" onclick="app.switchTab('settings')">Config</button>
-  </nav>
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="search" class="search-input" id="searchInput" placeholder="Buscar..." oninput="app.handleSearch()">
+<header>
+  <div class="logo" onclick="app.switchTab('home', this)">NaPlus</div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="app.switchTab('home', this)">Inicio</button>
+    <button class="nav-btn" onclick="app.switchTab('movies', this)">Películas</button>
+    <button class="nav-btn" onclick="app.switchTab('series', this)">Series</button>
+    <button class="nav-btn" onclick="app.switchTab('genres', this)">Géneros</button>
+    <button class="nav-btn" onclick="app.switchTab('list', this)">Mi Lista</button>
+    <button class="nav-btn" onclick="app.switchTab('settings', this)">Config</button>
   </div>
 </header>
 
-<main>
+<div class="container">
   <!-- INICIO -->
-  <section id="tab-home" class="section active">
-    <div class="hero" id="hero">
-      <div class="hero-bg" id="heroBg"></div>
-      <div class="hero-gradient"></div>
-      <div class="hero-content">
-        <h1 class="hero-title" id="heroTitle">NaPlus</h1>
-        <p class="hero-meta" id="heroMeta"></p>
-        <p class="hero-desc" id="heroDesc">Tu catálogo de películas y series.</p>
-        <div class="hero-btns">
-          <button class="btn btn-play" onclick="app.playFeatured()">▶ Reproducir</button>
-          <button class="btn btn-info" onclick="app.openFeaturedInfo()">ℹ Más info</button>
-        </div>
-      </div>
-    </div>
-    <div id="homeRows"></div>
-  </section>
+  <div id="tab-home" class="section active">
+    <input type="search" class="search-box" id="searchInput" placeholder="🔍 Buscar películas o series..." oninput="app.render()">
+    <div class="title">Películas</div>
+    <div class="grid" id="movieGrid"></div>
+    <div class="title" style="margin-top:28px;">Series</div>
+    <div class="grid" id="seriesGrid"></div>
+  </div>
 
   <!-- PELÍCULAS -->
-  <section id="tab-movies" class="section">
-    <h2 class="row-title" style="margin-top:8px;">Todas las Películas</h2>
-    <div class="grid" id="moviesGrid"></div>
-  </section>
+  <div id="tab-movies" class="section">
+    <div class="title">Todas las Películas</div>
+    <div class="grid" id="allMoviesGrid"></div>
+  </div>
 
   <!-- SERIES -->
-  <section id="tab-series" class="section">
-    <h2 class="row-title" style="margin-top:8px;">Todas las Series</h2>
-    <div class="grid" id="seriesGrid"></div>
-  </section>
+  <div id="tab-series" class="section">
+    <div class="title">Todas las Series</div>
+    <div class="grid" id="allSeriesGrid"></div>
+  </div>
 
   <!-- GÉNEROS -->
-  <section id="tab-genres" class="section">
-    <h2 class="row-title" style="margin-top:8px;">Explorar por Género</h2>
+  <div id="tab-genres" class="section">
+    <div class="title">Explorar por Género</div>
     <div class="genre-grid" id="genreGrid"></div>
-    <div id="genreResults" style="margin-top:28px; display:none;">
-      <h2 class="row-title" id="genreResultsTitle"></h2>
+    <div id="genreResults" style="display:none; margin-top:24px;">
+      <div class="title" id="genreTitle"></div>
       <div class="grid" id="genreResultsGrid"></div>
     </div>
-  </section>
+  </div>
 
   <!-- MI LISTA -->
-  <section id="tab-list" class="section">
-    <h2 class="row-title" style="margin-top:8px;">Mi Lista</h2>
+  <div id="tab-list" class="section">
+    <div class="title">Mi Lista</div>
     <div class="grid" id="listGrid"></div>
-    <p class="empty" id="emptyList" style="display:none;">Todavía no agregaste nada a tu lista.</p>
-  </section>
+    <p class="empty" id="emptyList" style="display:none;">No guardaste nada todavía.</p>
+  </div>
 
-  <!-- CONFIGURACIÓN -->
-  <section id="tab-settings" class="section">
-    <!-- Panel de Creador (aparece al activar) -->
-    <div class="settings-box" id="creatorPanel" style="display:none;">
-      <div class="status-badge">✓ Modo Creador activo</div>
-      <h3>Panel de Creador</h3>
-      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:16px;">
-        Desde aquí podés subir, editar y eliminar contenido. Los cambios se pueden sincronizar con GitHub para que todos los vean.
-      </p>
-      <button class="btn btn-red" onclick="app.openEditor()">+ Subir nuevo contenido</button>
+  <!-- CONFIG -->
+  <div id="tab-settings" class="section">
+    <div class="panel" id="creatorPanel" style="display:none;">
+      <h3>✓ Modo Creador Activo</h3>
+      <button class="btn" onclick="app.openEditor()">+ Subir Contenido Nuevo</button>
     </div>
 
-    <!-- Activación -->
-    <div class="settings-box" id="authBox">
+    <div class="panel">
       <h3>Activar Modo Creador</h3>
       <div class="field">
-        <label>Código de acceso</label>
-        <input type="password" id="authInput" placeholder="Escribí 9009" autocomplete="off">
+        <label>Código (9009) o Token de GitHub</label>
+        <input type="password" id="authInput" placeholder="Escribí 9009..." oninput="app.auth(this.value)">
       </div>
-      <button class="btn btn-red" onclick="app.tryAuth()" style="margin-bottom:10px;">Activar Modo Creador</button>
-      <p style="color:var(--muted); font-size:0.8rem;">
-        También podés pegar un Token de GitHub (ghp_...) para publicar el catálogo en la nube.
+      <p style="color:var(--muted); font-size:0.8rem; margin-top:8px;">
+        Con el código 9009 podés subir contenido. Con un token de GitHub se publica para todos.
       </p>
     </div>
-  </section>
-</main>
+  </div>
+</div>
 
-<!-- PLAYER -->
+<!-- REPRODUCTOR -->
 <div class="player-modal" id="playerModal">
   <div class="player-top">
     <h3 id="pTitleTop" style="font-size:0.95rem; max-width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></h3>
-    <button class="modal-close" onclick="app.closePlayer()" style="position:static;">✕</button>
+    <button class="btn-close" onclick="app.closePlayer()">✕</button>
   </div>
   <div class="player-screen" id="pScreen"></div>
   <div class="player-info">
-    <h2 id="pTitle" style="font-size:1.3rem; margin-bottom:6px;"></h2>
-    <p id="pMeta" style="color:var(--muted); margin-bottom:10px;"></p>
-    <p id="pDesc" style="color:#ccc; line-height:1.5; margin-bottom:16px;"></p>
-    <button class="btn btn-red" id="listBtn" onclick="app.toggleMyList()">+ Agregar a Mi Lista</button>
+    <h2 id="pTitle" style="font-size:1.25rem; margin-bottom:6px;"></h2>
+    <p id="pMeta" style="color:var(--red); font-size:0.9rem; margin-bottom:10px;"></p>
+    <p id="pDesc" style="color:var(--muted); font-size:0.9rem; line-height:1.45;"></p>
+    <button class="btn" id="listBtn" style="margin-top:16px;" onclick="app.toggleMyList()">+ Agregar a Mi Lista</button>
   </div>
 </div>
 
 <!-- EDITOR -->
-<div class="modal" id="editorModal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="app.closeEditor()">✕</button>
-    <h2 id="editorHeading" style="margin-bottom:16px; font-size:1.25rem;">Subir contenido</h2>
+<div class="editor-modal" id="editorModal">
+  <div class="editor-sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 id="editorHeading" style="color:var(--red);">Subir Contenido</h3>
+      <button class="btn-close" onclick="app.closeEditor()">✕</button>
+    </div>
     <form onsubmit="app.saveContent(event)">
       <input type="hidden" id="eId">
       <div class="field">
@@ -655,7 +456,7 @@
       </div>
       <div class="field">
         <label>Género</label>
-        <input type="text" id="eGenre" required placeholder="Terror, Acción, Drama...">
+        <input type="text" id="eGenre" required placeholder="Terror, Acción...">
       </div>
       <div class="field">
         <label>Año</label>
@@ -666,14 +467,14 @@
         <textarea id="eDesc" rows="3"></textarea>
       </div>
       <div class="field">
-        <label>URL de la portada</label>
+        <label>URL de Portada</label>
         <input type="url" id="eCover" required placeholder="https://...">
       </div>
       <div class="field">
-        <label>Link del video (OK.ru)</label>
+        <label>Link de Video (OK.ru)</label>
         <input type="url" id="eVideo" required placeholder="https://ok.ru/video/...">
       </div>
-      <button type="submit" class="btn btn-red" style="margin-top:6px;">Guardar contenido</button>
+      <button type="submit" class="btn" style="margin-top:8px;">Guardar</button>
     </form>
   </div>
 </div>
@@ -688,7 +489,7 @@ const DEFAULT_CATALOG = /*CATALOG_START*/[
     "title": "[REC]",
     "genre": "Terror",
     "year": "2007",
-    "desc": "Una reportera y su cámara quedan atrapados en un edificio de Barcelona durante un brote de una enfermedad mortal.",
+    "desc": "Película de prueba.",
     "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
     "video": "https://ok.ru/videoembed/237592963750"
   }
@@ -725,80 +526,50 @@ function parseOk(url) {
 
 class NaPlusApp {
   constructor() {
-    this.repo = 'ignacio12adrian-ux/NaPlus';
-    this.file = 'index.html';
+    this.repo = "ignacio12adrian-ux/NaPlus";
+    this.file = "index.html";
     this.catalog = DEFAULT_CATALOG.slice();
     this.myList = [];
-    try { this.myList = JSON.parse(storage.get('naplus_favs_v3')) || []; } catch(e){}
+    try { this.myList = JSON.parse(storage.get('naplus_favs_v2')) || []; } catch(e){}
     this.currentId = null;
-    this.featuredId = null;
     this.isAdmin = false;
-    this.searchQuery = '';
   }
 
   showToast(msg) {
     const t = $('toast');
     t.textContent = msg;
     t.style.display = 'block';
-    clearTimeout(this._toastT);
-    this._toastT = setTimeout(() => t.style.display = 'none', 2800);
+    setTimeout(() => t.style.display = 'none', 2800);
   }
 
-  switchTab(name) {
+  switchTab(tabName, btn) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    const sec = $('tab-' + name);
-    if (sec) sec.classList.add('active');
-    const btn = document.querySelector(`.nav-btn[data-tab="${name}"]`);
+    $('tab-' + tabName).classList.add('active');
     if (btn) btn.classList.add('active');
     window.scrollTo(0, 0);
-    $('searchInput').value = '';
-    this.searchQuery = '';
 
-    if (name === 'home') this.renderHome();
-    if (name === 'movies') this.renderMovies();
-    if (name === 'series') this.renderSeries();
-    if (name === 'genres') this.renderGenres();
-    if (name === 'list') this.renderList();
-  }
-
-  handleSearch() {
-    this.searchQuery = norm($('searchInput').value);
-    const active = document.querySelector('.section.active');
-    if (!active) return;
-    const id = active.id;
-    if (id === 'tab-home') this.renderHome();
-    else if (id === 'tab-movies') this.renderMovies();
-    else if (id === 'tab-series') this.renderSeries();
-    else if (id === 'tab-list') this.renderList();
-  }
-
-  getFiltered(type = null) {
-    let list = this.catalog;
-    if (type) list = list.filter(i => i.type === type);
-    if (this.searchQuery) {
-      list = list.filter(i =>
-        norm(i.title).includes(this.searchQuery) ||
-        norm(i.genre).includes(this.searchQuery)
-      );
-    }
-    return list;
+    if (tabName === 'home') this.render();
+    if (tabName === 'movies') this.renderMovies();
+    if (tabName === 'series') this.renderSeries();
+    if (tabName === 'genres') this.renderGenres();
+    if (tabName === 'list') this.renderList();
   }
 
   createCard(item) {
     const div = document.createElement('div');
     div.className = 'card';
     const id = Number(item.id);
+
     div.onclick = () => this.openPlayer(id);
 
     div.innerHTML = `
       <div class="card-admin">
-        <button title="Editar" onclick="event.stopPropagation();app.openEditor(${id})">✏️</button>
-        <button title="Eliminar" onclick="event.stopPropagation();app.deleteItem(${id})">🗑️</button>
+        <button onclick="event.stopPropagation(); app.openEditor(${id})">✏️</button>
+        <button onclick="event.stopPropagation(); app.deleteItem(${id})">🗑️</button>
       </div>
-      <img src="\( {esc(item.cover)}" alt=" \){esc(item.title)}" loading="lazy"
-           onerror="this.src='https://placehold.co/300x450/1f1f1f/666?text=Sin+imagen'">
-      <div class="card-info">
+      <img src="${esc(item.cover)}" alt="" loading="lazy" onerror="this.src='https://placehold.co/300x450/1f1f1f/666?text=Sin+img'">
+      <div class="card-body">
         <div class="card-title">${esc(item.title)}</div>
         <div class="card-sub">${esc(item.genre)} · ${item.year}</div>
       </div>
@@ -806,73 +577,44 @@ class NaPlusApp {
     return div;
   }
 
-  createRow(title, items) {
-    if (!items.length) return null;
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.innerHTML = `<h2 class="row-title">${esc(title)}</h2>`;
-    const scroll = document.createElement('div');
-    scroll.className = 'row-scroll';
-    items.forEach(i => scroll.appendChild(this.createCard(i)));
-    row.appendChild(scroll);
-    return row;
-  }
+  render() {
+    const q = norm($('searchInput').value);
+    const mGrid = $('movieGrid');
+    const sGrid = $('seriesGrid');
+    mGrid.innerHTML = '';
+    sGrid.innerHTML = '';
 
-  renderHome() {
-    const container = $('homeRows');
-    container.innerHTML = '';
+    const filtered = this.catalog.filter(i =>
+      norm(i.title).includes(q) || norm(i.genre).includes(q)
+    );
 
-    const movies = this.getFiltered('movie');
-    const series = this.getFiltered('series');
-    const all = this.getFiltered();
+    const movies = filtered.filter(i => i.type === 'movie');
+    const series = filtered.filter(i => i.type === 'series');
 
-    const featured = all[0] || null;
-    this.featuredId = featured ? Number(featured.id) : null;
+    movies.forEach(i => mGrid.appendChild(this.createCard(i)));
+    series.forEach(i => sGrid.appendChild(this.createCard(i)));
 
-    if (featured) {
-      \( ('heroBg').style.backgroundImage = `url( \){esc(featured.cover)})`;
-      $('heroTitle').textContent = featured.title;
-      \( ('heroMeta').textContent = ` \){featured.genre} · ${featured.year}`;
-      $('heroDesc').textContent = featured.desc || '';
-      $('hero').style.display = 'block';
-    } else {
-      $('hero').style.display = 'none';
-    }
-
-    const r1 = this.createRow('Películas', movies);
-    if (r1) container.appendChild(r1);
-    const r2 = this.createRow('Series', series);
-    if (r2) container.appendChild(r2);
-
-    const genres = [...new Set(all.map(i => i.genre).filter(Boolean))];
-    genres.slice(0, 4).forEach(g => {
-      const items = all.filter(i => i.genre === g);
-      const r = this.createRow(g, items);
-      if (r) container.appendChild(r);
-    });
-
-    if (!all.length) {
-      container.innerHTML = '<p class="empty">No hay contenido. Andá a Config → Activá el Modo Creador y subí el primero.</p>';
-    }
+    if (!movies.length) mGrid.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;grid-column:1/-1;">Sin resultados</p>';
+    if (!series.length) sGrid.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;grid-column:1/-1;">Sin resultados</p>';
   }
 
   renderMovies() {
-    const grid = $('moviesGrid');
+    const grid = $('allMoviesGrid');
     grid.innerHTML = '';
-    const items = this.getFiltered('movie');
+    const items = this.catalog.filter(i => i.type === 'movie');
     if (!items.length) {
-      grid.innerHTML = '<p class="empty">No se encontraron películas.</p>';
+      grid.innerHTML = '<p class="empty">No hay películas</p>';
       return;
     }
     items.forEach(i => grid.appendChild(this.createCard(i)));
   }
 
   renderSeries() {
-    const grid = $('seriesGrid');
+    const grid = $('allSeriesGrid');
     grid.innerHTML = '';
-    const items = this.getFiltered('series');
+    const items = this.catalog.filter(i => i.type === 'series');
     if (!items.length) {
-      grid.innerHTML = '<p class="empty">No se encontraron series.</p>';
+      grid.innerHTML = '<p class="empty">No hay series</p>';
       return;
     }
     items.forEach(i => grid.appendChild(this.createCard(i)));
@@ -886,7 +628,7 @@ class NaPlusApp {
 
     const genres = [...new Set(this.catalog.map(i => i.genre).filter(Boolean))].sort();
     if (!genres.length) {
-      grid.innerHTML = '<p class="empty">No hay géneros todavía.</p>';
+      grid.innerHTML = '<p class="empty">No hay géneros todavía</p>';
       return;
     }
 
@@ -894,40 +636,30 @@ class NaPlusApp {
       const card = document.createElement('div');
       card.className = 'genre-card';
       card.textContent = g;
-      card.onclick = () => this.showGenre(g);
+      card.onclick = () => {
+        const items = this.catalog.filter(i => i.genre === g);
+        $('genreTitle').textContent = g;
+        const rGrid = $('genreResultsGrid');
+        rGrid.innerHTML = '';
+        items.forEach(i => rGrid.appendChild(this.createCard(i)));
+        results.style.display = 'block';
+      };
       grid.appendChild(card);
     });
   }
 
-  showGenre(genre) {
-    const items = this.catalog.filter(i => i.genre === genre);
-    $('genreResultsTitle').textContent = genre;
-    const grid = $('genreResultsGrid');
-    grid.innerHTML = '';
-    items.forEach(i => grid.appendChild(this.createCard(i)));
-    $('genreResults').style.display = 'block';
-    $('genreResults').scrollIntoView({ behavior: 'smooth' });
-  }
-
   renderList() {
     const grid = $('listGrid');
-    const empty = $('emptyList');
+    const msg = $('emptyList');
     grid.innerHTML = '';
     const items = this.catalog.filter(i => this.myList.includes(Number(i.id)));
+
     if (!items.length) {
-      empty.style.display = 'block';
-      return;
+      msg.style.display = 'block';
+    } else {
+      msg.style.display = 'none';
+      items.forEach(i => grid.appendChild(this.createCard(i)));
     }
-    empty.style.display = 'none';
-    items.forEach(i => grid.appendChild(this.createCard(i)));
-  }
-
-  playFeatured() {
-    if (this.featuredId) this.openPlayer(this.featuredId);
-  }
-
-  openFeaturedInfo() {
-    if (this.featuredId) this.openPlayer(this.featuredId);
   }
 
   openPlayer(id) {
@@ -938,13 +670,13 @@ class NaPlusApp {
     $('pTitleTop').textContent = item.title;
     $('pTitle').textContent = item.title;
     \( ('pMeta').textContent = ` \){item.genre} · ${item.year}`;
-    $('pDesc').textContent = item.desc || 'Sin sinopsis disponible.';
+    $('pDesc').textContent = item.desc || 'Sin sinopsis.';
     this.updateListBtn();
 
     const embed = parseOk(item.video);
     $('pScreen').innerHTML = embed
       ? `<iframe src="${esc(embed)}" allowfullscreen allow="autoplay; fullscreen"></iframe>`
-      : '<div style="color:#e50914;padding:40px;text-align:center;">Video no disponible</div>';
+      : '<div style="color:var(--red);padding:30px;text-align:center;">Video no disponible</div>';
 
     $('playerModal').classList.add('active');
   }
@@ -970,45 +702,32 @@ class NaPlusApp {
       this.myList.push(this.currentId);
       this.showToast('Agregado a Mi Lista');
     }
-    storage.set('naplus_favs_v3', JSON.stringify(this.myList));
+    storage.set('naplus_favs_v2', JSON.stringify(this.myList));
     this.updateListBtn();
-    if (document.querySelector('#tab-list.active')) this.renderList();
-  }
-
-  tryAuth() {
-    const val = $('authInput').value.trim();
-    this.auth(val);
+    this.renderList();
   }
 
   auth(val) {
-    const v = (val || '').trim();
+    const v = val.trim();
     if (v === ADMIN_PASS || isToken(v)) {
       if (isToken(v)) storage.set('naplus_token', v);
       this.activateAdmin();
-    } else if (v.length > 0) {
-      this.showToast('Código incorrecto');
     }
   }
 
   activateAdmin() {
+    if (this.isAdmin) return;
     this.isAdmin = true;
     $('creatorPanel').style.display = 'block';
-    $('authBox').style.display = 'none';
     document.body.classList.add('admin-on');
-    this.showToast('✓ Modo Creador activado');
+    this.showToast('Modo Creador activado');
   }
 
   openEditor(id = null) {
-    if (!this.isAdmin) {
-      this.showToast('Primero activá el Modo Creador');
-      this.switchTab('settings');
-      return;
-    }
-
     if (id) {
       const item = this.catalog.find(x => Number(x.id) === id);
       if (!item) return;
-      $('editorHeading').textContent = 'Editar contenido';
+      $('editorHeading').textContent = 'Editar Contenido';
       $('eId').value = item.id;
       $('eType').value = item.type;
       $('eTitle').value = item.title;
@@ -1018,7 +737,7 @@ class NaPlusApp {
       $('eCover').value = item.cover;
       $('eVideo').value = item.video;
     } else {
-      $('editorHeading').textContent = 'Subir contenido';
+      $('editorHeading').textContent = 'Subir Contenido';
       $('eId').value = '';
       $('eType').value = 'movie';
       $('eTitle').value = '';
@@ -1039,17 +758,21 @@ class NaPlusApp {
     if (!confirm('¿Eliminar este título?')) return;
     this.catalog = this.catalog.filter(x => Number(x.id) !== id);
     this.myList = this.myList.filter(x => x !== id);
-    storage.set('naplus_favs_v3', JSON.stringify(this.myList));
-    this.renderAll();
+    storage.set('naplus_favs_v2', JSON.stringify(this.myList));
+    this.render();
+    this.renderMovies();
+    this.renderSeries();
+    this.renderGenres();
+    this.renderList();
     this.showToast('Eliminado');
-    await this.syncGitHub(false);
+    await this.syncGitHub();
   }
 
   async saveContent(e) {
     e.preventDefault();
     const vUrl = $('eVideo').value.trim();
     if (!parseOk(vUrl)) {
-      alert('El enlace debe ser de OK.ru\nEjemplo: https://ok.ru/video/123456789');
+      alert('El enlace debe ser de OK.ru (ejemplo: https://ok.ru/video/...)');
       return;
     }
 
@@ -1070,34 +793,29 @@ class NaPlusApp {
     else this.catalog.unshift(item);
 
     this.closeEditor();
-    this.renderAll();
-    this.showToast('✓ Contenido guardado');
-    await this.syncGitHub(true);
-  }
-
-  renderAll() {
-    this.renderHome();
+    this.render();
     this.renderMovies();
     this.renderSeries();
     this.renderGenres();
     this.renderList();
+    this.showToast('Guardado con éxito');
+    await this.syncGitHub();
   }
 
-  async syncGitHub(showPrompt = true) {
+  async syncGitHub() {
     let token = storage.get('naplus_token');
     if (!isToken(token)) {
-      if (!showPrompt) return;
-      token = prompt('Para que todos vean el contenido, pegá tu Token de GitHub (ghp_...):\n\n(Podés cancelar y seguir trabajando solo en este dispositivo)');
+      token = prompt('Ingresá tu Token de GitHub (ghp_...) para publicar globalmente:\n\n(Podés cancelar y el contenido queda solo en este dispositivo)');
       if (isToken(token)) {
         token = token.trim();
         storage.set('naplus_token', token);
+        this.activateAdmin();
       } else {
-        this.showToast('Guardado solo en este dispositivo');
         return;
       }
     }
 
-    this.showToast('Sincronizando con GitHub...');
+    this.showToast('Sincronizando...');
     const url = `https://api.github.com/repos/\( {this.repo}/contents/ \){this.file}`;
     const headers = {
       'Authorization': 'Bearer ' + token,
@@ -1107,7 +825,7 @@ class NaPlusApp {
     try {
       const res = await fetch(url, { headers });
       if (!res.ok) {
-        this.showToast('Error de token de GitHub');
+        this.showToast('Error de Token');
         return;
       }
       const data = await res.json();
@@ -1121,7 +839,7 @@ class NaPlusApp {
         method: 'PUT',
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: 'Actualización catálogo NaPlus',
+          message: 'Actualización NaPlus',
           content: b64enc(newCode),
           sha: data.sha
         })
@@ -1152,32 +870,21 @@ class NaPlusApp {
         const remote = JSON.parse(match[1]);
         if (Array.isArray(remote) && remote.length) {
           this.catalog = remote;
-          this.renderAll();
+          this.render();
+          this.renderList();
         }
       }
     } catch (e) {}
   }
 }
 
-// Iniciar
 const app = new NaPlusApp();
 app.initCloud();
-app.renderHome();
+app.render();
 
-// Si ya hay token guardado, activar admin
 if (isToken(storage.get('naplus_token'))) {
   app.activateAdmin();
 }
-
-// Efecto del header al scrollear
-window.addEventListener('scroll', () => {
-  $('header').classList.toggle('scrolled', window.scrollY > 30);
-});
-
-// Permitir activar con Enter
-$('authInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') app.tryAuth();
-});
 </script>
 </body>
 </html>
