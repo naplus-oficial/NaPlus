@@ -3,182 +3,322 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>StreamApp - Open Source Template</title>
+<title>StreamVibe Pro - Enterprise Streaming Engine</title>
 <style>
   :root {
-    --bg-base: #121212;
-    --bg-surface: #1e1e1e;
-    --accent: #e50914;
+    --primary: #e50914;
+    --primary-dark: #b20710;
+    --bg-app: #141414;
+    --bg-card: #1f1f1f;
+    --bg-glass: rgba(20, 20, 20, 0.85);
     --text-main: #ffffff;
-    --text-sec: #b3b3b3;
+    --text-muted: #808080;
+    --border-color: rgba(255, 255, 255, 0.1);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-base); color: var(--text-main); padding-bottom: 70px; }
 
-  header { position: sticky; top: 0; background: rgba(18,18,18,0.95); backdrop-filter: blur(8px); padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid #282828; }
-  .logo { font-size: 1.25rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background-color: var(--bg-app); color: var(--text-main); padding-bottom: 75px; overflow-x: hidden; }
 
-  .container { padding: 15px; }
-  .search-bar { width: 100%; padding: 12px; background: var(--bg-surface); border: 1px solid #333; color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none; margin-bottom: 20px; }
-  .search-bar:focus { border-color: var(--accent); }
+  /* Barra de Navegación Superior Fija con Efecto Glassmorphism */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; height: 60px;
+    background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+    z-index: 1000; border-bottom: 1px solid var(--border-color);
+  }
+  .brand { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; }
 
-  h2 { font-size: 1.1rem; margin-bottom: 12px; font-weight: 600; color: var(--text-main); }
+  /* Contenedor Principal */
+  .container { padding: 75px 16px 20px 16px; max-width: 1200px; margin: 0 auto; }
+
+  /* Hero Banner Destacado */
+  .hero-banner {
+    position: relative; width: 100%; height: 360px; border-radius: 12px; overflow: hidden;
+    margin-bottom: 25px; background: #000; display: flex; align-items: flex-end;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .hero-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
+  .hero-gradient { position: absolute; inset: 0; background: linear-gradient(0deg, #141414 0%, transparent 60%); }
+  .hero-content { position: relative; z-index: 2; padding: 20px; width: 100%; }
+  .hero-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+  .hero-desc { font-size: 0.85rem; color: #d1d1d1; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
-  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-  .media-card { background: var(--bg-surface); border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; }
-  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-  .media-card-title { padding: 6px; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn-primary {
+    background: var(--primary); color: #fff; border: none; padding: 10px 24px;
+    border-radius: 6px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s, transform 0.1s;
+  }
+  .btn-primary:active { transform: scale(0.96); background: var(--primary-dark); }
 
-  /* Bottom Navigation */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: var(--bg-surface); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #282828; z-index: 1000; }
-  .nav-link { background: none; border: none; color: var(--text-sec); font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 50%; }
-  .nav-link.active { color: var(--accent); }
-  .nav-link span { font-size: 1.2rem; }
+  /* Buscador Avanzado */
+  .search-wrapper { position: relative; margin-bottom: 25px; }
+  .search-input {
+    width: 100%; padding: 14px 16px 14px 42px; background: var(--bg-card);
+    border: 1px solid var(--border-color); color: #fff; border-radius: 8px;
+    font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input:focus { border-color: var(--primary); box-shadow: 0 0 12px rgba(229, 9, 20, 0.25); }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; }
 
-  /* Views */
-  .view { display: none; }
+  /* Secciones y Carruseles */
+  .section-header { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 30px; }
+  
+  .media-card {
+    background: var(--bg-card); border-radius: 8px; overflow: hidden; cursor: pointer;
+    position: relative; border: 1px solid var(--border-color);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .media-card:hover { transform: translateY(-4px); }
+  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
+  .media-card-body { padding: 8px; }
+  .media-card-title { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+  .media-card-meta { font-size: 0.7rem; color: var(--text-muted); }
+
+  /* Navegación Móvil Inferior Estilo App Nativa */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+    background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid var(--border-color); z-index: 1000;
+  }
+  .nav-item { background: none; border: none; color: var(--text-muted); font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; width: 50%; font-weight: 500; }
+  .nav-item span { font-size: 1.2rem; }
+  .nav-item.active { color: var(--primary); }
+
+  /* Vistas */
+  .view { display: none; animation: fadeIn 0.25s ease-in-out; }
   .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Player Screen */
-  .player-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
-  .player-screen.active { display: flex; }
-  .player-nav { padding: 15px; display: flex; align-items: center; background: rgba(0,0,0,0.7); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
-  .player-box { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-  .player-box video, .player-box iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
-  .player-meta { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
+  /* Reproductor Multimedia Inmersivo Pantalla Completa */
+  .cinema-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
+  .cinema-modal.active { display: flex; }
+  .cinema-topbar { position: absolute; top: 0; left: 0; right: 0; padding: 20px; display: flex; align-items: center; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); z-index: 10; }
+  .btn-back { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; margin-right: 15px; backdrop-filter: blur(4px); }
+  
+  .video-viewport { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #000; }
+  .video-viewport video, .video-viewport iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
+  
+  .cinema-details { padding: 20px; background: var(--bg-app); max-height: 40vh; overflow-y: auto; border-top: 1px solid var(--border-color); }
+  .action-row { display: flex; gap: 12px; margin-top: 15px; }
+  .btn-secondary { background: #333; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; flex: 1; }
+
+  /* Toast Notificación */
+  #toastNotification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; z-index: 4000; display: none; box-shadow: 0 4px 15px rgba(229,9,20,0.4); }
 </style>
 </head>
 <body>
 
+  <!-- Cabecera -->
   <header>
-    <div class="logo">STREAMBOX</div>
+    <div class="brand">StreamVibe</div>
   </header>
 
-  <!-- Vista Principal -->
-  <div id="homeView" class="view active container">
-    <input type="search" class="search-bar" id="searchInput" placeholder="Explorar catálogos..." oninput="filterMedia()">
-    
-    <h2>Tendencias Actuales</h2>
+  <!-- Vista Home / Explorar -->
+  <div id="viewHome" class="view active container">
+    <!-- Banner Principal Destacado -->
+    <div class="hero-banner" id="heroBanner">
+      <img id="heroImg" src="" alt="Hero">
+      <div class="hero-gradient"></div>
+      <div class="hero-content">
+        <h1 class="hero-title" id="heroTitle">Cargando...</h1>
+        <p class="hero-desc" id="heroDesc"></p>
+        <button class="btn-primary" onclick="app.playFeatured()">▶ Reproducir</button>
+      </div>
+    </div>
+
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="search" class="search-input" id="searchBox" placeholder="Títulos, personas, géneros..." oninput="app.handleSearch()">
+    </div>
+
+    <div class="section-header">Catálogo de Películas y Series</div>
     <div class="media-grid" id="catalogGrid"></div>
   </div>
 
-  <!-- Vista Favoritos / Lista -->
-  <div id="listView" class="view container">
-    <h2>Mi Biblioteca</h2>
-    <div class="media-grid" id="listGrid"></div>
+  <!-- Vista Mi Biblioteca -->
+  <div id="viewLibrary" class="view container">
+    <div class="section-header" style="margin-top: 15px;">Mi Lista de Favoritos</div>
+    <div class="media-grid" id="libraryGrid"></div>
+    <p id="emptyLibText" style="color: var(--text-muted); text-align: center; margin-top: 60px; font-size: 0.9rem; display: none;">No hay títulos guardados en tu biblioteca.</p>
   </div>
 
   <!-- Navegación Inferior -->
   <nav class="bottom-nav">
-    <button class="nav-link active" onclick="switchTab('home', this)"><span>🏠</span>Inicio</button>
-    <button class="nav-link" onclick="switchTab('list', this)"><span>⭐</span>Guardados</button>
+    <button class="nav-item active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
+    <button class="nav-item" onclick="app.switchView('Library', this)"><span>🔖</span>Mi Lista</button>
   </nav>
 
-  <!-- Reproductor Exclusivo -->
-  <div class="player-screen" id="playerModal">
-    <div class="player-nav">
-      <button class="back-btn" onclick="closePlayer()">✕</button>
-      <h3 id="modalTitle" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
+  <!-- Reproductor Dinámico Cinema -->
+  <div class="cinema-modal" id="cinemaModal">
+    <div class="cinema-topbar">
+      <button class="btn-back" onclick="app.closePlayer()">✕</button>
+      <h3 id="modalTopTitle" style="font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
     </div>
-    <div class="player-box" id="playerContainer"></div>
-    <div class="player-meta">
-      <h3 id="modalName" style="font-size: 1rem; margin-bottom: 4px;"></h3>
-      <p id="modalDesc" style="color: var(--text-sec); font-size: 0.8rem; line-height: 1.3;"></p>
-      <button onclick="toggleFav()" id="favBtn" style="margin-top: 12px; width:100%; padding: 10px; background: var(--accent); color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.85rem; cursor:pointer;">Guardar en Biblioteca</button>
+    <div class="video-viewport" id="videoViewport"></div>
+    <div class="cinema-details">
+      <h2 id="modalMainTitle" style="font-size: 1.25rem; margin-bottom: 4px;"></h2>
+      <p id="modalMeta" style="color: #46d369; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;"></p>
+      <p id="modalDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
+      <div class="action-row">
+        <button class="btn-secondary" id="libToggleBtn" onclick="app.toggleLibrary()">+ Mi Lista</button>
+      </div>
     </div>
   </div>
 
+  <div id="toastNotification"></div>
+
 <script>
-  // Base de datos de ejemplo abierta
-  const database = [
-    { id: 1, title: "Open Source Movie 1", desc: "Contenido multimedia libre de pruebas para reproducción web.", cover: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-    { id: 2, title: "Elephant Dream HD", desc: "Cortometraje de código abierto alojado en servidores públicos de prueba.", cover: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
-  ];
+class StreamVibeEngine {
+  constructor() {
+    this.storageKey = 'streamvibe_enterprise_db_v1';
+    this.libKey = 'streamvibe_enterprise_lib_v1';
+    
+    // Base de datos de ejemplo avanzada con metadatos extendidos
+    this.catalog = JSON.parse(localStorage.getItem(this.storageKey)) || [
+      { id: 101, title: "Interstellar Odyssey", genre: "Ciencia Ficción • 2024", rating: "98% Coincidencia", desc: "Un viaje a través de los límites del espacio conocido para asegurar el futuro de la humanidad en un entorno hostil.", cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
+      { id: 102, title: "Cyberpunk Rebellion", genre: "Acción • 2025", rating: "95% Coincidencia", desc: "En una metrópolis dominada por corporaciones corruptas, un grupo de resistencia hackea el sistema central.", cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+      { id: 103, title: "Nature's Symphony", Documental: "Naturaleza • 2023", genre: "Documental", rating: "91% Coincidencia", desc: "Una obra audiovisual inmersiva que retrata los ecosistemas más recónditos e inexplorados del planeta Tierra.", cover: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=500", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" }
+    ];
+    
+    this.library = JSON.parse(localStorage.getItem(this.libKey)) || [];
+    this.currentActiveId = null;
+    this.featuredId = 101;
+    
+    this.init();
+  }
 
-  let currentId = null;
-  let savedList = JSON.parse(localStorage.getItem('open_source_favs')) || [];
+  init() {
+    this.renderHero();
+    this.renderCatalog(this.catalog, 'catalogGrid');
+  }
 
-  function renderGrid(items, elementId) {
-    const grid = document.getElementById(elementId);
+  showToast(msg) {
+    const t = document.getElementById('toastNotification');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 2500);
+  }
+
+  switchView(viewName, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(`view${viewName}`).classList.add('active');
+    el.classList.add('active');
+    
+    if(viewName === 'Home') this.renderCatalog(this.catalog, 'catalogGrid');
+    if(viewName === 'Library') this.renderLibrary();
+  }
+
+  renderHero() {
+    const item = this.catalog.find(x => x.id === this.featuredId) || this.catalog[0];
+    if(!item) return;
+    document.getElementById('heroImg').src = item.cover;
+    document.getElementById('heroTitle').textContent = item.title;
+    document.getElementById('heroDesc').textContent = item.desc;
+  }
+
+  playFeatured() {
+    this.openPlayer(this.featuredId);
+  }
+
+  renderCatalog(items, gridId) {
+    const grid = document.getElementById(gridId);
     grid.innerHTML = '';
+    
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'media-card';
-      card.onclick = () => openPlayer(item.id);
+      card.onclick = () => this.openPlayer(item.id);
       card.innerHTML = `
-        <img src="${item.cover}" alt="${item.title}">
-        <div class="media-card-title">${item.title}</div>
+        <img src="${item.cover}" alt="${item.title}" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-title">${item.title}</div>
+          <div class="media-card-meta">${item.genre}</div>
+        </div>
       `;
       grid.appendChild(card);
     });
   }
 
-  function filterMedia() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = database.filter(i => i.title.toLowerCase().includes(q));
-    renderGrid(filtered, 'catalogGrid');
+  handleSearch() {
+    const query = document.getElementById('searchBox').value.toLowerCase().trim();
+    const results = this.catalog.filter(i => 
+      i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query)
+    );
+    this.renderCatalog(results, 'catalogGrid');
   }
 
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-    btn.classList.add('active');
-    if(tab === 'home') {
-      document.getElementById('homeView').classList.add('active');
-      renderGrid(database, 'catalogGrid');
+  renderLibrary() {
+    const items = this.catalog.filter(i => this.library.includes(i.id));
+    const emptyText = document.getElementById('emptyLibText');
+    
+    if(items.length === 0) {
+      emptyText.style.display = 'block';
+      document.getElementById('libraryGrid').innerHTML = '';
     } else {
-      document.getElementById('listView').classList.add('active');
-      const favItems = database.filter(i => savedList.includes(i.id));
-      renderGrid(favItems, 'listGrid');
+      emptyText.style.display = 'none';
+      this.renderCatalog(items, 'libraryGrid');
     }
   }
 
-  function openPlayer(id) {
-    currentId = id;
-    const item = database.find(x => x.id === id);
+  openPlayer(id) {
+    this.currentActiveId = id;
+    const item = this.catalog.find(x => x.id === id);
     if(!item) return;
 
-    document.getElementById('modalTitle').textContent = item.title;
-    document.getElementById('modalName').textContent = item.title;
+    document.getElementById('modalTopTitle').textContent = item.title;
+    document.getElementById('modalMainTitle').textContent = item.title;
+    document.getElementById('modalMeta').textContent = item.rating + " | " + item.genre;
     document.getElementById('modalDesc').textContent = item.desc;
-    updateFavButton();
-
-    const container = document.getElementById('playerContainer');
-    container.innerHTML = `<video src="${item.video}" controls autoplay playsinline style="width:100%; height:100%;"></video>`;
     
-    document.getElementById('playerModal').classList.add('active');
+    this.updateLibraryButtonState();
+
+    const viewport = document.getElementById('videoViewport');
+    viewport.innerHTML = `
+      <div style="color:var(--primary); font-size:0.85rem; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:36px; height:36px; border:3px solid rgba(229,9,20,0.3); border-top-color:var(--primary); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        Cargando buffer de alta definición...
+      </div>`;
+
+    setTimeout(() => {
+      viewport.innerHTML = `<video src="${item.video}" controls autoplay playsinline style="width:100%; height:100%;"></video>`;
+    }, 250);
+
+    document.getElementById('cinemaModal').classList.add('active');
   }
 
-  function closePlayer() {
-    document.getElementById('playerContainer').innerHTML = '';
-    document.getElementById('playerModal').classList.remove('active');
+  closePlayer() {
+    document.getElementById('videoViewport').innerHTML = '';
+    document.getElementById('cinemaModal').classList.remove('active');
   }
 
-  function updateFavButton() {
-    const btn = document.getElementById('favBtn');
-    if(savedList.includes(currentId)) {
-      btn.textContent = "Eliminar de Biblioteca";
-      btn.style.background = "#333";
+  updateLibraryButtonState() {
+    const isSaved = this.library.includes(this.currentActiveId);
+    const btn = document.getElementById('libToggleBtn');
+    btn.textContent = isSaved ? '✓ En Mi Lista' : '+ Mi Lista';
+    btn.style.background = isSaved ? '#2a2a2a' : '#333';
+  }
+
+  toggleLibrary() {
+    const idx = this.library.indexOf(this.currentActiveId);
+    if(idx > -1) {
+      this.library.splice(idx, 1);
+      this.showToast('Título eliminado de Mi Lista');
     } else {
-      btn.textContent = "Guardar en Biblioteca";
-      btn.style.background = "var(--accent)";
+      this.library.push(this.currentActiveId);
+      this.showToast('Título guardado en Mi Lista');
     }
+    localStorage.setItem(this.libKey, JSON.stringify(this.library));
+    this.updateLibraryButtonState();
   }
+}
 
-  function toggleFav() {
-    const index = savedList.indexOf(currentId);
-    if(index > -1) {
-      savedList.splice(index, 1);
-    } else {
-      savedList.push(currentId);
-    }
-    localStorage.setItem('open_source_favs', JSON.stringify(savedList));
-    updateFavButton();
-  }
-
-  // Inicializar vista inicial
-  renderGrid(database, 'catalogGrid');
+const app = new StreamVibeEngine();
 </script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </body>
 </html>
