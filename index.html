@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
+  
+  <!-- Estilos del Reproductor Video.js -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/city/index.css" rel="stylesheet" />
+
   <style>
     :root {
       --bg-dark: #0a0612;
@@ -209,7 +214,7 @@
       padding: 20px;
       border-radius: 12px;
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
       border: 1px solid var(--border-purple);
       position: relative;
     }
@@ -224,6 +229,7 @@
       border-radius: 50%;
       font-size: 1rem;
       cursor: pointer;
+      z-index: 100;
     }
 
     .modal-box h3 {
@@ -277,6 +283,7 @@
       cursor: pointer;
     }
 
+    /* Contenedor del Reproductor Estético */
     .video-box {
       width: 100%;
       aspect-ratio: 16/9;
@@ -287,12 +294,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
-    .video-box video, .video-box iframe {
-      width: 100%;
-      height: 100%;
+    .video-box video, .video-box iframe, .video-box .video-js {
+      width: 100% !important;
+      height: 100% !important;
       border: none;
+    }
+
+    .btn-telegram {
+      background: #0088cc;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
   </style>
 </head>
@@ -311,7 +331,6 @@
     </div>
   </div>
 
-  <!-- Sección Mi Lista -->
   <div id="myListContainer" style="display: none;">
     <div class="section-title">Mi Lista - Películas</div>
     <div class="grid" id="myListMoviesGrid"></div>
@@ -320,7 +339,6 @@
     <hr style="border: 0; border-top: 1px solid var(--border-purple); margin: 20px 15px 10px 15px;">
   </div>
 
-  <!-- Catálogo Principal -->
   <div class="section-title">Películas</div>
   <div class="grid" id="moviesGrid"></div>
 
@@ -341,15 +359,14 @@
     </div>
   </div>
 
-  <!-- Modal Clave Creador -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('loginModal')">✕</button>
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Clave de Creador (9009) o Token de GitHub</label>
-          <input type="password" id="passInput" placeholder="Ingresá la clave..." required autocomplete="off">
+          <label>Pegá tu Token de GitHub (ghp_...) o clave 9009</label>
+          <input type="password" id="passInput" placeholder="ghp_..." required autocomplete="off">
         </div>
         <div class="form-actions">
           <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">Cancelar</button>
@@ -359,7 +376,6 @@
     </div>
   </div>
 
-  <!-- Modal Formulario Subir/Editar -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -394,8 +410,8 @@
           <input type="url" id="coverInput" required placeholder="https://...">
         </div>
         <div class="form-group">
-          <label>URL del Video (MP4, YouTube, Telegram...)</label>
-          <input type="url" id="videoInput" required placeholder="https://...">
+          <label>URL del Video (Drive, MP4, YouTube, Telegram...)</label>
+          <input type="url" id="videoInput" required placeholder="https://drive.google.com/file/d/...">
         </div>
         <div class="form-actions">
           <button type="button" class="btn-cancel" onclick="closeModal('uploadModal')">Cancelar</button>
@@ -405,45 +421,29 @@
     </div>
   </div>
 
+  <!-- Scripts del Reproductor Video.js -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
   <script>
-    const REPO = "ignacio12adrian-ux/NaPlus";
+    const USER_REPO = "naplus-oficial/NaPlus";
     const FILE_PATH = "index.html";
 
     let catalog = [
-  {
-    "id": 1790594608318,
-    "type": "movie",
-    "title": "Blade",
-    "genre": "Acción",
-    "year": "1998",
-    "desc": "Blade un cazador de vampiros tienen que cazarlos y todo eso",
-    "cover": "https://www.google.com/search?tbnid=y--4pXRrSUxPbM&tbnh=0&tbnw=0&sca_esv=080dae4805299e94&cs=1&sxsrf=APpeQnuOk5vaY7ADcig_xszWPRAO1GOinQ:1790594561467&udm=2&tbs=rimg:CcvvuKV0a0lMYSFN1GS9Jr5a4AIA&q=blade+portada&sa=X&ved=2ahUKEwixp5XGlJGXAxUaFLkGHXSrGiEQuIIBegQIGBAA&biw=384&bih=635&dpr=2.81#sv=CAMSVxoyKhBlLW1TNk1aM1lncndETmFNMg5tUzZNWjNZZ3J3RE5hTToONVIzd1RydURlUXpXM00gBCoXCgFzEhBlLW1TNk1aM1lncndETmFNGAEwAUoECAEQAhgHINiKhf0ESggQAhgBIAIoAQ",
-    "video": "https://drive.google.com/file/d/1SVHu2HdtLG9afKHeStyAP_lEX0y_X4Rm/view?usp=drivesdk"
-  },
-  {
-    "id": 1790594193856,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Blablablabla",
-    "cover": "https://www.clarin.com/img/2020/04/15/9OmNWiFE0_720x0__1.jpg",
-    "video": "https://t.me/c/3804641088/2/3335"
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "Mi Primera Película",
-    "genre": "Aventura",
-    "year": "2026",
-    "desc": "Bienvenido a NaPlus.",
-    "cover": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400",
-    "video": "https://www.w3schools.com/html/mov_bbb.mp4"
-  }
-];
+      {
+        id: 1,
+        type: 'movie',
+        title: 'Mi Primera Película',
+        genre: 'Aventura',
+        year: '2026',
+        desc: 'Bienvenido a NaPlus.',
+        cover: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4'
+      }
+    ];
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
+    let activePlayer = null;
 
     function toggleFavorite(id, e) {
       e.stopPropagation();
@@ -518,8 +518,7 @@
     }
 
     function handleSearch() {
-      const text = document.getElementById('searchInput').value;
-      renderCatalog(text);
+      renderCatalog(document.getElementById('searchInput').value);
     }
 
     function openLoginModal() {
@@ -534,6 +533,10 @@
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
       if (id === 'detailModal') {
+        if (activePlayer) {
+          activePlayer.dispose();
+          activePlayer = null;
+        }
         document.getElementById('videoBox').innerHTML = '';
       }
     }
@@ -542,7 +545,7 @@
       e.preventDefault();
       const val = document.getElementById('passInput').value.trim();
 
-      if (val === "9009" || val.startsWith("ghp_")) {
+      if (val.startsWith("ghp_") || val === "9009") {
         if (val.startsWith("ghp_")) {
           localStorage.setItem('naPlus_gh_token', val);
         }
@@ -552,7 +555,7 @@
         closeModal('loginModal');
         openUploadModal();
       } else {
-        alert("Clave o Token incorrecto.");
+        alert("Atención: Tenés que pegar tu Token de GitHub que empieza por 'ghp_' para publicar en la nube.");
       }
     }
 
@@ -610,13 +613,13 @@
 
     async function publishToGitHub() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) {
-        token = prompt("Ingresá tu Token de GitHub (ghp_...) para guardar globalmente:");
-        if (token && token.startsWith("ghp_")) {
+      if (!token || !token.startsWith("ghp_")) {
+        token = prompt("Pegá tu Token de GitHub (que empieza por 'ghp_') para guardar los cambios para todos:");
+        if (token && token.trim().startsWith("ghp_")) {
           token = token.trim();
           localStorage.setItem('naPlus_gh_token', token);
         } else {
-          alert("Sin el token de GitHub los cambios solo se ven en tu pantalla local.");
+          alert("El token ingresado no es válido. Los cambios no se enviaron a la nube.");
           return;
         }
       }
@@ -625,7 +628,16 @@
       if (saveBtn) saveBtn.innerText = "Publicando...";
 
       try {
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`);
+        const getRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (getRes.status === 401 || getRes.status === 404) {
+          localStorage.removeItem('naPlus_gh_token');
+          alert("Error: El Token expiró o no tiene permiso de escritura 'repo'. Volvé a ingresarlo.");
+          return;
+        }
+
         const getData = await getRes.json();
         const sha = getData.sha;
 
@@ -635,7 +647,7 @@
 
         const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
 
-        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        const putRes = await fetch(`https://api.github.com/repos/${USER_REPO}/contents/${FILE_PATH}`, {
           method: 'PUT',
           headers: {
             'Authorization': `token ${token}`,
@@ -649,39 +661,7 @@
         });
 
         if (putRes.ok) {
-          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todos los usuarios.");
+          alert("¡Publicado globalmente! En 1 minuto le aparecerá a todo el mundo.");
         } else {
-          alert("Error con el Token de GitHub. Verificalo.");
-        }
-      } catch (err) {
-        alert("Error al conectar con GitHub.");
-      } finally {
-        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
-      }
-    }
-
-    function openDetail(id) {
-      const item = catalog.find(x => x.id == id);
-      if (!item) return;
-
-      document.getElementById('detailTitle').innerText = item.title;
-      document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
-      document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
-
-      const vBox = document.getElementById('videoBox');
-      const vUrl = item.video || '';
-
-      if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
-        let embed = vUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-        vBox.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
-      } else {
-        vBox.innerHTML = `<video src="${vUrl}" controls autoplay poster="${item.cover}"></video>`;
-      }
-
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    renderCatalog();
-  </script>
-</body>
-</html>
+          const errData = await putRes.json();
+          alert("Error de GitHub: " + (errData.message 
