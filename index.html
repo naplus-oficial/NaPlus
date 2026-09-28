@@ -442,4 +442,87 @@ class NaPlusProEngine {
     const token = store.get('naplus_token');
     if (!isToken(token)) return;
     try {
-      const res = await fet
+      const res = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
+      if (!res.ok) { this.ghError(res.status); return; }
+      const data = await res.json();
+      const code = b64decode(data.content);
+      const match = code.match(MARK_RE);
+      if (match) {
+        const remoteCatalog = JSON.parse(match[1]);
+        if (Array.isArray(remoteCatalog) && remoteCatalog.length) {
+          this.catalog = remoteCatalog;
+          this.renderHome();
+          this.renderList();
+        }
+      }
+    } catch (e) {}
+  }
+
+  async autoSyncGitHub() {
+    let token = store.get('naplus_token');
+    if (!isToken(token)) {
+      token = prompt("Ingresá tu Token de GitHub (ghp_...) para sincronizar globalmente:");
+      if (isToken(token)) {
+        token = token.trim();
+        store.set('naplus_token', token);
+        this.enableCreator(true);
+      } else {
+        return;
+      }
+    }
+
+    const statusEl = $('syncStatus');
+    statusEl.style.display = "block";
+
+    try {
+      const getRes = await fetch(this.ghUrl(), { headers: this.ghHeaders(token) });
+      if (!getRes.ok) {
+        statusEl.style.display = "none";
+        this.ghError(getRes.status);
+        return;
+      }
+      const getData = await getRes.json();
+      const currentCode = b64decode(getData.content);
+
+      const newJson = JSON.stringify(this.catalog, null, 2);
+      let updatedCode;
+      if (MARK_RE.test(currentCode)) {
+        updatedCode = currentCode.replace(MARK_RE, wrap(newJson));
+      } else {
+        updatedCode = currentCode;
+      }
+
+      const putRes = await fetch(this.ghUrl(), {
+        method: 'PUT',
+        headers: { ...this.ghHeaders(token), 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Actualización catálogo NaPlus Pro',
+          content: b64encode(updatedCode),
+          sha: getData.sha
+        })
+      });
+
+      if (putRes.ok) {
+        statusEl.innerText = "✅ ¡Sincronizado con éxito!";
+      } else {
+        statusEl.innerText = "❌ Error al sincronizar";
+        this.ghError(putRes.status);
+      }
+    } catch (err) {
+      statusEl.innerText = "❌ Error de red";
+    }
+    setTimeout(() => { statusEl.style.display = "none"; }, 3000);
+  }
+}
+
+const app = new NaPlusProEngine();
+app.loadFromGitHub();
+app.renderHome();
+
+// Restaurar token guardado automáticamente si ya existía
+if (isToken(store.get('naplus_token'))) {
+  app.enableCreator(true);
+}
+</script>
+</body>
+</html>
