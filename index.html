@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NaPlus Pro - La Neuro Página</title>
 <style>
   :root {
@@ -17,23 +17,23 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 75px; overflow-x: hidden; }
+  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
 
   nav {
     position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-    background: rgba(10, 6, 18, 0.98); backdrop-filter: blur(10px);
+    background: #0a0612;
     display: flex; justify-content: space-around; align-items: center;
-    border-top: 1px solid var(--border); z-index: 1000;
+    border-top: 1px solid var(--border); z-index: 9999;
   }
   .nav-btn {
     background: none; border: none; color: var(--text-muted);
     font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; width: 33.33%;
+    gap: 3px; cursor: pointer; width: 33.33%; padding: 10px 0;
   }
   .nav-btn span { font-size: 1.2rem; }
   .nav-btn.active { color: var(--accent); }
 
-  .view { display: none; padding: 15px; }
+  .view { display: none; padding: 15px; position: relative; z-index: 1; }
   .view.active { display: block; }
 
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -49,15 +49,20 @@
   .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
   .empty-note { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; }
   .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); z-index: 10; }
+  
+  .media-card { 
+    background: var(--bg-surface); border-radius: 8px; overflow: hidden; 
+    position: relative; cursor: pointer; border: 1px solid var(--border); 
+    z-index: 2; pointer-events: auto;
+  }
   .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
   .media-info { padding: 6px; }
   .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media-sub { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 20; }
+  .admin-controls { display: none; position: absolute; top: 5px; right: 5px; gap: 4px; z-index: 10; }
   body.creator-mode .admin-controls { display: flex; }
-  .admin-controls button { background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff; width: 30px; height: 30px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .admin-controls button { background: rgba(0,0,0,0.9); border: 1px solid var(--primary); color: #fff; width: 30px; height: 30px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
 
   .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
   .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--primary); }
@@ -68,7 +73,7 @@
   .btn-action { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
   .btn-action:active { background: var(--primary-hover); }
 
-  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; }
+  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 20000; flex-direction: column; }
   .player-overlay.active { display: flex; }
   .player-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(0,0,0,0.85); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
   .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
@@ -78,12 +83,12 @@
 
   .player-details { padding: 15px; background: var(--bg-surface); max-height: 35vh; overflow-y: auto; }
 
-  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: flex-end; }
+  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 30000; align-items: flex-end; }
   .modal-sheet.active { display: flex; }
   .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 6000; display: none; text-align: center; max-width: 90%; }
-  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 6000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 40000; display: none; text-align: center; max-width: 90%; }
+  #syncStatus { position: fixed; bottom: 70px; right: 15px; background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; z-index: 40000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 </style>
 </head>
 <body>
@@ -154,7 +159,7 @@
     <div class="sheet-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h3 id="modalTitleText" style="font-size: 1.1rem; color: var(--primary);">Publicar Contenido Global</h3>
-        <button onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
+        <button type="button" onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">✕</button>
       </div>
       <form onsubmit="app.saveItem(event)">
         <input type="hidden" id="fEditId">
@@ -174,7 +179,6 @@
   <div id="syncStatus">Sincronizando con GitHub...</div>
 
 <script>
-/* Catálogo publicado. NO borres los marcadores: la página los usa para guardar cambios. */
 const DEFAULT_CATALOG = /*CATALOG_START*/[
   {
     "id": 1,
@@ -188,7 +192,6 @@ const DEFAULT_CATALOG = /*CATALOG_START*/[
   }
 ]/*CATALOG_END*/;
 
-/* ---------- Utilidades ---------- */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -219,7 +222,6 @@ function okEmbed(url) {
   return m ? 'https://ok.ru/videoembed/' + m[1] : null;
 }
 
-/* ---------- Aplicación ---------- */
 class NaPlusProEngine {
   constructor() {
     this.repo = "ignacio12adrian-ux/NaPlus";
@@ -340,7 +342,6 @@ class NaPlusProEngine {
     this.renderList();
   }
 
-  /* ---------- Modo creador ---------- */
   enableCreator(silent) {
     if (this.creator) return;
     this.creator = true;
@@ -425,15 +426,20 @@ class NaPlusProEngine {
     await this.autoSyncGitHub();
   }
 
-  /* ---------- GitHub ---------- */
   ghUrl() { return `https://api.github.com/repos/${this.repo}/contents/${this.filePath}`; }
   ghHeaders(token) { return { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }; }
 
   ghError(status) {
     if (status === 401) {
       store.del('naplus_token');
-      alert('GitHub no aceptó el token: está vencido o quedó mal copiado. Creá uno nuevo y pégalo en Ajustes.');
+      alert('GitHub no aceptó el token: está vencido o quedó mal copiado.');
     } else if (status === 403) {
       alert('El token no tiene permisos suficientes (marcar repo).');
     }
-  
+  }
+
+  async loadFromGitHub() {
+    const token = store.get('naplus_token');
+    if (!isToken(token)) return;
+    try {
+      const res = await fet
