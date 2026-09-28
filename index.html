@@ -3,482 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NaPlus - Streaming Center</title>
+<title>NaPlus - Mobile Streaming</title>
 <style>
-:root {
-  --bg-app: #090510;
-  --bg-surface: #130a24;
-  --bg-card: #1c1133;
-  --accent-orange: #f47521;
-  --accent-orange-hover: #d25e10;
-  --accent-purple: #7c3aed;
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-}
+  :root {
+    --bg-main: #0f0b1a;
+    --bg-surface: #19122c;
+    --accent: #f47521;
+    --accent-hover: #d25e10;
+    --text: #ffffff;
+    --text-muted: #a0a0ab;
+    --border: rgba(255, 255, 255, 0.08);
+  }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background-color: var(--bg-main); color: var(--text); padding-bottom: 75px; overflow-x: hidden; }
 
-body {
-  background-color: var(--bg-app);
-  color: var(--text-main);
-  padding-bottom: 80px;
-  overflow-x: hidden;
-}
+  /* Barra de Navegación Móvil */
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+    background: rgba(15, 11, 26, 0.95); backdrop-filter: blur(10px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid var(--border); z-index: 1000;
+  }
+  .nav-btn {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; width: 33.33%;
+  }
+  .nav-btn span { font-size: 1.2rem; }
+  .nav-btn.active { color: var(--accent); }
 
-/* Navegación Inferior Estilo App Nativa */
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 65px;
-  background: rgba(9, 5, 16, 0.95);
-  backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top: 1px solid var(--border-subtle);
-  z-index: 1000;
-}
+  /* Vistas */
+  .view { display: none; padding: 15px; animation: fadeIn 0.2s ease-in-out; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.nav-item {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  width: 33.33%;
-  transition: color 0.2s ease;
-}
+  /* Header y Buscador */
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 0.5px; }
+  .search-input {
+    width: 100%; padding: 12px 15px; background: var(--bg-surface);
+    border: 1px solid var(--border); color: #fff; border-radius: 10px;
+    font-size: 0.95rem; outline: none; margin-bottom: 15px;
+  }
+  .search-input:focus { border-color: var(--accent); }
 
-.nav-item span.icon {
-  font-size: 1.3rem;
-}
+  /* Grilla de Contenido */
+  .section-title { font-size: 1rem; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
+  .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .media-card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border); }
+  .media-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #000; }
+  .media-info { padding: 6px; }
+  .media-title { font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .media-sub { font-size: 0.65rem; color: var(--text-muted); }
 
-.nav-item.active {
-  color: var(--accent-orange);
-}
+  /* Reproductor de Video Flotante / Pantalla Completa */
+  .player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; flex-direction: column; }
+  .player-overlay.active { display: flex; }
+  .player-header { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.8); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+  .close-player { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-right: 15px; }
+  .video-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+  .video-container video, .video-container iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
+  .player-details { padding: 15px; background: var(--bg-surface); max-height: 40vh; overflow-y: auto; }
+  .btn-action { background: var(--accent); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 12px; }
 
-/* Vistas de la Aplicación */
-.view {
-  display: none;
-  padding: 16px;
-  animation: fadeIn 0.25s ease-in-out;
-}
+  /* Panel Ajustes / Admin */
+  .settings-box { background: var(--bg-surface); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); }
+  .settings-box h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--accent); }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 0.9rem; outline: none; }
 
-.view.active {
-  display: block;
-}
+  /* Modal de Creador */
+  .modal-sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: flex-end; }
+  .modal-sheet.active { display: flex; }
+  .sheet-content { background: var(--bg-surface); width: 100%; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; border-top: 1px solid var(--border); }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Cabecera */
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-top: 4px;
-}
-
-.app-logo {
-  font-size: 1.6rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--accent-orange), #ff9f43);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.5px;
-}
-
-/* Buscador optimizado para móvil */
-.search-box {
-  width: 100%;
-  padding: 13px 16px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: #fff;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  outline: none;
-  margin-bottom: 20px;
-  transition: border-color 0.2s;
-}
-
-.search-box:focus {
-  border-color: var(--accent-orange);
-  box-shadow: 0 0 12px rgba(244, 117, 33, 0.2);
-}
-
-/* Secciones y Grillas de Contenido */
-.section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 24px 0 12px;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-title::before {
-  content: '';
-  width: 4px;
-  height: 16px;
-  background: var(--accent-orange);
-  border-radius: 2px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.card {
-  background: var(--bg-surface);
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  border: 1px solid var(--border-subtle);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card:active {
-  transform: scale(0.96);
-}
-
-.card img {
-  width: 100%;
-  aspect-ratio: 2/3;
-  object-fit: cover;
-  display: block;
-  background: #000;
-}
-
-.card-info {
-  padding: 8px;
-}
-
-.card-title {
-  font-size: 0.8rem;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 2px;
-}
-
-.card-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-/* Ajustes y Panel Oculto */
-.settings-group {
-  background: var(--bg-surface);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  border: 1px solid var(--border-subtle);
-}
-
-.settings-group h3 {
-  font-size: 1rem;
-  margin-bottom: 12px;
-  color: var(--accent-orange);
-}
-
-.btn-main {
-  background: var(--accent-orange);
-  color: #fff;
-  border: none;
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 4px 15px rgba(244, 117, 33, 0.3);
-}
-
-.btn-main:active {
-  background: var(--accent-orange-hover);
-}
-
-/* Reproductor Modal Pantalla Completa Nivel Cine */
-.player-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 2000;
-  flex-direction: column;
-  animation: fadeIn 0.2s ease;
-}
-
-.player-modal.active {
-  display: flex;
-}
-
-.player-topbar {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-}
-
-.btn-back {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-right: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-}
-
-.video-stage {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background: #000;
-}
-
-.video-stage video, .video-stage iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  object-fit: contain;
-}
-
-.video-loading {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  color: var(--accent-orange);
-  font-size: 0.85rem;
-  pointer-events: none;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(244,117,33,0.3);
-  border-top-color: var(--accent-orange);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.player-info {
-  padding: 20px;
-  background: var(--bg-surface);
-  max-height: 42vh;
-  overflow-y: auto;
-  border-top: 1px solid var(--border-subtle);
-}
-
-/* Modales Desplegables Tipo Sheet */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-  z-index: 3000;
-  align-items: flex-end;
-}
-
-.modal-overlay.active {
-  display: flex;
-}
-
-.modal-sheet {
-  background: var(--bg-surface);
-  width: 100%;
-  max-height: 90vh;
-  border-radius: 24px 24px 0 0;
-  padding: 24px 20px;
-  overflow-y: auto;
-  border-top: 1px solid var(--border-subtle);
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.form-field {
-  margin-bottom: 16px;
-}
-
-.form-field label {
-  display: block;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-.form-field input, .form-field select, .form-field textarea {
-  width: 100%;
-  padding: 12px;
-  background: var(--bg-app);
-  border: 1px solid var(--border-subtle);
-  color: #fff;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  outline: none;
-}
-
-.form-field input:focus, .form-field textarea:focus {
-  border-color: var(--accent-orange);
-}
-
-/* Toast de Notificaciones Dinámicas */
-#toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent-orange);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  z-index: 4000;
-  display: none;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(244, 117, 33, 0.5);
-}
+  /* Toast de alerta */
+  #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 4000; display: none; text-align: center; }
 </style>
 </head>
 <body>
 
-  <!-- Vista Principal: Inicio -->
+  <!-- Vista Inicio -->
   <div id="viewHome" class="view active">
-    <div class="app-header">
-      <div class="app-logo">NaPlus</div>
-    </div>
-    <input type="search" class="search-box" id="searchBar" placeholder="🔍 Buscar películas o series..." oninput="renderHome()">
+    <div class="header"><div class="logo">NaPlus</div></div>
+    <input type="search" class="search-input" id="searchBox" placeholder="🔍 Buscar películas o series..." oninput="app.renderHome()">
     
     <div class="section-title">Películas</div>
-    <div class="grid" id="moviesGrid"></div>
+    <div class="media-grid" id="moviesGrid"></div>
 
-    <div class="section-title" style="margin-top: 30px;">Series</div>
-    <div class="grid" id="seriesGrid"></div>
+    <div class="section-title" style="margin-top: 25px;">Series</div>
+    <div class="media-grid" id="seriesGrid"></div>
   </div>
 
-  <!-- Vista Secundaria: Mi Lista Personal -->
+  <!-- Vista Mi Lista -->
   <div id="viewList" class="view">
-    <div class="app-header">
-      <div class="app-logo">Mi Lista</div>
-    </div>
-    <div class="grid" id="listGrid" style="margin-top: 15px;"></div>
-    <p id="emptyListMsg" style="color: var(--text-muted); text-align: center; margin-top: 50px; font-size: 0.9rem; display: none;">Tu lista personal está vacía.</p>
+    <div class="header"><div class="logo">Mi Lista</div></div>
+    <div class="media-grid" id="listGrid" style="margin-top: 15px;"></div>
+    <p id="emptyMsg" style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.85rem; display: none;">Tu lista está vacía.</p>
   </div>
 
-  <!-- Vista Terciaria: Ajustes y Panel Creador Oculto -->
+  <!-- Vista Ajustes -->
   <div id="viewSettings" class="view">
-    <div class="app-header">
-      <div class="app-logo">Ajustes</div>
-    </div>
+    <div class="header"><div class="logo">Ajustes</div></div>
     
-    <div class="settings-group" id="creatorSection" style="display: none;">
+    <div class="settings-box" id="adminPanel" style="display: none;">
       <h3>Panel de Creador</h3>
-      <button class="btn-main" onclick="openAdminModal()">+ Subir Contenido a la Nube</button>
+      <button class="btn-action" onclick="app.openModal()">+ Subir Contenido</button>
     </div>
 
-    <div class="settings-group">
+    <div class="settings-box">
       <h3>Modo Administrador</h3>
-      <div class="form-field" style="margin-bottom: 0;">
-        <label>Clave Secreta de Acceso</label>
-        <input type="password" id="adminPassInput" placeholder="Ingresar clave (9009)..." oninput="checkAdminKey(this.value)">
+      <div class="field" style="margin-bottom: 0;">
+        <label>Clave Secreta</label>
+        <input type="password" placeholder="Ingresar clave (9009)..." oninput="app.verifyAdmin(this.value)">
       </div>
     </div>
   </div>
 
-  <!-- Barra de Navegación Móvil Inferior -->
-  <nav id="bottomNav">
-    <button class="nav-item active" onclick="switchView('Home', this)"><span class="icon">🏠</span>Inicio</button>
-    <button class="nav-item" onclick="switchView('List', this)"><span class="icon">🔖</span>Mi Lista</button>
-    <button class="nav-item" onclick="switchView('Settings', this)"><span class="icon">⚙️</span>Ajustes</button>
+  <!-- Navegación -->
+  <nav>
+    <button class="nav-btn active" onclick="app.switchView('Home', this)"><span>🏠</span>Inicio</button>
+    <button class="nav-btn" onclick="app.switchView('List', this)"><span>🔖</span>Mi Lista</button>
+    <button class="nav-btn" onclick="app.switchView('Settings', this)"><span>⚙️</span>Ajustes</button>
   </nav>
 
-  <!-- Reproductor Nivel Cine / Google Drive -->
-  <div class="player-modal" id="playerModal">
-    <div class="player-topbar">
-      <button class="btn-back" onclick="closePlayer()">✕</button>
-      <h3 id="playerHeaderTitle" style="font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;"></h3>
+  <!-- Reproductor Nativo -->
+  <div class="player-overlay" id="playerModal">
+    <div class="player-header">
+      <button class="close-player" onclick="app.closePlayer()">✕</button>
+      <h3 id="playerTitleHeader" style="font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
     </div>
-    <div class="video-stage" id="videoStage">
-      <div class="video-loading" id="videoLoading">
-        <div class="spinner"></div>
-        <span>Cargando streaming...</span>
-      </div>
-    </div>
-    <div class="player-info">
-      <h3 id="playerTitle" style="font-size: 1.15rem; margin-bottom: 4px; font-weight: 700;"></h3>
-      <p id="playerMeta" style="color: var(--accent-orange); font-size: 0.8rem; margin-bottom: 8px; font-weight: 600;"></p>
+    <div class="video-container" id="videoContainer"></div>
+    <div class="player-details">
+      <h3 id="playerTitle" style="font-size: 1.1rem; margin-bottom: 4px;"></h3>
+      <p id="playerMeta" style="color: var(--accent); font-size: 0.8rem; margin-bottom: 8px;"></p>
       <p id="playerDesc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;"></p>
-      <button class="btn-main" id="playerListBtn" style="margin-top: 16px;" onclick="toggleCurrentList()">+ Agregar a Mi Lista</button>
+      <button class="btn-action" id="listBtn" onclick="app.toggleList()">+ Agregar a Mi Lista</button>
     </div>
   </div>
 
-  <!-- Formulario Panel Creador -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-sheet">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 id="formTitle" style="font-size: 1.2rem; color: var(--accent-orange);">Subir Contenido</h3>
-        <button onclick="closeAdminModal()" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;">✕</button>
+  <!-- Modal Creador -->
+  <div class="modal-sheet" id="adminModal">
+    <div class="sheet-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="font-size: 1.1rem; color: var(--accent);">Nuevo Contenido</h3>
+        <button onclick="app.closeModal()" style="background: none; border: none; color: #fff; font-size: 1.2rem;">✕</button>
       </div>
-      <form onsubmit="saveContent(event)">
-        <input type="hidden" id="editId">
-        <div class="form-field"><label>Tipo de Contenido</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
-        <div class="form-field"><label>Título</label><input type="text" id="fTitle" required placeholder="Ej: Inception"></div>
-        <div class="form-field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Ciencia Ficción..."></div>
-        <div class="form-field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
-        <div class="form-field"><label>Sinopsis / Resumen</label><textarea id="fDesc" rows="3" placeholder="De qué trata la obra..."></textarea></div>
-        <div class="form-field"><label>URL de Portada (Imagen directa)</label><input type="url" id="fCover" required placeholder="https://..."></div>
-        <div class="form-field"><label>Link de Video (Google Drive directo / MP4 / YouTube)</label><input type="url" id="fVideo" required placeholder="https://..."></div>
-        <button type="submit" class="btn-main" style="margin-top: 10px;">Publicar Contenido</button>
+      <form onsubmit="app.saveItem(event)">
+        <div class="field"><label>Tipo</label><select id="fType"><option value="movie">Película</option><option value="series">Serie</option></select></div>
+        <div class="field"><label>Título</label><input type="text" id="fTitle" required></div>
+        <div class="field"><label>Género</label><input type="text" id="fGenre" required placeholder="Acción, Terror..."></div>
+        <div class="field"><label>Año</label><input type="number" id="fYear" required value="2026"></div>
+        <div class="field"><label>Sinopsis</label><textarea id="fDesc" rows="2"></textarea></div>
+        <div class="field"><label>URL Portada</label><input type="url" id="fCover" required placeholder="https://..."></div>
+        <div class="field"><label>Link de Video (Drive, MP4...)</label><input type="url" id="fVideo" required placeholder="https://..."></div>
+        <button type="submit" class="btn-action" style="margin-top: 10px;">Publicar</button>
       </form>
     </div>
   </div>
@@ -486,188 +167,171 @@ nav {
   <div id="toast"></div>
 
 <script>
-const $ = id => document.getElementById(id);
-const DB_KEY = 'naplus_catalog_v9';
-const LIST_KEY = 'naplus_user_favorites_v1';
-
-let catalog = JSON.parse(localStorage.getItem(DB_KEY)) || [
-  { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba optimizada para streaming móvil.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920' }
-];
-
-let myList = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
-let currentPlayId = null;
-
-function toast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 2500);
-}
-
-// Navegación fluida entre pestañas móviles
-function switchView(viewName, el) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  $(`view${viewName}`).classList.add('active');
-  el.classList.add('active');
-  if (viewName === 'Home') renderHome();
-  if (viewName === 'List') renderList();
-}
-
-// Renderizado optimizado de tarjetas
-function makeCard(item) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.onclick = () => openPlayer(item.id);
-  card.innerHTML = `
-    <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
-    <div class="card-info">
-      <div class="card-title">${item.title}</div>
-      <div class="card-sub">${item.genre}</div>
-    </div>
-  `;
-  return card;
-}
-
-function renderHome() {
-  const q = $('searchBar').value.toLowerCase().trim();
-  const moviesGrid = $('moviesGrid');
-  const seriesGrid = $('seriesGrid');
-  moviesGrid.innerHTML = '';
-  seriesGrid.innerHTML = '';
-
-  const filtered = catalog.filter(i => i.title.toLowerCase().includes(q) || i.genre.toLowerCase().includes(q));
-  filtered.forEach(item => {
-    const card = makeCard(item);
-    if (item.type === 'movie') moviesGrid.appendChild(card);
-    else seriesGrid.appendChild(card);
-  });
-}
-
-function renderList() {
-  const grid = $('listGrid');
-  grid.innerHTML = '';
-  const items = catalog.filter(i => myList.includes(i.id));
-
-  if (items.length === 0) {
-    $('emptyListMsg').style.display = 'block';
-  } else {
-    $('emptyListMsg').style.display = 'none';
-    items.forEach(item => grid.appendChild(makeCard(item)));
+class NaPlusApp {
+  constructor() {
+    this.dbKey = 'naplus_pro_db_v1';
+    this.listKey = 'naplus_pro_list_v1';
+    this.catalog = JSON.parse(localStorage.getItem(this.dbKey)) || [
+      { id: 1, type: 'movie', title: '[REC]', genre: 'Terror', year: '2007', desc: 'Película de prueba optimizada.', cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400', video: 'https://lh3.googleusercontent.com/d/10-ff0lGCypXx4dHgmc7NaYEzI4hcMnr2=w1920' }
+    ];
+    this.myList = JSON.parse(localStorage.getItem(this.listKey)) || [];
+    this.currentId = null;
+    this.init();
   }
-}
 
-// Reproductor Nivel Cine optimizado para Android y Google Drive
-function openPlayer(id) {
-  currentPlayId = id;
-  const item = catalog.find(x => x.id === id);
-  if (!item) return;
+  init() {
+    this.renderHome();
+  }
 
-  $('playerHeaderTitle').textContent = item.title;
-  $('playerTitle').textContent = item.title;
-  $('playerMeta').textContent = `${item.genre} • ${item.year}`;
-  $('playerDesc').textContent = item.desc || 'Sin sinopsis disponible.';
+  toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2500);
+  }
 
-  updatePlayerListBtn();
+  switchView(viewName, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+    document.getElementById(`view${viewName}`).classList.add('active');
+    el.classList.add('active');
+    if (viewName === 'Home') this.renderHome();
+    if (viewName === 'List') this.renderList();
+  }
 
-  const stage = $('videoStage');
-  stage.innerHTML = `
-    <div class="video-loading" id="videoLoading">
-      <div class="spinner"></div>
-      <span>Conectando servidor...</span>
-    </div>
-  `;
+  createCard(item) {
+    const card = document.createElement('div');
+    card.className = 'media-card';
+    card.onclick = () => this.openPlayer(item.id);
+    card.innerHTML = `
+      <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=NaPlus'">
+      <div class="media-info">
+        <div class="media-title">${item.title}</div>
+        <div class="media-sub">${item.genre}</div>
+      </div>
+    `;
+    return card;
+  }
 
-  const url = item.video || '';
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    let embed = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-    const iframe = document.createElement('iframe');
-    iframe.src = embed;
-    iframe.allowFullscreen = true;
-    iframe.onload = () => { $('videoLoading').style.display = 'none'; };
-    stage.appendChild(iframe);
-  } else {
-    const vid = document.createElement('video');
-    vid.src = url;
-    vid.controls = true;
-    vid.playsInline = true;
-    vid.autoplay = true;
-    vid.onloadeddata = () => { $('videoLoading').style.display = 'none'; };
-    vid.onerror = () => {
-      $('videoLoading').innerHTML = '<span style="color:#ef4444; padding:0 20px; text-align:center;">Error al reproducir. Asegurate de que el enlace de Google Drive sea público y accesible.</span>';
+  renderHome() {
+    const q = document.getElementById('searchBox').value.toLowerCase().trim();
+    const mGrid = document.getElementById('moviesGrid');
+    const sGrid = document.getElementById('seriesGrid');
+    mGrid.innerHTML = ''; sGrid.innerHTML = '';
+
+    this.catalog
+      .filter(i => i.title.toLowerCase().includes(q) || i.genre.toLowerCase().includes(q))
+      .forEach(item => {
+        const card = this.createCard(item);
+        if (item.type === 'movie') mGrid.appendChild(card);
+        else sGrid.appendChild(card);
+      });
+  }
+
+  renderList() {
+    const grid = document.getElementById('listGrid');
+    grid.innerHTML = '';
+    const items = this.catalog.filter(i => this.myList.includes(i.id));
+    const empty = document.getElementById('emptyMsg');
+
+    if (items.length === 0) { empty.style.display = 'block'; }
+    else {
+      empty.style.display = 'none';
+      items.forEach(item => grid.appendChild(this.createCard(item)));
+    }
+  }
+
+  openPlayer(id) {
+    this.currentId = id;
+    const item = this.catalog.find(x => x.id === id);
+    if (!item) return;
+
+    document.getElementById('playerTitleHeader').textContent = item.title;
+    document.getElementById('playerTitle').textContent = item.title;
+    document.getElementById('playerMeta').textContent = `${item.genre} • ${item.year}`;
+    document.getElementById('playerDesc').textContent = item.desc || 'Sin sinopsis.';
+
+    this.updateListBtnState();
+
+    const container = document.getElementById('videoContainer');
+    container.innerHTML = `
+      <div style="color: var(--accent); font-size: 0.85rem; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:30px; height:30px; border:3px solid rgba(244,117,33,0.3); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        Cargando stream...
+      </div>`;
+
+    const url = item.video || '';
+    setTimeout(() => {
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        let embed = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+        container.innerHTML = `<iframe src="${embed}" allowfullscreen></iframe>`;
+      } else {
+        container.innerHTML = `<video src="${url}" controls playsinline autoplay></video>`;
+      }
+    }, 300);
+
+    document.getElementById('playerModal').classList.add('active');
+  }
+
+  closePlayer() {
+    document.getElementById('videoContainer').innerHTML = '';
+    document.getElementById('playerModal').classList.remove('active');
+  }
+
+  updateListBtnState() {
+    const inList = this.myList.includes(this.currentId);
+    const btn = document.getElementById('listBtn');
+    btn.textContent = inList ? '✓ En Mi Lista' : '+ Agregar a Mi Lista';
+    btn.style.background = inList ? '#332b4a' : 'var(--accent)';
+  }
+
+  toggleList() {
+    const idx = this.myList.indexOf(this.currentId);
+    if (idx > -1) {
+      this.myList.splice(idx, 1);
+      this.toast('Eliminado de Mi Lista');
+    } else {
+      this.myList.push(this.currentId);
+      this.toast('Agregado a Mi Lista');
+    }
+    localStorage.setItem(this.listKey, JSON.stringify(this.myList));
+    this.updateListBtnState();
+  }
+
+  verifyAdmin(val) {
+    if (val.trim() === '9009') {
+      document.getElementById('adminPanel').style.display = 'block';
+      this.toast('¡Modo Creador Activo!');
+    }
+  }
+
+  openModal() { document.getElementById('adminModal').classList.add('active'); }
+  closeModal() { document.getElementById('adminModal').classList.remove('active'); }
+
+  saveItem(e) {
+    e.preventDefault();
+    const newItem = {
+      id: Date.now(),
+      type: document.getElementById('fType').value,
+      title: document.getElementById('fTitle').value.trim(),
+      genre: document.getElementById('fGenre').value.trim(),
+      year: document.getElementById('fYear').value,
+      desc: document.getElementById('fDesc').value.trim(),
+      cover: document.getElementById('fCover').value.trim(),
+      video: document.getElementById('fVideo').value.trim()
     };
-    stage.appendChild(vid);
-  }
-
-  $('playerModal').classList.add('active');
-}
-
-function closePlayer() {
-  $('videoStage').innerHTML = '';$('playerModal').classList.remove('active');
-}
-
-function updatePlayerListBtn() {
-  const inList = myList.includes(currentPlayId);
-  const btn = $('playerListBtn');
-  if (inList) {
-    btn.textContent = '✓ En Mi Lista';
-    btn.style.background = '#2c1e13';
-  } else {
-    btn.textContent = '+ Agregar a Mi Lista';
-    btn.style.background = 'var(--accent-orange)';
+    this.catalog.unshift(newItem);
+    localStorage.setItem(this.dbKey, JSON.stringify(this.catalog));
+    this.closeModal();
+    this.renderHome();
+    this.toast('Contenido guardado');
   }
 }
 
-function toggleCurrentList() {
-  const idx = myList.indexOf(currentPlayId);
-  if (idx > -1) {
-    myList.splice(idx, 1);
-    toast('Eliminado de Mi Lista');
-  } else {
-    myList.push(currentPlayId);
-    toast('Agregado a Mi Lista');
-  }
-  localStorage.setItem(LIST_KEY, JSON.stringify(myList));
-  updatePlayerListBtn();
-}
-
-// Panel de Creador Oculto por Seguridad
-function checkAdminKey(val) {
-  if (val.trim() === "9009") {
-    $('creatorSection').style.display = 'block';
-    toast('¡Modo Administrador Desbloqueado!');
-  }
-}
-
-function openAdminModal() {
-  $('adminModal').classList.add('active');
-}
-
-function closeAdminModal() {
-  $('adminModal').classList.remove('active');
-}
-
-function saveContent(e) {
-  e.preventDefault();
-  const newItem = {
-    id: Date.now(),
-    type: $('fType').value,
-    title: $('fTitle').value.trim(),
-    genre: $('fGenre').value.trim(),
-    year: $('fYear').value,
-    desc: $('fDesc').value.trim(),
-    cover: $('fCover').value.trim(),
-    video: $('fVideo').value.trim()
-  };
-  catalog.unshift(newItem);
-  localStorage.setItem(DB_KEY, JSON.stringify(catalog));
-  closeAdminModal();
-  renderHome();
-  toast('Contenido publicado con éxito');
-}
-
-// Inicialización automática
-renderHome();
+// Iniciar aplicación móvil optimizada
+const app = new NaPlusApp();
 </script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </body>
 </html>
