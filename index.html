@@ -402,10 +402,8 @@
   </div>
 
   <script>
-    const REPO = "ignacio12adrian-ux/NaPlus";
-    const FILE_PATH = "index.html";
-
-    let catalog = [
+    // Catálogo persistente en la memoria del navegador del dispositivo
+    let catalog = JSON.parse(localStorage.getItem('naPlus_permanent_db')) || [
       {
         id: 1,
         type: 'movie',
@@ -421,7 +419,13 @@
     ];
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
-    let isCreatorMode = false;
+    let isCreatorMode = localStorage.getItem('naPlus_is_creator_active') === 'true';
+
+    if (isCreatorMode) {
+      document.body.classList.add('creator-mode');
+      const btnC = document.getElementById('btnCreator');
+      if(btnC) btnC.innerText = '+ Agregar';
+    }
 
     function switchView(viewName) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
@@ -473,7 +477,7 @@
         mainContent.style.display = 'block';
       }
 
-      // Lo más reciente (Garantiza que cualquier elemento aparezca aunque no tenga fecha asignada)
+      // Lo más reciente
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
       const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
@@ -485,7 +489,7 @@
       const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
 
-      // Filas por género (agrupa automáticamente todo el contenido sin omitir nada)
+      // Filas por género
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
       const uniqueGenres = [...new Set(catalog.map(i => i.genre ? i.genre.trim() : 'Otros'))];
@@ -573,10 +577,11 @@
       const val = document.getElementById('passInput').value.trim();
 
       if (val === "9009" || val.startsWith("ghp_")) {
+        isCreatorMode = true;
+        localStorage.setItem('naPlus_is_creator_active', 'true');
         if (val.startsWith("ghp_")) {
           localStorage.setItem('naPlus_gh_token', val);
         }
-        isCreatorMode = true;
         document.body.classList.add('creator-mode');
         document.getElementById('btnCreator').innerText = '+ Agregar';
         closeModal('loginModal');
@@ -607,9 +612,9 @@
     async function deleteItem(id) {
       if (confirm("¿Seguro que querés eliminar esta obra del catálogo?")) {
         catalog = catalog.filter(x => x.id != id);
+        localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
         renderHomeSections();
         renderMyList();
-        await publishToGitHub();
       }
     }
 
@@ -636,61 +641,12 @@
         catalog.unshift(newItem);
       }
 
+      // Guardado permanente local inmediato
+      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
       renderMyList();
       closeModal('uploadModal');
-      await publishToGitHub();
-    }
-
-    async function publishToGitHub() {
-      let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) {
-        token = prompt("Para publicar los cambios permanentemente para todos, ingresá tu Token de GitHub (ghp_...):");
-        if (token && token.startsWith("ghp_")) {
-          token = token.trim();
-          localStorage.setItem('naPlus_gh_token', token);
-        } else {
-          return;
-        }
-      }
-
-      const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Sincronizando...";
-
-      try {
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`);
-        const getData = await getRes.json();
-        const sha = getData.sha;
-
-        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
-        const catalogJson = JSON.stringify(catalog, null, 2);
-        fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
-
-        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
-
-        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Actualización automática NaPlus',
-            content: updatedBase64,
-            sha: sha
-          })
-        });
-
-        if (putRes.ok) {
-          alert("¡Publicado globalmente con éxito!");
-        } else {
-          alert("Error al validar el Token de GitHub.");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
-      }
+      alert("¡Contenido guardado exitosamente en tu catálogo!");
     }
 
     function openDetail(id) {
@@ -698,6 +654,7 @@
       if (!item) return;
 
       item.views = (item.views || 0) + 1;
+      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
 
       document.getElementById('detailTitle').innerText = item.title;
       document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
