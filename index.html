@@ -402,20 +402,30 @@
   </div>
 
   <script>
-    let catalog = JSON.parse(localStorage.getItem('naPlus_permanent_db')) || [
+    const REPO = "ignacio12adrian-ux/NaPlus";
+    const FILE_PATH = "index.html";
+
+    // CATÁLOGO OFICIAL GLOBAL (Acá se graban tus películas para que cualquiera las vea al entrar al link)
+    let catalog = /*CATALOG_START*/[
       {
         id: 1,
         type: 'movie',
         title: '[REC]',
         genre: 'Terror, Suspenso',
         year: '2007',
-        desc: 'Película de prueba con géneros múltiples.',
+        desc: 'Película de prueba.',
         cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750',
         views: 1420,
         dateAdded: 1710000000000
       }
-    ];
+    ]/*CATALOG_END*/;
+
+    // Rescate automático: Si tenías películas en tu dispositivo, las fusiona para que no pierdas nada
+    const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
+    if (Array.isArray(localDb) && localDb.length > catalog.length) {
+      catalog = localDb;
+    }
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = localStorage.getItem('naPlus_is_creator_active') === 'true';
@@ -488,7 +498,7 @@
       const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
 
-      // Filas por géneros individuales (separa por comas y acomoda cada uno en su sección)
+      // Filas por géneros individuales (separa por comas)
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
 
@@ -631,6 +641,7 @@
         localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
         renderHomeSections();
         renderMyList();
+        await publishToGitHub();
       }
     }
 
@@ -661,7 +672,68 @@
       renderHomeSections();
       renderMyList();
       closeModal('uploadModal');
-      alert("¡Contenido guardado exitosamente en tu catálogo!");
+      await publishToGitHub();
+    }
+
+    // Sincronización automática con GitHub para que todos vean el contenido
+    async function publishToGitHub() {
+      let token = localStorage.getItem('naPlus_gh_token');
+      if (!token) {
+        token = prompt("Para que otras personas puedan ver tus películas, ingresá tu Token de GitHub (ghp_...) una única vez:");
+        if (token && token.startsWith("ghp_")) {
+          token = token.trim();
+          localStorage.setItem('naPlus_gh_token', token);
+        } else {
+          alert("Sin el Token de GitHub, el contenido solo lo verás vos en tu teléfono.");
+          return;
+        }
+      }
+
+      const saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) saveBtn.innerText = "Sincronizando...";
+
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`);
+        if (!getRes.ok) { alert("Error al conectar con GitHub. Verificá tu Token."); return; }
+        const getData = await getRes.json();
+        const sha = getData.sha;
+
+        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+        const catalogJson = JSON.stringify(catalog, null, 2);
+        
+        // Actualiza de forma segura el bloque global en GitHub
+        if (fileText.includes('/*CATALOG_START*/')) {
+          fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/${catalogJson}/*CATALOG_END*/`);
+        } else {
+          fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
+        }
+
+        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
+
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Actualización global de catálogo NaPlus',
+            content: updatedBase64,
+            sha: sha
+          })
+        });
+
+        if (putRes.ok) {
+          alert("✅ ¡Listo! Todo tu contenido se publicó en la nube y ahora cualquier persona que entre al link podrá verlo.");
+        } else {
+          alert("❌ Error al publicar en GitHub. Verificá que el token sea correcto.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error de red al intentar sincronizar.");
+      } finally {
+        if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
+      }
     }
 
     function openDetail(id) {
