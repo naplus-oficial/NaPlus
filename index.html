@@ -374,8 +374,8 @@
           <input type="text" id="titleInput" required placeholder="Nombre">
         </div>
         <div class="form-group">
-          <label>Género (ej. Terror, Acción, Animación)</label>
-          <input type="text" id="genreInput" required placeholder="Terror">
+          <label>Géneros (separados por coma, ej: Acción, Terror)</label>
+          <input type="text" id="genreInput" required placeholder="Acción, Terror">
         </div>
         <div class="form-group">
           <label>Año</label>
@@ -402,15 +402,14 @@
   </div>
 
   <script>
-    // Catálogo persistente en la memoria del navegador del dispositivo
     let catalog = JSON.parse(localStorage.getItem('naPlus_permanent_db')) || [
       {
         id: 1,
         type: 'movie',
         title: '[REC]',
-        genre: 'Terror',
+        genre: 'Terror, Suspenso',
         year: '2007',
-        desc: 'Película de prueba con reproductor OK.ru.',
+        desc: 'Película de prueba con géneros múltiples.',
         cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
         video: 'https://ok.ru/videoembed/237592963750',
         views: 1420,
@@ -489,13 +488,30 @@
       const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
 
-      // Filas por género
+      // Filas por géneros individuales (separa por comas y acomoda cada uno en su sección)
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
-      const uniqueGenres = [...new Set(catalog.map(i => i.genre ? i.genre.trim() : 'Otros'))];
-      
-      uniqueGenres.forEach(genre => {
-        const genreItems = catalog.filter(i => (i.genre ? i.genre.trim() : 'Otros') === genre);
+
+      let allIndividualGenres = [];
+      catalog.forEach(item => {
+        if (item.genre) {
+          item.genre.split(',').forEach(g => {
+            const cleanG = g.trim();
+            if (cleanG && !allIndividualGenres.includes(cleanG)) {
+              allIndividualGenres.push(cleanG);
+            }
+          });
+        }
+      });
+      allIndividualGenres.sort();
+
+      allIndividualGenres.forEach(genre => {
+        const genreItems = catalog.filter(i => {
+          if (!i.genre) return false;
+          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
+          return itemGenres.includes(genre.toLowerCase());
+        });
+
         if (genreItems.length > 0) {
           const titleDiv = document.createElement('div');
           titleDiv.className = 'section-title';
@@ -641,7 +657,6 @@
         catalog.unshift(newItem);
       }
 
-      // Guardado permanente local inmediato
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
       renderMyList();
