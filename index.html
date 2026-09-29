@@ -260,7 +260,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    /* REPRODUCTOR ESPECIALIZADO OK.RU */
+    /* REPRODUCTOR */
     .video-box {
       width: 100%; aspect-ratio: 16/9; background: #000;
       margin-bottom: 12px; border-radius: 8px; overflow: hidden;
@@ -344,8 +344,8 @@
       <h3>Acceso Creador</h3>
       <form onsubmit="submitLogin(event)">
         <div class="form-group">
-          <label>Clave (9009) o Token de GitHub</label>
-          <input type="password" id="passInput" placeholder="Clave o Token..." required autocomplete="off">
+          <label>Ingresá tu credencial de acceso</label>
+          <input type="password" id="passInput" placeholder="Credencial..." required autocomplete="off">
         </div>
         <div class="form-actions">
           <button type="button" class="btn-cancel" onclick="closeModal('loginModal')">Cancelar</button>
@@ -406,79 +406,19 @@
     const FILE_PATH = "index.html";
 
     let catalog = [
-  {
-    "id": 1790644586189,
-    "type": "movie",
-    "title": "Jujutsu Kaisen: El tesoro escondido/El tesoro perdido",
-    "genre": "Animación, Drama, Acción",
-    "year": "2025",
-    "desc": "Antes de ser enemigos, Satoru Gojo y Suguru Geto eran compañeros de instituto y amigos. Los dos poderosos hechiceros reciben el encargo de proteger a Riko Amanai.",
-    "cover": "https://static.wikia.nocookie.net/doblaje/images/c/cf/Jujutsu_Kaisen_-_El_Tesoro_Escondido-Perdido_-_Poster.jpg/revision/latest?cb=20250718182530&path-prefix=es",
-    "video": "https://ok.ru/video/16645678828251",
-    "views": 510,
-    "dateAdded": 1790644586190
-  },
-  {
-    "id": 1790642775197,
-    "type": "movie",
-    "title": "We're the Millers (Somos los Miller)",
-    "genre": "Comedia",
-    "year": "2010",
-    "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
-    "video": "https://ok.ru/video/16645596449499",
-    "views": 262,
-    "dateAdded": 1790642775197
-  },
-  {
-    "id": 1790638927123,
-    "type": "movie",
-    "title": "V/H/S: Las crónicas del miedo",
-    "genre": "Terror",
-    "year": "2012",
-    "desc": "Contratada para robar una cinta VHS de una casa alejada, una banda de ladrones descubre un cadáver, viejos televisores y muchas imágenes encriptadas.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/9e4b343e30ec4de545da0d441f539e1dad78d27cb16974010de57558fa8d2a7d.png",
-    "video": "https://ok.ru/video/16645441915611",
-    "views": 463,
-    "dateAdded": 1790638927123
-  },
-  {
-    "id": 1790637325394,
-    "type": "movie",
-    "title": "Final de la calle Oak",
-    "genre": "Terror, Acción",
-    "year": "2026",
-    "desc": "Cuando una anomalía cósmica sacude los suburbios, una familia deberá permanecer unida para sobrevivir a una aventura que desafía la realidad, donde el tiempo se desmorona y el caos invade el vecindario.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/73c3544aaac37e4c6bd8620234a55085d5498746efda9a28630927af5fda06d6.jpg",
-    "video": "https://ok.ru/video/16645391256283",
-    "views": 318,
-    "dateAdded": 1790637325395
-  },
-  {
-    "id": 1790632979212,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "En el interior de un edificio residencial, una reportera y su camarógrafo graban el terrible brote de una enfermedad que transforma a los humanos en caníbales. Uno tras otro, los vecinos del inmueble se convierten en monstruos sedientos de sangre.",
-    "cover": "https://www.clarin.com/img/2020/04/15/9OmNWiFE0_720x0__1.jpg",
-    "video": "https://ok.ru/video/16640296815323",
-    "views": 354,
-    "dateAdded": 1790632979213
-  },
-  {
-    "id": 1,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Película de prueba de terror.",
-    "cover": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-    "video": "https://ok.ru/videoembed/237592963750",
-    "views": 1420,
-    "dateAdded": 1710000000000
-  }
-];
+      {
+        id: 1,
+        type: 'movie',
+        title: '[REC]',
+        genre: 'Terror',
+        year: '2007',
+        desc: 'Película de prueba con reproductor OK.ru.',
+        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        video: 'https://ok.ru/videoembed/237592963750',
+        views: 1420,
+        dateAdded: 1710000000000
+      }
+    ];
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = false;
@@ -533,7 +473,7 @@
         mainContent.style.display = 'block';
       }
 
-      // Lo más reciente
+      // Lo más reciente (Garantiza que cualquier elemento aparezca aunque no tenga fecha asignada)
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
       const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
@@ -545,7 +485,7 @@
       const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
 
-      // Filas por género
+      // Filas por género (agrupa automáticamente todo el contenido sin omitir nada)
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
       const uniqueGenres = [...new Set(catalog.map(i => i.genre ? i.genre.trim() : 'Otros'))];
@@ -642,7 +582,7 @@
         closeModal('loginModal');
         openUploadModal();
       } else {
-        alert("Clave o Token incorrecto.");
+        alert("Credencial incorrecta.");
       }
     }
 
@@ -753,7 +693,6 @@
       }
     }
 
-    // Reproductor Especializado y Optimizado para OK.ru
     function openDetail(id) {
       const item = catalog.find(x => x.id == id);
       if (!item) return;
@@ -768,7 +707,6 @@
       const vBox = document.getElementById('videoBox');
       const vUrl = item.video || '';
 
-      // Conversor y Adaptador Nativo para OK.ru
       if (vUrl.includes('ok.ru')) {
         let embedUrl = vUrl;
         if (!vUrl.includes('videoembed')) {
