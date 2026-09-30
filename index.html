@@ -808,13 +808,13 @@
 
     function addEpisodeField(btn, epData = null) {
       const epContainer = btn.previousElementSibling;
-      const defaultEpNum = epData ? epData.num : (epContainer.children.length + 1);
+      const defaultEpNum = epData && epData.num !== undefined ? epData.num : (epContainer.children.length + 1);
       const epDiv = document.createElement('div');
       epDiv.className = 'admin-episode-card';
       epDiv.innerHTML = `
         <div style="display:flex; gap:6px; margin-bottom:6px; align-items:center;">
-          <label style="font-size:0.75rem; color:var(--accent-light); white-space:nowrap;">N° Cap:</label>
-          <input type="number" class="ep-num" value="${defaultEpNum}" style="width:60px; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.8rem;" required>
+          <span style="font-size:0.75rem; color:var(--accent-light); white-space:nowrap;">N° Cap:</span>
+          <input type="number" class="ep-num" value="${defaultEpNum}" style="width:65px; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.8rem;" required>
           <input type="text" class="ep-title" placeholder="Título del capítulo" value="${epData ? epData.title : ''}" style="flex-grow:1; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.8rem;">
           <button type="button" onclick="this.parentElement.parentElement.remove()" style="background:#ef4444; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">✕</button>
         </div>
@@ -861,7 +861,7 @@
               video: eCard.querySelector('.ep-video').value.trim()
             });
           });
-          // Ordenar automáticamente los capítulos por su número (1, 2, 3...)
+          // Ordenar automáticamente los capítulos por número (1, 2, 3...)
           eps.sort((a, b) => a.num - b.num);
           seasonsData.push({ name: sName, episodes: eps });
         });
@@ -1028,10 +1028,11 @@
         const item = document.createElement('div');
         item.className = 'episode-item';
         item.onclick = () => playEpisode(ep);
+        const epNumDisplay = ep.num !== undefined ? ep.num : '1';
         item.innerHTML = `
-          <div class="episode-num">${ep.num}</div>
+          <div class="episode-num">${epNumDisplay}</div>
           <div class="episode-details">
-            <div class="episode-title">${ep.title || 'Capítulo ' + ep.num}</div>
+            <div class="episode-title">${ep.title || 'Capítulo ' + epNumDisplay}</div>
             <div class="episode-desc">${ep.desc || 'Sin sinopsis de capítulo.'}</div>
           </div>
           <div style="font-size: 1.1rem; color: var(--accent-light);">▶</div>
@@ -1042,7 +1043,8 @@
 
     function playEpisode(ep) {
       document.getElementById('seriesModal').style.display = 'none';
-      document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num}: ${ep.title}`;
+      const epNumDisplay = ep.num !== undefined ? ep.num : '1';
+      document.getElementById('epModalTitle').innerText = `Capítulo ${epNumDisplay}: ${ep.title || ''}`;
       document.getElementById('epModalDesc').innerText = ep.desc || '';
       const vBox = document.getElementById('episodeVideoBox');
       renderVideoInBox(vBox, ep.video);
@@ -1050,6 +1052,10 @@
     }
 
     function renderVideoInBox(vBox, vInput) {
+      if (!vInput) {
+        vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
+        return;
+      }
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
         const iframeEl = vBox.querySelector('iframe');
