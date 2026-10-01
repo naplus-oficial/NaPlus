@@ -38,13 +38,13 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* BARRA SUPERIOR TRANSPARENTE FLOTANTE */
+    /* BARRA SUPERIOR FIJA / FLOTANTE */
     header {
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 65px;
       padding: 0 20px;
-      background: linear-gradient(180deg, rgba(7,4,13,0.85) 0%, rgba(7,4,13,0) 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.9) 0%, rgba(7,4,13,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -113,10 +113,10 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA CORREGIDO (Evita solapamiento con el logo) */
-    #searchResultsContainer {
+    /* CONTENEDOR DE BÚSQUEDA CORREGIDO (Separado del header para evitar solapamiento) */
+    #searchContainer {
       padding-top: 75px;
-      display: none;
+      padding-bottom: 10px;
     }
 
     /* CARRUSEL HERO */
@@ -235,29 +235,29 @@
     }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR */
+    /* BUSCADOR OPTIMIZADO */
     .hero { padding: 15px 20px 5px; }
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box input {
       width: 100%;
-      padding: 10px 35px 10px 14px;
-      background: rgba(255, 255, 255, 0.04);
+      padding: 11px 40px 11px 14px;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-purple);
       color: #fff;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       outline: none;
     }
-    .search-box input:focus { border-color: var(--accent-light); background: rgba(255, 255, 255, 0.07); }
+    .search-box input:focus { border-color: var(--accent-light); background: rgba(255, 255, 255, 0.08); }
 
-    /* BOTÓN LIMPIAR BÚSQUEDA RÁPIDA */
     .clear-search-btn {
       position: absolute;
       right: 12px; top: 50%;
       transform: translateY(-50%);
       background: none; border: none;
-      color: var(--text-gray); font-size: 1rem;
-      cursor: pointer; display: none;
+      color: var(--text-gray); font-size: 1.1rem;
+      cursor: pointer; padding: 4px;
+      display: none;
     }
     .clear-search-btn:hover { color: #fff; }
 
@@ -507,22 +507,26 @@
   </header>
 
   <div id="viewHome" class="view-section active">
+    <!-- CARRUSEL HERO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
-    <div class="hero">
+    <!-- BUSCADOR CON CONTENEDOR PROPIO SEPARADO DEL HEADER -->
+    <div class="hero" id="searchContainer">
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
-        <button class="clear-search-btn" id="clearSearchBtn" onclick="clearSearchInput()">✕</button>
+        <button class="clear-search-btn" id="clearSearchBtn" onclick="clearSearchInput()" type="button">✕</button>
       </div>
     </div>
 
-    <div id="searchResultsContainer">
+    <!-- RESULTADOS DE BÚSQUEDA -->
+    <div id="searchResultsContainer" style="display: none;">
       <div class="section-title">Resultados de Búsqueda</div>
       <div class="grid" id="searchGrid"></div>
     </div>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <div id="mainHomeContent">
       <div class="section-title">🔥 Lo Más Reciente</div>
       <div class="horizontal-scroll" id="recentScroll"></div>
@@ -749,7 +753,6 @@
     }
 
     function switchView(viewName) {
-      // Limpiar buscador al cambiar de pestaña principal
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
