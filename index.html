@@ -113,9 +113,9 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA CORREGIDO (Separado del header para evitar solapamiento) */
+    /* CONTENEDOR DE BÚSQUEDA: el padding-top real se define más abajo en .hero#searchContainer,
+       con una regla sin ambigüedad de especificidad para que nunca vuelva a competir con .hero */
     #searchContainer {
-      padding-top: 75px;
       padding-bottom: 10px;
     }
 
@@ -237,6 +237,10 @@
 
     /* BUSCADOR OPTIMIZADO */
     .hero { padding: 15px 20px 5px; }
+    /* Regla con la especificidad más alta de todo el archivo para este elemento:
+       así siempre gana y nunca vuelve a solaparse con el header (65px de alto). */
+    .hero#searchContainer { padding: 80px 20px 14px; }
+
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box input {
       width: 100%;
@@ -752,7 +756,38 @@
       document.body.classList.add('creator-mode');
     }
 
+    /* ---------- Control del botón "atrás" mientras se busca ----------
+       Si el usuario escribe algo en el buscador, marcamos ese momento en el
+       historial del navegador. Así, si toca "atrás" (algo muy común en Android
+       para cerrar el teclado), la página solo sale del modo búsqueda en vez de
+       salir de toda la app. Esto evita además que el teclado quede "trabado". */
+    let inSearchHistoryState = false;
+
+    function pushSearchState() {
+      if (!inSearchHistoryState) {
+        inSearchHistoryState = true;
+        history.pushState({ naplusSearch: true }, '', location.href);
+      }
+    }
+
+    function popSearchStateIfNeeded() {
+      if (inSearchHistoryState) {
+        inSearchHistoryState = false;
+        history.back();
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (inSearchHistoryState) {
+        inSearchHistoryState = false;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        renderHomeSections();
+      }
+    });
+
     function switchView(viewName) {
+      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -782,6 +817,7 @@
     }
 
     function clearSearchInput() {
+      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -873,6 +909,7 @@
       }
 
       if (query.length > 0 && query !== "9009") {
+        pushSearchState();
         heroSlider.style.display = 'none';
         searchContainer.style.display = 'block';
         mainContent.style.display = 'none';
@@ -943,6 +980,7 @@
         const val = document.getElementById('searchInput').value.trim();
         if (val === "9009") {
           e.preventDefault();
+          popSearchStateIfNeeded();
           document.getElementById('searchInput').value = '';
           
           isCreatorMode = !isCreatorMode;
@@ -954,10 +992,9 @@
           } else {
             alert("🔒 Modo Creador desactivado discretamente.");
           }
-          return;
+          renderHomeSections();
         }
       }
-      handleSearch();
     }
 
     function renderMoviesGrid() {
