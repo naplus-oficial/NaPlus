@@ -396,7 +396,7 @@
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
     .btn-submit:hover { background: #6d28d9; }
 
-    /* ENCABEZADO DE SERIE (HBO / NETFLIX STYLE) */
+    /* ENCABEZADO DE SERIE */
     .hbo-backdrop-header {
       position: relative;
       width: 100%;
@@ -545,7 +545,6 @@
     .video-box iframe { width: 100%; height: 100%; border: none; }
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
 
-    /* GESTOR DE EPISODIOS EN ADMIN */
     .admin-episode-card {
       background: #07040d;
       border: 1px solid var(--border-purple);
@@ -558,7 +557,7 @@
 </head>
 <body>
 
-  <!-- ENCABEZADO MINIMALISTA LIMPIO (SIN BOTÓN VISIBLE DE CREADOR) -->
+  <!-- ENCABEZADO MINIMALISTA LIMPIO -->
   <header>
     <div class="logo" onclick="switchView('home')">NaPlus</div>
     <div class="header-actions" style="display: none;"></div>
@@ -572,10 +571,10 @@
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
-    <!-- BUSCADOR CON HUEVO DE PASCUA (9009) -->
+    <!-- BUSCADOR DISCRETO (TEXTO LIMPIO) -->
     <div class="hero">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar o ingresar código..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
       </div>
     </div>
 
@@ -969,7 +968,7 @@
       });
     }
 
-    /* CONTROL DE CÓDIGO SECRETO DESDE EL BUSCADOR (9009) */
+    /* CONTROL DE CÓDIGO SECRETO (9009) DESDE EL BUSCADOR */
     function checkSecretCode(e) {
       if (e.key === 'Enter') {
         const val = document.getElementById('searchInput').value.trim();
@@ -977,7 +976,6 @@
           e.preventDefault();
           document.getElementById('searchInput').value = '';
           
-          // Interruptor (Toggle) para Activar / Desactivar Modo Creador discretamente
           isCreatorMode = !isCreatorMode;
           localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
           document.body.classList.toggle('creator-mode', isCreatorMode);
@@ -1068,7 +1066,7 @@
 
       card.innerHTML = `
         <button class="card-fav-btn" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar de mi lista' : 'Agregar a mi lista'}">
-          ${isFav ? '❤️' : '🔖'}
+          ${isFav ? '❤️️' : '🔖'}
         </button>
         <div class="admin-btns">
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
