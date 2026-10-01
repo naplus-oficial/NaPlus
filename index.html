@@ -33,25 +33,22 @@
     body {
       background-color: var(--bg-dark);
       color: var(--text-white);
-      padding-top: 60px; /* Ajustado exactamente a la barra superior */
-      padding-bottom: 85px; /* Espacio extra para que ningún contenido sea tapado abajo */
+      padding-top: 0; /* Sin espacio arriba para que el carrusel ocupe el fondo completo */
+      padding-bottom: 85px;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* BARRA SUPERIOR */
+    /* BARRA SUPERIOR TRANSPARENTE / FLOTANTE */
     header {
-      position: fixed;
+      position: absolute;
       top: 0; left: 0; right: 0;
-      height: 60px;
+      height: 65px;
       padding: 0 20px;
-      background: rgba(7, 4, 13, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(7,4,13,0.85) 0%, rgba(7,4,13,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       transform: translateZ(0);
     }
 
@@ -63,6 +60,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       cursor: pointer;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     /* NAVEGACIÓN INFERIOR CON ICONOS MINIMALISTAS SVG */
@@ -96,7 +94,6 @@
       transition: color 0.2s ease;
     }
 
-    /* SVG Minimalistas y Elegantes */
     .nav-item svg {
       width: 22px;
       height: 22px;
@@ -115,14 +112,14 @@
     .view-section { display: none; padding-bottom: 20px; will-change: opacity; }
     .view-section.active { display: block; }
 
-    /* CARRUSEL HERO CORREGIDO (Sin solapamiento superior) */
+    /* CARRUSEL HERO A PANTALLA COMPLETA */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
-      height: 420px;
+      height: 460px; /* Mayor altura para lucir el fondo completo */
       background: #000;
       overflow: hidden;
-      margin-top: 0; /* Corrección para que comience limpio debajo del header */
+      margin-top: 0;
       margin-bottom: 15px;
       transform: translateZ(0);
     }
@@ -135,7 +132,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 24px 20px; /* Padding superior seguro para el título */
+      padding: 24px 20px;
       background-size: cover;
       background-position: center;
       will-change: opacity;
@@ -146,7 +143,7 @@
     .hbo-slide-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.15) 0%, rgba(7,4,13,0.75) 60%, var(--bg-dark) 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.6) 60%, var(--bg-dark) 100%);
     }
 
     .hbo-slide-content {
@@ -156,11 +153,11 @@
     }
 
     .hbo-slide-title {
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 4px;
       line-height: 1.2;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     }
 
     .hbo-slide-meta {
@@ -197,10 +194,10 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       width: 38px; height: 38px;
       border-radius: 6px;
-      font-size: 0.95rem;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
     }
+    .hbo-btn-add svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .hbo-slider-dots {
       position: absolute;
@@ -288,18 +285,34 @@
     .card-title { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 0.65rem; color: var(--text-gray); }
 
+    /* BOTÓN DE GUARDAR MINIMALISTA (MARCADOR SVG) */
     .card-fav-btn {
       position: absolute;
       top: 6px; left: 6px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      width: 26px; height: 26px;
+      width: 30px; height: 30px;
       border-radius: 50%;
-      font-size: 0.7rem;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; z-index: 10;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .card-fav-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
+    .card-fav-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-fav-btn.saved svg {
+      fill: var(--accent-light);
+      stroke: var(--accent-light);
     }
 
     .admin-btns {
@@ -424,7 +437,6 @@
       outline: none;
     }
 
-    /* CORRECCIÓN DE EPISODIOS: Padding inferior amplio para que el último capítulo nunca quede tapado */
     .hbo-episodes-list { display: flex; flex-direction: column; gap: 15px; padding: 10px 20px 90px; }
     .hbo-ep-card { display: flex; flex-direction: column; gap: 6px; }
     .hbo-ep-row { display: flex; align-items: center; gap: 12px; cursor: pointer; }
@@ -457,6 +469,7 @@
 </head>
 <body>
 
+  <!-- ENCABEZADO TRANSPARENTE FLOTANTE -->
   <header>
     <div class="logo" onclick="switchView('home')">NaPlus</div>
     <div class="header-actions" style="display: none;"></div>
@@ -512,7 +525,7 @@
     <div class="grid" id="myListGrid"></div>
   </div>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR CON ICONOS SVG MINIMALISTAS -->
+  <!-- NAVEGACIÓN INFERIOR CON ICONOS SVG MINIMALISTAS -->
   <nav>
     <button class="nav-item active" id="navHome" onclick="switchView('home')">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -759,6 +772,7 @@
         const slide = document.createElement('div');
         slide.className = `hbo-slide ${idx === 0 ? 'active' : ''}`;
         slide.style.backgroundImage = `url('${item.cover}')`;
+        const isFav = myFavorites.includes(item.id);
         slide.innerHTML = `
           <div class="hbo-slide-overlay"></div>
           <div class="hbo-slide-content">
@@ -766,7 +780,9 @@
             <div class="hbo-slide-meta">${item.year} • ${item.genre.split(',')[0]}</div>
             <div class="hbo-slide-btns">
               <button class="hbo-btn-play" onclick="openContentDetail(${item.id})">▶ Ver</button>
-              <button class="hbo-btn-add" onclick="toggleFavorite(${item.id}, event)">${myFavorites.includes(item.id) ? '❤️' : '+'}</button>
+              <button class="hbo-btn-add" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
+                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              </button>
             </div>
           </div>
         `;
@@ -961,8 +977,8 @@
       const badge = item.type === 'series' ? '📺' : '🎬';
 
       card.innerHTML = `
-        <button class="card-fav-btn" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
-          ${isFav ? '❤️' : '🔖'}
+        <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         </button>
         <div class="admin-btns">
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
