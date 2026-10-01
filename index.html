@@ -28,7 +28,6 @@
       color: var(--text-white);
       padding-top: 65px;
       padding-bottom: 70px;
-      -webkit-font-smoothing: antialiased;
     }
 
     /* BARRA SUPERIOR */
@@ -38,8 +37,7 @@
       height: 60px;
       padding: 0 15px;
       background: rgba(10, 6, 18, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -72,9 +70,7 @@
       font-weight: bold;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: transform 0.1s ease;
     }
-    .btn-creator:active { transform: scale(0.96); }
 
     /* NAVEGACIÓN INFERIOR */
     nav {
@@ -82,8 +78,7 @@
       bottom: 0; left: 0; right: 0;
       height: 60px;
       background: rgba(10, 6, 18, 0.98);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -102,22 +97,16 @@
       gap: 3px;
       cursor: pointer;
       width: 25%;
-      transition: color 0.2s ease;
     }
 
     .nav-item span { font-size: 1.2rem; }
     .nav-item.active { color: var(--accent-light); font-weight: bold; }
 
-    /* VISTAS CON TRANSICIÓN FLUIDA */
-    .view-section { display: none; padding-bottom: 20px; animation: fadeIn 0.25s ease-in-out; }
+    /* VISTAS */
+    .view-section { display: none; padding-bottom: 20px; }
     .view-section.active { display: block; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* CARRUSEL PRINCIPAL ESTILO NETFLIX / HBO */
+    /* CARRUSEL PRINCIPAL ESTILO HBO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
@@ -131,14 +120,13 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.8s ease-in-out;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 20px;
       background-size: cover;
       background-position: center;
-      will-change: opacity;
     }
 
     .hbo-slide.active { opacity: 1; z-index: 2; }
@@ -146,7 +134,7 @@
     .hbo-slide-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(10,6,18,0.1) 0%, rgba(10,6,18,0.7) 60%, var(--bg-dark) 100%);
+      background: linear-gradient(180deg, rgba(10,6,18,0.2) 0%, rgba(10,6,18,0.7) 60%, var(--bg-dark) 100%);
     }
 
     .hbo-slide-content {
@@ -186,14 +174,11 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: transform 0.1s ease, background 0.2s;
     }
-    .hbo-btn-play:active { transform: scale(0.96); }
 
     .hbo-btn-add {
       background: rgba(255,255,255,0.2);
       backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.3);
       width: 42px; height: 42px;
@@ -201,7 +186,6 @@
       font-size: 1.2rem;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
     .hbo-slider-dots {
@@ -217,9 +201,9 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.4);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.3s;
     }
-    .hbo-dot.active { background: #fff; width: 22px; border-radius: 4px; }
+    .hbo-dot.active { background: #fff; width: 20px; border-radius: 4px; }
 
     /* HERO & BUSCADOR */
     .hero {
@@ -237,7 +221,6 @@
       border-radius: 8px;
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s;
     }
     .search-box input:focus { border-color: var(--accent-light); }
 
@@ -265,7 +248,6 @@
       overflow-x: auto;
       padding: 0 15px 10px 15px;
       scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll .card { min-width: 120px; width: 120px; flex-shrink: 0; }
@@ -285,9 +267,7 @@
       border: 1px solid var(--border-purple);
       cursor: pointer;
       position: relative;
-      transition: transform 0.2s ease;
     }
-    .card:active { transform: scale(0.97); }
 
     .card img {
       width: 100%;
@@ -333,19 +313,16 @@
       cursor: pointer;
     }
 
-    /* MODALES FLUIDOS */
+    /* MODALES */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
       z-index: 2000;
       padding: 20px;
       align-items: center;
       justify-content: center;
       overflow-y: auto;
-      animation: fadeIn 0.2s ease;
     }
 
     .modal-box {
@@ -359,6 +336,7 @@
       overflow-y: auto;
     }
 
+    /* MODAL AMPLIO ESTILO HBO PARA SERIES */
     .modal-box-series {
       background: #000;
       padding: 0;
@@ -372,7 +350,6 @@
       overflow-y: auto;
       z-index: 2100;
       display: none;
-      animation: fadeIn 0.2s ease;
     }
 
     .btn-close {
@@ -399,6 +376,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
+    /* ESTILO ENCABEZADO CON PORTADA DE FONDO Y GRADIENTE HBO */
     .hbo-backdrop-header {
       position: relative;
       width: 100%;
@@ -422,6 +400,7 @@
     .hbo-header-content h2 { font-size: 1.5rem; margin-bottom: 6px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     .hbo-header-content p { font-size: 0.85rem; color: #d1d5db; margin-bottom: 4px; }
     
+    /* SINOPSIS CON LEER MÁS */
     .synopsis-container {
       font-size: 0.85rem;
       color: var(--text-gray);
@@ -480,9 +459,7 @@
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: opacity 0.15s;
     }
-    .hbo-ep-row:active { opacity: 0.7; }
 
     .hbo-thumb {
       width: 140px;
@@ -538,6 +515,7 @@
     }
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
+    /* REPRODUCTOR */
     .video-box {
       width: 100%; aspect-ratio: 16/9; background: #000;
       margin-bottom: 12px; border-radius: 8px; overflow: hidden;
@@ -546,6 +524,7 @@
     .video-box iframe { width: 100%; height: 100%; border: none; }
     .empty-msg { font-size: 0.85rem; color: var(--text-gray); padding: 0 15px; font-style: italic; }
 
+    /* GESTOR DE EPISODIOS EN ADMIN */
     .admin-episode-card {
       background: #0a0612;
       border: 1px solid var(--border-purple);
@@ -569,7 +548,7 @@
   <!-- VISTA INICIO -->
   <div id="viewHome" class="view-section active">
     
-    <!-- CARRUSEL HERO ESTILO NETFLIX / HBO -->
+    <!-- CARRUSEL HERO ESTILO HBO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
@@ -601,12 +580,26 @@
   <!-- VISTA PELÍCULAS -->
   <div id="viewMovies" class="view-section">
     <div class="section-title" style="margin-top: 25px;">🎬 Películas</div>
+
+    <div class="section-title">⭐ Top 10 Más Vistas</div>
+    <div class="horizontal-scroll" id="moviesTopScroll"></div>
+
+    <div id="moviesGenreRowsContainer"></div>
+
+    <div class="section-title">Todas las Películas</div>
     <div class="grid" id="moviesGrid"></div>
   </div>
 
   <!-- VISTA SERIES -->
   <div id="viewSeries" class="view-section">
     <div class="section-title" style="margin-top: 25px;">📺 Series</div>
+
+    <div class="section-title">⭐ Top 10 Más Vistas</div>
+    <div class="horizontal-scroll" id="seriesTopScroll"></div>
+
+    <div id="seriesGenreRowsContainer"></div>
+
+    <div class="section-title">Todas las Series</div>
     <div class="grid" id="seriesGrid"></div>
   </div>
 
@@ -639,7 +632,7 @@
     </div>
   </div>
 
-  <!-- VISTA DE SERIE ESTILO NETFLIX / HBO -->
+  <!-- VISTA DE SERIE ESTILO HBO (PANTALLA COMPLETA CON BACKDROP DE FONDO) -->
   <div class="modal-box-series" id="seriesModal">
     <button class="btn-close" onclick="closeModal('seriesModal')">✕</button>
     
@@ -730,11 +723,13 @@
           <input type="url" id="coverInput" required placeholder="https://...">
         </div>
 
+        <!-- CAMPO PARA PELÍCULAS -->
         <div class="form-group" id="movieVideoGroup">
           <label>Enlace o Código de Video (VOE, OK.ru o .mp4)</label>
           <input type="text" id="videoInput" placeholder="https://voe.sx/..., https://ok.ru/... o enlace .mp4">
         </div>
 
+        <!-- CAMPO PARA GESTIONAR SECCIONES DE SERIES -->
         <div id="seriesSeasonsGroup" style="display: none;">
           <label style="color: var(--accent-light); font-weight: bold; margin-bottom: 8px; display: block;">Temporadas y Episodios</label>
           <div id="seasonsContainer"></div>
@@ -985,17 +980,99 @@
     }
 
     function renderMoviesGrid() {
+      const movies = catalog.filter(i => i.type === 'movie');
+
+      const topScroll = document.getElementById('moviesTopScroll');
+      topScroll.innerHTML = '';
+      const topMovies = [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+      topMovies.forEach(item => topScroll.appendChild(createCardElement(item)));
+      if (topMovies.length === 0) topScroll.innerHTML = '<div class="empty-msg">No hay películas cargadas.</div>';
+
+      const genreContainer = document.getElementById('moviesGenreRowsContainer');
+      genreContainer.innerHTML = '';
+
+      let allGenres = [];
+      movies.forEach(item => {
+        if (item.genre) {
+          item.genre.split(',').forEach(g => {
+            const cleanG = g.trim();
+            if (cleanG && !allGenres.includes(cleanG)) allGenres.push(cleanG);
+          });
+        }
+      });
+      allGenres.sort();
+
+      allGenres.forEach(genre => {
+        const genreItems = movies.filter(i => {
+          if (!i.genre) return false;
+          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
+          return itemGenres.includes(genre.toLowerCase());
+        });
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'section-title';
+          titleDiv.innerText = `🎬 ${genre}`;
+
+          const scrollDiv = document.createElement('div');
+          scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+
+          genreContainer.appendChild(titleDiv);
+          genreContainer.appendChild(scrollDiv);
+        }
+      });
+
       const grid = document.getElementById('moviesGrid');
       grid.innerHTML = '';
-      const movies = catalog.filter(i => i.type === 'movie');
       movies.forEach(item => grid.appendChild(createCardElement(item)));
       if (movies.length === 0) grid.innerHTML = '<div class="empty-msg">No hay películas cargadas.</div>';
     }
 
     function renderSeriesGrid() {
+      const series = catalog.filter(i => i.type === 'series');
+
+      const topScroll = document.getElementById('seriesTopScroll');
+      topScroll.innerHTML = '';
+      const topSeries = [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+      topSeries.forEach(item => topScroll.appendChild(createCardElement(item)));
+      if (topSeries.length === 0) topScroll.innerHTML = '<div class="empty-msg">No hay series cargadas.</div>';
+
+      const genreContainer = document.getElementById('seriesGenreRowsContainer');
+      genreContainer.innerHTML = '';
+
+      let allGenres = [];
+      series.forEach(item => {
+        if (item.genre) {
+          item.genre.split(',').forEach(g => {
+            const cleanG = g.trim();
+            if (cleanG && !allGenres.includes(cleanG)) allGenres.push(cleanG);
+          });
+        }
+      });
+      allGenres.sort();
+
+      allGenres.forEach(genre => {
+        const genreItems = series.filter(i => {
+          if (!i.genre) return false;
+          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
+          return itemGenres.includes(genre.toLowerCase());
+        });
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'section-title';
+          titleDiv.innerText = `📺 ${genre}`;
+
+          const scrollDiv = document.createElement('div');
+          scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+
+          genreContainer.appendChild(titleDiv);
+          genreContainer.appendChild(scrollDiv);
+        }
+      });
+
       const grid = document.getElementById('seriesGrid');
       grid.innerHTML = '';
-      const series = catalog.filter(i => i.type === 'series');
       series.forEach(item => grid.appendChild(createCardElement(item)));
       if (series.length === 0) grid.innerHTML = '<div class="empty-msg">No hay series cargadas.</div>';
     }
@@ -1024,7 +1101,7 @@
           <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
         </div>
-        <img src="${item.cover}" alt="Portada" loading="lazy" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
+        <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${badge} • ${item.year}</div>
@@ -1118,23 +1195,22 @@
           <button type="button" onclick="this.closest('.season-item-block').remove()" style="background:#ef4444; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Eliminar Temp</button>
         </div>
         <div class="episodes-admin-container"></div>
-        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.75rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this)">+ Agregar Capítulo</button>
+        <button type="button" class="btn-submit add-ep-btn" style="background:#7c3aed; font-size:0.75rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Capítulo</button>
       `;
       container.appendChild(seasonDiv);
 
       const epContainer = seasonDiv.querySelector('.episodes-admin-container');
       if (seasonData && seasonData.episodes) {
         seasonData.episodes.forEach(ep => {
-          addEpisodeField(seasonDiv.querySelector('button:last-of-type'), ep);
+          addEpisodeField(epContainer, ep);
         });
       } else {
-        addEpisodeField(seasonDiv.querySelector('button:last-of-type'));
+        addEpisodeField(epContainer);
       }
     }
 
-    function addEpisodeField(btn, epData = null) {
-      const epContainer = btn.previousElementSibling;
-      const defaultEpNum = epData && epData.num !== undefined ? epData.num : (epContainer.children.length + 1);
+    function addEpisodeField(container, epData = null) {
+      const defaultEpNum = epData && epData.num !== undefined ? epData.num : (container.children.length + 1);
       const epDiv = document.createElement('div');
       epDiv.className = 'admin-episode-card ep-item-row';
       epDiv.innerHTML = `
@@ -1144,11 +1220,11 @@
           <input type="text" class="ep-title" placeholder="Título del capítulo" value="${epData ? (epData.title || '') : ''}" style="flex-grow:1; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.8rem;">
           <button type="button" onclick="this.closest('.ep-item-row').remove()" style="background:#ef4444; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">✕</button>
         </div>
-        <input type="url" class="ep-img" placeholder="URL de miniatura específica del capítulo" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">
+        <input type="url" class="ep-img" placeholder="URL de miniatura de ESTE capítulo (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="1" placeholder="Sinopsis del capítulo" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">${epData ? (epData.desc || '') : ''}</textarea>
         <input type="text" class="ep-video" placeholder="Link de VOE, OK.ru o Iframe" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;">
       `;
-      epContainer.appendChild(epDiv);
+      container.appendChild(epDiv);
     }
 
     function editItem(id) {
@@ -1181,6 +1257,7 @@
           const epRows = sBlock.querySelectorAll('.ep-item-row');
           let eps = [];
           
+          // LECTURA DIRECTA Y ABSOLUTA POR PROPIEDAD NATIVA DE CADA NODO (Evita cruces de memoria)
           epRows.forEach((row, rIdx) => {
             const numInput = row.querySelector('.ep-num');
             const titleInput = row.querySelector('.ep-title');
@@ -1387,6 +1464,8 @@
 
       season.episodes.forEach((ep, eIdx) => {
         const epNumDisplay = ep.num !== undefined ? ep.num : (eIdx + 1);
+        
+        // RENDERIZADO AISLADO ESTRICTO: Cada tarjeta toma su propia imagen o recurre a la portada principal
         const thumbImg = (ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null') 
                          ? ep.img.trim() 
                          : currentSeriesData.cover;
@@ -1396,7 +1475,7 @@
         cardDiv.innerHTML = `
           <div class="hbo-ep-row" onclick="playEpisode(${sIdx}, ${eIdx})">
             <div class="hbo-thumb">
-              <img src="${thumbImg}" alt="Ep" loading="lazy" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80?text=Cap'">
+              <img src="${thumbImg}" alt="Ep" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80?text=Cap'">
               <div class="hbo-play-icon">▶</div>
             </div>
             <div class="hbo-ep-details">
