@@ -28,6 +28,7 @@
       color: var(--text-white);
       padding-top: 65px;
       padding-bottom: 70px;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* BARRA SUPERIOR */
@@ -37,7 +38,8 @@
       height: 60px;
       padding: 0 15px;
       background: rgba(10, 6, 18, 0.95);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -70,7 +72,9 @@
       font-weight: bold;
       font-size: 0.85rem;
       cursor: pointer;
+      transition: transform 0.1s ease;
     }
+    .btn-creator:active { transform: scale(0.96); }
 
     /* NAVEGACIÓN INFERIOR */
     nav {
@@ -78,7 +82,8 @@
       bottom: 0; left: 0; right: 0;
       height: 60px;
       background: rgba(10, 6, 18, 0.98);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -97,16 +102,22 @@
       gap: 3px;
       cursor: pointer;
       width: 25%;
+      transition: color 0.2s ease;
     }
 
     .nav-item span { font-size: 1.2rem; }
     .nav-item.active { color: var(--accent-light); font-weight: bold; }
 
-    /* VISTAS */
-    .view-section { display: none; padding-bottom: 20px; }
+    /* VISTAS CON TRANSICIÓN FLUIDA */
+    .view-section { display: none; padding-bottom: 20px; animation: fadeIn 0.25s ease-in-out; }
     .view-section.active { display: block; }
 
-    /* CARRUSEL PRINCIPAL ESTILO HBO */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARRUSEL PRINCIPAL ESTILO NETFLIX / HBO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
@@ -120,13 +131,14 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 20px;
       background-size: cover;
       background-position: center;
+      will-change: opacity;
     }
 
     .hbo-slide.active { opacity: 1; z-index: 2; }
@@ -134,7 +146,7 @@
     .hbo-slide-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(10,6,18,0.2) 0%, rgba(10,6,18,0.7) 60%, var(--bg-dark) 100%);
+      background: linear-gradient(180deg, rgba(10,6,18,0.1) 0%, rgba(10,6,18,0.7) 60%, var(--bg-dark) 100%);
     }
 
     .hbo-slide-content {
@@ -174,11 +186,14 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      transition: transform 0.1s ease, background 0.2s;
     }
+    .hbo-btn-play:active { transform: scale(0.96); }
 
     .hbo-btn-add {
       background: rgba(255,255,255,0.2);
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.3);
       width: 42px; height: 42px;
@@ -186,6 +201,7 @@
       font-size: 1.2rem;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
     .hbo-slider-dots {
@@ -201,9 +217,9 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.4);
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
     }
-    .hbo-dot.active { background: #fff; width: 20px; border-radius: 4px; }
+    .hbo-dot.active { background: #fff; width: 22px; border-radius: 4px; }
 
     /* HERO & BUSCADOR */
     .hero {
@@ -221,6 +237,7 @@
       border-radius: 8px;
       font-size: 0.95rem;
       outline: none;
+      transition: border-color 0.2s;
     }
     .search-box input:focus { border-color: var(--accent-light); }
 
@@ -248,6 +265,7 @@
       overflow-x: auto;
       padding: 0 15px 10px 15px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll .card { min-width: 120px; width: 120px; flex-shrink: 0; }
@@ -267,7 +285,9 @@
       border: 1px solid var(--border-purple);
       cursor: pointer;
       position: relative;
+      transition: transform 0.2s ease;
     }
+    .card:active { transform: scale(0.97); }
 
     .card img {
       width: 100%;
@@ -313,16 +333,19 @@
       cursor: pointer;
     }
 
-    /* MODALES */
+    /* MODALES FLUIDOS */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 2000;
       padding: 20px;
       align-items: center;
       justify-content: center;
       overflow-y: auto;
+      animation: fadeIn 0.2s ease;
     }
 
     .modal-box {
@@ -336,7 +359,6 @@
       overflow-y: auto;
     }
 
-    /* MODAL AMPLIO ESTILO HBO PARA SERIES */
     .modal-box-series {
       background: #000;
       padding: 0;
@@ -350,6 +372,7 @@
       overflow-y: auto;
       z-index: 2100;
       display: none;
+      animation: fadeIn 0.2s ease;
     }
 
     .btn-close {
@@ -376,7 +399,6 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    /* ESTILO ENCABEZADO CON PORTADA DE FONDO Y GRADIENTE HBO */
     .hbo-backdrop-header {
       position: relative;
       width: 100%;
@@ -400,7 +422,6 @@
     .hbo-header-content h2 { font-size: 1.5rem; margin-bottom: 6px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     .hbo-header-content p { font-size: 0.85rem; color: #d1d5db; margin-bottom: 4px; }
     
-    /* SINOPSIS CON LEER MÁS */
     .synopsis-container {
       font-size: 0.85rem;
       color: var(--text-gray);
@@ -459,7 +480,9 @@
       align-items: center;
       gap: 12px;
       cursor: pointer;
+      transition: opacity 0.15s;
     }
+    .hbo-ep-row:active { opacity: 0.7; }
 
     .hbo-thumb {
       width: 140px;
@@ -515,7 +538,6 @@
     }
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
-    /* REPRODUCTOR */
     .video-box {
       width: 100%; aspect-ratio: 16/9; background: #000;
       margin-bottom: 12px; border-radius: 8px; overflow: hidden;
@@ -524,7 +546,6 @@
     .video-box iframe { width: 100%; height: 100%; border: none; }
     .empty-msg { font-size: 0.85rem; color: var(--text-gray); padding: 0 15px; font-style: italic; }
 
-    /* GESTOR DE EPISODIOS EN ADMIN */
     .admin-episode-card {
       background: #0a0612;
       border: 1px solid var(--border-purple);
@@ -548,7 +569,7 @@
   <!-- VISTA INICIO -->
   <div id="viewHome" class="view-section active">
     
-    <!-- CARRUSEL HERO ESTILO HBO -->
+    <!-- CARRUSEL HERO ESTILO NETFLIX / HBO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
@@ -580,26 +601,12 @@
   <!-- VISTA PELÍCULAS -->
   <div id="viewMovies" class="view-section">
     <div class="section-title" style="margin-top: 25px;">🎬 Películas</div>
-
-    <div class="section-title">⭐ Top 10 Más Vistas</div>
-    <div class="horizontal-scroll" id="moviesTopScroll"></div>
-
-    <div id="moviesGenreRowsContainer"></div>
-
-    <div class="section-title">Todas las Películas</div>
     <div class="grid" id="moviesGrid"></div>
   </div>
 
   <!-- VISTA SERIES -->
   <div id="viewSeries" class="view-section">
     <div class="section-title" style="margin-top: 25px;">📺 Series</div>
-
-    <div class="section-title">⭐ Top 10 Más Vistas</div>
-    <div class="horizontal-scroll" id="seriesTopScroll"></div>
-
-    <div id="seriesGenreRowsContainer"></div>
-
-    <div class="section-title">Todas las Series</div>
     <div class="grid" id="seriesGrid"></div>
   </div>
 
@@ -632,7 +639,7 @@
     </div>
   </div>
 
-  <!-- VISTA DE SERIE ESTILO HBO (PANTALLA COMPLETA CON BACKDROP DE FONDO) -->
+  <!-- VISTA DE SERIE ESTILO NETFLIX / HBO -->
   <div class="modal-box-series" id="seriesModal">
     <button class="btn-close" onclick="closeModal('seriesModal')">✕</button>
     
@@ -723,13 +730,11 @@
           <input type="url" id="coverInput" required placeholder="https://...">
         </div>
 
-        <!-- CAMPO PARA PELÍCULAS -->
         <div class="form-group" id="movieVideoGroup">
           <label>Enlace o Código de Video (VOE, OK.ru o .mp4)</label>
           <input type="text" id="videoInput" placeholder="https://voe.sx/..., https://ok.ru/... o enlace .mp4">
         </div>
 
-        <!-- CAMPO PARA GESTIONAR SECCIONES DE SERIES -->
         <div id="seriesSeasonsGroup" style="display: none;">
           <label style="color: var(--accent-light); font-weight: bold; margin-bottom: 8px; display: block;">Temporadas y Episodios</label>
           <div id="seasonsContainer"></div>
@@ -785,530 +790,19 @@
     const FILE_PATH = "index.html";
 
     let catalog = /*CATALOG_START*/[
-  {
-    "id": 1790824833065,
-    "type": "movie",
-    "title": "Insaciable",
-    "genre": "Terror",
-    "year": "2026",
-    "desc": "Hana, una estudiante de medicina amorada, se aterroriza por una fuerza siniestra después de participar en una oscura locura de pérdida de peso: comer cenizas humanas.",
-    "cover": "https://cloudfront-us-east-1.images.arcpublishing.com/abccolor/LXHID2CQHBGIVCTQLKJOIPFHKY.jpg",
-    "video": "https://ok.ru/video/16671265327835",
-    "seasons": [],
-    "views": 436,
-    "dateAdded": 1790824833065
-  },
-  {
-    "id": 1790820683031,
-    "type": "series",
-    "title": "La maldición de Widow's Bay",
-    "genre": "Terror, Comedia",
-    "year": "2026",
-    "desc": "Mientras un alcalde intenta revitalizar el turismo en una isla de Nueva Inglaterra, las leyendas locales empiezan a hacerse realidad.",
-    "cover": "https://es.web.img3.acsta.net/img/4b/ab/4bab482ae65e4ee27b1dca7077aa99f3.png",
-    "video": "",
-    "seasons": [
       {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "¡Te damos la bienvenida a Widow’s Bay!",
-            "img": "https://m.media-amazon.com/images/M/MV5BNTY3NmRjMjMtMGUxNi00YWJkLWIyYTQtZWFjODBjZGFkYThkXkEyXkFqcGc@._V1_.jpg",
-            "desc": "Esperamos que hayas disfrutado del ferry de tres horas hasta el secreto mejor guardado de Nueva Inglaterra. Ignora las advertencias sobre la niebla. Todo está bien.",
-            "video": "https://ok.ru/video/16670769023707"
-          },
-          {
-            "num": 2,
-            "title": "Alojamiento",
-            "img": "https://i0.wp.com/elarchivokrell.com/wp-content/uploads/2026/06/WB5.jpg?resize=600%2C320&ssl=1",
-            "desc": "Aprecia el encanto histórico de nuestra posada local. El alcalde Loftis demostrará que es segura pasando una noche ahí solo.",
-            "video": "https://ok.ru/video/16670785145563"
-          },
-          {
-            "num": 3,
-            "title": "Baño inaugural",
-            "img": "https://mundocine.es/wp-content/uploads/2026/06/la-maldicion-de-widows-bay-tendra-temporada-2.webp",
-            "desc": "Es la apertura anual de la playa. Extiende una toalla mientras el alcalde “prueba las aguas”. Por otro lado: no recojas autoestopistas.",
-            "video": "https://ok.ru/video/16670792288987"
-          },
-          {
-            "num": 4,
-            "title": "Lecturas de playa",
-            "img": "https://www.infobae.com/resizer/v2/XIDJXYJRBNHBRCU52AJIESWIBE.webp?auth=576eb238245f0366d58707495d2a37a286c3eed359d3c666ecdb869c8d86e76e&smart=true&width=350&height=233&quality=85",
-            "desc": "Asegúrate de llevar un buen libro para la playa. No recomendamos libros de autoayuda en la isla.",
-            "video": "https://ok.ru/video/16670799563483"
-          },
-          {
-            "num": 5,
-            "title": "Que esperar de tu viaje",
-            "img": "https://cdn.avpasion.com/wp-content/uploads/2026/04/misterio-widows-bay-03-1200x675.jpg",
-            "desc": "Nos disculpamos por el toque de queda. Mantén la calma mientras averiguamos qué pasa. Los adolescentes deben quedarse en casa cuando oscurezca.",
-            "video": "https://ok.ru/video/16670813588187"
-          },
-          {
-            "num": 6,
-            "title": "Nuestra historia",
-            "img": "https://imagenes.20minutos.es/files/image_640_auto/uploads/imagenes/2026/07/15/6a57a3645ff335-31107935.jpeg",
-            "desc": "La historia de Widow’s Bay es un hermoso relato de matrimonio, lealtad y un amor que perdura más allá de las vidas. Eso es todo.",
-            "video": "https://ok.ru/video/16670990928603"
-          },
-          {
-            "num": 7,
-            "title": "Mareo",
-            "img": "https://i.blogs.es/15ae77/widows_bay_photo_010703.jpg.photo_modal_show_home_large-1-/1366_2000.jpeg",
-            "desc": "Sal a navegar con el alcalde Loftis y el querido local Wyck. Ellos atienden unos asuntos… mejor disfruta el viaje.",
-            "video": "https://ok.ru/video/16670996892379"
-          },
-          {
-            "num": 8,
-            "title": "Tú equipaje",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7a9gdsn7_qUSH8_K4QGnqRX75PNTKWlNJrODz4bnVYEsm30eoxFbfThU&s=10",
-            "desc": "No te preocupes por el equipaje extraviado. El equipaje viejo siempre reaparece en Widow’s Bay.",
-            "video": "https://ok.ru/video/16671002921691"
-          },
-          {
-            "num": 9,
-            "title": "Refugio de emergencia",
-            "img": "https://statics.forbesargentina.com/2026/06/6a3e752b1039c.jpg",
-            "desc": "Por favor busca refugio si una tormenta de siglos de antigüedad azota la isla y nos sume en la oscuridad. Juega a las cartas.",
-            "video": "https://ok.ru/video/16671105813211"
-          },
-          {
-            "num": 10,
-            "title": "¡Esperemos que te hayas divertido!",
-            "img": "https://www.indiewire.com/wp-content/uploads/2026/06/Widows-Bay-Episode-10-finale-Matthew-Rhys-Ruth-actor-K-Callan-e1781543948770.jpg",
-            "desc": "Final de temporada. Sabemos que hay que tomar decisiones difíciles y puede que nunca seamos los mismos, ¡pero esperamos que vuelvas de visita!",
-            "video": "https://ok.ru/video/16671118199515"
-          }
-        ]
+        id: 1,
+        type: 'movie',
+        title: '[REC]',
+        genre: 'Terror, Suspenso',
+        year: '2007',
+        desc: 'Película de prueba.',
+        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        video: 'https://ok.ru/videoembed/237592963750',
+        views: 1420,
+        dateAdded: 1710000000000
       }
-    ],
-    "views": 447,
-    "dateAdded": 1790820683031
-  },
-  {
-    "id": 1790804277999,
-    "type": "series",
-    "title": "Misa de medianoche",
-    "genre": "Terror",
-    "year": "2021",
-    "desc": "La llegada de un joven y carismático sacerdote trae consigo milagros, enigmas y un renovado fervor religioso a un pueblo de pescadores agonizante. Pero con él llega una criatura sedienta de sangre humana.",
-    "cover": "https://image.tmdb.org/t/p/original/p6kkBc4UX2CearGqOYasq0JMkuD.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Libro I: Génesis",
-            "img": "https://www.lanacion.com.ar/resizer/v2/misa-de-medianoche-la-serie-de-netflix-estrenada-YY3DBCIKKBHBDHLVTQOXTMRAMY.jpg?auth=31d92aa8f6627fade03ab31e7f4743f7060f9279c754795cfd9632656430ad97&width=1200&height=800&quality=70&smart=true",
-            "desc": "Riley Flynn regresa a casa y se encuentra con una familia disfuncional, caras conocidas y un nuevo sacerdote. En otra parte de la isla, se avecina una oscura tormenta.",
-            "video": "https://ok.ru/video/16670090070747"
-          },
-          {
-            "num": 2,
-            "title": "Libro ll: Salmos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC19yYIIduUQq8aKIE1rFvynqixwfUYmD_BDrlg_wgNzCAo0J9dfQt2MTB&s=10",
-            "desc": "Un presagio inquietante llega a la playa tras la tormenta. Más tarde, cuando los locales se reúnen para una comida, ocurre una tragedia… y un milagro.",
-            "video": "https://ok.ru/video/16670095772379"
-          },
-          {
-            "num": 3,
-            "title": "Libro lll: Proverbios",
-            "img": "https://i.blogs.es/52e043/midnightmass2/450_1000.jpg",
-            "desc": "Los milagros dejan atónitos a los residentes. Leeza visita a Joe. Una impactante confesión revela lo que realmente le ocurrió a monseñor Pruitt.",
-            "video": "https://ok.ru/video/16670103636699"
-          },
-          {
-            "num": 4,
-            "title": "Libro IV: Lamentaciones",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ26Xbtc51AThHLqZPiR0-fB9MCaHrAnQJ3yYSCSuzgzL1hydSUjHcrwnYe&s=10",
-            "desc": "Erin acude a Riley tras recibir una triste noticia. El padre Paul empieza a sufrir perturbadores efectos secundarios. Bev hace un descubrimiento impactante.",
-            "video": "https://ok.ru/video/16670209018587"
-          },
-          {
-            "num": 5,
-            "title": "Libro V: Evangelio",
-            "img": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABbpTr0Hvz5HdACGpJV9D5CO5d3EEshfhV1vd5xRht9u47-k8Vv2HsvQdjPYJGVvvtpl7hcMj5kxCEA9VuxaiD_jgBhV0t_V_NV6XRd2PjHwJGC03Dpiaxf5GlQ.jpg?r=8c1",
-            "desc": "El sheriff Hassan lidia con varias desapariciones mientras el pueblo se prepara para el Viernes Santo. Riley revela la verdad para proteger a Erin.",
-            "video": "https://ok.ru/video/16670210591451"
-          },
-          {
-            "num": 6,
-            "title": "Libro VI: Hechos de los apóstoles",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7b3CHJLLLRD_1FldEtglkzD3_a_fPU9WSyhylRaqwVGsxBUJ5sAEi0KQ&s=10",
-            "desc": "Una ferviente Bev llama a la fe en la noche de la vigilia de Pascua.",
-            "video": "https://ok.ru/video/16670212819675"
-          },
-          {
-            "num": 7,
-            "title": "Libro VII: Apocalipsis",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0iYAn5jRcZ8EIyBYb8Wm4151I5cFZWw32-EjYlurDUGKYJGLvsyeqQ7KV&s=10",
-            "desc": "La comunidad enfrenta las consecuencias definitivas de los milagros y el fervor religioso que se ha apoderado de la isla.",
-            "video": "https://ok.ru/video/16670215703259"
-          }
-        ]
-      }
-    ],
-    "views": 302,
-    "dateAdded": 1790804277999
-  },
-  {
-    "id": 1790783678102,
-    "type": "series",
-    "title": "El Gabinete de curiosidades de Guillermo del Toro",
-    "genre": "Terror, Cienciaficción",
-    "year": "2022",
-    "desc": "Una antología de terror con oscuras historias contadas por renombrados creadores del género.",
-    "cover": "https://image.tmdb.org/t/p/original/wdWGrl5U4CVOu2EniUXizz60gSh.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Lote 36",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW9ZTgHYbv1bYo6xlrJ51V1a1kYPgO7BH-Nts98HRfg8Vop_30MnvWPJb3cx_ALE5iKTV11-hyUPpFVFlkR-0LzPa1wG-0XEgF_LQHcxc&s=10",
-            "desc": "Un hombre compra una bodega llena de posesiones misteriosas para venderlas y pagar una deuda, pero pronto termina envuelto en una situación desesperada… y mortal.",
-            "video": "https://ok.ru/video/16667328449243"
-          },
-          {
-            "num": 2,
-            "title": "Ratas de cementerio",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/ratas_de_cementerio_00.jpg",
-            "desc": "Un ladrón de tumbas va por un botín recién llegado al cementerio, pero antes de hacerse con él deberá sobrevivir a un laberinto de túneles y a un ejército de roedores.",
-            "video": "https://ok.ru/video/16667825015515"
-          },
-          {
-            "num": 3,
-            "title": "La autopsia",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/27/la-autopsia-de-david-prior.jpeg",
-            "desc": "Mientras investiga la aparición de un cadáver, un alguacil veterano recurre a un viejo amigo forense para que lo ayude a desentrañar una serie de hechos escalofriantes.",
-            "video": "https://ok.ru/video/16667839761115"
-          },
-          {
-            "num": 4,
-            "title": "Por fuera",
-            "img": "https://media.elestimulo.com/uploads/2022/11/The-outside-1-1100x572.jpg",
-            "desc": "Ansiosa por encajar en su trabajo, Stacey empieza a usar una crema popular que le causa una reacción alarmante, mientras una inquietante transformación toma forma.",
-            "video": "https://ok.ru/video/16668959574747"
-          },
-          {
-            "num": 5,
-            "title": "Modelo",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/28/ben-barnes-y-crispin-glover-en-el-modelo-de-pickman.jpeg",
-            "desc": "Will, un estudiante de arte, conoce a Richard, un introvertido pintor cuyas tenebrosas obras empiezan a distorsionar su concepto de la realidad.",
-            "video": "https://ok.ru/video/16668984675035"
-          },
-          {
-            "num": 6,
-            "title": "Sueño en la casa de las brujas",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/28/daphne-hoskins-y-rupert-grint-en-suenos-en-la-casa-de-la-bruja.jpeg",
-            "desc": "Años después de la muerte de su gemela y estimulado por una rara sustancia, un investigador se adentra en un mundo oscuro y misterioso para traer a su hermana de regreso.",
-            "video": "https://ok.ru/video/16669013773019"
-          },
-          {
-            "num": 7,
-            "title": "La inspección",
-            "img": "https://image.pmgstatic.com/cache/resized/w663/files/images/film/photos/166/926/166926961_7aa5b1.jpg",
-            "desc": "Tentadas a vivir una experiencia única, cuatro personas visitan la lujosa mansión de un acaudalado ermitaño, pero la intriga pronto se convierte en horror.",
-            "video": "https://ok.ru/video/16669984164571"
-          },
-          {
-            "num": 8,
-            "title": "El murmullo",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmullo_01.jpg",
-            "desc": "Tras una pérdida devastadora, una pareja de ornitólogos se muda a una casa aislada para estudiar aves. Sin embargo, la historia del lugar está escrita con sangre y dolor.",
-            "video": "https://ok.ru/video/16669987506907"
-          }
-        ]
-      }
-    ],
-    "views": 288,
-    "dateAdded": 1790783678102
-  },
-  {
-    "id": 1790782282974,
-    "type": "movie",
-    "title": "[REC]⁴",
-    "genre": "Acción, Terror",
-    "year": "2014",
-    "desc": "Tras ser rescatada, envían a una desafortunada reportera de televisión a un viaje transocéanico, pero el virus mortal que la ha atormentado junto a muchos otros la sigue de cerca.",
-    "cover": "https://images.justwatch.com/poster/194558603/s718/rec-4-apocalipsis.jpg",
-    "video": "https://voe.sx/e/ujdvw0cw4lrj",
-    "seasons": [],
-    "views": 192,
-    "dateAdded": 1790782282974
-  },
-  {
-    "id": 1790779767239,
-    "type": "movie",
-    "title": "[REC]³ Génesis",
-    "genre": "Terror, Acción",
-    "year": "2012",
-    "desc": "Unos recién casados (Leticia Dolera, Diego Martín) observan cómo la recepción de su boda se convierte en un caos y en una carnicería cuando sus invitados son infectados por un virus que los transforma en unos zombies hambrientos.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/93ccf6afb00a4888162222f0c57ddef2d44f70dd6fe753494fe33f06d5b3c28b.jpg",
-    "video": "https://voe.sx/e/ipxa4ubjiyju",
-    "views": 98,
-    "dateAdded": 1790779767241
-  },
-  {
-    "id": 1790779271475,
-    "type": "movie",
-    "title": "[REC]²",
-    "genre": "Terror, Acción",
-    "year": "2009",
-    "desc": "Un grupo de policías entra en el edificio maldito, acompañado por un doctor que va a extraer sangre de los infectados para encontrar una cura. A su vez, tres adolescentes, un bombero y un antiguo inquilino entran por el alcantarillado.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/97051b1f80866fb2ac0f19f1970d9b55ad2d27d527f729faf51903ef5c8ef7b2.jpg",
-    "video": "https://ok.ru/video/16666491161307",
-    "views": 290,
-    "dateAdded": 1790779271475
-  },
-  {
-    "id": 1790777691129,
-    "type": "movie",
-    "title": "La muerte de un unicornio",
-    "genre": "Terror, Cienciaficción",
-    "year": "2025",
-    "desc": "El dúo padre-hija, Riley y Elliot, atropellan a un unicornio con su coche y lo llevan al refugio natural de un director general farmacéutico mega-rico.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/7ec54d860bdfce2eaa217ec2959da0dbeba8e4666669645c963e19a66f1eac5c.jpg",
-    "video": "https://voe.sx/e/kzm4jpvsz1d6",
-    "views": 272,
-    "dateAdded": 1790777691129
-  },
-  {
-    "id": 1790776246655,
-    "type": "movie",
-    "title": "The VelociPastor",
-    "genre": "Acción, Terror, Comedia",
-    "year": "2017",
-    "desc": "Después de perder a sus padres, un sacerdote viaja a China, donde hereda una habilidad misteriosa que le permite convertirse en un dinosaurio.",
-    "cover": "https://m.media-amazon.com/images/M/MV5BZTQyZDEwMDQtOTYyYS00ZmRkLWI0Y2EtNTRhNjhiZTJmMDVmXkEyXkFqcGc@._V1_.jpg",
-    "video": "https://ok.ru/video/16665821514459",
-    "views": 480,
-    "dateAdded": 1790776246655
-  },
-  {
-    "id": 1790771366996,
-    "type": "movie",
-    "title": "Maxxxine",
-    "genre": "Terror",
-    "year": "2024",
-    "desc": "Maxine Minx, aspirante a estrella de cine y estafadora, finalmente consigue su gran oportunidad. Pero mientras un misterioso asesino acecha a las estrellas de Hollywood de los años 80, un rastro de sangre amenaza con revelar su siniestro pasado.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/12879abf041926c00a188f2e48f3fd9936dc25d65fecbd8865b46ed5d4950507.jpg",
-    "video": "https://ok.ru/video/16665009654491",
-    "views": 195,
-    "dateAdded": 1790771366996
-  },
-  {
-    "id": 1790770844727,
-    "type": "movie",
-    "title": "X",
-    "genre": "Terror",
-    "year": "2022",
-    "desc": "Un equipo cinematográfico intenta grabar una película para adultos en una zona rural de Texas. Sin embargo, pronto, deberán luchar por sobrevivir.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/7040fd473c6ec5511ad7930376e9795c84f8d9c397da154d6cd61d6e6f576a75.jpg",
-    "video": "https://voe.sx/e/00dej9hw1spy",
-    "views": 476,
-    "dateAdded": 1790770844727
-  },
-  {
-    "id": 1790770226823,
-    "type": "movie",
-    "title": "Pearl",
-    "genre": "Terror, Drama",
-    "year": "2022",
-    "desc": "En la remota granja de su familia, Pearl debe cuidar a su padre enfermo bajo la estricta supervisión de su religiosa madre. Ella sueña con una vida lejos de allí, similar a la de las estrellas de cine, pero vive en un ambiente opresor y aterrador.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/bfc223dd18ed056b668e81469d69dd44c6bf5f658c5a556ff56c668240607376.jpg",
-    "video": "https://voe.sx/e/mtxifzx6gqta",
-    "views": 106,
-    "dateAdded": 1790770226823
-  },
-  {
-    "id": 1790769448763,
-    "type": "movie",
-    "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
-    "genre": "Terror",
-    "year": "2025",
-    "desc": "Wendy intenta rescatar a su hermano de Peter Pan, un perturbado secuestrador y asesino de niños que promete a los pequeños que, al morir, irán a la Tierra de Nunca Jamás.",
-    "cover": "https://play-lh.googleusercontent.com/HYVVxiMk_Gthbg5v7_JQpG4BvyqhZVhmVRdesAuWlWshUhYBAAqp2V9VwbuT1pKljEz8ijvAG1w7Ru7e2Q",
-    "video": "https://ok.ru/video/16664606411483",
-    "views": 441,
-    "dateAdded": 1790769448763
-  },
-  {
-    "id": 1790755820554,
-    "type": "movie",
-    "title": "Piraña 3DD",
-    "genre": "Terror, Comedia",
-    "year": "2012",
-    "desc": "Nadie está a salvo de un banco de peces prehistóricos que, buscando carne, clavan sus afilados dientes en los clientes del exitoso parque acuático Big Wet.",
-    "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
-    "video": "https://voe.sx/e/g0xdl5xf7x30",
-    "views": 361,
-    "dateAdded": 1790755820564
-  },
-  {
-    "id": 1790754583454,
-    "type": "movie",
-    "title": "Marble Hornet",
-    "genre": "Terror",
-    "year": "2015",
-    "desc": "Unos amigos descubren unas cintas de vídeo en las que un aterrador hombre sin rostro, vestido con un elegante traje, persigue a una familia hasta llevar a sus miembros a la locura. Ahora que lo han visto, el monstruo comienza a acosarlos sin descanso.",
-    "cover": "https://static.wikia.nocookie.net/vsdebating/images/f/fe/The_Operator.jpg/revision/latest/scale-to-width-down/1200?cb=20180302100112",
-    "video": "https://voe.sx/e/bj0ouh6neklp",
-    "views": 283,
-    "dateAdded": 1790754583455
-  },
-  {
-    "id": 1790651263999,
-    "type": "movie",
-    "title": "Piraña 3D",
-    "genre": "Terror, Comedia",
-    "year": "2010",
-    "desc": "Las vacaciones de primavera se vuelven una pesadilla en un popular centro turístico, en donde cientos de peces prehistóricos que se alimentan de humanos han llegado para comerse a los indefensos bañistas.",
-    "cover": "https://image.tmdb.org/t/p/original/lIodGaZNJbbShF5bDgf51cqpAKa.jpg",
-    "video": "https://ok.ru/video/16646131878619",
-    "views": 499,
-    "dateAdded": 1790651263999
-  },
-  {
-    "id": 1790649801930,
-    "type": "movie",
-    "title": "The Void (Conjuros del más allá)",
-    "genre": "Terror, Cienciaficción",
-    "year": "2016",
-    "desc": "Figuras cubiertas con capuchas, propias de una secta, atrapan a un agente de policía, pacientes y empleados en el interior de un hospital, que es una puerta abierta a la maldad.",
-    "cover": "https://www.joblo.com/wp-content/uploads/2015/12/the-void.jpg",
-    "video": "https://voe.sx/e/jgsbe2igvkwy",
-    "views": 380,
-    "dateAdded": 1790649801930
-  },
-  {
-    "id": 1790649103198,
-    "type": "movie",
-    "title": "I lost my body (Perdí mi cuerpo)",
-    "genre": "Drama, Romance, Animación",
-    "year": "2019",
-    "desc": "La historia de Naoufel, un joven que se enamora de Gabrielle, en París. En otra parte de la ciudad, la mano de un joven escapa de un laboratorio de disección, decidida a encontrar su cuerpo nuevamente.",
-    "cover": "https://a.ltrbxd.com/resized/film-poster/5/1/4/7/0/2/514702-i-lost-my-body-0-600-0-900-crop.jpg?v=d58f4ad597",
-    "video": "https://ok.ru/video/16645961091803",
-    "views": 348,
-    "dateAdded": 1790649103198
-  },
-  {
-    "id": 1790647825990,
-    "type": "movie",
-    "title": "Shutter",
-    "genre": "Terror",
-    "year": "2004",
-    "desc": "Un fotógrafo y su novia atropellan a una mujer con su automóvil, pero ahora deben enfrentar la ira de su espíritu vengativo.",
-    "cover": "https://m.media-amazon.com/images/I/612oSHMX54L._AC_UF894,1000_QL80_.jpg",
-    "video": "https://ok.ru/video/16645864032987",
-    "views": 459,
-    "dateAdded": 1790647825990
-  },
-  {
-    "id": 1790646943641,
-    "type": "movie",
-    "title": "Jujutsu Kaisen: El tesoro escondido/El tesoro perdido",
-    "genre": "Animación, Acción, Drama",
-    "year": "2026",
-    "desc": "Antes de ser enemigos, Satoru Gojo y Suguru Geto eran compañeros de instituto y amigos. Los dos poderosos hechiceros reciben el encargo de proteger a Riko Amanai",
-    "cover": "https://image.tmdb.org/t/p/original/gO0B3CwQ0gmLSFk9YwkNMvvvp0a.jpg",
-    "video": "https://ok.ru/video/16645678828251",
-    "seasons": [],
-    "views": 98,
-    "dateAdded": 1790646943641
-  },
-  {
-    "id": 1790646768137,
-    "type": "movie",
-    "title": "5 centímetros por segundo",
-    "genre": "Animación, Romance, Drama",
-    "year": "2007",
-    "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
-    "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
-    "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 499,
-    "dateAdded": 1790646768137
-  },
-  {
-    "id": 1790646629199,
-    "type": "movie",
-    "title": "Somos los Miller (We're the Millers)",
-    "genre": "Comedia",
-    "year": "2013",
-    "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
-    "video": "https://voe.sx/e/qif8izzgsxum",
-    "views": 549,
-    "dateAdded": 1790646629199
-  },
-  {
-    "id": 1790646464102,
-    "type": "movie",
-    "title": "V/H/S: Viral",
-    "genre": "Terror",
-    "year": "2014",
-    "desc": "Una persecución policiaca por las calles de Los Ángeles inspira a docenas de jóvenes obsesionados con la fama para capturar imágenes lascivas, pero no son conscientes que enfrentarán sus propias muertes como estrellas de la sensación de su video.",
-    "cover": "https://images.justwatch.com/poster/309926499/s718/v-h-s-viral.jpg",
-    "video": "https://ok.ru/video/16645563353819",
-    "views": 217,
-    "dateAdded": 1790646464102
-  },
-  {
-    "id": 1790646338112,
-    "type": "movie",
-    "title": "V/H/S 2: Las crónicas del miedo 2",
-    "genre": "Terror",
-    "year": "2013",
-    "desc": "Mientras se realiza una búsqueda sobre el paradero de un estudiante desaparecido, una pareja observa horribles historias grabadas en una colección de videocintas.",
-    "cover": "https://play-lh.googleusercontent.com/LossrrWKrnNop4AxnkA5cYMxNDqDWXBTpCUWMgPimKgLwfYSSasoE64g7qjrlu0ZZW0",
-    "video": "https://ok.ru/video/16645514988251",
-    "views": 229,
-    "dateAdded": 1790646338112
-  },
-  {
-    "id": 1790646185225,
-    "type": "movie",
-    "title": "V/H/S: Las crónicas del miedo",
-    "genre": "Terror",
-    "year": "2012",
-    "desc": "Contratada para robar una cinta VHS de una casa alejada, una banda de ladrones descubre un cadáver, viejos televisores y muchas imágenes encriptadas y perturbadoras.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/9e4b343e30ec4de545da0d441f539e1dad78d27cb16974010de57558fa8d2a7d.png",
-    "video": "https://ok.ru/video/16645441915611",
-    "views": 65,
-    "dateAdded": 1790646185225
-  },
-  {
-    "id": 1790645942165,
-    "type": "movie",
-    "title": "El final de la calle Oak",
-    "genre": "Acción, Cienciaficción",
-    "year": "2026",
-    "desc": "La familia Platt se une para desenvolverse en su nuevo entorno después de que un evento cósmico traslada su barrio residencial a un lugar desconocido y sterrador.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/73c3544aaac37e4c6bd8620234a55085d5498746efda9a28630927af5fda06d6.jpg",
-    "video": "https://ok.ru/video/16645391256283",
-    "views": 369,
-    "dateAdded": 1790645942165
-  },
-  {
-    "id": 1790645806977,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Un reportero de televisión y un camarógrafo siguen a un equipo de emergencias a un oscuro edificio de viviendas y rápidamente se ven atrapados dentro con algo aterrador y sobrenatural.",
-    "cover": "https://play-lh.googleusercontent.com/Boii2lPaGvS8OsUFVkTtkvTtXrT1mffksn5_TH8Yl81Xz53N-8kpmDuxCaLeU-yJ2WBh=w240-h480-rw",
-    "video": "https://ok.ru/video/16643535932123",
-    "views": 301,
-    "dateAdded": 1790645806977
-  }
-]/*CATALOG_END*/;
+    ]/*CATALOG_END*/;
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
@@ -1491,99 +985,17 @@
     }
 
     function renderMoviesGrid() {
-      const movies = catalog.filter(i => i.type === 'movie');
-
-      const topScroll = document.getElementById('moviesTopScroll');
-      topScroll.innerHTML = '';
-      const topMovies = [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      topMovies.forEach(item => topScroll.appendChild(createCardElement(item)));
-      if (topMovies.length === 0) topScroll.innerHTML = '<div class="empty-msg">No hay películas cargadas.</div>';
-
-      const genreContainer = document.getElementById('moviesGenreRowsContainer');
-      genreContainer.innerHTML = '';
-
-      let allGenres = [];
-      movies.forEach(item => {
-        if (item.genre) {
-          item.genre.split(',').forEach(g => {
-            const cleanG = g.trim();
-            if (cleanG && !allGenres.includes(cleanG)) allGenres.push(cleanG);
-          });
-        }
-      });
-      allGenres.sort();
-
-      allGenres.forEach(genre => {
-        const genreItems = movies.filter(i => {
-          if (!i.genre) return false;
-          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
-          return itemGenres.includes(genre.toLowerCase());
-        });
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div');
-          titleDiv.className = 'section-title';
-          titleDiv.innerText = `🎬 ${genre}`;
-
-          const scrollDiv = document.createElement('div');
-          scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-
-          genreContainer.appendChild(titleDiv);
-          genreContainer.appendChild(scrollDiv);
-        }
-      });
-
       const grid = document.getElementById('moviesGrid');
       grid.innerHTML = '';
+      const movies = catalog.filter(i => i.type === 'movie');
       movies.forEach(item => grid.appendChild(createCardElement(item)));
       if (movies.length === 0) grid.innerHTML = '<div class="empty-msg">No hay películas cargadas.</div>';
     }
 
     function renderSeriesGrid() {
-      const series = catalog.filter(i => i.type === 'series');
-
-      const topScroll = document.getElementById('seriesTopScroll');
-      topScroll.innerHTML = '';
-      const topSeries = [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      topSeries.forEach(item => topScroll.appendChild(createCardElement(item)));
-      if (topSeries.length === 0) topScroll.innerHTML = '<div class="empty-msg">No hay series cargadas.</div>';
-
-      const genreContainer = document.getElementById('seriesGenreRowsContainer');
-      genreContainer.innerHTML = '';
-
-      let allGenres = [];
-      series.forEach(item => {
-        if (item.genre) {
-          item.genre.split(',').forEach(g => {
-            const cleanG = g.trim();
-            if (cleanG && !allGenres.includes(cleanG)) allGenres.push(cleanG);
-          });
-        }
-      });
-      allGenres.sort();
-
-      allGenres.forEach(genre => {
-        const genreItems = series.filter(i => {
-          if (!i.genre) return false;
-          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
-          return itemGenres.includes(genre.toLowerCase());
-        });
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div');
-          titleDiv.className = 'section-title';
-          titleDiv.innerText = `📺 ${genre}`;
-
-          const scrollDiv = document.createElement('div');
-          scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-
-          genreContainer.appendChild(titleDiv);
-          genreContainer.appendChild(scrollDiv);
-        }
-      });
-
       const grid = document.getElementById('seriesGrid');
       grid.innerHTML = '';
+      const series = catalog.filter(i => i.type === 'series');
       series.forEach(item => grid.appendChild(createCardElement(item)));
       if (series.length === 0) grid.innerHTML = '<div class="empty-msg">No hay series cargadas.</div>';
     }
@@ -1612,7 +1024,7 @@
           <button onclick="event.stopPropagation(); editItem(${item.id})">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})">🗑️</button>
         </div>
-        <img src="${item.cover}" alt="Portada" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
+        <img src="${item.cover}" alt="Portada" loading="lazy" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${badge} • ${item.year}</div>
@@ -1706,22 +1118,23 @@
           <button type="button" onclick="this.closest('.season-item-block').remove()" style="background:#ef4444; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Eliminar Temp</button>
         </div>
         <div class="episodes-admin-container"></div>
-        <button type="button" class="btn-submit add-ep-btn" style="background:#7c3aed; font-size:0.75rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Capítulo</button>
+        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.75rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this)">+ Agregar Capítulo</button>
       `;
       container.appendChild(seasonDiv);
 
       const epContainer = seasonDiv.querySelector('.episodes-admin-container');
       if (seasonData && seasonData.episodes) {
         seasonData.episodes.forEach(ep => {
-          addEpisodeField(epContainer, ep);
+          addEpisodeField(seasonDiv.querySelector('button:last-of-type'), ep);
         });
       } else {
-        addEpisodeField(epContainer);
+        addEpisodeField(seasonDiv.querySelector('button:last-of-type'));
       }
     }
 
-    function addEpisodeField(container, epData = null) {
-      const defaultEpNum = epData && epData.num !== undefined ? epData.num : (container.children.length + 1);
+    function addEpisodeField(btn, epData = null) {
+      const epContainer = btn.previousElementSibling;
+      const defaultEpNum = epData && epData.num !== undefined ? epData.num : (epContainer.children.length + 1);
       const epDiv = document.createElement('div');
       epDiv.className = 'admin-episode-card ep-item-row';
       epDiv.innerHTML = `
@@ -1731,11 +1144,11 @@
           <input type="text" class="ep-title" placeholder="Título del capítulo" value="${epData ? (epData.title || '') : ''}" style="flex-grow:1; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.8rem;">
           <button type="button" onclick="this.closest('.ep-item-row').remove()" style="background:#ef4444; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">✕</button>
         </div>
-        <input type="url" class="ep-img" placeholder="URL de miniatura de ESTE capítulo (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">
+        <input type="url" class="ep-img" placeholder="URL de miniatura específica del capítulo" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="1" placeholder="Sinopsis del capítulo" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem; margin-bottom:6px;">${epData ? (epData.desc || '') : ''}</textarea>
         <input type="text" class="ep-video" placeholder="Link de VOE, OK.ru o Iframe" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:6px; background:#0a0612; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;">
       `;
-      container.appendChild(epDiv);
+      epContainer.appendChild(epDiv);
     }
 
     function editItem(id) {
@@ -1768,7 +1181,6 @@
           const epRows = sBlock.querySelectorAll('.ep-item-row');
           let eps = [];
           
-          // LECTURA DIRECTA Y ABSOLUTA POR PROPIEDAD NATIVA DE CADA NODO (Evita cruces de memoria)
           epRows.forEach((row, rIdx) => {
             const numInput = row.querySelector('.ep-num');
             const titleInput = row.querySelector('.ep-title');
@@ -1975,8 +1387,6 @@
 
       season.episodes.forEach((ep, eIdx) => {
         const epNumDisplay = ep.num !== undefined ? ep.num : (eIdx + 1);
-        
-        // RENDERIZADO AISLADO ESTRICTO: Cada tarjeta toma su propia imagen o recurre a la portada principal
         const thumbImg = (ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null') 
                          ? ep.img.trim() 
                          : currentSeriesData.cover;
@@ -1986,7 +1396,7 @@
         cardDiv.innerHTML = `
           <div class="hbo-ep-row" onclick="playEpisode(${sIdx}, ${eIdx})">
             <div class="hbo-thumb">
-              <img src="${thumbImg}" alt="Ep" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80?text=Cap'">
+              <img src="${thumbImg}" alt="Ep" loading="lazy" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80?text=Cap'">
               <div class="hbo-play-icon">▶</div>
             </div>
             <div class="hbo-ep-details">
