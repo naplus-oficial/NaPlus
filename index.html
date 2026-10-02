@@ -38,7 +38,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* BARRA SUPERIOR FIJA / FLOTANTE */
+    /* BARRA SUPERIOR */
     header {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -430,7 +430,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* REPRODUCTOR OPTIMIZADO CON PANTALLA HORIZONTAL PARA VOE */
+    /* REPRODUCTOR Y PANTALLA COMPLETA HORIZONTAL */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
@@ -444,7 +444,6 @@
       position: relative;
     }
     
-    /* Cuando se activa la pantalla completa horizontal para VOE */
     .video-box.fullscreen-mode {
       position: fixed !important;
       inset: 0 !important;
@@ -464,12 +463,12 @@
       object-fit: contain;
     }
 
-    /* Botón flotante exclusivo para VOE para forzar pantalla horizontal completa */
+    /* BOTÓN MOVIDO A LA IZQUIERDA para no chocar con el control nativo de VOE */
     .btn-fullscreen-toggle {
       position: absolute;
       bottom: 10px;
-      right: 10px;
-      background: rgba(124, 58, 237, 0.85);
+      left: 10px; /* Movido a la izquierda de forma segura */
+      background: rgba(124, 58, 237, 0.9);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
       padding: 6px 12px;
@@ -478,7 +477,7 @@
       border-radius: 6px;
       cursor: pointer;
       z-index: 3000;
-      display: none; /* Por defecto oculto, solo se muestra en VOE */
+      display: none; 
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
 
@@ -1363,7 +1362,7 @@
           },
           {
             "num": 7,
-            "title": "Susan es la nueva negra",
+            "title": "Susan is the new negra",
             "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
             "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
             "video": "https://ok.ru/video/16679640173275"
@@ -2563,7 +2562,6 @@
     }
 
     function closeEpisodePlayer() {
-      // Al cerrar, salimos del modo horizontal/fullscreen si estuviera activo
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       if (screen.orientation && screen.orientation.unlock) {
         try { screen.orientation.unlock(); } catch(e){}
@@ -2573,7 +2571,6 @@
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    /* REPRODUCTOR CON BOTÓN HORIZONTAL EXCLUSIVO PARA VOE */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2595,6 +2592,7 @@
           const parts = vInput.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1]}`;
         }
+        // Botón posicionado a la izquierda (`left: 10px`) para no invadir los controles de VOE
         vBox.innerHTML = `
           <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
           <button class="btn-fullscreen-toggle" style="display: block;" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
@@ -2605,30 +2603,46 @@
           const match = vInput.match(/\/video\/([0-9]+)/);
           if (match && match[1]) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
-        // Para ok.ru NO mostramos el botón personalizado, dejamos que use su propia interfaz normal
         vBox.innerHTML = `<iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>`;
       } else {
         vBox.innerHTML = `<video src="${vInput}" controls autoplay playsinline preload="auto"></video>`;
       }
     }
 
-    // Función para forzar pantalla horizontal (landscape) y tamaño completo real exclusiva para VOE
+    // Lógica mejorada: Extiende el contenedor en pantalla completa real y fuerza la orientación horizontal (landscape)
     async function forceLandscapeFullscreen(btn) {
       const box = btn.closest('.video-box');
       box.classList.toggle('fullscreen-mode');
 
       if (box.classList.contains('fullscreen-mode')) {
         btn.innerText = "✕ Salir";
-        // Intentar rotar la pantalla del celular a horizontal automáticamente
+        
+        // Solicitar pantalla completa estándar del navegador si está disponible
+        if (box.requestFullscreen) {
+          box.requestFullscreen().catch(() => {});
+        } else if (box.webkitRequestFullscreen) {
+          box.webkitRequestFullscreen();
+        }
+
+        // Forzar rotación horizontal en dispositivos móviles
         if (screen.orientation && screen.orientation.lock) {
           try {
             await screen.orientation.lock('landscape');
           } catch (err) {
-            console.log("Bloqueo de orientación no soportado en este navegador.");
+            console.log("Bloqueo de orientación no permitido o no soportado.");
           }
         }
       } else {
         btn.innerText = "⛶ Pantalla Completa";
+
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
+
         if (screen.orientation && screen.orientation.unlock) {
           try { screen.orientation.unlock(); } catch (err) {}
         }
