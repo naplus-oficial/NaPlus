@@ -272,7 +272,6 @@
       top: 0; left: 0;
     }
 
-    /* CONTENEDOR DE VIDEO NATIVO PERSONALIZADO ESTILO NETFLIX */
     .netflix-player-wrapper {
       width: 100%;
       height: 100%;
@@ -290,7 +289,6 @@
       object-fit: contain;
     }
 
-    /* OVERLAY Y CONTROLES SUPERIORES TIPO NETFLIX */
     .netflix-top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -318,7 +316,6 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
 
-    /* BARRA DE CONTROLES INFERIOR TIPO NETFLIX */
     .netflix-bottom-controls {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -396,7 +393,6 @@
       font-weight: 500;
     }
 
-    /* BOTÓN FLOTANTE DE PANTALLA COMPLETA */
     .netflix-fullscreen-toggle {
       background: rgba(20, 20, 25, 0.75);
       backdrop-filter: blur(8px);
@@ -418,7 +414,6 @@
       border-color: var(--accent-light);
     }
 
-    /* MODO EXPANDIDO / PANTALLA COMPLETA ESTILO NETFLIX */
     .video-box.netflix-fullscreen {
       position: fixed !important;
       inset: 0 !important;
@@ -435,7 +430,6 @@
       height: 100% !important;
     }
 
-    /* ENCABEZADO DE SERIE */
     .hbo-backdrop-header {
       position: relative; width: 100%; min-height: 230px;
       padding: 40px 20px 20px; display: flex; flex-direction: column;
@@ -1146,8 +1140,6 @@
 
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
-      // Mantenemos el modal de serie en el fondo con menor z-index y abrimos el reproductor limpio
-      document.getElementById('seriesModal').style.display = 'none';
       document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num}: ${ep.title}`;
       document.getElementById('epModalDesc').innerText = ep.desc || '';
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video, `Capítulo ${ep.num}: ${ep.title}`);
@@ -1157,13 +1149,12 @@
     function closeEpisodePlayer() {
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
-      // Volvemos exactamente al modal de la serie de forma fluida
       if (currentSeriesData) {
         document.getElementById('seriesModal').style.display = 'block';
       }
     }
 
-    /* SISTEMA DE REPRODUCTOR PROFESIONAL NETFLIX CON GOOGLE DRIVE Y CONTROLES NATIVOS */
+    /* REPRODUCTOR PROFESIONAL CON CONVERSIÓN DE GOOGLE DRIVE Y CONTROLES NATIVOS */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1195,6 +1186,7 @@
         if (directUrl.includes('drive.google.com')) {
           const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
           if (match && match[1]) {
+            // Se usa el formato de exportación directa optimizado para que el elemento video HTML5 reproduzca el archivo correctamente
             directUrl = `https://docs.google.com/uc?export=download&id=${match[1]}`;
           } else {
             const urlParams = new URLSearchParams(directUrl.split('?')[1]);
@@ -1241,7 +1233,6 @@
         ${innerContent}
       `;
 
-      // Autoreproducir si es reproductor nativo
       setTimeout(() => {
         const videoEl = vBox.querySelector('video');
         if (videoEl) {
