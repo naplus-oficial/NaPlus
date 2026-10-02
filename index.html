@@ -36,6 +36,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* BARRA SUPERIOR */
     header {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -58,6 +59,7 @@
       cursor: pointer;
     }
 
+    /* NAVEGACIÓN INFERIOR */
     nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -90,6 +92,7 @@
     .nav-item.active { color: var(--accent-light); font-weight: 700; }
     .nav-item.active svg { stroke: var(--accent-light); }
 
+    /* VISTAS */
     .view-section { display: none; padding-bottom: 20px; }
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
@@ -97,6 +100,7 @@
     .hero { padding: 15px 20px 5px; }
     body.search-active .hero#searchContainer { padding-top: 80px; }
 
+    /* CARRUSEL HERO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
@@ -155,6 +159,7 @@
     .hbo-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
+    /* BUSCADOR */
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box .search-icon {
       position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
@@ -172,6 +177,7 @@
       background: none; border: none; color: var(--text-gray); font-size: 1.1rem; cursor: pointer; display: none;
     }
 
+    /* SECCIONES Y TARJETAS */
     .section-title { font-size: 1rem; font-weight: 700; margin: 20px 20px 10px; color: #e2e8f0; }
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 10px;
@@ -209,6 +215,7 @@
       display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
+    /* MODALES DE DETALLE */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
@@ -247,6 +254,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
+    /* NUEVO REPRODUCTOR PROFESIONAL ESTILO NETFLIX */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
@@ -271,35 +279,37 @@
       top: 0; left: 0;
     }
 
+    /* BARRA FLOTANTE ESTILO NETFLIX (PARA PANTALLA COMPLETA REAL Y LIMPIA) */
     .netflix-player-bar {
       position: absolute;
-      top: 10px; right: 10px;
+      top: 12px; right: 12px;
       z-index: 30;
       display: flex;
       gap: 8px;
     }
 
     .netflix-control-btn {
-      background: rgba(15, 15, 20, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(20, 20, 25, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       transition: background 0.2s, transform 0.2s;
     }
     .netflix-control-btn:hover {
-      background: rgba(124, 58, 237, 0.8);
+      background: rgba(124, 58, 237, 0.85);
       border-color: var(--accent-light);
     }
 
+    /* MODO PANTALLA COMPLETA NETFLIX */
     .video-box.netflix-fullscreen {
       position: fixed !important;
       inset: 0 !important;
@@ -322,6 +332,7 @@
     }
     .native-player-container video { width: 100%; height: 100%; object-fit: contain; }
 
+    /* ENCABEZADO DE SERIE */
     .hbo-backdrop-header {
       position: relative; width: 100%; min-height: 230px;
       padding: 40px 20px 20px; display: flex; flex-direction: column;
@@ -361,7 +372,6 @@
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
-    .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; }
 
     @media (max-width: 600px) {
       #detailModal .modal-box, #episodeModal .modal-box {
@@ -577,7 +587,7 @@
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
             "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://ok.ru/video/16692894567131"
+            "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
           },
           {
             "num": 2,
@@ -585,59 +595,12 @@
             "img": "https://pixel.disco.skyshowtime.com/uuid/2d783975-b8a1-3820-ba10-bbc19f892868/LAND_16_9?language=es-ES&proposition=SKYSHOWTIME&version=0d604691-fea1-3f70-bbad-974885922fd0&downsize=3840%3A*&format=webp&quality=9",
             "desc": "Con su cliente anterior retirándose del pago, la reputación del Chacal está en juego y comienza a planear su venganza.",
             "video": "https://ok.ru/video/16692972686043"
-          },
-          {
-            "num": 3,
-            "title": "Múnich",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/7d422920-bd2d-36cc-923d-c4ac05da69c9/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=db4cb694-6943-36a4-92bb-c87f3bcf042f",
-            "desc": "Armado con el conocimiento de la identidad de su cliente, el Chacal lo localiza en Múnich, decidido a ajustar cuentas.",
-            "video": "https://ok.ru/video/16692985137883"
-          },
-          {
-            "num": 4,
-            "title": "Huída de Múnich",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/443e8cce-e21c-395b-ae12-6b13d53a23a5/LAND_16_9/432/236?language=en-US&proposition=SKYSHOWTIME&version=2c8ecaee-4576-3563-a0e4-f4173f934bbd",
-            "desc": "Cumplida su venganza, el Chacal huye de Múnich e intenta acallar las sospechas de Nuria. Bianca sigue una nueva pista.",
-            "video": "https://ok.ru/video/16693331430107"
           }
         ]
       }
     ],
-    "views": 105,
+    "views": 114,
     "dateAdded": 1790955167205
-  },
-  {
-    "id": 1790908626680,
-    "type": "series",
-    "title": "El problema de los tres cuerpos",
-    "genre": "Cienciaficción, Drama",
-    "year": "2024",
-    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existencial se cierne sobre toda la humanidad.",
-    "cover": "https://image.tmdb.org/t/p/original/6Dc9mMl083cVpNknWzALCw7JYPH.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Cuenta regresiva",
-            "img": "https://i.blogs.es/24bbb0/el-problema-de-los-tres-cuerpos-3/650_1200.png",
-            "desc": "Una serie de eventos perturbadores lleva a un grupo de brillantes amigos al límite mientras se devela un misterio que se remonta a China durante la Revolución Cultural.",
-            "video": "https://ok.ru/video/16684083186395"
-          },
-          {
-            "num": 2,
-            "title": "Costa roja",
-            "img": "https://i.blogs.es/a21478/3bp_102_unit_08301rc/500_333.jpeg",
-            "desc": "La cuenta atrás de Auggie pone en riesgo su trabajo en nanotecnología. Jin se obsesiona con un juego de realidad virtual de otro mundo. Ye Wenjie pone en práctica una idea radical.",
-            "video": "https://ok.ru/video/16684088625883"
-          }
-        ]
-      }
-    ],
-    "views": 91,
-    "dateAdded": 1790908626680
   },
   {
     "id": 1790867112502,
@@ -1080,8 +1043,7 @@
 
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
-      // Mantenemos el modal de la serie visible en el fondo pero ocultamos temporalmente su scroll con z-index inferior
-      document.getElementById('seriesModalstyle') ? '' : null;
+      document.getElementById('seriesModal').style.display = 'none';
       document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num}: ${ep.title}`;
       document.getElementById('epModalDesc').innerText = ep.desc || '';
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
@@ -1091,13 +1053,10 @@
     function closeEpisodePlayer() {
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
-      // Al cerrar el reproductor del capítulo, garantizamos que el modal de la serie siga abierto y visible
-      if (currentSeriesData) {
-        document.getElementById('seriesModal').style.display = 'block';
-      }
+      if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    /* SISTEMA DE REPRODUCTOR NETFLIX OPTIMIZADO */
+    /* REPRODUCTOR NETFLIX PROFESIONAL Y SOPORTE DE GOOGLE DRIVE */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1132,10 +1091,11 @@
           const urlParams = new URLSearchParams(vInput.split('?')[1]);
           fileId = urlParams.get('id');
         }
-        const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-        innerContent = `<iframe src="${embedDriveUrl}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+        // Reproductor nativo fluido optimizado para Google Drive con enlace directo de descarga/streaming
+        const directDriveUrl = `https://docs.google.com/uc?export=download&id=${fileId}`;
+        innerContent = `<div class="native-player-container"><video src="${directDriveUrl}" controls autoplay playsinline webkit-playsinline></video></div>`;
       } else {
-        innerContent = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
+        innerContent = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video></div>`;
       }
 
       vBox.innerHTML = `
