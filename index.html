@@ -113,21 +113,21 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA */
+    /* CONTENEDOR DE BÚSQUEDA: el padding-top real se define más abajo en .hero#searchContainer,
+       con una regla sin ambigüedad de especificidad para que nunca vuelva a competir con .hero */
     #searchContainer {
-      padding-top: 10px;
       padding-bottom: 10px;
     }
 
-    /* CARRUSEL HERO OPTIMIZADO (Sin bloques negros vacíos) */
+    /* CARRUSEL HERO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
-      height: 520px;
+      height: 460px;
       background: #000;
       overflow: hidden;
       margin-top: 0;
-      margin-bottom: 0;
+      margin-bottom: 15px;
       transform: translateZ(0);
     }
 
@@ -139,9 +139,9 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 30px 20px 45px;
+      padding: 24px 20px;
       background-size: cover;
-      background-position: center top;
+      background-position: center;
       will-change: opacity;
     }
 
@@ -150,7 +150,7 @@
     .hbo-slide-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.2) 0%, rgba(7,4,13,0.4) 40%, rgba(7,4,13,0.95) 80%, var(--bg-dark) 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.6) 60%, var(--bg-dark) 100%);
     }
 
     .hbo-slide-content {
@@ -160,23 +160,23 @@
     }
 
     .hbo-slide-title {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 4px;
-      line-height: 1.15;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     }
 
     .hbo-slide-meta {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--accent-light);
-      margin-bottom: 14px;
-      font-weight: 600;
+      margin-bottom: 12px;
+      font-weight: 500;
     }
 
     .hbo-slide-btns {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
@@ -184,10 +184,10 @@
       background: #fff;
       color: #000;
       border: none;
-      padding: 10px 24px;
+      padding: 9px 20px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -200,7 +200,7 @@
       -webkit-backdrop-filter: blur(6px);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      width: 40px; height: 40px;
+      width: 38px; height: 38px;
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
@@ -221,7 +221,7 @@
 
     .hbo-slider-dots {
       position: absolute;
-      bottom: 15px; right: 20px;
+      bottom: 12px; right: 20px;
       z-index: 10;
       display: flex;
       gap: 5px;
@@ -235,25 +235,16 @@
     }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR CON LUPA MINIMALISTA SVG */
-    .hero { padding: 10px 20px 5px; }
-    .search-box { width: 100%; max-width: 500px; position: relative; display: flex; align-items: center; }
-    
-    .search-icon-svg {
-      position: absolute;
-      left: 14px;
-      width: 16px; height: 16px;
-      fill: none;
-      stroke: var(--text-gray);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      pointer-events: none;
-    }
+    /* BUSCADOR OPTIMIZADO */
+    .hero { padding: 15px 20px 5px; }
+    /* Regla con la especificidad más alta de todo el archivo para este elemento:
+       así siempre gana y nunca vuelve a solaparse con el header (65px de alto). */
+    .hero#searchContainer { padding: 80px 20px 14px; }
 
+    .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box input {
       width: 100%;
-      padding: 11px 40px 11px 38px;
+      padding: 11px 40px 11px 14px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-purple);
       color: #fff;
@@ -262,7 +253,6 @@
       outline: none;
     }
     .search-box input:focus { border-color: var(--accent-light); background: rgba(255, 255, 255, 0.08); }
-    .search-box input:focus ~ .search-icon-svg { stroke: var(--accent-light); }
 
     .clear-search-btn {
       position: absolute;
@@ -521,16 +511,15 @@
   </header>
 
   <div id="viewHome" class="view-section active">
-    <!-- CARRUSEL HERO FLUIDO (Sin espacio negro cortado) -->
+    <!-- CARRUSEL HERO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
-    <!-- BUSCADOR CON LUPA MINIMALISTA SVG -->
+    <!-- BUSCADOR CON CONTENEDOR PROPIO SEPARADO DEL HEADER -->
     <div class="hero" id="searchContainer">
       <div class="search-box">
-        <svg class="search-icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" placeholder="Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
         <button class="clear-search-btn" id="clearSearchBtn" onclick="clearSearchInput()" type="button">✕</button>
       </div>
     </div>
@@ -767,7 +756,38 @@
       document.body.classList.add('creator-mode');
     }
 
+    /* ---------- Control del botón "atrás" mientras se busca ----------
+       Si el usuario escribe algo en el buscador, marcamos ese momento en el
+       historial del navegador. Así, si toca "atrás" (algo muy común en Android
+       para cerrar el teclado), la página solo sale del modo búsqueda en vez de
+       salir de toda la app. Esto evita además que el teclado quede "trabado". */
+    let inSearchHistoryState = false;
+
+    function pushSearchState() {
+      if (!inSearchHistoryState) {
+        inSearchHistoryState = true;
+        history.pushState({ naplusSearch: true }, '', location.href);
+      }
+    }
+
+    function popSearchStateIfNeeded() {
+      if (inSearchHistoryState) {
+        inSearchHistoryState = false;
+        history.back();
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (inSearchHistoryState) {
+        inSearchHistoryState = false;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        renderHomeSections();
+      }
+    });
+
     function switchView(viewName) {
+      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -797,6 +817,7 @@
     }
 
     function clearSearchInput() {
+      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -888,6 +909,7 @@
       }
 
       if (query.length > 0 && query !== "9009") {
+        pushSearchState();
         heroSlider.style.display = 'none';
         searchContainer.style.display = 'block';
         mainContent.style.display = 'none';
@@ -958,6 +980,7 @@
         const val = document.getElementById('searchInput').value.trim();
         if (val === "9009") {
           e.preventDefault();
+          popSearchStateIfNeeded();
           document.getElementById('searchInput').value = '';
           
           isCreatorMode = !isCreatorMode;
@@ -969,10 +992,9 @@
           } else {
             alert("🔒 Modo Creador desactivado discretamente.");
           }
-          return;
+          renderHomeSections();
         }
       }
-      handleSearch();
     }
 
     function renderMoviesGrid() {
