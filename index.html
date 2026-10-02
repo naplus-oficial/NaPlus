@@ -482,7 +482,7 @@
       transition: opacity 0.25s ease;
     }
 
-    /* CAPA TÁCTICA INICIAL: Solo intercepta el primer toque para habilitar el reproductor y luego desaparece */
+    /* CAPA TÁCTICA INICIAL: Se oculta al hacer clic para dejar pasar los eventos al reproductor */
     .video-touch-overlay {
       position: absolute;
       inset: 0;
@@ -2583,20 +2583,18 @@
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    // Sistema corregido: La capa táctil se oculta al primer toque para que puedas presionar Play libremente en VOE
+    // Solución definitiva para VOE: Al hacer clic en la capa transparente, el reproductor arranca y la capa se quita al instante
     function setupTouchToggle(vBox) {
       const btn = vBox.querySelector('.btn-fullscreen-toggle');
       const overlay = vBox.querySelector('.video-touch-overlay');
       if (!btn || !overlay) return;
 
-      // Mostrar el botón al inicio
       btn.style.display = 'block';
 
-      // Al primer toque sobre la capa transparente, muestra el botón y la oculta para liberar los clics al reproductor VOE
       overlay.addEventListener('click', (e) => {
         e.stopPropagation();
         btn.style.display = 'block';
-        overlay.style.display = 'none'; // Se desactiva para dejar pasar los clics al botón Play de VOE
+        overlay.style.display = 'none'; // Libera totalmente los clics hacia el iframe de VOE
       });
     }
 
