@@ -482,7 +482,7 @@
       transition: opacity 0.25s ease;
     }
 
-    /* CAPA TÁCTICA INICIAL: Se oculta al hacer clic para dejar pasar los eventos al reproductor */
+    /* CAPA TÁCTICA INICIAL: Se oculta al hacer clic para dejar pasar los clics al reproductor */
     .video-touch-overlay {
       position: absolute;
       inset: 0;
@@ -2583,7 +2583,6 @@
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    // Solución definitiva para VOE: Al hacer clic en la capa transparente, el reproductor arranca y la capa se quita al instante
     function setupTouchToggle(vBox) {
       const btn = vBox.querySelector('.btn-fullscreen-toggle');
       const overlay = vBox.querySelector('.video-touch-overlay');
@@ -2594,7 +2593,7 @@
       overlay.addEventListener('click', (e) => {
         e.stopPropagation();
         btn.style.display = 'block';
-        overlay.style.display = 'none'; // Libera totalmente los clics hacia el iframe de VOE
+        overlay.style.display = 'none';
       });
     }
 
