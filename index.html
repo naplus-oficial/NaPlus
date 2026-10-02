@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#07040d">
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
   <style>
     :root {
       --bg-dark: #07040d;
@@ -1470,6 +1466,9 @@
       }
     }
 
+    // Junta todas las imágenes disponibles de una serie (portada + miniaturas
+    // de sus capítulos) para usarlas como relleno aleatorio cuando un capítulo
+    // no tiene su propia imagen cargada.
     function getSeriesImagePool(seriesData) {
       const pool = [];
       if (seriesData.cover) pool.push(seriesData.cover);
