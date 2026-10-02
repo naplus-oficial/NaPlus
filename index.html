@@ -113,9 +113,6 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA: en la vista normal queda pegado al carrusel (padding chico).
-       Solo cuando el usuario está buscando (body.search-active) se le agrega margen extra
-       arriba para no taparse con el logo flotante, ya que en ese momento el carrusel se oculta. */
     .hero { padding: 15px 20px 5px; }
     .hero#searchContainer { padding: 15px 20px 10px; }
     body.search-active .hero#searchContainer { padding-top: 80px; }
@@ -237,7 +234,7 @@
     }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR OPTIMIZADO */
+    /* BUSCADOR */
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box .search-icon {
       position: absolute;
@@ -276,7 +273,6 @@
     }
     .clear-search-btn:hover { color: #fff; }
 
-    /* SCROLL HORIZONTAL */
     .section-title {
       font-size: 1rem;
       font-weight: 700;
@@ -299,7 +295,6 @@
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
-    /* GRILLAS */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
@@ -331,7 +326,6 @@
     .card-title { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 0.65rem; color: var(--text-gray); }
 
-    /* BOTÓN DE GUARDAR EN TARJETAS */
     .card-fav-btn {
       position: absolute;
       top: 6px; left: 6px;
@@ -348,18 +342,9 @@
     }
     .card-fav-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
     .card-fav-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
-    .card-fav-btn.saved svg {
-      fill: var(--accent-light);
-      stroke: var(--accent-light);
-    }
+    .card-fav-btn.saved svg { fill: var(--accent-light); stroke: var(--accent-light); }
 
     .admin-btns {
       display: none;
@@ -445,7 +430,41 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* ENCABEZADO DE SERIE */
+    /* REPRODUCTOR OPTIMIZADO PARA CARGA RÁPIDA Y PANTALLA COMPLETA */
+    .video-box { 
+      width: 100%; 
+      aspect-ratio: 16/9; 
+      background: #000; 
+      margin-bottom: 12px; 
+      border-radius: 6px; 
+      overflow: hidden; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      position: relative;
+    }
+    .video-box iframe, .video-box video { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      object-fit: contain;
+    }
+
+    /* Botón flotante opcional para forzar pantalla completa si el iframe resiste */
+    .btn-fullscreen-toggle {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
     .hbo-backdrop-header {
       position: relative;
       width: 100%;
@@ -507,27 +526,22 @@
     }
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
-    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 12px; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .video-box iframe { width: 100%; height: 100%; border: none; }
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
   </style>
 </head>
 <body>
 
-  <!-- ENCABEZADO TRANSPARENTE FLOTANTE -->
   <header>
     <div class="logo" onclick="switchView('home')">NaPlus</div>
     <div class="header-actions" style="display: none;"></div>
   </header>
 
   <div id="viewHome" class="view-section active">
-    <!-- CARRUSEL HERO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
-    <!-- BUSCADOR CON CONTENEDOR PROPIO SEPARADO DEL HEADER -->
     <div class="hero" id="searchContainer">
       <div class="search-box">
         <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
@@ -536,13 +550,11 @@
       </div>
     </div>
 
-    <!-- RESULTADOS DE BÚSQUEDA -->
     <div id="searchResultsContainer" style="display: none;">
       <div class="section-title">Resultados de Búsqueda</div>
       <div class="grid" id="searchGrid"></div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div id="mainHomeContent">
       <div class="section-title">🔥 Lo Más Reciente</div>
       <div class="horizontal-scroll" id="recentScroll"></div>
@@ -577,7 +589,6 @@
     <div class="grid" id="myListGrid"></div>
   </div>
 
-  <!-- NAVEGACIÓN INFERIOR -->
   <nav>
     <button class="nav-item active" id="navHome" onclick="switchView('home')">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -741,53 +752,6 @@
 
     let catalog = /*CATALOG_START*/[
   {
-    "id": 1790955167205,
-    "type": "series",
-    "title": "El Chacal",
-    "genre": "Acción",
-    "year": "2024",
-    "desc": "El Chacal es un escurridizo asesino de élite que mata por encargo, con una precisión letal. Sin embargo, tras su última misión, se topa con una tenaz oficial de inteligencia británica que comienza a rastrear su pista por toda Europa.",
-    "cover": "https://image.tmdb.org/t/p/original/e7QdDLU3VNAZlS8546MSqSqJoLt.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "El último asesinato",
-            "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
-            "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://ok.ru/video/16692894567131"
-          },
-          {
-            "num": 2,
-            "title": "La venganza",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/2d783975-b8a1-3820-ba10-bbc19f892868/LAND_16_9?language=es-ES&proposition=SKYSHOWTIME&version=0d604691-fea1-3f70-bbad-974885922fd0&downsize=3840%3A*&format=webp&quality=9",
-            "desc": "Con su cliente anterior retirándose del pago, la reputación del Chacal está en juego y comienza a planear su venganza.",
-            "video": "https://ok.ru/video/16692972686043"
-          },
-          {
-            "num": 3,
-            "title": "Múnich",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/7d422920-bd2d-36cc-923d-c4ac05da69c9/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=db4cb694-6943-36a4-92bb-c87f3bcf042f",
-            "desc": "Armado con el conocimiento de la identidad de su cliente, el Chacal lo localiza en Múnich, decidido a ajustar cuentas.",
-            "video": "https://ok.ru/video/16692985137883"
-          },
-          {
-            "num": 4,
-            "title": "Huída de Múnich",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/443e8cce-e21c-395b-ae12-6b13d53a23a5/LAND_16_9/432/236?language=en-US&proposition=SKYSHOWTIME&version=2c8ecaee-4576-3563-a0e4-f4173f934bbd",
-            "desc": "Cumplida su venganza, el Chacal huye de Múnich e intenta acallar las sospechas de Nuria. Bianca sigue una nueva pista.",
-            "video": "https://ok.ru/video/16693331430107"
-          }
-        ]
-      }
-    ],
-    "views": 105,
-    "dateAdded": 1790955167205
-  },
-  {
     "id": 1790908626680,
     "type": "series",
     "title": "El problema de los tres cuerpos",
@@ -827,39 +791,11 @@
             "img": "https://i.blogs.es/579102/3bp_104_unit_00636rc/840_560.jpeg",
             "desc": "Jin busca justicia cuando una muerte sacude al equipo. Antes de una importante cumbre, los investigadores descubren a un grupo extremista que adora a una entidad de otro mundo.",
             "video": "https://ok.ru/video/16684101864155"
-          },
-          {
-            "num": 5,
-            "title": "Juicio final",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10qOLCEdEz1hp00-GPGIG-3u1gWGdeiARGQBcrTwr5AWQKTVY06UMJWAgbFItvDrlVwOdjAMornqgKKeBV4RR62it_Ied5k4b2OjUkF96gdhW5Oa2RYKkqdz7-ppYUdtzNkV68Q1xBvXRQBkO9GlWFa4XFKWQ6metDEPfe1NvKmLL-CY9DMyPLB4XuWx0gQ&q=el+problema+de+los+tres+cuerpos+serie+capitulo+5&sa=X&ved=2ahUKEwiH39n3yZuXAxXSrJUCHT6nNWwQtKgLegQIEhAB&biw=384&bih=635&dpr=2.81#sv=CAMSVxoyKhBlLWlTd0pMVkhOamtsZWhNMg5pU3dKTFZITmprbGVoTToOVmh6ZHFiVGw4Z1hNVk0gBCoXCgFzEhBlLWlTd0pMVkhOamtsZWhNGAEwAUoECAEQAhgHIMj1_IIKSggQAhgBIAIoAQ",
-            "desc": "Mientras el nivel de amenaza aumenta, se pone en marcha una misión secreta en territorio peligroso para obtener información del enemigo. La Tierra recibe un mensaje aterrador.",
-            "video": "https://ok.ru/video/16692258933467"
-          },
-          {
-            "num": 6,
-            "title": "Estrellas destino nuestro",
-            "img": "https://media.vogue.mx/photos/660325d9afcf2b8fc2033499/16:9/w_2992,h_1683,c_limit/el-problema-de-los-3-cuerpos-con-eiza-gonzalez.jpg",
-            "desc": "El mundo entra en pánico tras una declaración trascendental. Wade reúne a las mentes más brillantes del planeta para preparar un plan de defensa.",
-            "video": "https://ok.ru/video/16692275251931"
-          },
-          {
-            "num": 7,
-            "title": "Un avance",
-            "img": "https://i.blogs.es/799b17/3bp_107_unit_00362rc.jpg-3bp_107_unit_00362rc/1200_900.jpeg",
-            "desc": "Una propuesta atrevida para el Proyecto Escalera genera tensión en el grupo. Will evalúa sus opciones. Ye regresa a un lugar familiar.",
-            "video": "https://ok.ru/video/16692570360539"
-          },
-          {
-            "num": 8,
-            "title": "Proyecto Vallado",
-            "img": "https://occ-0-2218-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABTtECG7yUaT0Vr017L4dj2tQUwpRELrv1TBvDaOK3CB6-eQL5iQjBxJKf1x6OyzFyaXzbJ4shMdnNqTO-H0AoVt-HKNiSjWEZ8WkQLpVoOQYSWriGF-obIoviA.jpg?r=e29",
-            "desc": "Una operación importante pone a Saul en riesgo. Con grandes emociones y expectativas, la sonda se lanza al espacio y la humanidad comienza una nueva y aterradora era.",
-            "video": "https://ok.ru/video/16692581239515"
           }
         ]
       }
     ],
-    "views": 91,
+    "views": 77,
     "dateAdded": 1790908626680
   },
   {
@@ -1192,7 +1128,7 @@
     "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
     "video": "https://voe.sx/e/xctz9a4atwnh",
     "seasons": [],
-    "views": 362,
+    "views": 361,
     "dateAdded": 1790858421339
   },
   {
@@ -1205,7 +1141,7 @@
     "cover": "https://static.wikia.nocookie.net/doblaje/images/f/fe/GremlinsII.jpg/revision/latest?cb=20251231010522&path-prefix=es",
     "video": "https://ok.ru/video/16677757848283",
     "seasons": [],
-    "views": 266,
+    "views": 265,
     "dateAdded": 1790857870335
   },
   {
@@ -1216,9 +1152,9 @@
     "year": "1984",
     "desc": "Una población pintoresca se transforma en un lugar terrorífico tras la llegada de una criatura algo inusual.",
     "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
-    "video": "https://voe.sx/e/jx8q5z1ls85u",
+    "video": "https://ok.ru/video/16677444979419",
     "seasons": [],
-    "views": 516,
+    "views": 512,
     "dateAdded": 1790855769248
   },
   {
@@ -1451,7 +1387,7 @@
     "cover": "https://cloudfront-us-east-1.images.arcpublishing.com/abccolor/LXHID2CQHBGIVCTQLKJOIPFHKY.jpg",
     "video": "https://ok.ru/video/16671265327835",
     "seasons": [],
-    "views": 447,
+    "views": 446,
     "dateAdded": 1790824833065
   },
   {
@@ -1540,7 +1476,7 @@
         ]
       }
     ],
-    "views": 456,
+    "views": 455,
     "dateAdded": 1790820683031
   },
   {
@@ -1816,7 +1752,7 @@
     "desc": "Unos amigos descubren unas cintas de vídeo en las que un aterrador hombre sin rostro, vestido con un elegante traje, persigue a una familia hasta llevar a sus miembros a la locura. Ahora que lo han visto, el monstruo comienza a acosarlos sin descanso.",
     "cover": "https://static.wikia.nocookie.net/vsdebating/images/f/fe/The_Operator.jpg/revision/latest/scale-to-width-down/1200?cb=20180302100112",
     "video": "https://voe.sx/e/bj0ouh6neklp",
-    "views": 285,
+    "views": 284,
     "dateAdded": 1790754583455
   },
   {
@@ -1901,7 +1837,7 @@
     "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
     "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
     "video": "https://voe.sx/e/qif8izzgsxum",
-    "views": 555,
+    "views": 554,
     "dateAdded": 1790646629199
   },
   {
@@ -1980,11 +1916,6 @@
       document.body.classList.add('creator-mode');
     }
 
-    /* ---------- Imágenes confiables, sin depender de servicios externos ----------
-       Si una portada falla al cargar (corte momentáneo de red, CDN lento, etc.),
-       reintentamos un par de veces antes de rendirnos. Si definitivamente no carga,
-       mostramos un cartel propio (sin depender de via.placeholder.com, que a veces
-       también falla y deja el cuadro en negro). */
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
     );
@@ -2000,11 +1931,6 @@
       }
     }
 
-    /* ---------- Control del botón "atrás" mientras se busca ----------
-       Si el usuario escribe algo en el buscador, marcamos ese momento en el
-       historial del navegador. Así, si toca "atrás" (algo muy común en Android
-       para cerrar el teclado), la página solo sale del modo búsqueda en vez de
-       salir de toda la app. Esto evita además que el teclado quede "trabado". */
     let inSearchHistoryState = false;
 
     function pushSearchState() {
@@ -2033,9 +1959,7 @@
     function switchView(viewName) {
       popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.value = '';
-      }
+      if (searchInput) searchInput.value = '';
       
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
@@ -2088,8 +2012,6 @@
     let currentSlide = 0;
     let sliderInterval = null;
 
-    // Reinicia el cambio automático de slide desde cero (se llama tras cada
-    // interacción manual, para no interrumpir al usuario justo después).
     function restartSliderInterval() {
       if (sliderInterval) clearInterval(sliderInterval);
       const count = document.querySelectorAll('.hbo-slide').length;
@@ -2103,12 +2025,10 @@
     function renderHeroSlider() {
       const sliderContainer = document.getElementById('hboHeroSlider');
       const dotsContainer = document.getElementById('hboSliderDots');
-      
       const recentItems = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).slice(0, 6);
       if (recentItems.length === 0) return;
 
-      const existingSlides = sliderContainer.querySelectorAll('.hbo-slide');
-      existingSlides.forEach(s => s.remove());
+      sliderContainer.querySelectorAll('.hbo-slide').forEach(s => s.remove());
       dotsContainer.innerHTML = '';
 
       recentItems.forEach((item, idx) => {
@@ -2148,8 +2068,6 @@
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
-    // Permite deslizar el banner con el dedo (o el mouse) para moverlo a mano,
-    // además de que siga rotando solo. Deslizar a la derecha vuelve al anterior.
     (function setupSliderSwipe() {
       const slider = document.getElementById('hboHeroSlider');
       if (!slider) return;
@@ -2186,9 +2104,7 @@
       const heroSlider = document.getElementById('hboHeroSlider');
       const clearBtn = document.getElementById('clearSearchBtn');
 
-      if (clearBtn) {
-        clearBtn.style.display = query.length > 0 ? 'block' : 'none';
-      }
+      if (clearBtn) clearBtn.style.display = query.length > 0 ? 'block' : 'none';
 
       const searching = query.length > 0 && query !== "9009";
       document.body.classList.toggle('search-active', searching);
@@ -2216,13 +2132,11 @@
 
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
-      const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
-      recentSorted.forEach(item => recentScroll.appendChild(createCardElement(item)));
+      [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => recentScroll.appendChild(createCardElement(item)));
 
       const topScroll = document.getElementById('topScroll');
       topScroll.innerHTML = '';
-      const topSorted = [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      topSorted.forEach(item => topScroll.appendChild(createCardElement(item)));
+      [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
 
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
@@ -2241,8 +2155,7 @@
       allIndividualGenres.forEach(genre => {
         const genreItems = catalog.filter(i => {
           if (!i.genre) return false;
-          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
-          return itemGenres.includes(genre.toLowerCase());
+          return i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase());
         });
 
         if (genreItems.length > 0) {
@@ -2272,11 +2185,8 @@
           localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
           document.body.classList.toggle('creator-mode', isCreatorMode);
 
-          if (isCreatorMode) {
-            openUploadModal();
-          } else {
-            alert("🔒 Modo Creador desactivado discretamente.");
-          }
+          if (isCreatorMode) openUploadModal();
+          else alert("🔒 Modo Creador desactivado discretamente.");
           renderHomeSections();
         }
       }
@@ -2678,9 +2588,6 @@
       }
     }
 
-    // Junta todas las imágenes disponibles de una serie (portada + miniaturas
-    // de sus capítulos) para usarlas como relleno aleatorio cuando un capítulo
-    // no tiene su propia imagen cargada.
     function getSeriesImagePool(seriesData) {
       const pool = [];
       if (seriesData.cover) pool.push(seriesData.cover);
@@ -2766,9 +2673,7 @@
       currentSeriesData.seasons[sIdx].episodes.sort((a, b) => a.num - b.num);
 
       const catIdx = catalog.findIndex(x => x.id === currentSeriesData.id);
-      if (catIdx !== -1) {
-        catalog[catIdx] = currentSeriesData;
-      }
+      if (catIdx !== -1) catalog[catIdx] = currentSeriesData;
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       closeModal('editEpisodeModal');
@@ -2790,23 +2695,25 @@
     function closeEpisodePlayer() {
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
-      if (currentSeriesData) {
-        document.getElementById('seriesModal').style.display = 'block';
-      }
+      if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
+    /* REPRODUCTOR OPTIMIZADO: Carga rápida y permisos absolutos de pantalla completa */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
       }
+      
+      const permissions = 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"';
+
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
         const iframeEl = vBox.querySelector('iframe');
         if (iframeEl) {
           iframeEl.style.width = "100%";
           iframeEl.style.height = "100%";
-          iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+          iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture');
           iframeEl.setAttribute('allowfullscreen', 'true');
         }
       } else if (vInput.includes('voe.sx')) {
@@ -2815,16 +2722,38 @@
           const parts = vInput.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1]}`;
         }
-        vBox.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+        vBox.innerHTML = `
+          <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
+          <button class="btn-fullscreen-toggle" onclick="forceBoxFullscreen(this)">⛶ Pantalla Completa</button>
+        `;
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput;
         if (!vInput.includes('videoembed')) {
           const match = vInput.match(/\/video\/([0-9]+)/);
           if (match && match[1]) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
-        vBox.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+        vBox.innerHTML = `
+          <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
+          <button class="btn-fullscreen-toggle" onclick="forceBoxFullscreen(this)">⛶ Pantalla Completa</button>
+        `;
       } else {
-        vBox.innerHTML = `<video src="${vInput}" controls autoplay></video>`;
+        vBox.innerHTML = `<video src="${vInput}" controls autoplay playsinline preload="auto"></video>`;
+      }
+    }
+
+    // Función auxiliar para forzar la expansión de la caja de video si el navegador móvil bloquea el botón nativo del iframe
+    function forceBoxFullscreen(btn) {
+      const box = btn.closest('.video-box');
+      if (!document.fullscreenElement) {
+        if (box.requestFullscreen) {
+          box.requestFullscreen();
+        } else if (box.webkitRequestFullscreen) {
+          box.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
       }
     }
 
