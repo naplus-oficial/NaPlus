@@ -117,9 +117,7 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA: en la vista normal queda pegado al carrusel (padding chico).
-       Solo cuando el usuario está buscando (body.search-active) se le agrega margen extra
-       arriba para no taparse con el logo flotante, ya que en ese momento el carrusel se oculta. */
+    /* CONTENEDOR DE BÚSQUEDA */
     .hero { padding: 15px 20px 5px; }
     .hero#searchContainer { padding: 15px 20px 10px; }
     body.search-active .hero#searchContainer { padding-top: 80px; }
@@ -746,15 +744,60 @@
     let catalog = /*CATALOG_START*/[
       {
         id: 1,
-        type: 'movie',
-        title: '[REC]',
-        genre: 'Terror, Suspenso',
-        year: '2007',
-        desc: 'Película de prueba.',
-        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
-        video: 'https://ok.ru/videoembed/237592963750',
-        views: 1420,
-        dateAdded: 1710000000000
+        type: 'series',
+        title: 'Son of Zorn',
+        genre: 'Comedia',
+        year: '2016',
+        desc: 'Un padre guerrero animado regresa a la Tierra.',
+        cover: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=400',
+        views: 310,
+        dateAdded: 1710000000001,
+        seasons: [
+          {
+            name: 'Temporada 1',
+            episodes: [
+              { num: 1, title: 'Piloto', desc: 'Zorn llega a casa.', video: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 2,
+        type: 'series',
+        title: 'Marvel Zombies',
+        genre: 'Terror, Animación',
+        year: '2025',
+        desc: 'Una nueva era de terror en el universo Marvel.',
+        cover: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=400',
+        views: 890,
+        dateAdded: 1710000000002,
+        seasons: [
+          {
+            name: 'Temporada 1',
+            episodes: [
+              { num: 1, title: 'Infección', desc: 'El brote comienza.', video: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 3,
+        type: 'series',
+        title: 'El caballero de los siete reinos',
+        genre: 'Acción, Fantasía',
+        year: '2026',
+        desc: 'Aventuras en Poniente.',
+        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400',
+        views: 1250,
+        dateAdded: 1710000000003,
+        seasons: [
+          {
+            name: 'Temporada 1',
+            episodes: [
+              { num: 1, title: 'El Escudero', desc: 'Comienza el viaje.', video: '' }
+            ]
+          }
+        ]
       }
     ]/*CATALOG_END*/;
 
@@ -772,11 +815,6 @@
       document.body.classList.add('creator-mode');
     }
 
-    /* ---------- Imágenes confiables, sin depender de servicios externos ----------
-       Si una portada falla al cargar (corte momentáneo de red, CDN lento, etc.),
-       reintentamos un par de veces antes de rendirnos. Si definitivamente no carga,
-       mostramos un cartel propio (sin depender de via.placeholder.com, que a veces
-       también falla y deja el cuadro en negro). */
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
     );
@@ -792,11 +830,6 @@
       }
     }
 
-    /* ---------- Control del botón "atrás" mientras se busca ----------
-       Si el usuario escribe algo en el buscador, marcamos ese momento en el
-       historial del navegador. Así, si toca "atrás" (algo muy común en Android
-       para cerrar el teclado), la página solo sale del modo búsqueda en vez de
-       salir de toda la app. Esto evita además que el teclado quede "trabado". */
     let inSearchHistoryState = false;
 
     function pushSearchState() {
@@ -880,8 +913,6 @@
     let currentSlide = 0;
     let sliderInterval = null;
 
-    // Reinicia el cambio automático de slide desde cero (se llama tras cada
-    // interacción manual, para no interrumpir al usuario justo después).
     function restartSliderInterval() {
       if (sliderInterval) clearInterval(sliderInterval);
       const count = document.querySelectorAll('.hbo-slide').length;
@@ -940,8 +971,6 @@
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
-    // Permite deslizar el banner con el dedo (o el mouse) para moverlo a mano,
-    // además de que siga rotando solo. Deslizar a la derecha vuelve al anterior.
     (function setupSliderSwipe() {
       const slider = document.getElementById('hboHeroSlider');
       if (!slider) return;
@@ -1223,7 +1252,7 @@
           <button type="button" onclick="this.closest('.season-item-block').remove()" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem;">Eliminar</button>
         </div>
         <div class="episodes-admin-container"></div>
-        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.7rem; padding:4px 8px; margin-top:4px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Capítulo</button>
+        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.7rem; padding:4px 8px; margin-top:4px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Temporada</button>
       `;
       container.appendChild(seasonDiv);
 
@@ -1470,9 +1499,6 @@
       }
     }
 
-    // Junta todas las imágenes disponibles de una serie (portada + miniaturas
-    // de sus capítulos) para usarlas como relleno aleatorio cuando un capítulo
-    // no tiene su propia imagen cargada.
     function getSeriesImagePool(seriesData) {
       const pool = [];
       if (seriesData.cover) pool.push(seriesData.cover);
@@ -1621,13 +1647,6 @@
     }
 
     renderHomeSections();
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-      });
-    }
   </script>
 </body>
 </html>
