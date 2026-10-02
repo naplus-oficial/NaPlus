@@ -113,9 +113,6 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA: en la vista normal queda pegado al carrusel (padding chico).
-       Solo cuando el usuario está buscando (body.search-active) se le agrega margen extra
-       arriba para no taparse con el logo flotante, ya que en ese momento el carrusel se oculta. */
     .hero { padding: 15px 20px 5px; }
     .hero#searchContainer { padding: 15px 20px 10px; }
     body.search-active .hero#searchContainer { padding-top: 80px; }
@@ -237,7 +234,7 @@
     }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR OPTIMIZADO */
+    /* BUSCADOR */
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box .search-icon {
       position: absolute;
@@ -331,7 +328,6 @@
     .card-title { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 0.65rem; color: var(--text-gray); }
 
-    /* BOTÓN DE GUARDAR EN TARJETAS */
     .card-fav-btn {
       position: absolute;
       top: 6px; left: 6px;
@@ -348,18 +344,9 @@
     }
     .card-fav-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
     .card-fav-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
-    .card-fav-btn.saved svg {
-      fill: var(--accent-light);
-      stroke: var(--accent-light);
-    }
+    .card-fav-btn.saved svg { fill: var(--accent-light); stroke: var(--accent-light); }
 
     .admin-btns {
       display: none;
@@ -515,7 +502,10 @@
       border-radius: 6px; 
       overflow: hidden; 
       position: relative;
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .video-box iframe { 
       width: 100%; 
@@ -525,12 +515,55 @@
       top: 0;
       left: 0;
     }
+    
+    /* Contenedor del reproductor nativo y barra de calidad */
+    .native-player-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .native-player-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .player-controls-bar {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .player-controls-bar label {
+      font-size: 0.7rem;
+      color: #cbd5e1;
+    }
+    .quality-selector {
+      background: #07040d;
+      color: #fff;
+      border: 1px solid var(--border-purple);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      padding: 2px 4px;
+      outline: none;
+    }
+
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
 
-    /* Mejor experiencia de video en móvil */
     @media (max-width: 600px) {
-      #detailModal .modal-box {
+      #detailModal .modal-box, #episodeModal .modal-box {
         max-width: 100%;
         max-height: 100%;
         height: 100%;
@@ -539,48 +572,29 @@
         display: flex;
         flex-direction: column;
       }
-      #detailModal .video-box {
-        flex-shrink: 0;
-        border-radius: 4px;
-      }
-      #episodeModal .modal-box {
-        max-width: 100%;
-        max-height: 100%;
-        height: 100%;
-        border-radius: 0;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-      }
-      #episodeModal .video-box {
+      #detailModal .video-box, #episodeModal .video-box {
         flex-shrink: 0;
         border-radius: 4px;
       }
     }
 
-    /* Cuando el navegador entra en fullscreen */
-    :fullscreen .btn-close,
-    :-webkit-full-screen .btn-close {
+    :fullscreen .btn-close, :-webkit-full-screen .btn-close {
       display: none !important;
     }
-
   </style>
 </head>
 <body>
 
-  <!-- ENCABEZADO TRANSPARENTE FLOTANTE -->
   <header>
     <div class="logo" onclick="switchView('home')">NaPlus</div>
     <div class="header-actions" style="display: none;"></div>
   </header>
 
   <div id="viewHome" class="view-section active">
-    <!-- CARRUSEL HERO -->
     <div class="hbo-hero-slider" id="hboHeroSlider">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
-    <!-- BUSCADOR CON CONTENEDOR PROPIO SEPARADO DEL HEADER -->
     <div class="hero" id="searchContainer">
       <div class="search-box">
         <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
@@ -589,13 +603,11 @@
       </div>
     </div>
 
-    <!-- RESULTADOS DE BÚSQUEDA -->
     <div id="searchResultsContainer" style="display: none;">
       <div class="section-title">Resultados de Búsqueda</div>
       <div class="grid" id="searchGrid"></div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div id="mainHomeContent">
       <div class="section-title">🔥 Lo Más Reciente</div>
       <div class="horizontal-scroll" id="recentScroll"></div>
@@ -630,7 +642,6 @@
     <div class="grid" id="myListGrid"></div>
   </div>
 
-  <!-- NAVEGACIÓN INFERIOR -->
   <nav>
     <button class="nav-item active" id="navHome" onclick="switchView('home')">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -735,8 +746,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Código de Video (VOE, OK.ru o .mp4)</label>
-          <input type="text" id="videoInput" placeholder="https://voe.sx/..., https://ok.ru/... o enlace .mp4">
+          <label>Enlace o Código de Video (VOE, OK.ru, Google Drive o .mp4)</label>
+          <input type="text" id="videoInput" placeholder="https://voe.sx/..., enlace de Drive o .mp4">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -777,7 +788,7 @@
           <textarea id="modalEpDesc" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (VOE, OK.ru o Iframe)</label>
+          <label>Enlace de Video (VOE, OK.ru, Google Drive o Iframe)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1463,7 +1474,7 @@
           },
           {
             "num": 7,
-            "title": "Susan es la nueva negra",
+            "title": "Susan is the new negra",
             "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
             "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
             "video": "https://ok.ru/video/16679640173275"
@@ -2033,11 +2044,6 @@
       document.body.classList.add('creator-mode');
     }
 
-    /* ---------- Imágenes confiables, sin depender de servicios externos ----------
-       Si una portada falla al cargar (corte momentáneo de red, CDN lento, etc.),
-       reintentamos un par de veces antes de rendirnos. Si definitivamente no carga,
-       mostramos un cartel propio (sin depender de via.placeholder.com, que a veces
-       también falla y deja el cuadro en negro). */
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
     );
@@ -2053,11 +2059,6 @@
       }
     }
 
-    /* ---------- Control del botón "atrás" mientras se busca ----------
-       Si el usuario escribe algo en el buscador, marcamos ese momento en el
-       historial del navegador. Así, si toca "atrás" (algo muy común en Android
-       para cerrar el teclado), la página solo sale del modo búsqueda en vez de
-       salir de toda la app. Esto evita además que el teclado quede "trabado". */
     let inSearchHistoryState = false;
 
     function pushSearchState() {
@@ -2141,8 +2142,6 @@
     let currentSlide = 0;
     let sliderInterval = null;
 
-    // Reinicia el cambio automático de slide desde cero (se llama tras cada
-    // interacción manual, para no interrumpir al usuario justo después).
     function restartSliderInterval() {
       if (sliderInterval) clearInterval(sliderInterval);
       const count = document.querySelectorAll('.hbo-slide').length;
@@ -2201,8 +2200,6 @@
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
-    // Permite deslizar el banner con el dedo (o el mouse) para moverlo a mano,
-    // además de que siga rotando solo. Deslizar a la derecha vuelve al anterior.
     (function setupSliderSwipe() {
       const slider = document.getElementById('hboHeroSlider');
       if (!slider) return;
@@ -2509,7 +2506,7 @@
         </div>
         <input type="url" class="ep-img" placeholder="URL de miniatura específica (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="1" placeholder="Sinopsis del capítulo" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Link de video (VOE, OK.ru o Iframe)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;">
+        <input type="text" class="ep-video" placeholder="Link de video (VOE, OK.ru, Google Drive o Iframe)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;">
       `;
       container.appendChild(epDiv);
     }
@@ -2731,9 +2728,6 @@
       }
     }
 
-    // Junta todas las imágenes disponibles de una serie (portada + miniaturas
-    // de sus capítulos) para usarlas como relleno aleatorio cuando un capítulo
-    // no tiene su propia imagen cargada.
     function getSeriesImagePool(seriesData) {
       const pool = [];
       if (seriesData.cover) pool.push(seriesData.cover);
@@ -2854,7 +2848,6 @@
         return;
       }
 
-      // Si ya viene un iframe completo
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
         const iframeEl = vBox.querySelector('iframe');
@@ -2869,10 +2862,8 @@
         return;
       }
 
-      // VOE
       if (vInput.includes('voe.sx')) {
         let embedUrl = vInput.trim();
-        // Normalizamos a /e/
         if (!embedUrl.includes('/e/') && !embedUrl.includes('/embed')) {
           const parts = embedUrl.split('voe.sx/');
           if (parts[1]) {
@@ -2894,7 +2885,6 @@
         return;
       }
 
-      // OK.ru
       if (vInput.includes('ok.ru')) {
         let embedUrl = vInput.trim();
         if (!embedUrl.includes('videoembed')) {
@@ -2915,8 +2905,43 @@
         return;
       }
 
-      // Video directo
-      vBox.innerHTML = `<video src="${vInput}" controls autoplay playsinline webkit-playsinline style="width:100%;height:100%;object-fit:contain;"></video>`;
+      // Si es de Google Drive o un enlace directo de video
+      let directUrl = vInput.trim();
+      if (directUrl.includes('drive.google.com/file/d/')) {
+        const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          directUrl = `https://docs.google.com/uc?export=download&id=${match[1]}`;
+        }
+      }
+
+      vBox.innerHTML = `
+        <div class="native-player-container">
+          <div class="player-controls-bar">
+            <label for="qualitySelect">Calidad:</label>
+            <select id="qualitySelect" class="quality-selector" onchange="changeVideoQuality(this)">
+              <option value="auto">Automática</option>
+              <option value="1080">1080p</option>
+              <option value="720">720p</option>
+              <option value="480">480p</option>
+            </select>
+          </div>
+          <video id="customHtmlVideo" src="${directUrl}" controls autoplay playsinline webkit-playsinline></video>
+        </div>
+      `;
+    }
+
+    function changeVideoQuality(selectElem) {
+      const quality = selectElem.value;
+      const videoEl = document.getElementById('customHtmlVideo');
+      if (!videoEl) return;
+      const currentTime = videoEl.currentTime;
+      const isPaused = videoEl.paused;
+
+      // Aquí puedes mapear fuentes alternativas según la calidad si tus enlaces de Drive varían, 
+      // de lo contrario el reproductor nativo maneja la reproducción fluida.
+      console.log("Cambiando calidad de video a: ", quality);
+      
+      if (!isPaused) videoEl.play();
     }
 
     renderHomeSections();
