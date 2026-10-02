@@ -463,22 +463,30 @@
       object-fit: contain;
     }
 
-    /* BOTÓN MOVIDO A LA IZQUIERDA para no chocar con el control nativo de VOE */
+    /* BOTÓN DINÁMICO: Se oculta automáticamente al reproducir y aparece al tocar la pantalla */
     .btn-fullscreen-toggle {
       position: absolute;
-      bottom: 10px;
-      left: 10px; /* Movido a la izquierda de forma segura */
+      bottom: 15px;
+      left: 15px;
       background: rgba(124, 58, 237, 0.9);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
-      padding: 6px 12px;
+      padding: 8px 14px;
       font-size: 0.75rem;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       z-index: 3000;
       display: none; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      opacity: 1;
+    }
+
+    /* Clase para ocultar suavemente el botón mientras se ve la película */
+    .btn-fullscreen-toggle.hidden-controls {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .hbo-backdrop-header {
@@ -2159,7 +2167,10 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
-      if (id === 'detailModal') document.getElementById('videoBox').innerHTML = '';
+      if (id === 'detailModal') {
+        document.getElementById('videoBox').innerHTML = '';
+        clearActivePlayerTimers();
+      }
     }
 
     function toggleContentTypeFields() {
@@ -2566,12 +2577,44 @@
       if (screen.orientation && screen.orientation.unlock) {
         try { screen.orientation.unlock(); } catch(e){}
       }
+      clearActivePlayerTimers();
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
+    let activeControlTimer = null;
+
+    function clearActivePlayerTimers() {
+      if (activeControlTimer) {
+        clearTimeout(activeControlTimer);
+        activeControlTimer = null;
+      }
+    }
+
+    function setupAutoHidingControls(vBox) {
+      const btn = vBox.querySelector('.btn-fullscreen-toggle');
+      if (!btn) return;
+
+      function showControls() {
+        btn.classList.remove('hidden-controls');
+        clearActivePlayerTimers();
+        // Ocultar automáticamente tras 3.5 segundos de inactividad
+        activeControlTimer = setTimeout(() => {
+          btn.classList.add('hidden-controls');
+        }, 3500);
+      }
+
+      // Mostrar al tocar o hacer clic en cualquier parte del reproductor
+      vBox.addEventListener('pointerdown', showControls);
+      vBox.addEventListener('mousemove', showControls);
+
+      // Iniciar con controles visibles por 3 segundos y luego ocultarlos
+      showControls();
+    }
+
     function renderVideoInBox(vBox, vInput) {
+      clearActivePlayerTimers();
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
@@ -2592,11 +2635,11 @@
           const parts = vInput.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1]}`;
         }
-        // Botón posicionado a la izquierda (`left: 10px`) para no invadir los controles de VOE
         vBox.innerHTML = `
           <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
           <button class="btn-fullscreen-toggle" style="display: block;" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
         `;
+        setupAutoHidingControls(vBox);
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput;
         if (!vInput.includes('videoembed')) {
@@ -2609,7 +2652,6 @@
       }
     }
 
-    // Lógica mejorada: Extiende el contenedor en pantalla completa real y fuerza la orientación horizontal (landscape)
     async function forceLandscapeFullscreen(btn) {
       const box = btn.closest('.video-box');
       box.classList.toggle('fullscreen-mode');
@@ -2617,14 +2659,12 @@
       if (box.classList.contains('fullscreen-mode')) {
         btn.innerText = "✕ Salir";
         
-        // Solicitar pantalla completa estándar del navegador si está disponible
         if (box.requestFullscreen) {
           box.requestFullscreen().catch(() => {});
         } else if (box.webkitRequestFullscreen) {
           box.webkitRequestFullscreen();
         }
 
-        // Forzar rotación horizontal en dispositivos móviles
         if (screen.orientation && screen.orientation.lock) {
           try {
             await screen.orientation.lock('landscape');
