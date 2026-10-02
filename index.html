@@ -113,11 +113,12 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
 
-    /* CONTENEDOR DE BÚSQUEDA: el padding-top real se define más abajo en .hero#searchContainer,
-       con una regla sin ambigüedad de especificidad para que nunca vuelva a competir con .hero */
-    #searchContainer {
-      padding-bottom: 10px;
-    }
+    /* CONTENEDOR DE BÚSQUEDA: en la vista normal queda pegado al carrusel (padding chico).
+       Solo cuando el usuario está buscando (body.search-active) se le agrega margen extra
+       arriba para no taparse con el logo flotante, ya que en ese momento el carrusel se oculta. */
+    .hero { padding: 15px 20px 5px; }
+    .hero#searchContainer { padding: 15px 20px 10px; }
+    body.search-active .hero#searchContainer { padding-top: 80px; }
 
     /* CARRUSEL HERO */
     .hbo-hero-slider {
@@ -129,6 +130,7 @@
       margin-top: 0;
       margin-bottom: 15px;
       transform: translateZ(0);
+      touch-action: pan-y;
     }
 
     .hbo-slide {
@@ -236,15 +238,24 @@
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
     /* BUSCADOR OPTIMIZADO */
-    .hero { padding: 15px 20px 5px; }
-    /* Regla con la especificidad más alta de todo el archivo para este elemento:
-       así siempre gana y nunca vuelve a solaparse con el header (65px de alto). */
-    .hero#searchContainer { padding: 80px 20px 14px; }
-
     .search-box { width: 100%; max-width: 500px; position: relative; }
+    .search-box .search-icon {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .search-box .search-icon svg {
+      width: 17px; height: 17px;
+      fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
     .search-box input {
       width: 100%;
-      padding: 11px 40px 11px 14px;
+      padding: 11px 40px 11px 40px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-purple);
       color: #fff;
@@ -312,7 +323,7 @@
       aspect-ratio: 2/3;
       object-fit: cover;
       display: block;
-      background: #000;
+      background: #1a1528;
       pointer-events: none;
     }
 
@@ -519,7 +530,8 @@
     <!-- BUSCADOR CON CONTENEDOR PROPIO SEPARADO DEL HEADER -->
     <div class="hero" id="searchContainer">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
+        <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+        <input type="text" id="searchInput" placeholder="Buscar película o serie..." oninput="handleSearch()" onkeydown="checkSecretCode(event)">
         <button class="clear-search-btn" id="clearSearchBtn" onclick="clearSearchInput()" type="button">✕</button>
       </div>
     </div>
@@ -728,1156 +740,19 @@
     const FILE_PATH = "index.html";
 
     let catalog = /*CATALOG_START*/[
-  {
-    "id": 1790908626680,
-    "type": "series",
-    "title": "El problema de los tres cuerpos",
-    "genre": "Ciencia ficción, Drama",
-    "year": "2024",
-    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existencial se cierne sobre toda la humanidad.",
-    "cover": "https://image.tmdb.org/t/p/original/6Dc9mMl083cVpNknWzALCw7JYPH.jpg",
-    "video": "",
-    "seasons": [
       {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Cuenta regresiva",
-            "img": "https://i.blogs.es/24bbb0/el-problema-de-los-tres-cuerpos-3/650_1200.png",
-            "desc": "Una serie de eventos perturbadores lleva a un grupo de brillantes amigos al límite mientras se devela un misterio que se remonta a China durante la Revolución Cultural.",
-            "video": "https://ok.ru/video/16684083186395"
-          },
-          {
-            "num": 2,
-            "title": "Costa roja",
-            "img": "https://i.blogs.es/a21478/3bp_102_unit_08301rc/500_333.jpeg",
-            "desc": "La cuenta atrás de Auggie pone en riesgo su trabajo en nanotecnología. Jin se obsesiona con un juego de realidad virtual de otro mundo. Ye Wenjie pone en práctica una idea radical.",
-            "video": "https://ok.ru/video/16684088625883"
-          },
-          {
-            "num": 3,
-            "title": "Destructor de mundos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10w_ZTSjnSeK44m5prWg%3A1790908764435&ei=XBm_arOQGrux5OUPp9uOwQI&oq=el+problema+de+los+tres+cuerpos+serie+capitulo+3&gs_lp=EhJtb2JpbGUtZ3dzLXdpei1pbWciMGVsIHByb2JsZW1hIGRlIGxvcyB0cmVzIGN1ZXJwb3Mgc2VyaWUgY2FwaXR1bG8gMzIIEAAYiQUYogRIxhFQowhYlQ1wAHgAkAEAmAF2oAHPAqoBAzAuM7gBA8gBAPgBAZgCA6AC6wLCAgcQIxjJAhgnwgIIEAAYgAQYogSYAwCIBgGSBwMwLjOgB8UJsgcDMC4zuAfrAsIHBzAuMS4xLjHIBxqACAE&sclient=mobile-gws-wiz-img#sv=CAMSVxoyKhBlLVlyV1lqUU1BUnFhLW5NMg5ZcldZalFNQVJxYS1uTToOS3RzQlAzWGpTRTBYU00gBCoXCgFzEhBlLVlyV1lqUU1BUnFhLW5NGAEwAUoECAEQAhgHIJX6urkGSggQAhgBIAIoAQ",
-            "desc": "Obsesionados con su misión en el juego virtual, Jin y Jack se apresuran para resolver un acertijo complejo. Sin embargo, el paso al siguiente nivel trae consecuencias desastrosas.",
-            "video": "https://ok.ru/video/16684098587355"
-          },
-          {
-            "num": 4,
-            "title": "Su señoria",
-            "img": "https://i.blogs.es/579102/3bp_104_unit_00636rc/840_560.jpeg",
-            "desc": "Jin busca justicia cuando una muerte sacude al equipo. Antes de una importante cumbre, los investigadores descubren a un grupo extremista que adora a una entidad de otro mundo.",
-            "video": "https://ok.ru/video/16684101864155"
-          }
-        ]
+        id: 1,
+        type: 'movie',
+        title: '[REC]',
+        genre: 'Terror, Suspenso',
+        year: '2007',
+        desc: 'Película de prueba.',
+        cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        video: 'https://ok.ru/videoembed/237592963750',
+        views: 1420,
+        dateAdded: 1710000000000
       }
-    ],
-    "views": 73,
-    "dateAdded": 1790908626680
-  },
-  {
-    "id": 1790899010591,
-    "type": "series",
-    "title": "Son of Zorn",
-    "genre": "Comedia, Animación",
-    "year": "2016",
-    "desc": "Tras estar fuera por una década, un guerrero animado lucha en contra de la banalidad de la vida de los suburbios.",
-    "cover": "https://static0.colliderimages.com/wordpress/wp-content/uploads/sharedimages/2024/06/son-of-zorn_tv-show_poster.jpeg?q=49&fit=contain&w=480&dpr=2",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Regreso al condado de Orange",
-            "img": "https://resizing.flixster.com/Wk9_us8gd-HYxgf7RH9OS3TnWoM=/620x336/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p12901177_e_h8_ac.jpg",
-            "desc": "Zorn viaja desde Zephyria a California para reconectarse con su hijo Alan y descubre que su exesposa Edie está comprometida.",
-            "video": "https://ok.ru/video/16683621419739"
-          },
-          {
-            "num": 2,
-            "title": "Defensor del amor adolescente",
-            "img": "https://variety.com/wp-content/uploads/2016/09/01_16_16_06_zorn_at_computer_hires2.jpg",
-            "desc": "Después de avergonzar a Alan frente a su crush, Zorn usa la Piedra de la Visión para espiarla y ayudarlo. Edie obliga a Zorn a sacar sus cajas del garaje.",
-            "video": "https://ok.ru/video/16683622468315"
-          },
-          {
-            "num": 3,
-            "title": "La guerra del lugar de trabajo",
-            "img": "https://static.wikia.nocookie.net/sonofzorn/images/f/fb/Returntoorangecounty2.jpg/revision/latest?cb=20160911200118",
-            "desc": "Zorn intenta movilizar a sus compañeros de trabajo cuando alguien roba la salsa picante de la sala de descanso. Alan teme mostrar las piernas en la clase de natación.",
-            "video": "https://ok.ru/video/16683625155291"
-          },
-          {
-            "num": 4,
-            "title": "Guerrero de fin de semana",
-            "img": "https://m.media-amazon.com/images/M/MV5BMTUwMjE0MjAyM15BMl5BanBnXkFtZTgwMzM0NDUyMDI@._V1_.jpg",
-            "desc": "Zorn intenta ser el papá cool cuando Alan se queda el fin de semana en su departamento, pero todo se complica cuando llega el amigo de Alan.",
-            "video": "https://ok.ru/video/16683653860059"
-          },
-          {
-            "num": 5,
-            "title": "El sabor de Zephyria",
-            "img": "https://static.wikia.nocookie.net/sonofzorn/images/a/ad/SOZ_105.jpg/revision/latest?cb=20170126143221",
-            "desc": "Zorn intenta enseñarle a Alan sobre la cultura de Zephyria. Edie pelea con sus vecinos por un gnomo de jardín parlante.",
-            "video": "https://ok.ru/video/16683655236315"
-          },
-          {
-            "num": 6,
-            "title": "Historia de dos Zorns",
-            "img": "https://m.media-amazon.com/images/M/MV5BNDgxMjg4NmMtYzIxYy00ZDk4LWIwZWQtMjczZTNkY2NkZTlmXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_.jpg",
-            "desc": "Zorn usa a su doble mecánico “Meka-Zorn” para faltar al trabajo y hacer fila por un videojuego con Alan, mientras Edie y Linda desquitan sus frustraciones con el muñeco.",
-            "video": "https://ok.ru/video/16683657267931"
-          },
-          {
-            "num": 7,
-            "title": "La batalla de acción de gracias",
-            "img": "https://i.blogs.es/9bedea/son-of-zorn-cast/1366_2000.jpg",
-            "desc": "Zorn se cuela en la cena de Acción de Gracias de Edie para demostrarle a su madre que es maduro.",
-            "video": "https://ok.ru/video/16683684465371"
-          },
-          {
-            "num": 8,
-            "title": "El regreso del compañero de copas",
-            "img": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/4fb2ea98-0dd3-42a7-903f-23b24f51dfea/compose?format=webp&width=2560",
-            "desc": "Zorn se reencuentra con un viejo amigo de Zephyria y las cosas se descontrolan.",
-            "video": "https://ok.ru/video/16683686496987"
-          },
-          {
-            "num": 9,
-            "title": "La guerra contra Grafelnik",
-            "img": "https://m.media-amazon.com/images/M/MV5BYmU5YjlmYzgtZTEzOS00NjY1LThiZWItMDY4MGZmNmRkMTkxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_.jpg",
-            "desc": "Alan enfrenta el dilema entre Navidad y la festividad zephyriana de venganza llamada Grafelnik, y aprovecha para enfrentar a sus padres.",
-            "video": "https://ok.ru/video/16683687938779"
-          },
-          {
-            "num": 10,
-            "title": "Ex novia radioactiva",
-            "img": "https://pbs.twimg.com/media/Ey7gINFWUAI_oFM?format=webp&name=large",
-            "desc": "Aparece una ex de Zorn de Zephyria y genera problemas.",
-            "video": "https://ok.ru/video/16683999103707"
-          },
-          {
-            "num": 11,
-            "title": "La batalla de la autoaceptación",
-            "img": "https://images.plex.tv/photo?size=large-1920&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fextras%2Fiva%2F927345%2Fd6882727d72bb82f7cc8f90ba254a20a.jpg",
-            "desc": "Craig le pide a Zorn que lo ayude a convertirse en un guerrero porque siente que no es suficiente hombre para Edie.",
-            "video": "https://ok.ru/video/16684005460699"
-          },
-          {
-            "num": 12,
-            "title": "La búsqueda de Craig",
-            "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj5GoKJ8cmM0OkFR3INEFjJ7vCTW5GP1K2vJApirZCueDup-tnvJqNfYe2IAYo78oAZIoslYtBZwc5eHk8-Sg_FRgk1NF4b-URakXsVWqKuVaoLns49ViIZI_n-uPfpz-6jyhfrBw/s1600/Edie_Craig_Zorn_and_Linda_in_school_stands_hires1+%255Bwww.imagesplitter.net%255D.jpeg",
-            "desc": "Cuando Craig se escapa para pensar en su relación con Edie, ella y Zorn salen en un viaje por carretera para traerlo de vuelta.",
-            "video": "https://ok.ru/video/16684009065179"
-          },
-          {
-            "num": 13,
-            "title": "Todos saluden al hijo de Zorn",
-            "img": "https://images.justwatch.com/backdrop/22272297/s640/son-of-zorn.jpg",
-            "desc": "Zorn aumenta las ventas de la empresa abriendo el mercado zephyriano para recuperar el puesto de Linda. Ayuda a Alan a convertirse en rey del baile para reconquistar a Layla.",
-            "video": "https://ok.ru/video/16684012931803"
-          }
-        ]
-      }
-    ],
-    "views": 320,
-    "dateAdded": 1790899010591
-  },
-  {
-    "id": 1790897174446,
-    "type": "series",
-    "title": "Marvel Zombies",
-    "genre": "Terror, Acción, Animación",
-    "year": "2025",
-    "desc": "Reimagina el universo Marvel con una nueva generación de héroes que luchan contra un ataque zombi cada vez más extendido.",
-    "cover": "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/6/60/Marvel_Zombies_-_Poster_2.jpg/revision/latest?cb=20251010040407&path-prefix=es",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Sobrevivientes solitarios",
-            "img": "https://pictures.betaseries.com/banners/episodes/30824/10f6899f82a678a60e5f19103b71df91.jpg",
-            "desc": "En un mundo devastado por el virus zombi, un grupo de sobrevivientes aislados lucha por mantenerse con vida ante horrores interminables.",
-            "video": "https://ok.ru/video/16683576658651"
-          },
-          {
-            "num": 2,
-            "title": "En la carretera",
-            "img": "https://static.wikia.nocookie.net/marveldatabase/images/5/51/Marvel_Zombies_%28animated_series%29_Season_1_2.png/revision/latest?cb=20250924124143",
-            "desc": "En una carretera, el apetito por la carne lo controla todo y convierte un simple viaje en una pesadilla aterradora.",
-            "video": "https://ok.ru/video/16683578165979"
-          },
-          {
-            "num": 3,
-            "title": "Los muertos putrefactos",
-            "img": "https://static.wikia.nocookie.net/marveldatabase/images/1/15/Marvel_Zombies_%28animated_series%29_Season_1_3.png/revision/latest?cb=20250924151921",
-            "desc": "En una ciudad asediada, los muertos se levantan de sus tumbas hambrientos de carne humana mientras el terror se propaga entre los sobrevivientes.",
-            "video": "https://ok.ru/video/16683578952411"
-          },
-          {
-            "num": 4,
-            "title": "Un final sangriento",
-            "img": "https://www.laughingplace.com/uploads/media/2025/09/20/recap-the-final-battle-between-the-living-and-dead-takes-place-in-epic-marvel-zombies-finale.jpeg",
-            "desc": "Los últimos héroes se enfrentan a una amenaza definitiva en un enfrentamiento final lleno de sangre y sacrificio.",
-            "video": "https://ok.ru/video/16683580000987"
-          }
-        ]
-      }
-    ],
-    "views": 92,
-    "dateAdded": 1790897174446
-  },
-  {
-    "id": 1790894139224,
-    "type": "series",
-    "title": "El caballero de los siete reinos",
-    "genre": "Acción",
-    "year": "2026",
-    "desc": "Un siglo antes de los eventos de \"Juego de tronos\", cuando la línea Targaryen aún ocupa el Trono de Hierro, dos héroes improbables vagan por Poniente: un joven caballero, ser Duncan \"el Alto\" y su escudero Egg.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNM4sUPb1llgo7xu66Wz7Xh-WiTnSh1Ll-WKdkVx-VokM6q92n",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "El caballero errante",
-            "img": "https://media.cnn.com/api/v1/images/stellar/prod/knight-seven-kingdoms-episode-1.jpg?q=w_1110,c_fill",
-            "desc": "En camino al torneo de Ashford, Dunk conoce a un chico astuto llamado Egg, quien se ofrece a ser su escudero.",
-            "video": "https://ok.ru/video/16683502865115"
-          },
-          {
-            "num": 2,
-            "title": "Carne salada",
-            "img": "https://i.blogs.es/4ec2ad/b7b6488d-edec-4503-ba5b-f68279adfb79/500_333.jpeg",
-            "desc": "Dunk busca el apoyo de varios señores para entrar al torneo, pero Egg le aconseja mantener su orgullo. Cuando los Targaryen llegan a Ashford, Dunk aprovecha su oportunidad con el príncipe Baelor.",
-            "video": "https://ok.ru/video/16683517151963"
-          },
-          {
-            "num": 3,
-            "title": "El escudero",
-            "img": "https://actitud925.com/images/noticias/312502.jpg",
-            "desc": "Ser Duncan se prepara para el torneo mientras se revelan más detalles sobre Egg.",
-            "video": "https://ok.ru/video/16683522984667"
-          },
-          {
-            "num": 4,
-            "title": "Siete",
-            "img": "https://www.clarin.com/img/2026/02/04/l-IqLxu4j_2000x1500__1.jpg",
-            "desc": "Dunk enfurece a los Targaryen y exige un juicio por combate. Cuando Aerion pide un juicio de siete, Dunk debe encontrar seis guerreros que luchen a su lado.",
-            "video": "https://ok.ru/video/16683524295387"
-          },
-          {
-            "num": 5,
-            "title": "En el nombre de la madre",
-            "img": "https://imagenes.20minutos.es/files/image_640_auto/uploads/imagenes/2026/02/16/6992fd180e2bb5-34472813.jpeg",
-            "desc": "El temple de Dunk es puesto a prueba en el brutal juicio de los siete. Años atrás, Dunk se siente atraído por la promesa de un nuevo futuro.",
-            "video": "https://ok.ru/video/16683525868251"
-          },
-          {
-            "num": 6,
-            "title": "El mañana",
-            "img": "https://media.cnn.com/api/v1/images/stellar/prod/caballero-siete-reinos-episodio-6-a.jpg?c=original",
-            "desc": "Mientras Ashford lamenta una gran pérdida, Dunk evalúa su próximo movimiento… y si mantener a Egg como su escudero o no.",
-            "video": "https://ok.ru/video/16683528817371"
-          }
-        ]
-      }
-    ],
-    "views": 64,
-    "dateAdded": 1790894139224
-  },
-  {
-    "id": 1790869921110,
-    "type": "series",
-    "title": "Chapelwaite",
-    "genre": "Terror, Drama",
-    "year": "2021",
-    "desc": "El capitán Charles Boone lleva a sus tres hijos a su antiguo hogar en Maine, luego de que su esposa muera en el mar.",
-    "cover": "https://images.justwatch.com/poster/248568781/s718/chapelwaite.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "La sangre llama a la sangre",
-            "img": "https://pictures.betaseries.com/banners/episodes/28430/4faa188ef27bcfebffcbebf31a4c3544.jpg",
-            "desc": "En 1850, el capitán Charles Boone hereda la mansión de su primo y se muda con su familia a un pequeño pueblo en Maine. Allí enfrentan prejuicios, hostilidad y misterios oscuros.",
-            "video": "https://ok.ru/video/16680130054875"
-          },
-          {
-            "num": 2,
-            "title": "Recuerda que debes morir",
-            "img": "https://pictures.betaseries.com/banners/episodes/28430/a81c303e17daa1354177843640e0ff61.jpg",
-            "desc": "Una niña muere de una extraña enfermedad y nombra a Stephen Boone. Los habitantes exigen que Charles abra la tumba de su primo.",
-            "video": "https://ok.ru/video/16680152926939"
-          },
-          {
-            "num": 3,
-            "title": "Legado de locura",
-            "img": "https://resizing.flixster.com/AuxsAvp6VqLsG7qk6pmTODOK2Ng=/375x210/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p20139148_e_h10_ab.jpg",
-            "desc": "Charles escucha ratas detrás de las paredes y busca respuestas en un manicomio, donde descubre sus peores temores.",
-            "video": "https://ok.ru/video/16680193559259"
-          },
-          {
-            "num": 4,
-            "title": "Los prometidos",
-            "img": "https://fathersonholygore.com/wp-content/uploads/2021/09/father-son-holy-gore-chapelwaite-the-worm-doth-corrupt.png",
-            "desc": "Charles se prepara para internarse en el manicomio, pero su hijo Tane encuentra algo inquietante que revela secretos de Chapelwaite. Llegan extraños acólitos.",
-            "video": "https://ok.ru/video/16680206863067"
-          },
-          {
-            "num": 5,
-            "title": "El profeta",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNL6x3dLlsHBCmJxHm-cgi906MrzBPSXASmT7eZS2Y2W3AZgaWeWBrv0s&s=10",
-            "desc": "Un misterioso personaje lleva a Charles a Jerusalem's Lot, donde descubre que su locura está ligada a un antiguo libro.",
-            "video": "https://ok.ru/video/16680220232411"
-          },
-          {
-            "num": 6,
-            "title": "La oferta",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfZA07AwxG4pIBRXvILxxFdA_TywmK9RX3uyf-mSCyyJ311iNX6OOgus9l&s=10",
-            "desc": "Charles recibe una propuesta peligrosa mientras la oscuridad familiar crece.",
-            "video": "https://ok.ru/video/16683449584347"
-          },
-          {
-            "num": 7,
-            "title": "De vermis mysteriis",
-            "img": "https://stephenking.com.ar/wp-content/uploads/2021/03/Chapelwaite-poster-00.jpg",
-            "desc": "El libro prohibido cobra mayor importancia en la lucha contra el mal ancestral.",
-            "video": "https://ok.ru/video/16683454434011"
-          },
-          {
-            "num": 8,
-            "title": "Sostén la noche",
-            "img": "",
-            "desc": "La familia y los habitantes enfrentan horrores nocturnos.",
-            "video": "https://ok.ru/video/16683457120987"
-          },
-          {
-            "num": 9,
-            "title": "La oscuridad se reúne",
-            "img": "",
-            "desc": "Las fuerzas oscuras se concentran para un enfrentamiento final.",
-            "video": "https://ok.ru/video/16683458693851"
-          },
-          {
-            "num": 10,
-            "title": "El guardian",
-            "img": "https://dmtalkies.com/wp-content/uploads/2021/10/ezgif-7-6f6265f895c8-compressed.jpg.webp",
-            "desc": "Charles y sus aliados libran una batalla decisiva para salvar a su familia y el pueblo del antiguo mal.",
-            "video": "https://ok.ru/video/16683461118683"
-          }
-        ]
-      }
-    ],
-    "views": 189,
-    "dateAdded": 1790869921110
-  },
-  {
-    "id": 1790867112502,
-    "type": "movie",
-    "title": "Blade",
-    "genre": "Acción, Cienciaficción",
-    "year": "1998",
-    "desc": "Un hombre mitad vampiro, mitad mortal, se convierte en protector de la raza mortal, mientras mata a vampiros.",
-    "cover": "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p21512_p_v8_ad.jpg",
-    "video": "https://voe.sx/e/6wlobplzjvja",
-    "seasons": [],
-    "views": 232,
-    "dateAdded": 1790867112502
-  },
-  {
-    "id": 1790858421339,
-    "type": "movie",
-    "title": "Trick 'r Treat",
-    "genre": "Terror, Comedia",
-    "year": "2007",
-    "desc": "Cinco historias de Halloween: Una directora tiene una vida secreta, una virgen la busca por primera vez, un grupo de niños hacen una broma, una mujer que detesta Halloween no respeta las reglas y un viejo mezquero se encuentra con un truco o trato demoníaco.",
-    "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
-    "video": "https://voe.sx/e/xctz9a4atwnh",
-    "seasons": [],
-    "views": 361,
-    "dateAdded": 1790858421339
-  },
-  {
-    "id": 1790857870335,
-    "type": "movie",
-    "title": "Gremlins 2: La nueva generación",
-    "genre": "Terror, Comedia",
-    "year": "1990",
-    "desc": "Un rascacielos moderno es el trasfondo de la continuación satírica de la horda de Gremlins, los destructivos diablillos.",
-    "cover": "https://static.wikia.nocookie.net/doblaje/images/f/fe/GremlinsII.jpg/revision/latest?cb=20251231010522&path-prefix=es",
-    "video": "https://ok.ru/video/16677757848283",
-    "seasons": [],
-    "views": 265,
-    "dateAdded": 1790857870335
-  },
-  {
-    "id": 1790855769247,
-    "type": "movie",
-    "title": "Gremlins",
-    "genre": "Terror, Comedia",
-    "year": "1984",
-    "desc": "Una población pintoresca se transforma en un lugar terrorífico tras la llegada de una criatura algo inusual.",
-    "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
-    "video": "https://ok.ru/video/16677444979419",
-    "seasons": [],
-    "views": 512,
-    "dateAdded": 1790855769248
-  },
-  {
-    "id": 1790855240159,
-    "type": "movie",
-    "title": "Krampus",
-    "genre": "Terror, Comedia",
-    "year": "2015",
-    "desc": "Los miembros de una familia disfuncional enfrentan la ira de Krampus, un antiguo demonio del folclore europeo, quien castiga a los chicos necios durante la Navidad.",
-    "cover": "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p11822957_p_v8_ac.jpg",
-    "video": "https://ok.ru/video/16677414963931",
-    "seasons": [],
-    "views": 312,
-    "dateAdded": 1790855240159
-  },
-  {
-    "id": 1790852393903,
-    "type": "movie",
-    "title": "El Cuervo",
-    "genre": "Acción, Drama",
-    "year": "2024",
-    "desc": "El magnate de la música Roeg asesina a Eric y Shelly porque saben un oscuro secreto sobre él. Un espíritu guía le ofrece a Eric pasar la eternidad junto al alma de su amada si regresa a la Tierra y mata a Roeg, quien hizo un pacto con el demonio.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/97861408fdee827dc2691577544a58eb713a641b3bd0b51425c9e91a37dd8713.png",
-    "video": "https://voe.sx/e/xkrbh6bha3bg",
-    "seasons": [],
-    "views": 94,
-    "dateAdded": 1790852393903
-  },
-  {
-    "id": 1790852066005,
-    "type": "movie",
-    "title": "El Cuervo",
-    "genre": "Acción, Drama",
-    "year": "1994",
-    "desc": "La noche antes de su boda, el músico Eric Draven y su prometida son brutalmente asesinados por miembros de una banda violenta. En el aniversario de su muerte, Eric se levanta de la tumba y asume el manto del Cuervo, un vengador sobrenatural.",
-    "cover": "https://image.tmdb.org/t/p/original/926j4wnskRBMtWJuR4bCrlKb1ZF.jpg",
-    "video": "https://ok.ru/video/16676846832347",
-    "seasons": [],
-    "views": 86,
-    "dateAdded": 1790852066006
-  },
-  {
-    "id": 1790851135517,
-    "type": "movie",
-    "title": "La muerte de Robin Hood",
-    "genre": "Acción, Drama",
-    "year": "2026",
-    "desc": "Un Robin Hood herido enfrenta la muerte después de su última batalla, hasta que un misterioso curandero le ofrece la redención de su pasado violento.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/pC2hVl4J522GcMVc5OghRHSs0tq.jpg",
-    "video": "https://ok.ru/video/16676620536539",
-    "seasons": [],
-    "views": 254,
-    "dateAdded": 1790851135517
-  },
-  {
-    "id": 1790850945057,
-    "type": "movie",
-    "title": "F1",
-    "genre": "Drama",
-    "year": "2025",
-    "desc": "leyenda de las carreras Sonny Hayes se ve obligada a liderar un equipo de Fórmula 1 en dificultades, y a ser mentor de un joven prometedor, mientras busca una última oportunidad de llegar al éxito.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4jqj8JA0Xej67zmoKK9VC4h06mZJSNR129QNRSwaM_YncHVYDWnqKWdI&s=10",
-    "video": "https://ok.ru/video/16676554148571",
-    "seasons": [],
-    "views": 241,
-    "dateAdded": 1790850945058
-  },
-  {
-    "id": 1790850497221,
-    "type": "movie",
-    "title": "Cannibal Mukbang",
-    "genre": "Terror, Comedia",
-    "year": "2023",
-    "desc": "Una exploración de las relaciones de uno con la comida, la sexualidad y la venganza. Pregunta: ¿Hasta dónde llegarías en nombre del amor?",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/48d463475174d44d5e9b550c6e8e287f743ad156511158bf1fd34d41e2e174ed.jpg",
-    "video": "https://ok.ru/video/16676527999707",
-    "seasons": [],
-    "views": 216,
-    "dateAdded": 1790850497221
-  },
-  {
-    "id": 1790827411085,
-    "type": "series",
-    "title": "Ted",
-    "genre": "Comedia",
-    "year": "2024",
-    "desc": "Después de que pasa su momento de fama, Ted, el osito de peluche malhablado, regresa a la casa de clase trabajadora de Boston de su mejor amigo, John.",
-    "cover": "https://image.tmdb.org/t/p/original/m2A9Js2rMkyLBYTKnbp2EmN3YiD.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Di que si",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8q0amYczjFOqLBd115xEDzx3yDQvHV_Ztwwur6bZleA&s=10",
-            "desc": "Después de demasiadas travesuras en casa, Matty obliga a Ted a ir al colegio con John. Ted decide de inmediato conseguir que lo expulsen.",
-            "video": "https://ok.ru/video/16671761042139"
-          },
-          {
-            "num": 2,
-            "title": "Mis dos papás",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
-            "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
-            "video": "https://ok.ru/video/16671801936603"
-          },
-          {
-            "num": 3,
-            "title": "Disfunción eyaculatoria",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/fde3af69-2d1e-3dd1-ab0e-b99218cdc371/LAND_16_9?language=eng&proposition=NBCUOTT&version=9b51bbe6-f899-32bd-a7fb-b55a35fd1704&downsize=3840%3A*&format=webp&quality=9",
-            "desc": "Ted y John hacen de todo para que John pueda ver su primera película para adultos.",
-            "video": "https://ok.ru/video/16671921539803"
-          },
-          {
-            "num": 4,
-            "title": "Metro, bicicletas y automóviles",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/4d4887bf-a4c2-3174-910c-b7d8983a2877/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=47556045-8917-3f4b-b14c-0d7c47add55c",
-            "desc": "Los planes de Halloween de Ted con John se frustran cuando Blaire lo obliga a ser su conductor designado.",
-            "video": "https://ok.ru/video/16671989238491"
-          },
-          {
-            "num": 5,
-            "title": "Buscando desesperadamente a Susan",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/475c0505-ef96-398e-9e80-6847a7a43286/LAND_16_9?language=eng&proposition=NBCUOTT&version=9e7e57ca-e8eb-3a3e-8a8b-13b4c8b53d9c",
-            "desc": "Blaire convence a Matty y Susan de que Ted sea su terapeuta matrimonial. Después, animan a Susan a retomar la carrera que abandonó.",
-            "video": "https://ok.ru/video/16676265921243"
-          },
-          {
-            "num": 6,
-            "title": "Noche ruidosa",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/172fe95b-f79c-3618-868a-f50978ea3617/LAND_16_9?language=eng&proposition=NBCUOTT&version=b39f5bad-1856-39ae-9e4e-e7ad755366f6",
-            "desc": "El peculiar deseo navideño de Matty se hace realidad y trastoca las costumbres de la familia Bennett.",
-            "video": "https://ok.ru/video/16676277848795"
-          },
-          {
-            "num": 7,
-            "title": "Tiene que hacerlo",
-            "img": "https://www.movistarplus.es/recorte/n/fanartweb/F4171796",
-            "desc": "A medida que se acerca el final del año escolar, Ted planea ayudar a John a perder su virginidad.",
-            "video": "https://ok.ru/video/16676294560475"
-          }
-        ]
-      },
-      {
-        "name": "Temporada 2",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Háblame sucio",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/d94530f3-1fb5-3a94-83cc-48d9d192710b/LAND_16_9?language=eng&proposition=NBCUOTT&version=815d4c65-8f86-3f1a-9690-a1279c686c67",
-            "desc": "John y Ted usan el teléfono de la escuela para llamar a una línea erótica, lo que genera una investigación.",
-            "video": "https://ok.ru/video/16679370099419"
-          },
-          {
-            "num": 2,
-            "title": "La señora Robicheck",
-            "img": "https://www.reddit.com/media?url=https%3A%2F%2Fexternal-preview.redd.it%2Fseth-macfarlane-on-ted-season-2s-abortion-episode-using-ai-v0-AqY3Sm4J2W-ybt-26azkOfVo3sWF6fFL9Y9Lu78A9RQ.jpeg%3Fauto%3Dwebp%26s%3D0c141d3c04f3592d3bbd1443dec0a2a46f81f261",
-            "desc": "Ted comienza una aventura amorosa con una mujer casada. Matty se enfrenta a la disfunción eréctil.",
-            "video": "https://ok.ru/video/16679392053979"
-          },
-          {
-            "num": 3,
-            "title": "Traficantes y mazmorras",
-            "img": "https://pixel.disco.skyshowtime.com/uuid/f522f6d3-548e-3fa0-94f1-94ce93c87600/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=bee89192-c4d4-348e-9b7e-3eb91312bd32",
-            "desc": "Una escasez de marihuana obliga a John, Ted y Blaire a completar la campaña de Dragones y Mazmorras de un traficante.",
-            "video": "https://ok.ru/video/16679412894427"
-          },
-          {
-            "num": 4,
-            "title": "La comedia romántica de mamá explota",
-            "img": "https://image.tmdb.org/t/p/original/4hk5MA4SQ7TxeIZrC2Dk5GUqAHt.jpg",
-            "desc": "El maratón de películas románticas de Blaire molesta a Matty. Ted y John tienen una cita doble poco habitual.",
-            "video": "https://ok.ru/video/16679574375131"
-          },
-          {
-            "num": 5,
-            "title": "La espada en la piedra",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/40b23a4a-1266-3d2d-8c7f-5fe2fc048fc6/LAND_16_9?language=eng&proposition=NBCUOTT&version=f4342641-e06e-381b-947d-ce1467c52bc6&downsize=3840%3A*&format=webp&quality=9",
-            "desc": "Al darse cuenta de que John necesita más actividades extracurriculares, Ted y él audicionan para la obra del colegio.",
-            "video": "https://ok.ru/video/16679610223323"
-          },
-          {
-            "num": 6,
-            "title": "Roe vs Weed",
-            "img": "https://imageservice.disco.peacocktv.com/uuid/a9191bf8-969d-3de9-b720-4bc245d6f8ae/LAND_16_9?language=eng&proposition=NBCUOTT&version=9bac1920-c266-32fa-98e9-9fd01d98f4d3",
-            "desc": "Los personajes enfrentan un tema delicado relacionado con derechos y decisiones personales.",
-            "video": "https://ok.ru/video/16679630146267"
-          },
-          {
-            "num": 7,
-            "title": "Susan es la nueva negra",
-            "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
-            "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
-            "video": "https://ok.ru/video/16679640173275"
-          },
-          {
-            "num": 8,
-            "title": "Fraudcast news",
-            "img": "https://pixel.disco.nowtv.com/uuid/2adcf9e2-3514-42b4-bbc0-4b61d8d7bff4/LAND_16_9?language=en-GB&proposition=NOWOTT&version=a446c6f8-e03e-3f8d-a385-2a7eb857f31d&downsize=3840%3A*&format=webp&quality=9",
-            "desc": "Los eventos finalizan con nuevas complicaciones y consecuencias para el grupo.",
-            "video": "https://ok.ru/video/16679651052251"
-          }
-        ]
-      }
-    ],
-    "views": 72,
-    "dateAdded": 1790827411085
-  },
-  {
-    "id": 1790826693065,
-    "type": "movie",
-    "title": "Nuremberg: El juicio del siglo",
-    "genre": "Drama",
-    "year": "2025",
-    "desc": "A punto de comenzar los juicios de Núremberg, un psiquiatra del Ejército de los Estados Unidos se ve envuelto en un dramático enfrentamiento psicológico con el acusado de crímenes de guerra nazi Hermann Göring.",
-    "cover": "https://image.tmdb.org/t/p/original/xthXNYltOOm80vW5Kxjzxx5gvQ6.jpg",
-    "video": "https://ok.ru/video/16671598054107",
-    "seasons": [],
-    "views": 109,
-    "dateAdded": 1790826693065
-  },
-  {
-    "id": 1790824833065,
-    "type": "movie",
-    "title": "Insaciable",
-    "genre": "Terror",
-    "year": "2026",
-    "desc": "Hana, una estudiante de medicina amorada, se aterroriza por una fuerza siniestra después de participar en una oscura locura de pérdida de peso: comer cenizas humanas.",
-    "cover": "https://cloudfront-us-east-1.images.arcpublishing.com/abccolor/LXHID2CQHBGIVCTQLKJOIPFHKY.jpg",
-    "video": "https://ok.ru/video/16671265327835",
-    "seasons": [],
-    "views": 446,
-    "dateAdded": 1790824833065
-  },
-  {
-    "id": 1790820683031,
-    "type": "series",
-    "title": "La maldición de Widow's Bay",
-    "genre": "Terror, Comedia",
-    "year": "2026",
-    "desc": "Mientras un alcalde intenta revitalizar el turismo en una isla de Nueva Inglaterra, las leyendas locales empiezan a hacerse realidad.",
-    "cover": "https://es.web.img3.acsta.net/img/4b/ab/4bab482ae65e4ee27b1dca7077aa99f3.png",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "¡Te damos la bienvenida a Widow’s Bay!",
-            "img": "https://m.media-amazon.com/images/M/MV5BNTY3NmRjMjMtMGUxNi00YWJkLWIyYTQtZWFjODBjZGFkYThkXkEyXkFqcGc@._V1_.jpg",
-            "desc": "Esperamos que hayas disfrutado del ferry de tres horas hasta el secreto mejor guardado de Nueva Inglaterra. Ignora las advertencias sobre la niebla. Todo está bien.",
-            "video": "https://ok.ru/video/16670769023707"
-          },
-          {
-            "num": 2,
-            "title": "Alojamiento",
-            "img": "https://i0.wp.com/elarchivokrell.com/wp-content/uploads/2026/06/WB5.jpg?resize=600%2C320&ssl=1",
-            "desc": "Aprecia el encanto histórico de nuestra posada local. El alcalde Loftis demostrará que es segura pasando una noche ahí solo.",
-            "video": "https://ok.ru/video/16670785145563"
-          },
-          {
-            "num": 3,
-            "title": "Baño inaugural",
-            "img": "https://mundocine.es/wp-content/uploads/2026/06/la-maldicion-de-widows-bay-tendra-temporada-2.webp",
-            "desc": "Es la apertura anual de la playa. Extiende una toalla mientras el alcalde “prueba las aguas”. Por otro lado: no recojas autoestopistas.",
-            "video": "https://ok.ru/video/16670792288987"
-          },
-          {
-            "num": 4,
-            "title": "Lecturas de playa",
-            "img": "https://www.infobae.com/resizer/v2/XIDJXYJRBNHBRCU52AJIESWIBE.webp?auth=576eb238245f0366d58707495d2a37a286c3eed359d3c666ecdb869c8d86e76e&smart=true&width=350&height=233&quality=85",
-            "desc": "Asegúrate de llevar un buen libro para la playa. No recomendamos libros de autoayuda en la isla.",
-            "video": "https://ok.ru/video/16670799563483"
-          },
-          {
-            "num": 5,
-            "title": "Que esperar de tu viaje",
-            "img": "https://cdn.avpasion.com/wp-content/uploads/2026/04/misterio-widows-bay-03-1200x675.jpg",
-            "desc": "Nos disculpamos por el toque de queda. Mantén la calma mientras averiguamos qué pasa. Los adolescentes deben quedarse en casa cuando oscurezca.",
-            "video": "https://ok.ru/video/16670813588187"
-          },
-          {
-            "num": 6,
-            "title": "Nuestra historia",
-            "img": "https://imagenes.20minutos.es/files/image_640_auto/uploads/imagenes/2026/07/15/6a57a3645ff335-31107935.jpeg",
-            "desc": "La historia de Widow’s Bay es un hermoso relato de matrimonio, lealtad y un amor que perdura más allá de las vidas. Eso es todo.",
-            "video": "https://ok.ru/video/16670990928603"
-          },
-          {
-            "num": 7,
-            "title": "Mareo",
-            "img": "https://i.blogs.es/15ae77/widows_bay_photo_010703.jpg.photo_modal_show_home_large-1-/1366_2000.jpeg",
-            "desc": "Sal a navegar con el alcalde Loftis y el querido local Wyck. Ellos atienden unos asuntos… mejor disfruta el viaje.",
-            "video": "https://ok.ru/video/16670996892379"
-          },
-          {
-            "num": 8,
-            "title": "Tú equipaje",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7a9gdsn7_qUSH8_K4QGnqRX75PNTKWlNJrODz4bnVYEsm30eoxFbfThU&s=10",
-            "desc": "No te preocupes por el equipaje extraviado. El equipaje viejo siempre reaparece en Widow’s Bay.",
-            "video": "https://ok.ru/video/16671002921691"
-          },
-          {
-            "num": 9,
-            "title": "Refugio de emergencia",
-            "img": "https://statics.forbesargentina.com/2026/06/6a3e752b1039c.jpg",
-            "desc": "Por favor busca refugio si una tormenta de siglos de antigüedad azota la isla y nos sume en la oscuridad. Juega a las cartas.",
-            "video": "https://ok.ru/video/16671105813211"
-          },
-          {
-            "num": 10,
-            "title": "¡Esperemos que te hayas divertido!",
-            "img": "https://www.indiewire.com/wp-content/uploads/2026/06/Widows-Bay-Episode-10-finale-Matthew-Rhys-Ruth-actor-K-Callan-e1781543948770.jpg",
-            "desc": "Final de temporada. Sabemos que hay que tomar decisiones difíciles y puede que nunca seamos los mismos, ¡pero esperamos que vuelvas de visita!",
-            "video": "https://ok.ru/video/16671118199515"
-          }
-        ]
-      }
-    ],
-    "views": 455,
-    "dateAdded": 1790820683031
-  },
-  {
-    "id": 1790804277999,
-    "type": "series",
-    "title": "Misa de medianoche",
-    "genre": "Terror",
-    "year": "2021",
-    "desc": "La llegada de un joven y carismático sacerdote trae consigo milagros, enigmas y un renovado fervor religioso a un pueblo de pescadores agonizante. Pero con él llega una criatura sedienta de sangre humana.",
-    "cover": "https://image.tmdb.org/t/p/original/p6kkBc4UX2CearGqOYasq0JMkuD.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Libro I: Génesis",
-            "img": "https://www.lanacion.com.ar/resizer/v2/misa-de-medianoche-la-serie-de-netflix-estrenada-YY3DBCIKKBHBDHLVTQOXTMRAMY.jpg?auth=31d92aa8f6627fade03ab31e7f4743f7060f9279c754795cfd9632656430ad97&width=1200&height=800&quality=70&smart=true",
-            "desc": "Riley Flynn regresa a casa y se encuentra con una familia disfuncional, caras conocidas y un nuevo sacerdote. En otra parte de la isla, se avecina una oscura tormenta.",
-            "video": "https://ok.ru/video/16670090070747"
-          },
-          {
-            "num": 2,
-            "title": "Libro ll: Salmos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC19yYIIduUQq8aKIE1rFvynqixwfUYmD_BDrlg_wgNzCAo0J9dfQt2MTB&s=10",
-            "desc": "Un presagio inquietante llega a la playa tras la tormenta. Más tarde, cuando los locales se reúnen para una comida, ocurre una tragedia… y un milagro.",
-            "video": "https://ok.ru/video/16670095772379"
-          },
-          {
-            "num": 3,
-            "title": "Libro lll: Proverbios",
-            "img": "https://i.blogs.es/52e043/midnightmass2/450_1000.jpg",
-            "desc": "Los milagros dejan atónitos a los residentes. Leeza visita a Joe. Una impactante confesión revela lo que realmente le ocurrió a monseñor Pruitt.",
-            "video": "https://ok.ru/video/16670103636699"
-          },
-          {
-            "num": 4,
-            "title": "Libro IV: Lamentaciones",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ26Xbtc51AThHLqZPiR0-fB9MCaHrAnQJ3yYSCSuzgzL1hydSUjHcrwnYe&s=10",
-            "desc": "Erin acude a Riley tras recibir una triste noticia. El padre Paul empieza a sufrir perturbadores efectos secundarios. Bev hace un descubrimiento impactante.",
-            "video": "https://ok.ru/video/16670209018587"
-          },
-          {
-            "num": 5,
-            "title": "Libro V: Evangelio",
-            "img": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABbpTr0Hvz5HdACGpJV9D5CO5d3EEshfhV1vd5xRht9u47-k8Vv2HsvQdjPYJGVvvtpl7hcMj5kxCEA9VuxaiD_jgBhV0t_V_NV6XRd2PjHwJGC03Dpiaxf5GlQ.jpg?r=8c1",
-            "desc": "El sheriff Hassan lidia con varias desapariciones mientras el pueblo se prepara para el Viernes Santo. Riley revela la verdad para proteger a Erin.",
-            "video": "https://ok.ru/video/16670210591451"
-          },
-          {
-            "num": 6,
-            "title": "Libro VI: Hechos de los apóstoles",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7b3CHJLLLRD_1FldEtglkzD3_a_fPU9WSyhylRaqwVGsxBUJ5sAEi0KQ&s=10",
-            "desc": "Una ferviente Bev llama a la fe en la noche de la vigilia de Pascua.",
-            "video": "https://ok.ru/video/16670212819675"
-          },
-          {
-            "num": 7,
-            "title": "Libro VII: Apocalipsis",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0iYAn5jRcZ8EIyBYb8Wm4151I5cFZWw32-EjYlurDUGKYJGLvsyeqQ7KV&s=10",
-            "desc": "La comunidad enfrenta las consecuencias definitivas de los milagros y el fervor religioso que se ha apoderado de la isla.",
-            "video": "https://ok.ru/video/16670215703259"
-          }
-        ]
-      }
-    ],
-    "views": 306,
-    "dateAdded": 1790804277999
-  },
-  {
-    "id": 1790783678102,
-    "type": "series",
-    "title": "El Gabinete de curiosidades de Guillermo del Toro",
-    "genre": "Terror, Cienciaficción",
-    "year": "2022",
-    "desc": "Una antología de terror con oscuras historias contadas por renombrados creadores del género.",
-    "cover": "https://image.tmdb.org/t/p/original/wdWGrl5U4CVOu2EniUXizz60gSh.jpg",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Lote 36",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW9ZTgHYbv1bYo6xlrJ51V1a1kYPgO7BH-Nts98HRfg8Vop_30MnvWPJb3cx_ALE5iKTV11-hyUPpFVFlkR-0LzPa1wG-0XEgF_LQHcxc&s=10",
-            "desc": "Un hombre compra una bodega llena de posesiones misteriosas para venderlas y pagar una deuda, pero pronto termina envuelto en una situación desesperada… y mortal.",
-            "video": "https://ok.ru/video/16667328449243"
-          },
-          {
-            "num": 2,
-            "title": "Ratas de cementerio",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/ratas_de_cementerio_00.jpg",
-            "desc": "Un ladrón de tumbas va por un botín recién llegado al cementerio, pero antes de hacerse con él deberá sobrevivir a un laberinto de túneles y a un ejército de roedores.",
-            "video": "https://ok.ru/video/16667825015515"
-          },
-          {
-            "num": 3,
-            "title": "La autopsia",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/27/la-autopsia-de-david-prior.jpeg",
-            "desc": "Mientras investiga la aparición de un cadáver, un alguacil veterano recurre a un viejo amigo forense para que lo ayude a desentrañar una serie de hechos escalofriantes.",
-            "video": "https://ok.ru/video/16667839761115"
-          },
-          {
-            "num": 4,
-            "title": "Por fuera",
-            "img": "https://media.elestimulo.com/uploads/2022/11/The-outside-1-1100x572.jpg",
-            "desc": "Ansiosa por encajar en su trabajo, Stacey empieza a usar una crema popular que le causa una reacción alarmante, mientras una inquietante transformación toma forma.",
-            "video": "https://ok.ru/video/16668959574747"
-          },
-          {
-            "num": 5,
-            "title": "Modelo",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/28/ben-barnes-y-crispin-glover-en-el-modelo-de-pickman.jpeg",
-            "desc": "Will, un estudiante de arte, conoce a Richard, un introvertido pintor cuyas tenebrosas obras empiezan a distorsionar su concepto de la realidad.",
-            "video": "https://ok.ru/video/16668984675035"
-          },
-          {
-            "num": 6,
-            "title": "Sueño en la casa de las brujas",
-            "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/10/28/daphne-hoskins-y-rupert-grint-en-suenos-en-la-casa-de-la-bruja.jpeg",
-            "desc": "Años después de la muerte de su gemela y estimulado por una rara sustancia, un investigador se adentra en un mundo oscuro y misterioso para traer a su hermana de regreso.",
-            "video": "https://ok.ru/video/16669013773019"
-          },
-          {
-            "num": 7,
-            "title": "La inspección",
-            "img": "https://image.pmgstatic.com/cache/resized/w663/files/images/film/photos/166/926/166926961_7aa5b1.jpg",
-            "desc": "Tentadas a vivir una experiencia única, cuatro personas visitan la lujosa mansión de un acaudalado ermitaño, pero la intriga pronto se convierte en horror.",
-            "video": "https://ok.ru/video/16669984164571"
-          },
-          {
-            "num": 8,
-            "title": "El murmullo",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmullo_01.jpg",
-            "desc": "Tras una pérdida devastadora, una pareja de ornitólogos se muda a una casa aislada para estudiar aves. Sin embargo, la historia del lugar está escrita con sangre y dolor.",
-            "video": "https://ok.ru/video/16669987506907"
-          }
-        ]
-      }
-    ],
-    "views": 291,
-    "dateAdded": 1790783678102
-  },
-  {
-    "id": 1790782282974,
-    "type": "movie",
-    "title": "[REC]⁴",
-    "genre": "Acción, Terror",
-    "year": "2014",
-    "desc": "Tras ser rescatada, envían a una desafortunada reportera de televisión a un viaje transocéanico, pero el virus mortal que la ha atormentado junto a muchos otros la sigue de cerca.",
-    "cover": "https://images.justwatch.com/poster/194558603/s718/rec-4-apocalipsis.jpg",
-    "video": "https://voe.sx/e/ujdvw0cw4lrj",
-    "seasons": [],
-    "views": 195,
-    "dateAdded": 1790782282974
-  },
-  {
-    "id": 1790779767239,
-    "type": "movie",
-    "title": "[REC]³ Génesis",
-    "genre": "Terror, Acción",
-    "year": "2012",
-    "desc": "Unos recién casados (Leticia Dolera, Diego Martín) observan cómo la recepción de su boda se convierte en un caos y en una carnicería cuando sus invitados son infectados por un virus que los transforma en unos zombies hambrientos.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/93ccf6afb00a4888162222f0c57ddef2d44f70dd6fe753494fe33f06d5b3c28b.jpg",
-    "video": "https://voe.sx/e/ipxa4ubjiyju",
-    "views": 99,
-    "dateAdded": 1790779767241
-  },
-  {
-    "id": 1790779271475,
-    "type": "movie",
-    "title": "[REC]²",
-    "genre": "Terror, Acción",
-    "year": "2009",
-    "desc": "Un grupo de policías entra en el edificio maldito, acompañado por un doctor que va a extraer sangre de los infectados para encontrar una cura. A su vez, tres adolescentes, un bombero y un antiguo inquilino entran por el alcantarillado.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/97051b1f80866fb2ac0f19f1970d9b55ad2d27d527f729faf51903ef5c8ef7b2.jpg",
-    "video": "https://ok.ru/video/16666491161307",
-    "views": 291,
-    "dateAdded": 1790779271475
-  },
-  {
-    "id": 1790777691129,
-    "type": "movie",
-    "title": "La muerte de un unicornio",
-    "genre": "Terror, Cienciaficción",
-    "year": "2025",
-    "desc": "El dúo padre-hija, Riley y Elliot, atropellan a un unicornio con su coche y lo llevan al refugio natural de un director general farmacéutico mega-rico.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/7ec54d860bdfce2eaa217ec2959da0dbeba8e4666669645c963e19a66f1eac5c.jpg",
-    "video": "https://voe.sx/e/kzm4jpvsz1d6",
-    "views": 273,
-    "dateAdded": 1790777691129
-  },
-  {
-    "id": 1790776246655,
-    "type": "movie",
-    "title": "The VelociPastor",
-    "genre": "Acción, Terror, Comedia",
-    "year": "2017",
-    "desc": "Después de perder a sus padres, un sacerdote viaja a China, donde hereda una habilidad misteriosa que le permite convertirse en un dinosaurio.",
-    "cover": "https://m.media-amazon.com/images/M/MV5BZTQyZDEwMDQtOTYyYS00ZmRkLWI0Y2EtNTRhNjhiZTJmMDVmXkEyXkFqcGc@._V1_.jpg",
-    "video": "https://ok.ru/video/16665821514459",
-    "views": 482,
-    "dateAdded": 1790776246655
-  },
-  {
-    "id": 1790771366996,
-    "type": "movie",
-    "title": "Maxxxine",
-    "genre": "Terror",
-    "year": "2024",
-    "desc": "Maxine Minx, aspirante a estrella de cine y estafadora, finalmente consigue su gran oportunidad. Pero mientras un misterioso asesino acecha a las estrellas de Hollywood de los años 80, un rastro de sangre amenaza con revelar su siniestro pasado.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/12879abf041926c00a188f2e48f3fd9936dc25d65fecbd8865b46ed5d4950507.jpg",
-    "video": "https://ok.ru/video/16665009654491",
-    "views": 196,
-    "dateAdded": 1790771366996
-  },
-  {
-    "id": 1790770844727,
-    "type": "movie",
-    "title": "X",
-    "genre": "Terror",
-    "year": "2022",
-    "desc": "Un equipo cinematográfico intenta grabar una película para adultos en una zona rural de Texas. Sin embargo, pronto, deberán luchar por sobrevivir.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/7040fd473c6ec5511ad7930376e9795c84f8d9c397da154d6cd61d6e6f576a75.jpg",
-    "video": "https://voe.sx/e/00dej9hw1spy",
-    "views": 479,
-    "dateAdded": 1790770844727
-  },
-  {
-    "id": 1790770226823,
-    "type": "movie",
-    "title": "Pearl",
-    "genre": "Terror, Drama",
-    "year": "2022",
-    "desc": "En la remota granja de su familia, Pearl debe cuidar a su padre enfermo bajo la estricta supervisión de su religiosa madre. Ella sueña con una vida lejos de allí, similar a la de las estrellas de cine, pero vive en un ambiente opresor y aterrador.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/bfc223dd18ed056b668e81469d69dd44c6bf5f658c5a556ff56c668240607376.jpg",
-    "video": "https://voe.sx/e/mtxifzx6gqta",
-    "views": 107,
-    "dateAdded": 1790770226823
-  },
-  {
-    "id": 1790769448763,
-    "type": "movie",
-    "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
-    "genre": "Terror",
-    "year": "2025",
-    "desc": "Wendy intenta rescatar a su hermano de Peter Pan, un perturbado secuestrador y asesino de niños que promete a los pequeños que, al morir, irán a la Tierra de Nunca Jamás.",
-    "cover": "https://play-lh.googleusercontent.com/HYVVxiMk_Gthbg5v7_JQpG4BvyqhZVhmVRdesAuWlWshUhYBAAqp2V9VwbuT1pKljEz8ijvAG1w7Ru7e2Q",
-    "video": "https://ok.ru/video/16664606411483",
-    "views": 445,
-    "dateAdded": 1790769448763
-  },
-  {
-    "id": 1790755820554,
-    "type": "movie",
-    "title": "Piraña 3DD",
-    "genre": "Terror, Comedia",
-    "year": "2012",
-    "desc": "Nadie está a salvo de un banco de peces prehistóricos que, buscando carne, clavan sus afilados dientes en los clientes del exitoso parque acuático Big Wet.",
-    "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
-    "video": "https://voe.sx/e/g0xdl5xf7x30",
-    "views": 361,
-    "dateAdded": 1790755820564
-  },
-  {
-    "id": 1790754583454,
-    "type": "movie",
-    "title": "Marble Hornet",
-    "genre": "Terror",
-    "year": "2015",
-    "desc": "Unos amigos descubren unas cintas de vídeo en las que un aterrador hombre sin rostro, vestido con un elegante traje, persigue a una familia hasta llevar a sus miembros a la locura. Ahora que lo han visto, el monstruo comienza a acosarlos sin descanso.",
-    "cover": "https://static.wikia.nocookie.net/vsdebating/images/f/fe/The_Operator.jpg/revision/latest/scale-to-width-down/1200?cb=20180302100112",
-    "video": "https://voe.sx/e/bj0ouh6neklp",
-    "views": 284,
-    "dateAdded": 1790754583455
-  },
-  {
-    "id": 1790651263999,
-    "type": "movie",
-    "title": "Piraña 3D",
-    "genre": "Terror, Comedia",
-    "year": "2010",
-    "desc": "Las vacaciones de primavera se vuelven una pesadilla en un popular centro turístico, en donde cientos de peces prehistóricos que se alimentan de humanos han llegado para comerse a los indefensos bañistas.",
-    "cover": "https://image.tmdb.org/t/p/original/lIodGaZNJbbShF5bDgf51cqpAKa.jpg",
-    "video": "https://ok.ru/video/16646131878619",
-    "views": 501,
-    "dateAdded": 1790651263999
-  },
-  {
-    "id": 1790649801930,
-    "type": "movie",
-    "title": "The Void (Conjuros del más allá)",
-    "genre": "Terror, Cienciaficción",
-    "year": "2016",
-    "desc": "Figuras cubiertas con capuchas, propias de una secta, atrapan a un agente de policía, pacientes y empleados en el interior de un hospital, que es una puerta abierta a la maldad.",
-    "cover": "https://www.joblo.com/wp-content/uploads/2015/12/the-void.jpg",
-    "video": "https://voe.sx/e/jgsbe2igvkwy",
-    "views": 381,
-    "dateAdded": 1790649801930
-  },
-  {
-    "id": 1790649103198,
-    "type": "movie",
-    "title": "I lost my body (Perdí mi cuerpo)",
-    "genre": "Drama, Romance, Animación",
-    "year": "2019",
-    "desc": "La historia de Naoufel, un joven que se enamora de Gabrielle, en París. En otra parte de la ciudad, la mano de un joven escapa de un laboratorio de disección, decidida a encontrar su cuerpo nuevamente.",
-    "cover": "https://a.ltrbxd.com/resized/film-poster/5/1/4/7/0/2/514702-i-lost-my-body-0-600-0-900-crop.jpg?v=d58f4ad597",
-    "video": "https://ok.ru/video/16645961091803",
-    "views": 349,
-    "dateAdded": 1790649103198
-  },
-  {
-    "id": 1790647825990,
-    "type": "movie",
-    "title": "Shutter",
-    "genre": "Terror",
-    "year": "2004",
-    "desc": "Un fotógrafo y su novia atropellan a una mujer con su automóvil, pero ahora deben enfrentar la ira de su espíritu vengativo.",
-    "cover": "https://m.media-amazon.com/images/I/612oSHMX54L._AC_UF894,1000_QL80_.jpg",
-    "video": "https://ok.ru/video/16645864032987",
-    "views": 459,
-    "dateAdded": 1790647825990
-  },
-  {
-    "id": 1790646943641,
-    "type": "movie",
-    "title": "Jujutsu Kaisen: El tesoro escondido/El tesoro perdido",
-    "genre": "Animación, Acción, Drama",
-    "year": "2026",
-    "desc": "Antes de ser enemigos, Satoru Gojo y Suguru Geto eran compañeros de instituto y amigos. Los dos poderosos hechiceros reciben el encargo de proteger a Riko Amanai",
-    "cover": "https://image.tmdb.org/t/p/original/gO0B3CwQ0gmLSFk9YwkNMvvvp0a.jpg",
-    "video": "https://ok.ru/video/16645678828251",
-    "seasons": [],
-    "views": 98,
-    "dateAdded": 1790646943641
-  },
-  {
-    "id": 1790646768137,
-    "type": "movie",
-    "title": "5 centímetros por segundo",
-    "genre": "Animación, Romance, Drama",
-    "year": "2007",
-    "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
-    "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
-    "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 499,
-    "dateAdded": 1790646768137
-  },
-  {
-    "id": 1790646629199,
-    "type": "movie",
-    "title": "Somos los Miller (We're the Millers)",
-    "genre": "Comedia",
-    "year": "2013",
-    "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
-    "video": "https://voe.sx/e/qif8izzgsxum",
-    "views": 554,
-    "dateAdded": 1790646629199
-  },
-  {
-    "id": 1790646464102,
-    "type": "movie",
-    "title": "V/H/S: Viral",
-    "genre": "Terror",
-    "year": "2014",
-    "desc": "Una persecución policiaca por las calles de Los Ángeles inspira a docenas de jóvenes obsesionados con la fama para capturar imágenes lascivas, pero no son conscientes que enfrentarán sus propias muertes como estrellas de la sensación de su video.",
-    "cover": "https://images.justwatch.com/poster/309926499/s718/v-h-s-viral.jpg",
-    "video": "https://ok.ru/video/16645563353819",
-    "views": 217,
-    "dateAdded": 1790646464102
-  },
-  {
-    "id": 1790646338112,
-    "type": "movie",
-    "title": "V/H/S 2: Las crónicas del miedo 2",
-    "genre": "Terror",
-    "year": "2013",
-    "desc": "Mientras se realiza una búsqueda sobre el paradero de un estudiante desaparecido, una pareja observa horribles historias grabadas en una colección de videocintas.",
-    "cover": "https://play-lh.googleusercontent.com/LossrrWKrnNop4AxnkA5cYMxNDqDWXBTpCUWMgPimKgLwfYSSasoE64g7qjrlu0ZZW0",
-    "video": "https://ok.ru/video/16645514988251",
-    "views": 229,
-    "dateAdded": 1790646338112
-  },
-  {
-    "id": 1790646185225,
-    "type": "movie",
-    "title": "V/H/S: Las crónicas del miedo",
-    "genre": "Terror",
-    "year": "2012",
-    "desc": "Contratada para robar una cinta VHS de una casa alejada, una banda de ladrones descubre un cadáver, viejos televisores y muchas imágenes encriptadas y perturbadoras.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/9e4b343e30ec4de545da0d441f539e1dad78d27cb16974010de57558fa8d2a7d.png",
-    "video": "https://ok.ru/video/16645441915611",
-    "views": 65,
-    "dateAdded": 1790646185225
-  },
-  {
-    "id": 1790645942165,
-    "type": "movie",
-    "title": "El final de la calle Oak",
-    "genre": "Acción, Cienciaficción",
-    "year": "2026",
-    "desc": "La familia Platt se une para desenvolverse en su nuevo entorno después de que un evento cósmico traslada su barrio residencial a un lugar desconocido y sterrador.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/73c3544aaac37e4c6bd8620234a55085d5498746efda9a28630927af5fda06d6.jpg",
-    "video": "https://ok.ru/video/16645391256283",
-    "views": 369,
-    "dateAdded": 1790645942165
-  },
-  {
-    "id": 1790645806977,
-    "type": "movie",
-    "title": "[REC]",
-    "genre": "Terror",
-    "year": "2007",
-    "desc": "Un reportero de televisión y un camarógrafo siguen a un equipo de emergencias a un oscuro edificio de viviendas y rápidamente se ven atrapados dentro con algo aterrador y sobrenatural.",
-    "cover": "https://play-lh.googleusercontent.com/Boii2lPaGvS8OsUFVkTtkvTtXrT1mffksn5_TH8Yl81Xz53N-8kpmDuxCaLeU-yJ2WBh=w240-h480-rw",
-    "video": "https://ok.ru/video/16643535932123",
-    "views": 301,
-    "dateAdded": 1790645806977
-  }
-]/*CATALOG_END*/;
+    ]/*CATALOG_END*/;
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
@@ -1891,6 +766,26 @@
 
     if (isCreatorMode) {
       document.body.classList.add('creator-mode');
+    }
+
+    /* ---------- Imágenes confiables, sin depender de servicios externos ----------
+       Si una portada falla al cargar (corte momentáneo de red, CDN lento, etc.),
+       reintentamos un par de veces antes de rendirnos. Si definitivamente no carga,
+       mostramos un cartel propio (sin depender de via.placeholder.com, que a veces
+       también falla y deja el cuadro en negro). */
+    const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
+    );
+
+    function handleImgError(img) {
+      const tries = parseInt(img.dataset.retries || '0', 10);
+      if (tries < 2 && img.dataset.orig) {
+        img.dataset.retries = String(tries + 1);
+        setTimeout(() => { img.src = img.dataset.orig; }, 600 * (tries + 1));
+      } else {
+        img.onerror = null;
+        img.src = NO_COVER_SVG;
+      }
     }
 
     /* ---------- Control del botón "atrás" mientras se busca ----------
@@ -1981,6 +876,18 @@
     let currentSlide = 0;
     let sliderInterval = null;
 
+    // Reinicia el cambio automático de slide desde cero (se llama tras cada
+    // interacción manual, para no interrumpir al usuario justo después).
+    function restartSliderInterval() {
+      if (sliderInterval) clearInterval(sliderInterval);
+      const count = document.querySelectorAll('.hbo-slide').length;
+      if (!count) return;
+      sliderInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % count;
+        goToSlide(currentSlide);
+      }, 5000);
+    }
+
     function renderHeroSlider() {
       const sliderContainer = document.getElementById('hboHeroSlider');
       const dotsContainer = document.getElementById('hboSliderDots');
@@ -2014,15 +921,11 @@
 
         const dot = document.createElement('div');
         dot.className = `hbo-dot ${idx === 0 ? 'active' : ''}`;
-        dot.onclick = () => goToSlide(idx);
+        dot.onclick = () => { goToSlide(idx); restartSliderInterval(); };
         dotsContainer.appendChild(dot);
       });
 
-      if (sliderInterval) clearInterval(sliderInterval);
-      sliderInterval = setInterval(() => {
-        currentSlide = (currentSlide + 1) % recentItems.length;
-        goToSlide(currentSlide);
-      }, 5000);
+      restartSliderInterval();
     }
 
     function goToSlide(idx) {
@@ -2032,6 +935,36 @@
       slides.forEach((s, i) => s.classList.toggle('active', i === idx));
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
+
+    // Permite deslizar el banner con el dedo (o el mouse) para moverlo a mano,
+    // además de que siga rotando solo. Deslizar a la derecha vuelve al anterior.
+    (function setupSliderSwipe() {
+      const slider = document.getElementById('hboHeroSlider');
+      if (!slider) return;
+      let startX = null, startY = null, dragging = false;
+
+      slider.addEventListener('pointerdown', e => {
+        startX = e.clientX; startY = e.clientY; dragging = true;
+      });
+
+      slider.addEventListener('pointerup', e => {
+        if (!dragging || startX === null) { dragging = false; return; }
+        dragging = false;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - (startY || 0);
+        const count = document.querySelectorAll('.hbo-slide').length;
+        if (count > 1 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          let next = currentSlide + (dx < 0 ? 1 : -1);
+          if (next < 0) next = count - 1;
+          if (next >= count) next = 0;
+          goToSlide(next);
+          restartSliderInterval();
+        }
+        startX = null; startY = null;
+      });
+
+      slider.addEventListener('pointercancel', () => { dragging = false; startX = null; });
+    })();
 
     function renderHomeSections() {
       const searchInput = document.getElementById('searchInput');
@@ -2045,7 +978,10 @@
         clearBtn.style.display = query.length > 0 ? 'block' : 'none';
       }
 
-      if (query.length > 0 && query !== "9009") {
+      const searching = query.length > 0 && query !== "9009";
+      document.body.classList.toggle('search-active', searching);
+
+      if (searching) {
         pushSearchState();
         heroSlider.style.display = 'none';
         searchContainer.style.display = 'block';
@@ -2215,7 +1151,7 @@
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
         </div>
-        <img src="${item.cover}" alt="Portada" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/200x300?text=Sin+Portada'">
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="lazy" decoding="async" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${badge} • ${item.year}</div>
@@ -2530,6 +1466,22 @@
       }
     }
 
+    // Junta todas las imágenes disponibles de una serie (portada + miniaturas
+    // de sus capítulos) para usarlas como relleno aleatorio cuando un capítulo
+    // no tiene su propia imagen cargada.
+    function getSeriesImagePool(seriesData) {
+      const pool = [];
+      if (seriesData.cover) pool.push(seriesData.cover);
+      (seriesData.seasons || []).forEach(s => {
+        (s.episodes || []).forEach(e => {
+          if (e.img && typeof e.img === 'string' && e.img.trim() && e.img.trim() !== 'null') {
+            pool.push(e.img.trim());
+          }
+        });
+      });
+      return pool.length ? pool : [seriesData.cover];
+    }
+
     function renderEpisodesForSelectedSeason() {
       if (!currentSeriesData || !currentSeriesData.seasons) return;
       const sIdx = document.getElementById('seasonSelect').value;
@@ -2541,20 +1493,20 @@
         return;
       }
 
+      const imagePool = getSeriesImagePool(currentSeriesData);
       const fragment = document.createDocumentFragment();
 
       season.episodes.forEach((ep, eIdx) => {
         const epNumDisplay = ep.num !== undefined ? ep.num : (eIdx + 1);
-        const thumbImg = (ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null') 
-                         ? ep.img.trim() 
-                         : currentSeriesData.cover;
+        const hasOwnImg = ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null';
+        const thumbImg = hasOwnImg ? ep.img.trim() : imagePool[Math.floor(Math.random() * imagePool.length)];
         
         const cardDiv = document.createElement('div');
         cardDiv.className = 'hbo-ep-card';
         cardDiv.innerHTML = `
           <div class="hbo-ep-row" onclick="playEpisode(${sIdx}, ${eIdx})">
             <div class="hbo-thumb">
-              <img src="${thumbImg}" alt="Ep" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80?text=Cap'">
+              <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" onerror="handleImgError(this)">
               <div class="hbo-play-icon">▶</div>
             </div>
             <div class="hbo-ep-details">
