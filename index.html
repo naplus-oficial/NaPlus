@@ -247,7 +247,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* REPRODUCTOR ESTILO NETFLIX PROFESIONAL Y ELEGANTE */
+    /* CONTENEDOR DE VIDEO PROFESIONAL ESTILO NETFLIX */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
@@ -264,142 +264,31 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
-    .video-box iframe { 
+    .video-box iframe, .video-box video { 
       width: 100%; 
       height: 100%; 
       border: none; 
       position: absolute;
       top: 0; left: 0;
-    }
-
-    .netflix-player-wrapper {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .netflix-player-wrapper video {
-      width: 100%;
-      height: 100%;
       object-fit: contain;
+      background: #000;
     }
 
-    .netflix-top-bar {
+    .netflix-player-bar {
       position: absolute;
-      top: 0; left: 0; right: 0;
-      padding: 15px 20px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      top: 12px; right: 12px;
+      z-index: 50;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 40;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    .video-box:hover .netflix-top-bar,
-    .netflix-player-wrapper.touch-active .netflix-top-bar {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .netflix-title-badge {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
-    .netflix-bottom-controls {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 20px 15px 12px;
-      background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
-      display: flex;
-      flex-direction: column;
       gap: 8px;
-      z-index: 40;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
     }
 
-    .video-box:hover .netflix-bottom-controls,
-    .netflix-player-wrapper.touch-active .netflix-bottom-controls {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .netflix-progress-container {
-      width: 100%;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 3px;
-      cursor: pointer;
-      position: relative;
-      transition: height 0.15s ease;
-    }
-
-    .netflix-progress-container:hover {
-      height: 8px;
-    }
-
-    .netflix-progress-bar {
-      height: 100%;
-      background: var(--accent-purple);
-      border-radius: 3px;
-      width: 0%;
-      position: relative;
-    }
-
-    .netflix-buttons-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .netflix-left-btns, .netflix-right-btns {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .netflix-icon-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      transition: transform 0.15s ease, color 0.15s ease;
-    }
-
-    .netflix-icon-btn:hover {
-      color: var(--accent-light);
-      transform: scale(1.1);
-    }
-
-    .netflix-time-display {
-      font-size: 0.75rem;
-      color: #cbd5e1;
-      font-weight: 500;
-    }
-
-    .netflix-fullscreen-toggle {
-      background: rgba(20, 20, 25, 0.75);
+    .netflix-control-btn {
+      background: rgba(20, 20, 25, 0.8);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
@@ -409,8 +298,8 @@
       gap: 5px;
       transition: background 0.2s, transform 0.2s;
     }
-    .netflix-fullscreen-toggle:hover {
-      background: rgba(124, 58, 237, 0.8);
+    .netflix-control-btn:hover {
+      background: rgba(124, 58, 237, 0.9);
       border-color: var(--accent-light);
     }
 
@@ -425,7 +314,7 @@
       border: none !important;
       background: #000 !important;
     }
-    .video-box.netflix-fullscreen iframe {
+    .video-box.netflix-fullscreen iframe, .video-box.netflix-fullscreen video {
       width: 100% !important;
       height: 100% !important;
     }
@@ -1154,7 +1043,7 @@
       }
     }
 
-    /* REPRODUCTOR PROFESIONAL CON CONVERSIÓN DE GOOGLE DRIVE Y CONTROLES NATIVOS */
+    /* REPRODUCTOR INTELIGENTE CON SOPORTE EXACTO PARA GOOGLE DRIVE Y ENLACES EXTERNOS */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1181,47 +1070,20 @@
           if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
         innerContent = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
-      } else {
-        let directUrl = vInput.trim();
-        if (directUrl.includes('drive.google.com')) {
-          const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-          if (match && match[1]) {
-            // Se usa el formato de exportación directa optimizado para que el elemento video HTML5 reproduzca el archivo correctamente
-            directUrl = `https://docs.google.com/uc?export=download&id=${match[1]}`;
-          } else {
-            const urlParams = new URLSearchParams(directUrl.split('?')[1]);
-            const fileId = urlParams.get('id');
-            if (fileId) directUrl = `https://docs.google.com/uc?export=download&id=${fileId}`;
-          }
+      } else if (vInput.includes('drive.google.com')) {
+        let fileId = '';
+        const match = vInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          fileId = match[1];
+        } else {
+          const urlParams = new URLSearchParams(vInput.split('?')[1]);
+          if (urlParams.get('id')) fileId = urlParams.get('id');
         }
-
-        const vidId = 'vid_' + Math.random().toString(36).substring(2, 9);
-        innerContent = `
-          <div class="netflix-player-wrapper" id="wrap_${vidId}" onclick="togglePlayPause('${vidId}')" ontouchstart="handleTouchWrapper(this)">
-            <video id="${vidId}" src="${directUrl}" playsinline webkit-playsinline ontimeupdate="updateProgress('${vidId}')" onloadedmetadata="initDuration('${vidId}')"></video>
-            
-            <div class="netflix-top-bar" onclick="event.stopPropagation()">
-              <span class="netflix-title-badge">${titleText}</span>
-            </div>
-
-            <div class="netflix-bottom-controls" onclick="event.stopPropagation()">
-              <div class="netflix-progress-container" onclick="seekVideo(event, '${vidId}')">
-                <div class="netflix-progress-bar" id="prog_${vidId}"></div>
-              </div>
-              <div class="netflix-buttons-row">
-                <div class="netflix-left-btns">
-                  <button class="netflix-icon-btn" id="playBtn_${vidId}" onclick="togglePlayPause('${vidId}')">▶</button>
-                  <button class="netflix-icon-btn" onclick="skipTime('${vidId}', -10)">10s ⏪</button>
-                  <button class="netflix-icon-btn" onclick="skipTime('${vidId}', 10)">⏩ 10s</button>
-                  <span class="netflix-time-display" id="time_${vidId}">0:00 / 0:00</span>
-                </div>
-                <div class="netflix-right-btns">
-                  <button class="netflix-icon-btn" onclick="toggleMute('${vidId}')" id="muteBtn_${vidId}">🔊</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
+        // Se utiliza el enlace de inserción oficial de Google Drive para garantizar que cargue y reproduzca siempre
+        const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+        innerContent = `<iframe src="${embedDriveUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      } else {
+        innerContent = `<video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
       vBox.innerHTML = `
@@ -1232,75 +1094,6 @@
         </div>
         ${innerContent}
       `;
-
-      setTimeout(() => {
-        const videoEl = vBox.querySelector('video');
-        if (videoEl) {
-          videoEl.play().catch(() => {});
-        }
-      }, 200);
-    }
-
-    function togglePlayPause(vidId) {
-      const v = document.getElementById(vidId);
-      const playBtn = document.getElementById('playBtn_' + vidId);
-      if (!v) return;
-      if (v.paused) {
-        v.play();
-        if (playBtn) playBtn.innerText = '❚❚';
-      } else {
-        v.pause();
-        if (playBtn) playBtn.innerText = '▶';
-      }
-    }
-
-    function skipTime(vidId, seconds) {
-      const v = document.getElementById(vidId);
-      if (v) v.currentTime += seconds;
-    }
-
-    function toggleMute(vidId) {
-      const v = document.getElementById(vidId);
-      const muteBtn = document.getElementById('muteBtn_' + vidId);
-      if (!v) return;
-      v.muted = !v.muted;
-      if (muteBtn) muteBtn.innerText = v.muted ? '🔇' : '🔊';
-    }
-
-    function updateProgress(vidId) {
-      const v = document.getElementById(vidId);
-      const prog = document.getElementById('prog_' + vidId);
-      const timeDisplay = document.getElementById('time_' + vidId);
-      if (!v || !prog || !timeDisplay) return;
-
-      const percent = (v.currentTime / v.duration) * 100;
-      prog.style.width = percent + '%';
-      timeDisplay.innerText = formatTime(v.currentTime) + ' / ' + formatTime(v.duration || 0);
-    }
-
-    function initDuration(vidId) {
-      updateProgress(vidId);
-    }
-
-    function seekVideo(e, vidId) {
-      const v = document.getElementById(vidId);
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      if (v && v.duration) {
-        v.currentTime = pos * v.duration;
-      }
-    }
-
-    function formatTime(seconds) {
-      if (isNaN(seconds)) return "0:00";
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60);
-      return m + ":" + (s < 10 ? "0" : "") + s;
-    }
-
-    function handleTouchWrapper(wrapper) {
-      wrapper.classList.toggle('touch-active');
-      setTimeout(() => wrapper.classList.remove('touch-active'), 4000);
     }
 
     function toggleNetflixFullscreen(boxId) {
