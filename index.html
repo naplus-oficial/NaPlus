@@ -36,7 +36,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* BARRA SUPERIOR */
     header {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -59,7 +58,6 @@
       cursor: pointer;
     }
 
-    /* NAVEGACIÓN INFERIOR */
     nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -92,7 +90,6 @@
     .nav-item.active { color: var(--accent-light); font-weight: 700; }
     .nav-item.active svg { stroke: var(--accent-light); }
 
-    /* VISTAS */
     .view-section { display: none; padding-bottom: 20px; }
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList { padding-top: 75px; }
@@ -100,7 +97,6 @@
     .hero { padding: 15px 20px 5px; }
     body.search-active .hero#searchContainer { padding-top: 80px; }
 
-    /* CARRUSEL HERO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
@@ -159,7 +155,6 @@
     .hbo-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR */
     .search-box { width: 100%; max-width: 500px; position: relative; }
     .search-box .search-icon {
       position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
@@ -177,7 +172,6 @@
       background: none; border: none; color: var(--text-gray); font-size: 1.1rem; cursor: pointer; display: none;
     }
 
-    /* SECCIONES Y TARJETAS */
     .section-title { font-size: 1rem; font-weight: 700; margin: 20px 20px 10px; color: #e2e8f0; }
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 10px;
@@ -215,7 +209,6 @@
       display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* MODALES DE DETALLE */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
@@ -254,7 +247,6 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* ESTILO REPRODUCTOR NETFLIX / PREMIUM */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
@@ -279,7 +271,6 @@
       top: 0; left: 0;
     }
 
-    /* BARRA FLOTANTE NETFLIX PARA PANTALLA COMPLETA REAL */
     .netflix-player-bar {
       position: absolute;
       top: 10px; right: 10px;
@@ -309,7 +300,6 @@
       border-color: var(--accent-light);
     }
 
-    /* MODO EXPANDIDO / PANTALLA COMPLETA ESTILO NETFLIX */
     .video-box.netflix-fullscreen {
       position: fixed !important;
       inset: 0 !important;
@@ -332,7 +322,6 @@
     }
     .native-player-container video { width: 100%; height: 100%; object-fit: contain; }
 
-    /* ENCABEZADO DE SERIE */
     .hbo-backdrop-header {
       position: relative; width: 100%; min-height: 230px;
       padding: 40px 20px 20px; display: flex; flex-direction: column;
@@ -643,87 +632,12 @@
             "img": "https://i.blogs.es/a21478/3bp_102_unit_08301rc/500_333.jpeg",
             "desc": "La cuenta atrás de Auggie pone en riesgo su trabajo en nanotecnología. Jin se obsesiona con un juego de realidad virtual de otro mundo. Ye Wenjie pone en práctica una idea radical.",
             "video": "https://ok.ru/video/16684088625883"
-          },
-          {
-            "num": 3,
-            "title": "Destructor de mundos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10",
-            "desc": "Obsesionados con su misión en el juego virtual, Jin y Jack se apresuran para resolver un acertijo complejo. Sin embargo, el paso al siguiente nivel trae consecuencias desastrosas.",
-            "video": "https://ok.ru/video/16684098587355"
-          },
-          {
-            "num": 4,
-            "title": "Su señoria",
-            "img": "https://i.blogs.es/579102/3bp_104_unit_00636rc/840_560.jpeg",
-            "desc": "Jin busca justicia cuando una muerte sacude al equipo. Antes de una importante cumbre, los investigadores descubren a un grupo extremista que adora a una entidad de otro mundo.",
-            "video": "https://ok.ru/video/16684101864155"
-          },
-          {
-            "num": 5,
-            "title": "Juicio final",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10",
-            "desc": "Mientras el nivel de amenaza aumenta, se pone en marcha una misión secreta en territorio peligroso para obtener información del enemigo. La Tierra recibe un mensaje aterrador.",
-            "video": "https://ok.ru/video/16692258933467"
-          },
-          {
-            "num": 6,
-            "title": "Estrellas destino nuestro",
-            "img": "https://media.vogue.mx/photos/660325d9afcf2b8fc2033499/16:9/w_2992,h_1683,c_limit/el-problema-de-los-3-cuerpos-con-eiza-gonzalez.jpg",
-            "desc": "El mundo entra en pánico tras una declaración trascendental. Wade reúne a las mentes más brillantes del planeta para preparar un plan de defensa.",
-            "video": "https://ok.ru/video/16692275251931"
-          },
-          {
-            "num": 7,
-            "title": "Un avance",
-            "img": "https://i.blogs.es/799b17/3bp_107_unit_00362rc.jpg-3bp_107_unit_00362rc/1200_900.jpeg",
-            "desc": "Una propuesta atrevida para el Proyecto Escalera genera tensión en el grupo. Will evalúa sus opciones. Ye regresa a un lugar familiar.",
-            "video": "https://ok.ru/video/16692570360539"
-          },
-          {
-            "num": 8,
-            "title": "Proyecto Vallado",
-            "img": "https://occ-0-2218-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABTtECG7yUaT0Vr017L4dj2tQUwpRELrv1TBvDaOK3CB6-eQL5iQjBxJKf1x6OyzFyaXzbJ4shMdnNqTO-H0AoVt-HKNiSjWEZ8WkQLpVoOQYSWriGF-obIoviA.jpg?r=e29",
-            "desc": "Una operación importante pone a Saul en riesgo. Con grandes emociones y expectativas, la sonda se lanza al espacio y la humanidad comienza una nueva y aterradora era.",
-            "video": "https://ok.ru/video/16692581239515"
           }
         ]
       }
     ],
     "views": 91,
     "dateAdded": 1790908626680
-  },
-  {
-    "id": 1790899010591,
-    "type": "series",
-    "title": "Son of Zorn",
-    "genre": "Comedia, Animación",
-    "year": "2016",
-    "desc": "Tras estar fuera por una década, un guerrero animado lucha en contra de la banalidad de la vida de los suburbios.",
-    "cover": "https://static0.colliderimages.com/wordpress/wp-content/uploads/sharedimages/2024/06/son-of-zorn_tv-show_poster.jpeg?q=49&fit=contain&w=480&dpr=2",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Regreso al condado de Orange",
-            "img": "https://resizing.flixster.com/Wk9_us8gd-HYxgf7RH9OS3TnWoM=/620x336/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p12901177_e_h8_ac.jpg",
-            "desc": "Zorn viaja desde Zephyria a California para reconectarse con su hijo Alan y descubre que su exesposa Edie está comprometida.",
-            "video": "https://ok.ru/video/16683621419739"
-          },
-          {
-            "num": 2,
-            "title": "Defensor del amor adolescente",
-            "img": "https://variety.com/wp-content/uploads/2016/09/01_16_16_06_zorn_at_computer_hires2.jpg",
-            "desc": "Después de avergonzar a Alan frente a su crush, Zorn usa la Piedra de la Visión para espiarla y ayudarlo. Edie obliga a Zorn a sacar sus cajas del garaje.",
-            "video": "https://ok.ru/video/16683622468315"
-          }
-        ]
-      }
-    ],
-    "views": 321,
-    "dateAdded": 1790899010591
   },
   {
     "id": 1790867112502,
@@ -737,32 +651,6 @@
     "seasons": [],
     "views": 232,
     "dateAdded": 1790867112502
-  },
-  {
-    "id": 1790858421339,
-    "type": "movie",
-    "title": "Trick 'r Treat",
-    "genre": "Terror, Comedia",
-    "year": "2007",
-    "desc": "Cinco historias de Halloween: Una directora tiene una vida secreta, una virgen la busca por primera vez, un grupo de niños hacen una broma, una mujer que detesta Halloween no respeta las reglas y un viejo mezquero se encuentra con un truco o trato demoníaco.",
-    "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
-    "video": "https://voe.sx/e/xctz9a4atwnh",
-    "seasons": [],
-    "views": 362,
-    "dateAdded": 1790858421339
-  },
-  {
-    "id": 1790855769247,
-    "type": "movie",
-    "title": "Gremlins",
-    "genre": "Terror, Comedia",
-    "year": "1984",
-    "desc": "Una población pintoresca se transforma en un lugar terrorífico tras la llegada de una criatura algo inusual.",
-    "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
-    "video": "https://voe.sx/e/jx8q5z1ls85u",
-    "seasons": [],
-    "views": 516,
-    "dateAdded": 1790855769248
   }
 ]/*CATALOG_END*/;
 
@@ -1192,7 +1080,8 @@
 
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
-      document.getElementById('seriesModal').style.display = 'none';
+      // Mantenemos el modal de la serie visible en el fondo pero ocultamos temporalmente su scroll con z-index inferior
+      document.getElementById('seriesModalstyle') ? '' : null;
       document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num}: ${ep.title}`;
       document.getElementById('epModalDesc').innerText = ep.desc || '';
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
@@ -1202,7 +1091,10 @@
     function closeEpisodePlayer() {
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
-      if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
+      // Al cerrar el reproductor del capítulo, garantizamos que el modal de la serie siga abierto y visible
+      if (currentSeriesData) {
+        document.getElementById('seriesModal').style.display = 'block';
+      }
     }
 
     /* SISTEMA DE REPRODUCTOR NETFLIX OPTIMIZADO */
