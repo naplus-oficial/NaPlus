@@ -463,14 +463,14 @@
       object-fit: contain;
     }
 
-    /* BOTÓN DINÁMICO: Se oculta automáticamente al reproducir y aparece al tocar la pantalla */
+    /* BOTÓN FIJO Y ACCESIBLE: Siempre visible en la esquina inferior izquierda al tocar la pantalla */
     .btn-fullscreen-toggle {
       position: absolute;
       bottom: 15px;
       left: 15px;
-      background: rgba(124, 58, 237, 0.9);
+      background: rgba(124, 58, 237, 0.95);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.5);
       padding: 8px 14px;
       font-size: 0.75rem;
       font-weight: 700;
@@ -478,15 +478,19 @@
       cursor: pointer;
       z-index: 3000;
       display: none; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      transition: opacity 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+      transition: opacity 0.25s ease;
       opacity: 1;
     }
 
-    /* Clase para ocultar suavemente el botón mientras se ve la película */
-    .btn-fullscreen-toggle.hidden-controls {
-      opacity: 0;
-      pointer-events: none;
+    /* CAPA TÁCTICA TRANSPARENTE SUPERIOR: Permite detectar cuando tocas el reproductor VOE en móviles */
+    .video-touch-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2500;
+      background: transparent;
+      display: none;
+      pointer-events: auto;
     }
 
     .hbo-backdrop-header {
@@ -781,7 +785,7 @@
     "title": "El problema de los tres cuerpos",
     "genre": "Cienciaficción, Drama",
     "year": "2024",
-    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existencial se cierne sobre toda la humanidad.",
+    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existential se cierne sobre toda la humanidad.",
     "cover": "https://image.tmdb.org/t/p/original/6Dc9mMl083cVpNknWzALCw7JYPH.jpg",
     "video": "",
     "seasons": [
@@ -956,7 +960,7 @@
             "num": 2,
             "title": "En la carretera",
             "img": "https://static.wikia.nocookie.net/marveldatabase/images/5/51/Marvel_Zombies_%28animated_series%29_Season_1_2.png/revision/latest?cb=20250924124143",
-            "desc": "En una carretera, el apetito por la carne lo controla todo y convierte un simple viaje en una pesadilla aterradora.",
+            "desc": "En una carretera, el apetito por la carne lo controla tutto y convierte un simple viaje en una pesadilla aterradora.",
             "video": "https://ok.ru/video/16683578165979"
           },
           {
@@ -2169,7 +2173,6 @@
       document.getElementById(id).style.display = 'none';
       if (id === 'detailModal') {
         document.getElementById('videoBox').innerHTML = '';
-        clearActivePlayerTimers();
       }
     }
 
@@ -2577,44 +2580,32 @@
       if (screen.orientation && screen.orientation.unlock) {
         try { screen.orientation.unlock(); } catch(e){}
       }
-      clearActivePlayerTimers();
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    let activeControlTimer = null;
-
-    function clearActivePlayerTimers() {
-      if (activeControlTimer) {
-        clearTimeout(activeControlTimer);
-        activeControlTimer = null;
-      }
-    }
-
-    function setupAutoHidingControls(vBox) {
+    // Sistema robusto de toque: Muestra el botón de salida al tocar el reproductor y lo oculta solo cuando el usuario lo desea o tras tocar de nuevo.
+    function setupTouchToggle(vBox) {
       const btn = vBox.querySelector('.btn-fullscreen-toggle');
-      if (!btn) return;
+      const overlay = vBox.querySelector('.video-touch-overlay');
+      if (!btn || !overlay) return;
 
-      function showControls() {
-        btn.classList.remove('hidden-controls');
-        clearActivePlayerTimers();
-        // Ocultar automáticamente tras 3.5 segundos de inactividad
-        activeControlTimer = setTimeout(() => {
-          btn.classList.add('hidden-controls');
-        }, 3500);
-      }
+      // Al tocar la capa superior transparente, alterna la visibilidad del botón de salida
+      overlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.style.display === 'block') {
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = 'block';
+        }
+      });
 
-      // Mostrar al tocar o hacer clic en cualquier parte del reproductor
-      vBox.addEventListener('pointerdown', showControls);
-      vBox.addEventListener('mousemove', showControls);
-
-      // Iniciar con controles visibles por 3 segundos y luego ocultarlos
-      showControls();
+      // Mostrar inicialmente el botón al abrir el vídeo
+      btn.style.display = 'block';
     }
 
     function renderVideoInBox(vBox, vInput) {
-      clearActivePlayerTimers();
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
@@ -2637,9 +2628,10 @@
         }
         vBox.innerHTML = `
           <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
-          <button class="btn-fullscreen-toggle" style="display: block;" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
+          <div class="video-touch-overlay" style="display: block;"></div>
+          <button class="btn-fullscreen-toggle" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
         `;
-        setupAutoHidingControls(vBox);
+        setupTouchToggle(vBox);
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput;
         if (!vInput.includes('videoembed')) {
