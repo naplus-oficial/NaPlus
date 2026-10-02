@@ -430,67 +430,9 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* REPRODUCTOR Y PANTALLA COMPLETA HORIZONTAL */
-    .video-box { 
-      width: 100%; 
-      aspect-ratio: 16/9; 
-      background: #000; 
-      margin-bottom: 12px; 
-      border-radius: 6px; 
-      overflow: hidden; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      position: relative;
-    }
-    
-    .video-box.fullscreen-mode {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      aspect-ratio: unset !important;
-      z-index: 999999 !important;
-      background: #000 !important;
-      border-radius: 0 !important;
-      margin: 0 !important;
-    }
-
-    .video-box iframe, .video-box video { 
-      width: 100%; 
-      height: 100%; 
-      border: none; 
-      object-fit: contain;
-    }
-
-    /* BOTÓN FIJO Y ACCESIBLE */
-    .btn-fullscreen-toggle {
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-      background: rgba(124, 58, 237, 0.95);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.5);
-      padding: 8px 14px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      z-index: 3000;
-      display: none; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-      transition: opacity 0.25s ease;
-    }
-
-    /* CAPA TÁCTICA INICIAL: Se oculta al hacer clic para dejar pasar los clics al reproductor */
-    .video-touch-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 2500;
-      background: transparent;
-      display: none;
-      pointer-events: auto;
-    }
+    /* REPRODUCTOR */
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 12px; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .video-box iframe, .video-box video { width: 100%; height: 100%; border: none; object-fit: contain; }
 
     .hbo-backdrop-header {
       position: relative;
@@ -2574,27 +2516,9 @@
     }
 
     function closeEpisodePlayer() {
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-      if (screen.orientation && screen.orientation.unlock) {
-        try { screen.orientation.unlock(); } catch(e){}
-      }
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
-    }
-
-    function setupTouchToggle(vBox) {
-      const btn = vBox.querySelector('.btn-fullscreen-toggle');
-      const overlay = vBox.querySelector('.video-touch-overlay');
-      if (!btn || !overlay) return;
-
-      btn.style.display = 'block';
-
-      overlay.addEventListener('click', (e) => {
-        e.stopPropagation();
-        btn.style.display = 'block';
-        overlay.style.display = 'none';
-      });
     }
 
     function renderVideoInBox(vBox, vInput) {
@@ -2618,12 +2542,7 @@
           const parts = vInput.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1]}`;
         }
-        vBox.innerHTML = `
-          <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
-          <div class="video-touch-overlay" style="display: block;"></div>
-          <button class="btn-fullscreen-toggle" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
-        `;
-        setupTouchToggle(vBox);
+        vBox.innerHTML = `<iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>`;
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput;
         if (!vInput.includes('videoembed')) {
@@ -2633,43 +2552,6 @@
         vBox.innerHTML = `<iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>`;
       } else {
         vBox.innerHTML = `<video src="${vInput}" controls autoplay playsinline preload="auto"></video>`;
-      }
-    }
-
-    async function forceLandscapeFullscreen(btn) {
-      const box = btn.closest('.video-box');
-      box.classList.toggle('fullscreen-mode');
-
-      if (box.classList.contains('fullscreen-mode')) {
-        btn.innerText = "✕ Salir";
-        
-        if (box.requestFullscreen) {
-          box.requestFullscreen().catch(() => {});
-        } else if (box.webkitRequestFullscreen) {
-          box.webkitRequestFullscreen();
-        }
-
-        if (screen.orientation && screen.orientation.lock) {
-          try {
-            await screen.orientation.lock('landscape');
-          } catch (err) {
-            console.log("Bloqueo de orientación no permitido o no soportado.");
-          }
-        }
-      } else {
-        btn.innerText = "⛶ Pantalla Completa";
-
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-          if (document.exitFullscreen) {
-            document.exitFullscreen().catch(() => {});
-          } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-          }
-        }
-
-        if (screen.orientation && screen.orientation.unlock) {
-          try { screen.orientation.unlock(); } catch (err) {}
-        }
       }
     }
 
