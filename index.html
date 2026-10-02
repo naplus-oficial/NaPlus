@@ -741,69 +741,18 @@
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
 
-    let catalog = /*CATALOG_START*/[
-      {
-        id: 1,
-        type: 'series',
-        title: 'Son of Zorn',
-        genre: 'Comedia',
-        year: '2016',
-        desc: 'Un padre guerrero animado regresa a la Tierra.',
-        cover: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=400',
-        views: 310,
-        dateAdded: 1710000000001,
-        seasons: [
-          {
-            name: 'Temporada 1',
-            episodes: [
-              { num: 1, title: 'Piloto', desc: 'Zorn llega a casa.', video: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 2,
-        type: 'series',
-        title: 'Marvel Zombies',
-        genre: 'Terror, Animación',
-        year: '2025',
-        desc: 'Una nueva era de terror en el universo Marvel.',
-        cover: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=400',
-        views: 890,
-        dateAdded: 1710000000002,
-        seasons: [
-          {
-            name: 'Temporada 1',
-            episodes: [
-              { num: 1, title: 'Infección', desc: 'El brote comienza.', video: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 3,
-        type: 'series',
-        title: 'El caballero de los siete reinos',
-        genre: 'Acción, Fantasía',
-        year: '2026',
-        desc: 'Aventuras en Poniente.',
-        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400',
-        views: 1250,
-        dateAdded: 1710000000003,
-        seasons: [
-          {
-            name: 'Temporada 1',
-            episodes: [
-              { num: 1, title: 'El Escudero', desc: 'Comienza el viaje.', video: '' }
-            ]
-          }
-        ]
-      }
-    ]/*CATALOG_END*/;
+    let catalog = /*CATALOG_START*/[]/*CATALOG_END*/;
 
+    // Forzamos a que el código lea siempre el catálogo principal actualizado del archivo,
+    // limpiando cualquier caché vieja del celular que ocultara las series/películas.
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
-      catalog = localDb;
+      // Si el navegador tenía menos de 3 elementos guardados, priorizamos el de GitHub para no perder nada
+      if (localDb.length < (catalog.length || 0)) {
+        localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+      } else {
+        catalog = localDb;
+      }
     } else {
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
     }
@@ -943,7 +892,7 @@
           <div class="hbo-slide-overlay"></div>
           <div class="hbo-slide-content">
             <div class="hbo-slide-title">${item.title}</div>
-            <div class="hbo-slide-meta">${item.year} • ${item.genre.split(',')[0]}</div>
+            <div class="hbo-slide-meta">${item.year} • ${item.genre ? item.genre.split(',')[0] : ''}</div>
             <div class="hbo-slide-btns">
               <button class="hbo-btn-play" onclick="openContentDetail(${item.id})">▶ Ver</button>
               <button class="hbo-btn-add ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
@@ -1021,7 +970,7 @@
         mainContent.style.display = 'none';
         const searchGrid = document.getElementById('searchGrid');
         searchGrid.innerHTML = '';
-        const matches = catalog.filter(i => i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query));
+        const matches = catalog.filter(i => i.title.toLowerCase().includes(query) || (i.genre && i.genre.toLowerCase().includes(query)));
         if (matches.length > 0) {
           matches.forEach(item => searchGrid.appendChild(createCardElement(item)));
         } else {
@@ -1252,7 +1201,7 @@
           <button type="button" onclick="this.closest('.season-item-block').remove()" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem;">Eliminar</button>
         </div>
         <div class="episodes-admin-container"></div>
-        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.7rem; padding:4px 8px; margin-top:4px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Temporada</button>
+        <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.7rem; padding:4px 8px; margin-top:4px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Capítulo</button>
       `;
       container.appendChild(seasonDiv);
 
@@ -1447,7 +1396,7 @@
         headerBg.style.backgroundImage = `url('${item.cover}')`;
 
         document.getElementById('seriesTitle').innerText = item.title;
-        document.getElementById('seriesMeta').innerText = `${item.genre} • ${item.year}`;
+        document.getElementById('seriesMeta').innerText = `${item.genre || ''} • ${item.year || ''}`;
         document.getElementById('seriesViews').innerText = `👁️ ${item.views} reproducciones`;
         
         const descEl = document.getElementById('seriesDesc');
@@ -1477,7 +1426,7 @@
         document.getElementById('seriesModal').style.display = 'block';
       } else {
         document.getElementById('detailTitle').innerText = item.title;
-        document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+        document.getElementById('detailMeta').innerText = `${item.genre || ''} • ${item.year || ''}`;
         document.getElementById('detailViews').innerText = `👁️ ${item.views} reproducciones`;
         document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
 
