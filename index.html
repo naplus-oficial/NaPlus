@@ -430,7 +430,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* REPRODUCTOR OPTIMIZADO PARA CARGA RÁPIDA Y PANTALLA COMPLETA */
+    /* REPRODUCTOR OPTIMIZADO CON PANTALLA HORIZONTAL PARA VOE */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
@@ -443,6 +443,20 @@
       justify-content: center; 
       position: relative;
     }
+    
+    /* Cuando se activa la pantalla completa horizontal para VOE */
+    .video-box.fullscreen-mode {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      aspect-ratio: unset !important;
+      z-index: 999999 !important;
+      background: #000 !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+    }
+
     .video-box iframe, .video-box video { 
       width: 100%; 
       height: 100%; 
@@ -450,19 +464,22 @@
       object-fit: contain;
     }
 
-    /* Botón flotante opcional para forzar pantalla completa si el iframe resiste */
+    /* Botón flotante exclusivo para VOE para forzar pantalla horizontal completa */
     .btn-fullscreen-toggle {
       position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(0, 0, 0, 0.6);
+      bottom: 10px;
+      right: 10px;
+      background: rgba(124, 58, 237, 0.85);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 6px;
       cursor: pointer;
-      z-index: 10;
+      z-index: 3000;
+      display: none; /* Por defecto oculto, solo se muestra en VOE */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
 
     .hbo-backdrop-header {
@@ -1257,7 +1274,7 @@
           },
           {
             "num": 2,
-            "title": "Mis dos papás",
+            "title": "Mis dois papás",
             "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
             "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
             "video": "https://ok.ru/video/16671801936603"
@@ -1720,151 +1737,6 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
-    "type": "movie",
-    "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
-    "genre": "Terror",
-    "year": "2025",
-    "desc": "Wendy intenta rescatar a su hermano de Peter Pan, un perturbado secuestrador y asesino de niños que promete a los pequeños que, al morir, irán a la Tierra de Nunca Jamás.",
-    "cover": "https://play-lh.googleusercontent.com/HYVVxiMk_Gthbg5v7_JQpG4BvyqhZVhmVRdesAuWlWshUhYBAAqp2V9VwbuT1pKljEz8ijvAG1w7Ru7e2Q",
-    "video": "https://ok.ru/video/16664606411483",
-    "views": 445,
-    "dateAdded": 1790769448763
-  },
-  {
-    "id": 1790755820554,
-    "type": "movie",
-    "title": "Piraña 3DD",
-    "genre": "Terror, Comedia",
-    "year": "2012",
-    "desc": "Nadie está a salvo de un banco de peces prehistóricos que, buscando carne, clavan sus afilados dientes en los clientes del exitoso parque acuático Big Wet.",
-    "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
-    "video": "https://voe.sx/e/g0xdl5xf7x30",
-    "views": 361,
-    "dateAdded": 1790755820564
-  },
-  {
-    "id": 1790754583454,
-    "type": "movie",
-    "title": "Marble Hornet",
-    "genre": "Terror",
-    "year": "2015",
-    "desc": "Unos amigos descubren unas cintas de vídeo en las que un aterrador hombre sin rostro, vestido con un elegante traje, persigue a una familia hasta llevar a sus miembros a la locura. Ahora que lo han visto, el monstruo comienza a acosarlos sin descanso.",
-    "cover": "https://static.wikia.nocookie.net/vsdebating/images/f/fe/The_Operator.jpg/revision/latest/scale-to-width-down/1200?cb=20180302100112",
-    "video": "https://voe.sx/e/bj0ouh6neklp",
-    "views": 284,
-    "dateAdded": 1790754583455
-  },
-  {
-    "id": 1790651263999,
-    "type": "movie",
-    "title": "Piraña 3D",
-    "genre": "Terror, Comedia",
-    "year": "2010",
-    "desc": "Las vacaciones de primavera se vuelven una pesadilla en un popular centro turístico, en donde cientos de peces prehistóricos que se alimentan de humanos han llegado para comerse a los indefensos bañistas.",
-    "cover": "https://image.tmdb.org/t/p/original/lIodGaZNJbbShF5bDgf51cqpAKa.jpg",
-    "video": "https://ok.ru/video/16646131878619",
-    "views": 501,
-    "dateAdded": 1790651263999
-  },
-  {
-    "id": 1790649801930,
-    "type": "movie",
-    "title": "The Void (Conjuros del más allá)",
-    "genre": "Terror, Cienciaficción",
-    "year": "2016",
-    "desc": "Figuras cubiertas con capuchas, propias de una secta, atrapan a un agente de policía, pacientes y empleados en el interior de un hospital, que es una puerta abierta a la maldad.",
-    "cover": "https://www.joblo.com/wp-content/uploads/2015/12/the-void.jpg",
-    "video": "https://voe.sx/e/jgsbe2igvkwy",
-    "views": 381,
-    "dateAdded": 1790649801930
-  },
-  {
-    "id": 1790649103198,
-    "type": "movie",
-    "title": "I lost my body (Perdí mi cuerpo)",
-    "genre": "Drama, Romance, Animación",
-    "year": "2019",
-    "desc": "La historia de Naoufel, un joven que se enamora de Gabrielle, en París. En otra parte de la ciudad, la mano de un joven escapa de un laboratorio de disección, decidida a encontrar su cuerpo nuevamente.",
-    "cover": "https://a.ltrbxd.com/resized/film-poster/5/1/4/7/0/2/514702-i-lost-my-body-0-600-0-900-crop.jpg?v=d58f4ad597",
-    "video": "https://ok.ru/video/16645961091803",
-    "views": 349,
-    "dateAdded": 1790649103198
-  },
-  {
-    "id": 1790647825990,
-    "type": "movie",
-    "title": "Shutter",
-    "genre": "Terror",
-    "year": "2004",
-    "desc": "Un fotógrafo y su novia atropellan a una mujer con su automóvil, pero ahora deben enfrentar la ira de su espíritu vengativo.",
-    "cover": "https://m.media-amazon.com/images/I/612oSHMX54L._AC_UF894,1000_QL80_.jpg",
-    "video": "https://ok.ru/video/16645864032987",
-    "views": 459,
-    "dateAdded": 1790647825990
-  },
-  {
-    "id": 1790646943641,
-    "type": "movie",
-    "title": "Jujutsu Kaisen: El tesoro escondido/El tesoro perdido",
-    "genre": "Animación, Acción, Drama",
-    "year": "2026",
-    "desc": "Antes de ser enemigos, Satoru Gojo y Suguru Geto eran compañeros de instituto y amigos. Los dos poderosos hechiceros reciben el encargo de proteger a Riko Amanai",
-    "cover": "https://image.tmdb.org/t/p/original/gO0B3CwQ0gmLSFk9YwkNMvvvp0a.jpg",
-    "video": "https://ok.ru/video/16645678828251",
-    "seasons": [],
-    "views": 98,
-    "dateAdded": 1790646943641
-  },
-  {
-    "id": 1790646768137,
-    "type": "movie",
-    "title": "5 centímetros por segundo",
-    "genre": "Animación, Romance, Drama",
-    "year": "2007",
-    "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
-    "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
-    "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 499,
-    "dateAdded": 1790646768137
-  },
-  {
-    "id": 1790646629199,
-    "type": "movie",
-    "title": "Somos los Miller (We're the Millers)",
-    "genre": "Comedia",
-    "year": "2013",
-    "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
-    "video": "https://voe.sx/e/qif8izzgsxum",
-    "views": 554,
-    "dateAdded": 1790646629199
-  },
-  {
-    "id": 1790646464102,
-    "type": "movie",
-    "title": "V/H/S: Viral",
-    "genre": "Terror",
-    "year": "2014",
-    "desc": "Una persecución policiaca por las calles de Los Ángeles inspira a docenas de jóvenes obsesionados con la fama para capturar imágenes lascivas, pero no son conscientes que enfrentarán sus propias muertes como estrellas de la sensación de su video.",
-    "cover": "https://images.justwatch.com/poster/309926499/s718/v-h-s-viral.jpg",
-    "video": "https://ok.ru/video/16645563353819",
-    "views": 217,
-    "dateAdded": 1790646464102
-  },
-  {
-    "id": 1790646338112,
-    "type": "movie",
-    "title": "V/H/S 2: Las crónicas del miedo 2",
-    "genre": "Terror",
-    "year": "2013",
-    "desc": "Mientras se realiza una búsqueda sobre el paradero de un estudiante desaparecido, una pareja observa horribles historias grabadas en una colección de videocintas.",
-    "cover": "https://play-lh.googleusercontent.com/LossrrWKrnNop4AxnkA5cYMxNDqDWXBTpCUWMgPimKgLwfYSSasoE64g7qjrlu0ZZW0",
-    "video": "https://ok.ru/video/16645514988251",
-    "views": 229,
-    "dateAdded": 1790646338112
-  },
-  {
     "id": 1790646185225,
     "type": "movie",
     "title": "V/H/S: Las crónicas del miedo",
@@ -1912,9 +1784,7 @@
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
     let isCreatorMode = localStorage.getItem('naPlus_is_creator_active') === 'true';
 
-    if (isCreatorMode) {
-      document.body.classList.add('creator-mode');
-    }
+    if (isCreatorMode) document.body.classList.add('creator-mode');
 
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
@@ -2693,12 +2563,17 @@
     }
 
     function closeEpisodePlayer() {
+      // Al cerrar, salimos del modo horizontal/fullscreen si estuviera activo
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      if (screen.orientation && screen.orientation.unlock) {
+        try { screen.orientation.unlock(); } catch(e){}
+      }
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
     }
 
-    /* REPRODUCTOR OPTIMIZADO: Carga rápida y permisos absolutos de pantalla completa */
+    /* REPRODUCTOR CON BOTÓN HORIZONTAL EXCLUSIVO PARA VOE */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2713,8 +2588,6 @@
         if (iframeEl) {
           iframeEl.style.width = "100%";
           iframeEl.style.height = "100%";
-          iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture');
-          iframeEl.setAttribute('allowfullscreen', 'true');
         }
       } else if (vInput.includes('voe.sx')) {
         let embedUrl = vInput;
@@ -2724,7 +2597,7 @@
         }
         vBox.innerHTML = `
           <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
-          <button class="btn-fullscreen-toggle" onclick="forceBoxFullscreen(this)">⛶ Pantalla Completa</button>
+          <button class="btn-fullscreen-toggle" style="display: block;" onclick="forceLandscapeFullscreen(this)">⛶ Pantalla Completa</button>
         `;
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput;
@@ -2732,27 +2605,32 @@
           const match = vInput.match(/\/video\/([0-9]+)/);
           if (match && match[1]) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
-        vBox.innerHTML = `
-          <iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>
-          <button class="btn-fullscreen-toggle" onclick="forceBoxFullscreen(this)">⛶ Pantalla Completa</button>
-        `;
+        // Para ok.ru NO mostramos el botón personalizado, dejamos que use su propia interfaz normal
+        vBox.innerHTML = `<iframe src="${embedUrl}" ${permissions} loading="eager"></iframe>`;
       } else {
         vBox.innerHTML = `<video src="${vInput}" controls autoplay playsinline preload="auto"></video>`;
       }
     }
 
-    // Función auxiliar para forzar la expansión de la caja de video si el navegador móvil bloquea el botón nativo del iframe
-    function forceBoxFullscreen(btn) {
+    // Función para forzar pantalla horizontal (landscape) y tamaño completo real exclusiva para VOE
+    async function forceLandscapeFullscreen(btn) {
       const box = btn.closest('.video-box');
-      if (!document.fullscreenElement) {
-        if (box.requestFullscreen) {
-          box.requestFullscreen();
-        } else if (box.webkitRequestFullscreen) {
-          box.webkitRequestFullscreen();
+      box.classList.toggle('fullscreen-mode');
+
+      if (box.classList.contains('fullscreen-mode')) {
+        btn.innerText = "✕ Salir";
+        // Intentar rotar la pantalla del celular a horizontal automáticamente
+        if (screen.orientation && screen.orientation.lock) {
+          try {
+            await screen.orientation.lock('landscape');
+          } catch (err) {
+            console.log("Bloqueo de orientación no soportado en este navegador.");
+          }
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
+        btn.innerText = "⛶ Pantalla Completa";
+        if (screen.orientation && screen.orientation.unlock) {
+          try { screen.orientation.unlock(); } catch (err) {}
         }
       }
     }
