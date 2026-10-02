@@ -385,12 +385,13 @@
     .modal-box {
       background: #11091e;
       padding: 20px;
-      border-radius: 10px;
-      width: 100%; max-width: 480px;
+      border-radius: 12px;
+      width: 100%; max-width: 520px;
       border: 1px solid var(--border-purple);
       position: relative;
       max-height: 90vh;
       overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
     }
 
     .modal-box-series {
@@ -419,6 +420,7 @@
       z-index: 2250;
       display: flex; align-items: center; justify-content: center;
     }
+    .btn-close:hover { background: rgba(124, 58, 237, 0.4); border-color: var(--accent-light); }
 
     .modal-box h3 { margin-bottom: 12px; padding-right: 30px; font-size: 1.1rem; }
     .form-group { margin-bottom: 12px; }
@@ -494,18 +496,21 @@
     }
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
+    /* REPRODUCTOR PROFESIONAL ESTILO STREAMING */
     .video-box { 
       width: 100%; 
       aspect-ratio: 16/9; 
       background: #000; 
       margin-bottom: 12px; 
-      border-radius: 6px; 
+      border-radius: 8px; 
       overflow: hidden; 
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
     .video-box iframe { 
       width: 100%; 
@@ -516,7 +521,6 @@
       left: 0;
     }
     
-    /* Contenedor del reproductor nativo y barra de calidad */
     .native-player-container {
       width: 100%;
       height: 100%;
@@ -530,33 +534,6 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-    }
-    .player-controls-bar {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .player-controls-bar label {
-      font-size: 0.7rem;
-      color: #cbd5e1;
-    }
-    .quality-selector {
-      background: #07040d;
-      color: #fff;
-      border: 1px solid var(--border-purple);
-      border-radius: 4px;
-      font-size: 0.7rem;
-      padding: 2px 4px;
-      outline: none;
     }
 
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
@@ -822,7 +799,7 @@
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
             "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
+            "video": "https://ok.ru/video/16692894567131"
           },
           {
             "num": 2,
@@ -848,7 +825,7 @@
         ]
       }
     ],
-    "views": 114,
+    "views": 105,
     "dateAdded": 1790955167205
   },
   {
@@ -1256,7 +1233,7 @@
     "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
     "video": "https://voe.sx/e/xctz9a4atwnh",
     "seasons": [],
-    "views": 365,
+    "views": 362,
     "dateAdded": 1790858421339
   },
   {
@@ -1282,7 +1259,7 @@
     "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
     "video": "https://voe.sx/e/jx8q5z1ls85u",
     "seasons": [],
-    "views": 530,
+    "views": 516,
     "dateAdded": 1790855769248
   },
   {
@@ -1308,7 +1285,7 @@
     "cover": "https://m.media-amazon.com/images/S/pv-target-images/97861408fdee827dc2691577544a58eb713a641b3bd0b51425c9e91a37dd8713.png",
     "video": "https://voe.sx/e/xkrbh6bha3bg",
     "seasons": [],
-    "views": 102,
+    "views": 94,
     "dateAdded": 1790852393903
   },
   {
@@ -1385,7 +1362,7 @@
           },
           {
             "num": 2,
-            "title": "Mis dos papás",
+            "title": "Mis dois papás",
             "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
             "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
             "video": "https://ok.ru/video/16671801936603"
@@ -1474,7 +1451,7 @@
           },
           {
             "num": 7,
-            "title": "Susan es la nueva negra",
+            "title": "Susan is the new negra",
             "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
             "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
             "video": "https://ok.ru/video/16679640173275"
@@ -1604,7 +1581,7 @@
         ]
       }
     ],
-    "views": 457,
+    "views": 456,
     "dateAdded": 1790820683031
   },
   {
@@ -1832,7 +1809,7 @@
     "desc": "Un equipo cinematográfico intenta grabar una película para adultos en una zona rural de Texas. Sin embargo, pronto, deberán luchar por sobrevivir.",
     "cover": "https://m.media-amazon.com/images/S/pv-target-images/7040fd473c6ec5511ad7930376e9795c84f8d9c397da154d6cd61d6e6f576a75.jpg",
     "video": "https://voe.sx/e/00dej9hw1spy",
-    "views": 483,
+    "views": 479,
     "dateAdded": 1790770844727
   },
   {
@@ -1848,7 +1825,7 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
+    "id": 179069448763,
     "type": "movie",
     "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
     "genre": "Terror",
@@ -1928,7 +1905,7 @@
     "desc": "Un fotógrafo y su novia atropellan a una mujer con su automóvil, pero ahora deben enfrentar la ira de su espíritu vengativo.",
     "cover": "https://m.media-amazon.com/images/I/612oSHMX54L._AC_UF894,1000_QL80_.jpg",
     "video": "https://ok.ru/video/16645864032987",
-    "views": 460,
+    "views": 459,
     "dateAdded": 1790647825990
   },
   {
@@ -1953,7 +1930,7 @@
     "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
     "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
     "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 500,
+    "views": 499,
     "dateAdded": 1790646768137
   },
   {
@@ -2905,43 +2882,40 @@
         return;
       }
 
-      // Si es de Google Drive o un enlace directo de video
-      let directUrl = vInput.trim();
-      if (directUrl.includes('drive.google.com/file/d/')) {
-        const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      // Soporte profesional y limpio para Google Drive mediante previsualización por Iframe
+      if (vInput.includes('drive.google.com')) {
+        let fileId = '';
+        const match = vInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (match && match[1]) {
-          directUrl = `https://docs.google.com/uc?export=download&id=${match[1]}`;
+          fileId = match[1];
+        } else {
+          const urlParams = new URLSearchParams(vInput.split('?')[1]);
+          fileId = urlParams.get('id');
+        }
+
+        if (fileId) {
+          const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+          vBox.innerHTML = `
+            <iframe 
+              src="${embedDriveUrl}" 
+              frameborder="0" 
+              scrolling="no"
+              allow="autoplay; encrypted-media; fullscreen" 
+              allowfullscreen 
+              webkitallowfullscreen
+              mozallowfullscreen
+              style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
+            </iframe>`;
+          return;
         }
       }
 
+      // Reproductor nativo por defecto para enlaces directos de video (.mp4)
       vBox.innerHTML = `
         <div class="native-player-container">
-          <div class="player-controls-bar">
-            <label for="qualitySelect">Calidad:</label>
-            <select id="qualitySelect" class="quality-selector" onchange="changeVideoQuality(this)">
-              <option value="auto">Automática</option>
-              <option value="1080">1080p</option>
-              <option value="720">720p</option>
-              <option value="480">480p</option>
-            </select>
-          </div>
-          <video id="customHtmlVideo" src="${directUrl}" controls autoplay playsinline webkit-playsinline></video>
+          <video id="customHtmlVideo" src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>
         </div>
       `;
-    }
-
-    function changeVideoQuality(selectElem) {
-      const quality = selectElem.value;
-      const videoEl = document.getElementById('customHtmlVideo');
-      if (!videoEl) return;
-      const currentTime = videoEl.currentTime;
-      const isPaused = videoEl.paused;
-
-      // Aquí puedes mapear fuentes alternativas según la calidad si tus enlaces de Drive varían, 
-      // de lo contrario el reproductor nativo maneja la reproducción fluida.
-      console.log("Cambiando calidad de video a: ", quality);
-      
-      if (!isPaused) videoEl.play();
     }
 
     renderHomeSections();
