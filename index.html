@@ -442,7 +442,7 @@
     }
     body.creator-mode .netflix-ep-edit-btn { display: inline-block; }
 
-    /* SISTEMA DE REPRODUCTOR PROFESIONAL TIPO CUEVANA / PELISPLUS CON PANTALLA COMPLETA TOTALMENTE FLUIDA */
+    /* CONTENEDOR DE VIDEO PROFESIONAL LIMPIO */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -468,51 +468,7 @@
       background: #000;
     }
 
-    /* Botón flotante superior optimizado para forzar pantalla completa real estilo app de streaming */
-    .cuevana-fullscreen-bar {
-      position: absolute;
-      top: 10px; right: 10px;
-      z-index: 99999;
-      display: flex;
-    }
-
-    .cuevana-fs-btn {
-      background: rgba(124, 58, 237, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    }
-    .cuevana-fs-btn:hover {
-      background: var(--accent-purple);
-    }
-
-    /* Pantalla completa absolute responsiva para móviles y PC */
-    .video-box.cuevana-fullscreen-active {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: 100vw !important;
-      max-height: 100vh !important;
-      aspect-ratio: unset !important;
-      z-index: 9999999 !important;
-      border-radius: 0 !important;
-      border: none !important;
-      background: #000 !important;
-      margin: 0 !important;
-    }
-
-    /* Ajuste para modal de episodios en pantalla completa */
+    /* Modal de episodios en pantalla completa limpia sin elementos molestos */
     #episodeModal .modal-box {
       width: 100vw !important;
       height: 100vh !important;
@@ -1065,7 +1021,7 @@
         </button>
         <div class="admin-btns">
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
-          <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️️</button>
+          <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
         </div>
         <img src="${item.cover}" alt="Portada" loading="lazy" onerror="handleImgError(this)">
         <div class="card-info">
@@ -1223,7 +1179,7 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
     }
 
-    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO ESTILO CUEVANA / PELISPLUS (FULLSCREEN & HORIZONTAL) */
+    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO: ELIMINA BARRAS INNECESARIAS Y DEJA QUE EL IFRAME USE SU PROPIO FULLSCREEN NATIVO DE CUEVANA/VOE */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1231,10 +1187,6 @@
       }
 
       let innerContent = '';
-      const boxId = 'vbox_' + Math.random().toString(36).substring(2, 9);
-      vBox.id = boxId;
-
-      // Atributos obligatorios para permitir pantalla completa y aceleración de hardware en iframes y VOE
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
       if (vInput.includes('<iframe')) {
@@ -1268,34 +1220,7 @@
         innerContent = `<video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
-      vBox.innerHTML = `
-        <div class="cuevana-fullscreen-bar">
-          <button class="cuevana-fs-btn" onclick="toggleCuevanaFullscreen('${boxId}')">
-            <span>⛶ Pantalla Completa</span>
-          </button>
-        </div>
-        ${innerContent}
-      `;
-    }
-
-    function toggleCuevanaFullscreen(boxId) {
-      const box = document.getElementById(boxId);
-      if (!box) return;
-      box.classList.toggle('cuevana-fullscreen-active');
-      
-      const btnSpan = box.querySelector('.cuevana-fs-btn span');
-      if (box.classList.contains('cuevana-fullscreen-active')) {
-        if (btnSpan) btnSpan.innerText = '✕ Minimizar';
-        // Intenta forzar la rotación horizontal en dispositivos móviles compatibles
-        if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock('landscape').catch(() => {});
-        }
-      } else {
-        if (btnSpan) btnSpan.innerText = '⛶ Pantalla Completa';
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      }
+      vBox.innerHTML = innerContent;
     }
 
     renderHomeSections();
