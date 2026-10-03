@@ -330,7 +330,6 @@
       padding: 0 15px;
     }
 
-    /* Pestañas en Español */
     .series-tabs-bar {
       display: flex;
       justify-content: center;
@@ -443,20 +442,20 @@
     }
     body.creator-mode .netflix-ep-edit-btn { display: inline-block; }
 
+    /* CONTENEDOR DE VIDEO LIMPIO Y PANTALLA COMPLETA NATIVA */
     .video-box { 
-      width: 100vw;
-      height: 100vh;
-      max-width: 100%;
+      width: 100%;
       aspect-ratio: 16/9; 
       background: #000; 
-      margin-bottom: 0; 
-      border-radius: 0; 
+      margin-bottom: 15px; 
+      border-radius: 10px; 
       overflow: hidden; 
       position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
     .video-box iframe, .video-box video { 
@@ -469,53 +468,37 @@
       background: #000;
     }
 
-    .netflix-player-bar {
-      position: absolute;
-      top: 15px; right: 15px;
-      z-index: 9999;
-      display: flex;
-      gap: 8px;
-    }
-
-    .netflix-control-btn {
-      background: rgba(20, 20, 25, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    .netflix-control-btn:hover {
-      background: rgba(124, 58, 237, 0.95);
-      border-color: var(--accent-light);
-    }
-
-    .video-box.netflix-fullscreen {
-      position: fixed !important;
-      inset: 0 !important;
+    /* Modal reproductor optimizado en pantalla completa real */
+    #episodeModal .modal-box {
       width: 100vw !important;
       height: 100vh !important;
       max-width: 100vw !important;
       max-height: 100vh !important;
-      aspect-ratio: unset !important;
-      z-index: 999999 !important;
+      margin: 0 !important;
+      padding: 0 !important;
       border-radius: 0 !important;
       background: #000 !important;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #episodeModal .video-box {
+      width: 100vw !important;
+      height: 100vh !important;
+      aspect-ratio: unset !important;
+      border: none !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
     }
 
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 20px; font-style: italic; text-align: center; }
 
     @media (max-width: 600px) {
-      #detailModal .modal-box, #episodeModal .modal-box {
-        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 0; display: flex; flex-direction: column;
+      #detailModal .modal-box {
+        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 15px;
       }
       .series-main-title { font-size: 1.8rem; }
     }
@@ -613,7 +596,7 @@
     </div>
   </div>
 
-  <!-- MODAL VISTA SERIE EN ESPAÑOL -->
+  <!-- MODAL VISTA SERIE -->
   <div class="modal-box-series" id="seriesModal">
     <button class="btn-close" onclick="closeModal('seriesModal')">✕</button>
     
@@ -635,7 +618,6 @@
       </div>
     </div>
 
-    <!-- Pestañas en Español -->
     <div class="series-tabs-bar">
       <button class="series-tab-item active">EPISODIOS</button>
       <button class="series-tab-item" onclick="alert('Sección en desarrollo')">SUGERENCIAS</button>
@@ -651,9 +633,9 @@
 
   <!-- MODAL REPRODUCTOR DE EPISODIOS -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
-    <div class="modal-box" style="max-width: 650px; padding: 0; background: #000; border: none;">
-      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 999999;">✕</button>
-      <div class="video-box" id="episodeVideoBox" style="margin: 0; border: none;"></div>
+    <div class="modal-box">
+      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 999999; top: 15px; right: 15px;">✕</button>
+      <div class="video-box" id="episodeVideoBox"></div>
     </div>
   </div>
 
@@ -1012,7 +994,7 @@
       const series = catalog.filter(i => i.type === 'series');
       const topScroll = document.getElementById('seriesTopScroll');
       topScroll.innerHTML = '';
-      [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+      [...series].sort((a, b) => (b.views || 0) - (b.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
 
       const grid = document.getElementById('seriesGrid');
       grid.innerHTML = '';
@@ -1180,7 +1162,6 @@
           <div class="netflix-ep-info">
             <div class="netflix-ep-title">${ep.num}. ${ep.title}</div>
             <div class="netflix-ep-duration">${ep.desc ? ep.desc.substring(0, 65) + '...' : 'Capítulo de serie'}</div>
-            <button class="netflix-ep-edit-btn" onclick="event.stopPropagation(); openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏️ Editar</button>
           </div>
         `;
         container.appendChild(cardDiv);
@@ -1205,9 +1186,6 @@
       }
 
       let innerContent = '';
-      const boxId = 'vbox_' + Math.random().toString(36).substring(2, 9);
-      vBox.id = boxId;
-
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
       if (vInput.includes('<iframe')) {
@@ -1241,33 +1219,7 @@
         innerContent = `<video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
-      vBox.innerHTML = `
-        <div class="netflix-player-bar">
-          <button class="netflix-control-btn" onclick="toggleNetflixFullscreen('${boxId}')">
-            <span>⛶ Pantalla Completa / Horizontal</span>
-          </button>
-        </div>
-        ${innerContent}
-      `;
-    }
-
-    function toggleNetflixFullscreen(boxId) {
-      const box = document.getElementById(boxId);
-      if (!box) return;
-      box.classList.toggle('netflix-fullscreen');
-      
-      const btnSpan = box.querySelector('.netflix-control-btn span');
-      if (box.classList.contains('netflix-fullscreen')) {
-        if (btnSpan) btnSpan.innerText = '✕ Minimizar';
-        if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock('landscape').catch(() => {});
-        }
-      } else {
-        if (btnSpan) btnSpan.innerText = '⛶ Pantalla Completa / Horizontal';
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      }
+      vBox.innerHTML = innerContent;
     }
 
     renderHomeSections();
