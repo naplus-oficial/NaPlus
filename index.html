@@ -442,7 +442,7 @@
     }
     body.creator-mode .netflix-ep-edit-btn { display: inline-block; }
 
-    /* CONTENEDOR DE VIDEO PROFESIONAL ESTILO CUEVANA */
+    /* CONTENEDOR DE VIDEO PROFESIONAL */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -674,8 +674,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Código de Video (VOE, OK.ru, Google Drive o .mp4)</label>
-          <input type="text" id="videoInput" placeholder="https://voe.sx/..., enlace de Drive o .mp4">
+          <label>Enlace o Código de Video (VOE, Dropbox, OK.ru, Google Drive o .mp4)</label>
+          <input type="text" id="videoInput" placeholder="https://voe.sx/..., Dropbox o .mp4">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -1178,45 +1178,53 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
     }
 
-    /* MOTOR DE REPRODUCCIÓN DEFINITIVO: SOPORTE ESTÁNDAR LIMPIO Y COMPATIBLE CON VOE */
+    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTAR VOE, DROPBOX Y ENLACES DIRECTOS */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
       }
 
+      let cleanUrl = vInput.trim();
+
+      // Conversión automática de Dropbox a formato raw directo
+      if (cleanUrl.includes('dropbox.com')) {
+        cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+      }
+
       let innerContent = '';
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      if (vInput.includes('<iframe')) {
-        innerContent = vInput.replace(/<iframe/i, `<iframe ${iframeAttributes}`);
-      } else if (vInput.includes('voe.sx')) {
-        let embedUrl = vInput.trim();
+      if (cleanUrl.includes('<iframe')) {
+        innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}`);
+      } else if (cleanUrl.includes('voe.sx')) {
+        let embedUrl = cleanUrl;
         if (!embedUrl.includes('/e/')) {
           const parts = embedUrl.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1].split(/[?#/]/)[0]}`;
         }
         innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
-      } else if (vInput.includes('ok.ru')) {
-        let embedUrl = vInput.trim();
+      } else if (cleanUrl.includes('ok.ru')) {
+        let embedUrl = cleanUrl;
         if (!embedUrl.includes('videoembed')) {
           const match = embedUrl.match(/\/video\/([0-9]+)/);
           if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
         innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
-      } else if (vInput.includes('drive.google.com')) {
+      } else if (cleanUrl.includes('drive.google.com')) {
         let fileId = '';
-        const match = vInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (match && match[1]) {
           fileId = match[1];
         } else {
-          const urlParams = new URLSearchParams(vInput.split('?')[1]);
+          const urlParams = new URLSearchParams(cleanUrl.split('?')[1]);
           if (urlParams.get('id')) fileId = urlParams.get('id');
         }
         const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
       } else {
-        innerContent = `<video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>`;
+        // Reproductor HTML5 nativo para Dropbox directos (.mp4) y archivos planos
+        innerContent = `<video src="${cleanUrl}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
       vBox.innerHTML = innerContent;
