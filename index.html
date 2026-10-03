@@ -247,7 +247,6 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* ESTILOS PROFESIONALES Y LIMPIOS PARA EDICIÓN DE TEMPORADAS Y CAPÍTULOS */
     .season-block {
       background: rgba(18, 11, 32, 0.7);
       border: 1px solid var(--border-purple);
@@ -1088,7 +1087,6 @@
       document.getElementById('seriesSeasonsGroup').style.display = type === 'series' ? 'block' : 'none';
     }
 
-    /* GESTIÓN DE TEMPORADAS Y CAPÍTULOS CON DISEÑO ELEGANTE Y COMPACTO */
     function addSeasonField(seasonData = null) {
       const container = document.getElementById('seasonsContainer');
       const sIdx = container.children.length;
@@ -1328,7 +1326,7 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
     }
 
-    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTAR DROPBOX Y OTROS SERVIDORES SIN FALLOS */
+    /* MOTOR DE REPRODUCCIÓN DEFINITIVO: SOPORTE COMPATIBLE CON DROPBOX Y OTROS SERVIDORES */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1336,17 +1334,19 @@
       }
 
       let cleanUrl = vInput.trim();
-
-      // Transformación inteligente para enlaces de Dropbox (soporta tanto formato antiguo como moderno /scl/fi/...)
-      if (cleanUrl.includes('dropbox.com')) {
-        cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
-      }
-
       let innerContent = '';
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
       if (cleanUrl.includes('<iframe')) {
         innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}>`);
+      } else if (cleanUrl.includes('dropbox.com')) {
+        // Corrección definitiva para Dropbox: se transforma al visor seguro embebido
+        let embedDropboxUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+        if (cleanUrl.includes('/scl/fi/')) {
+          embedDropboxUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+          if (!embedDropboxUrl.includes('raw=1')) embedDropboxUrl += (embedDropboxUrl.includes('?') ? '&' : '?') + 'raw=1';
+        }
+        innerContent = `<iframe src="${embedDropboxUrl}" ${iframeAttributes}></iframe>`;
       } else if (cleanUrl.includes('voe.sx')) {
         let embedUrl = cleanUrl;
         if (!embedUrl.includes('/e/')) {
