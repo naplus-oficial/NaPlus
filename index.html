@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO OPTIMIZADO PARA PANTALLA COMPLETA NATIVA */
+    /* CONTENEDOR DE VIDEO CON BOTÓN DE FORZADO TOTAL DE PANTALLA COMPLETA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -511,22 +511,21 @@
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: rgba(124, 58, 237, 0.9);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: #7c3aed;
+      border: 2px solid #fff;
       color: #fff;
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 0.8rem;
+      font-weight: 800;
       cursor: pointer;
-      z-index: 3000;
+      z-index: 999999;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
     }
-    .fullscreen-trigger-btn:hover { background: rgba(124, 58, 237, 1); }
+    .fullscreen-trigger-btn:active { transform: scale(0.95); }
 
     #episodeModal .modal-box {
       width: 100vw !important;
@@ -855,25 +854,50 @@
       }
     });
 
-    // FUNCIÓN POTENCIADA PARA FORZAR PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL
+    // SISTEMA ABSOLUTO DE PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL FORZADA
     function triggerBoxFullscreen(btnEl) {
       const vBox = btnEl.parentElement;
       const targetElem = vBox.querySelector('video') || vBox.querySelector('iframe') || vBox;
       
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        if (targetElem.requestFullscreen) {
-          targetElem.requestFullscreen().catch(() => vBox.requestFullscreen?.());
-        } else if (targetElem.webkitRequestFullscreen) {
-          targetElem.webkitRequestFullscreen();
-        } else if (vBox.requestFullscreen) {
-          vBox.requestFullscreen();
+      // Intentar API Fullscreen estándar y bloqueo de orientación horizontal
+      const requestMethod = targetElem.requestFullscreen || targetElem.webkitRequestFullscreen || targetElem.msRequestFullscreen || vBox.requestFullscreen;
+      
+      if (requestMethod) {
+        requestMethod.call(targetElem).then(() => {
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {});
+          }
+        }).catch(() => {
+          // Si el navegador bloquea la API nativa, forzamos expansión visual total en pantalla
+          forceVisualLandscapeFullscreen(vBox);
+        });
+      } else {
+        forceVisualLandscapeFullscreen(vBox);
+      }
+    }
+
+    function forceVisualLandscapeFullscreen(vBox) {
+      if (!vBox.classList.contains('forced-fullscreen')) {
+        vBox.classList.add('forced-fullscreen');
+        vBox.style.position = 'fixed';
+        vBox.style.inset = '0';
+        vBox.style.width = '100vw';
+        vBox.style.height = '100vh';
+        vBox.style.zIndex = '9999999';
+        vBox.style.borderRadius = '0';
+        vBox.style.margin = '0';
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
+        vBox.classList.remove('forced-fullscreen');
+        vBox.style.position = '';
+        vBox.style.inset = '';
+        vBox.style.width = '';
+        vBox.style.height = '';
+        vBox.style.zIndex = '';
+        vBox.style.borderRadius = '';
+        vBox.style.margin = '';
       }
     }
 
@@ -1367,7 +1391,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON SOPORTE DE PANTALLA COMPLETA NATIVA (SIN PLAYSINLINE) */
+    /* MOTOR DE REPRODUCCIÓN CON BOTÓN FLOTANTE DE FORZADO ABSOLUTO (PANTALLA COMPLETA + HORIZONTAL) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1413,13 +1437,12 @@
         const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
       } else {
-        // Se eliminó playsinline para permitir el uso libre de los controles de pantalla completa y rotación en Android
         innerContent = `<video src="${cleanUrl}" controls autoplay></video>`;
       }
 
       vBox.innerHTML = innerContent + `
         <button class="fullscreen-trigger-btn" onclick="triggerBoxFullscreen(this)">
-          ⛶ Pantalla Completa
+          ⛶ Pantalla Completa / Horizontal
         </button>
       `;
     }
