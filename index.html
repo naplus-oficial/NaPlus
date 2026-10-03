@@ -442,7 +442,7 @@
     }
     body.creator-mode .netflix-ep-edit-btn { display: inline-block; }
 
-    /* CONTENEDOR DE VIDEO PROFESIONAL ESTILO STREAMING (ASPECT RATIO 16:9 PERFECTO) */
+    /* CONTENEDOR DE VIDEO PROFESIONAL ESTILO CUEVANA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -464,7 +464,7 @@
       border: none !important; 
       position: absolute;
       top: 0; left: 0;
-      object-fit: contain !important; /* Mantiene la proporción exacta 16:9 sin distorsiones ni cortes */
+      object-fit: contain !important;
       background: #000;
     }
 
@@ -941,7 +941,7 @@
 
       const topScroll = document.getElementById('topScroll');
       topScroll.innerHTML = '';
-      [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+      [...catalog].sort((a, b) => (b.views || 0) - (b.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
 
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
@@ -1178,7 +1178,7 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
     }
 
-    /* MOTOR DE REPRODUCCIÓN PROFESIONAL DEFINITIVO CON SANDBOX ANTI-REDIRECCIÓN Y FULLSCREEN NATIVO */
+    /* MOTOR DE REPRODUCCIÓN DEFINITIVO: SOPORTE ESTÁNDAR LIMPIO Y COMPATIBLE CON VOE */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1186,25 +1186,24 @@
       }
 
       let innerContent = '';
-      // IMPORTANTE: El sandbox bloquea redirecciones popups de VOE/terceros, permitiendo reproducción limpia
-      const safeAttributes = 'frameborder="0" sandbox="allow-scripts allow-same-origin allow-presentation allow-bowser" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
+      const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
       if (vInput.includes('<iframe')) {
-        innerContent = vInput.replace(/<iframe/i, `<iframe ${safeAttributes}`);
+        innerContent = vInput.replace(/<iframe/i, `<iframe ${iframeAttributes}`);
       } else if (vInput.includes('voe.sx')) {
         let embedUrl = vInput.trim();
         if (!embedUrl.includes('/e/')) {
           const parts = embedUrl.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1].split(/[?#/]/)[0]}`;
         }
-        innerContent = `<iframe src="${embedUrl}" ${safeAttributes}></iframe>`;
+        innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
       } else if (vInput.includes('ok.ru')) {
         let embedUrl = vInput.trim();
         if (!embedUrl.includes('videoembed')) {
           const match = embedUrl.match(/\/video\/([0-9]+)/);
           if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
         }
-        innerContent = `<iframe src="${embedUrl}" ${safeAttributes}></iframe>`;
+        innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
       } else if (vInput.includes('drive.google.com')) {
         let fileId = '';
         const match = vInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -1215,7 +1214,7 @@
           if (urlParams.get('id')) fileId = urlParams.get('id');
         }
         const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-        innerContent = `<iframe src="${embedDriveUrl}" ${safeAttributes}></iframe>`;
+        innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
       } else {
         innerContent = `<video src="${vInput.trim()}" controls autoplay playsinline webkit-playsinline></video>`;
       }
