@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO CON BOTÓN FLOTANTE DE PANTALLA COMPLETA */
+    /* CONTENEDOR DE VIDEO OPTIMIZADO PARA PANTALLA COMPLETA NATIVA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -511,9 +511,9 @@
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: rgba(124, 58, 237, 0.85);
+      background: rgba(124, 58, 237, 0.9);
       backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       color: #fff;
       padding: 7px 14px;
       border-radius: 20px;
@@ -524,7 +524,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
     .fullscreen-trigger-btn:hover { background: rgba(124, 58, 237, 1); }
 
@@ -855,16 +855,18 @@
       }
     });
 
-    // FUNCIÓN PARA ACTIVAR PANTALLA COMPLETA NATIVA DESDE EL BOTÓN FLOTANTE
+    // FUNCIÓN POTENCIADA PARA FORZAR PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL
     function triggerBoxFullscreen(btnEl) {
       const vBox = btnEl.parentElement;
+      const targetElem = vBox.querySelector('video') || vBox.querySelector('iframe') || vBox;
+      
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        if (vBox.requestFullscreen) {
+        if (targetElem.requestFullscreen) {
+          targetElem.requestFullscreen().catch(() => vBox.requestFullscreen?.());
+        } else if (targetElem.webkitRequestFullscreen) {
+          targetElem.webkitRequestFullscreen();
+        } else if (vBox.requestFullscreen) {
           vBox.requestFullscreen();
-        } else if (vBox.webkitRequestFullscreen) {
-          vBox.webkitRequestFullscreen();
-        } else if (vBox.msRequestFullscreen) {
-          vBox.msRequestFullscreen();
         }
       } else {
         if (document.exitFullscreen) {
@@ -1365,7 +1367,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON SOPORTE COMPLETO DE PANTALLA COMPLETA Y BOTÓN FLOTANTE */
+    /* MOTOR DE REPRODUCCIÓN CON SOPORTE DE PANTALLA COMPLETA NATIVA (SIN PLAYSINLINE) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1411,7 +1413,8 @@
         const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
       } else {
-        innerContent = `<video src="${cleanUrl}" controls autoplay playsinline webkit-playsinline></video>`;
+        // Se eliminó playsinline para permitir el uso libre de los controles de pantalla completa y rotación en Android
+        innerContent = `<video src="${cleanUrl}" controls autoplay></video>`;
       }
 
       vBox.innerHTML = innerContent + `
