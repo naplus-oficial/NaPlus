@@ -247,6 +247,37 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
+    /* ESTILOS PROFESIONALES Y LIMPIOS PARA EDICIÓN DE TEMPORADAS Y CAPÍTULOS */
+    .season-block {
+      background: rgba(18, 11, 32, 0.7);
+      border: 1px solid var(--border-purple);
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+    .season-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .episode-block {
+      background: rgba(7, 4, 13, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      position: relative;
+    }
+    .episode-block input, .episode-block textarea {
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(124, 58, 237, 0.2) !important;
+      font-size: 0.85rem !important;
+      padding: 8px 10px !important;
+      border-radius: 6px !important;
+    }
+
     .series-hero-banner {
       position: relative;
       width: 100%;
@@ -436,7 +467,6 @@
       color: var(--text-gray);
     }
 
-    /* Botones de edición específicos para capítulos en modo creador */
     .ep-admin-actions {
       display: none;
       position: absolute;
@@ -452,23 +482,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* Contenedor dinámico de temporadas en el formulario */
-    .season-block {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border-purple);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .episode-block {
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 8px;
-      border-left: 3px solid var(--accent-purple);
-    }
-
-    /* CONTENEDOR DE VIDEO PROFESIONAL */
+    /* CONTENEDOR DE VIDEO ELEGANTE Y PROFESIONAL */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -668,7 +682,7 @@
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
-      <h3 id="formTitle">Subir Contenido</h3>
+      <h3 id="formTitle" style="margin-bottom: 15px; font-size: 1.1rem; font-weight: 800; color: var(--accent-light);">Subir Contenido</h3>
       <form onsubmit="submitContent(event)">
         <input type="hidden" id="editId">
         <div class="form-group">
@@ -705,12 +719,12 @@
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
-          <label style="color: var(--accent-light); font-weight: 600; margin-bottom: 6px; display: block; font-size: 0.8rem;">Temporadas y Episodios</label>
+          <label style="color: var(--accent-light); font-weight: 700; margin-bottom: 8px; display: block; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">Gestión de Temporadas y Capítulos</label>
           <div id="seasonsContainer"></div>
-          <button type="button" class="btn-submit" style="background: #2563eb; width: 100%; margin-top: 6px; font-size: 0.75rem; padding: 6px;" onclick="addSeasonField()">+ Agregar Temporada</button>
+          <button type="button" class="btn-submit" style="background: var(--accent-purple); width: 100%; margin-top: 8px; font-size: 0.8rem; padding: 10px;" onclick="addSeasonField()">+ Agregar Temporada</button>
         </div>
 
-        <div class="form-actions" style="margin-top: 15px;">
+        <div class="form-actions" style="margin-top: 20px;">
           <button type="button" class="btn-cancel" onclick="closeModal('uploadModal')">Cancelar</button>
           <button type="submit" class="btn-submit" id="saveBtn">Guardar y Publicar</button>
         </div>
@@ -1074,7 +1088,7 @@
       document.getElementById('seriesSeasonsGroup').style.display = type === 'series' ? 'block' : 'none';
     }
 
-    // GESTIÓN DINÁMICA DE TEMPORADAS Y EPISODIOS EN EL FORMULARIO
+    /* GESTIÓN DE TEMPORADAS Y CAPÍTULOS CON DISEÑO ELEGANTE Y COMPACTO */
     function addSeasonField(seasonData = null) {
       const container = document.getElementById('seasonsContainer');
       const sIdx = container.children.length;
@@ -1082,12 +1096,12 @@
       const sDiv = document.createElement('div');
       sDiv.className = 'season-block';
       sDiv.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <input type="text" class="season-name-input" placeholder="Nombre de Temporada (ej. Temporada 1)" value="${seasonData ? seasonData.name : 'Temporada ' + (sIdx + 1)}" style="font-weight:700; width: 75%;">
-          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.75rem;" onclick="this.parentElement.parentElement.remove()">Eliminar Temporada</button>
+        <div class="season-header-row">
+          <input type="text" class="season-name-input" placeholder="Nombre de Temporada" value="${seasonData ? seasonData.name : 'Temporada ' + (sIdx + 1)}" style="font-weight:700;">
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.75rem; white-space:nowrap;" onclick="this.closest('.season-block').remove()">Eliminar</button>
         </div>
         <div class="episodes-container"></div>
-        <button type="button" class="btn-submit" style="background:#2563eb; font-size:0.7rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Episodio</button>
+        <button type="button" class="btn-submit" style="background:#2563eb; font-size:0.75rem; padding:6px 12px; margin-top:8px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Episodio</button>
       `;
       container.appendChild(sDiv);
 
@@ -1104,22 +1118,22 @@
       const eDiv = document.createElement('div');
       eDiv.className = 'episode-block';
       eDiv.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-          <span style="font-size:0.75rem; color:var(--accent-light); font-weight:600;">Episodio</span>
-          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.7rem; padding:0;" onclick="this.parentElement.parentElement.remove()">✕ Eliminar</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:0.75rem; color:var(--accent-light); font-weight:700;">Episodio</span>
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.7rem; padding:0;" onclick="this.closest('.episode-block').remove()">✕ Eliminar</button>
         </div>
-        <div style="display:grid; grid-template-columns: 50px 1fr; gap:6px; margin-bottom:6px;">
+        <div style="display:grid; grid-template-columns: 60px 1fr; gap:6px; margin-bottom:6px;">
           <input type="number" class="ep-num" placeholder="Num" value="${epData ? epData.num : eIdx}">
-          <input type="text" class="ep-title" placeholder="Título del Episodio" value="${epData ? epData.title : ''}">
+          <input type="text" class="ep-title" placeholder="Título del episodio" value="${epData ? epData.title : ''}">
         </div>
         <div style="margin-bottom:6px;">
-          <input type="url" class="ep-img" placeholder="URL Miniatura del Capítulo" value="${epData ? epData.img || '' : ''}">
+          <input type="url" class="ep-img" placeholder="URL Miniatura (Imagen)" value="${epData ? epData.img || '' : ''}">
         </div>
         <div style="margin-bottom:6px;">
           <input type="text" class="ep-video" placeholder="Enlace de Video (VOE, Dropbox, Drive, .mp4)" value="${epData ? epData.video || '' : ''}">
         </div>
         <div>
-          <textarea class="ep-desc" rows="1" placeholder="Descripción breve...">${epData ? epData.desc || '' : ''}</textarea>
+          <textarea class="ep-desc" rows="1" placeholder="Descripción breve del episodio...">${epData ? epData.desc || '' : ''}</textarea>
         </div>
       `;
       epContainer.appendChild(eDiv);
@@ -1314,7 +1328,7 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
     }
 
-    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTAR VOE, DROPBOX Y ENLACES DIRECTOS */
+    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTAR DROPBOX Y OTROS SERVIDORES SIN FALLOS */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1323,6 +1337,7 @@
 
       let cleanUrl = vInput.trim();
 
+      // Transformación inteligente para enlaces de Dropbox (soporta tanto formato antiguo como moderno /scl/fi/...)
       if (cleanUrl.includes('dropbox.com')) {
         cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
       }
