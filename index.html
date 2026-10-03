@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO OPTIMIZADO PARA PANTALLA COMPLETA NATIVA Y ROTACIÓN */
+    /* CONTENEDOR DE VIDEO CON BOTÓN FLOTANTE DE PANTALLA COMPLETA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -506,6 +506,27 @@
       object-fit: contain !important;
       background: #000;
     }
+
+    .fullscreen-trigger-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(124, 58, 237, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .fullscreen-trigger-btn:hover { background: rgba(124, 58, 237, 1); }
 
     #episodeModal .modal-box {
       width: 100vw !important;
@@ -805,7 +826,7 @@
       img.src = NO_COVER_SVG;
     }
 
-    // GESTIÓN DE HISTORIAL INTELIGENTE PARA EL BOTÓN "ATRÁS" DE ANDROID
+    // GESTIÓN DE HISTORIAL INTELIGENTE PARA EL BOTÓN "ATRÁS"
     let activeModalId = null;
 
     function openModalWithHistory(id) {
@@ -833,6 +854,26 @@
         return;
       }
     });
+
+    // FUNCIÓN PARA ACTIVAR PANTALLA COMPLETA NATIVA DESDE EL BOTÓN FLOTANTE
+    function triggerBoxFullscreen(btnEl) {
+      const vBox = btnEl.parentElement;
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (vBox.requestFullscreen) {
+          vBox.requestFullscreen();
+        } else if (vBox.webkitRequestFullscreen) {
+          vBox.webkitRequestFullscreen();
+        } else if (vBox.msRequestFullscreen) {
+          vBox.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
 
     function switchView(viewName) {
       const searchInput = document.getElementById('searchInput');
@@ -1324,7 +1365,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTE DE PANTALLA COMPLETA Y ROTACIÓN */
+    /* MOTOR DE REPRODUCCIÓN CON SOPORTE COMPLETO DE PANTALLA COMPLETA Y BOTÓN FLOTANTE */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1373,7 +1414,11 @@
         innerContent = `<video src="${cleanUrl}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
-      vBox.innerHTML = innerContent;
+      vBox.innerHTML = innerContent + `
+        <button class="fullscreen-trigger-btn" onclick="triggerBoxFullscreen(this)">
+          ⛶ Pantalla Completa
+        </button>
+      `;
     }
 
     renderHomeSections();
