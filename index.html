@@ -389,6 +389,7 @@
       padding: 6px;
       border-radius: 8px;
       transition: background 0.2s;
+      position: relative;
     }
     .netflix-ep-row:hover {
       background: rgba(255, 255, 255, 0.06);
@@ -435,12 +436,37 @@
       color: var(--text-gray);
     }
 
-    .netflix-ep-edit-btn {
+    /* Botones de edición específicos para capítulos en modo creador */
+    .ep-admin-actions {
       display: none;
-      background: #2563eb; border: none; color: #fff;
-      padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; cursor: pointer; margin-top: 4px;
+      position: absolute;
+      top: 8px; right: 8px;
+      gap: 6px;
+      z-index: 10;
     }
-    body.creator-mode .netflix-ep-edit-btn { display: inline-block; }
+    body.creator-mode .ep-admin-actions { display: flex; }
+    .ep-admin-actions button {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff; width: 28px; height: 28px; border-radius: 50%;
+      font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+
+    /* Contenedor dinámico de temporadas en el formulario */
+    .season-block {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-purple);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .episode-block {
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      border-left: 3px solid var(--accent-purple);
+    }
 
     /* CONTENEDOR DE VIDEO PROFESIONAL */
     .video-box { 
@@ -1048,6 +1074,57 @@
       document.getElementById('seriesSeasonsGroup').style.display = type === 'series' ? 'block' : 'none';
     }
 
+    // GESTIÓN DINÁMICA DE TEMPORADAS Y EPISODIOS EN EL FORMULARIO
+    function addSeasonField(seasonData = null) {
+      const container = document.getElementById('seasonsContainer');
+      const sIdx = container.children.length;
+      
+      const sDiv = document.createElement('div');
+      sDiv.className = 'season-block';
+      sDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <input type="text" class="season-name-input" placeholder="Nombre de Temporada (ej. Temporada 1)" value="${seasonData ? seasonData.name : 'Temporada ' + (sIdx + 1)}" style="font-weight:700; width: 75%;">
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.75rem;" onclick="this.parentElement.parentElement.remove()">Eliminar Temporada</button>
+        </div>
+        <div class="episodes-container"></div>
+        <button type="button" class="btn-submit" style="background:#2563eb; font-size:0.7rem; padding:4px 8px; margin-top:6px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Episodio</button>
+      `;
+      container.appendChild(sDiv);
+
+      const epContainer = sDiv.querySelector('.episodes-container');
+      if (seasonData && seasonData.episodes) {
+        seasonData.episodes.forEach(ep => addEpisodeField(epContainer, ep));
+      } else {
+        addEpisodeField(epContainer);
+      }
+    }
+
+    function addEpisodeField(epContainer, epData = null) {
+      const eIdx = epContainer.children.length + 1;
+      const eDiv = document.createElement('div');
+      eDiv.className = 'episode-block';
+      eDiv.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="font-size:0.75rem; color:var(--accent-light); font-weight:600;">Episodio</span>
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.7rem; padding:0;" onclick="this.parentElement.parentElement.remove()">✕ Eliminar</button>
+        </div>
+        <div style="display:grid; grid-template-columns: 50px 1fr; gap:6px; margin-bottom:6px;">
+          <input type="number" class="ep-num" placeholder="Num" value="${epData ? epData.num : eIdx}">
+          <input type="text" class="ep-title" placeholder="Título del Episodio" value="${epData ? epData.title : ''}">
+        </div>
+        <div style="margin-bottom:6px;">
+          <input type="url" class="ep-img" placeholder="URL Miniatura del Capítulo" value="${epData ? epData.img || '' : ''}">
+        </div>
+        <div style="margin-bottom:6px;">
+          <input type="text" class="ep-video" placeholder="Enlace de Video (VOE, Dropbox, Drive, .mp4)" value="${epData ? epData.video || '' : ''}">
+        </div>
+        <div>
+          <textarea class="ep-desc" rows="1" placeholder="Descripción breve...">${epData ? epData.desc || '' : ''}</textarea>
+        </div>
+      `;
+      epContainer.appendChild(eDiv);
+    }
+
     function openUploadModal(item = null) {
       document.getElementById('editId').value = item ? item.id : '';
       document.getElementById('formTitle').innerText = item ? 'Editar Contenido' : 'Subir Contenido';
@@ -1058,6 +1135,13 @@
       document.getElementById('descInput').value = item ? item.desc : '';
       document.getElementById('coverInput').value = item ? item.cover : '';
       document.getElementById('videoInput').value = item && item.video ? item.video : '';
+      
+      const seasonsContainer = document.getElementById('seasonsContainer');
+      seasonsContainer.innerHTML = '';
+      if (item && item.type === 'series' && item.seasons) {
+        item.seasons.forEach(s => addSeasonField(s));
+      }
+
       toggleContentTypeFields();
       document.getElementById('uploadModal').style.display = 'flex';
     }
@@ -1079,6 +1163,27 @@
       e.preventDefault();
       const id = document.getElementById('editId').value;
       const type = document.getElementById('typeInput').value;
+
+      let seasons = [];
+      if (type === 'series') {
+        document.querySelectorAll('.season-block').forEach(sBlock => {
+          const sName = sBlock.querySelector('.season-name-input').value.trim() || "Temporada";
+          let episodes = [];
+          sBlock.querySelectorAll('.episode-block').forEach(eBlock => {
+            episodes.push({
+              num: parseInt(eBlock.querySelector('.ep-num').value) || 1,
+              title: eBlock.querySelector('.ep-title').value.trim() || "Episodio",
+              img: eBlock.querySelector('.ep-img').value.trim(),
+              video: eBlock.querySelector('.ep-video').value.trim(),
+              desc: eBlock.querySelector('.ep-desc').value.trim()
+            });
+          });
+          seasons.push({ name: sName, episodes: episodes });
+        });
+      }
+
+      const existingItem = id ? catalog.find(x => x.id == id) : null;
+
       const newItem = {
         id: id ? parseInt(id) : Date.now(),
         type: type,
@@ -1088,11 +1193,17 @@
         desc: document.getElementById('descInput').value.trim(),
         cover: document.getElementById('coverInput').value.trim(),
         video: type === 'movie' ? document.getElementById('videoInput').value.trim() : '',
-        seasons: [],
-        views: 50,
-        dateAdded: Date.now()
+        seasons: seasons,
+        views: existingItem ? (existingItem.views || 50) : 50,
+        dateAdded: existingItem ? (existingItem.dateAdded || Date.now()) : Date.now()
       };
-      catalog.unshift(newItem);
+
+      if (id) {
+        catalog = catalog.map(x => x.id == id ? newItem : x);
+      } else {
+        catalog.unshift(newItem);
+      }
+
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
       closeModal('uploadModal');
@@ -1154,6 +1265,10 @@
         cardDiv.className = 'netflix-ep-row';
         cardDiv.onclick = () => playEpisode(sIdx, eIdx);
         cardDiv.innerHTML = `
+          <div class="ep-admin-actions">
+            <button onclick="event.stopPropagation(); editSeriesEpisode(${currentSeriesData.id}, ${sIdx}, ${eIdx})" title="Editar Capítulo">✏️</button>
+            <button onclick="event.stopPropagation(); deleteSeriesEpisode(${currentSeriesData.id}, ${sIdx}, ${eIdx})" title="Eliminar Capítulo">🗑️</button>
+          </div>
           <div class="netflix-ep-thumb">
             <img src="${ep.img || currentSeriesData.cover}" alt="Ep" loading="lazy" onerror="handleImgError(this)">
             <div class="netflix-ep-play-overlay">▶</div>
@@ -1165,6 +1280,27 @@
         `;
         container.appendChild(cardDiv);
       });
+    }
+
+    function editSeriesEpisode(seriesId, sIdx, eIdx) {
+      const item = catalog.find(x => x.id == seriesId);
+      if (item) {
+        document.getElementById('seriesModal').style.display = 'none';
+        openUploadModal(item);
+      }
+    }
+
+    function deleteSeriesEpisode(seriesId, sIdx, eIdx) {
+      if (confirm("¿Estás seguro de eliminar este capítulo?")) {
+        const item = catalog.find(x => x.id == seriesId);
+        if (item && item.seasons[sIdx]) {
+          item.seasons[sIdx].episodes.splice(eIdx, 1);
+          localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+          currentSeriesData = item;
+          renderEpisodesForSelectedSeason();
+          renderHomeSections();
+        }
+      }
     }
 
     function playEpisode(seasonIdx, epIdx) {
@@ -1187,7 +1323,6 @@
 
       let cleanUrl = vInput.trim();
 
-      // Conversión automática de Dropbox a formato raw directo
       if (cleanUrl.includes('dropbox.com')) {
         cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
       }
@@ -1196,7 +1331,7 @@
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
       if (cleanUrl.includes('<iframe')) {
-        innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}`);
+        innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}>`);
       } else if (cleanUrl.includes('voe.sx')) {
         let embedUrl = cleanUrl;
         if (!embedUrl.includes('/e/')) {
@@ -1223,7 +1358,6 @@
         const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
       } else {
-        // Reproductor HTML5 nativo para Dropbox directos (.mp4) y archivos planos
         innerContent = `<video src="${cleanUrl}" controls autoplay playsinline webkit-playsinline></video>`;
       }
 
