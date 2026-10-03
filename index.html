@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO ELEGANTE Y PROFESIONAL */
+    /* CONTENEDOR DE VIDEO OPTIMIZADO PARA PANTALLA COMPLETA NATIVA Y ROTACIÓN */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -805,33 +805,36 @@
       img.src = NO_COVER_SVG;
     }
 
-    let inSearchHistoryState = false;
+    // GESTIÓN DE HISTORIAL INTELIGENTE PARA EL BOTÓN "ATRÁS" DE ANDROID
+    let activeModalId = null;
 
-    function pushSearchState() {
-      if (!inSearchHistoryState) {
-        inSearchHistoryState = true;
-        history.pushState({ naplusSearch: true }, '', location.href);
+    function openModalWithHistory(id) {
+      activeModalId = id;
+      history.pushState({ modalOpen: id }, '', location.href);
+      document.getElementById(id).style.display = (id === 'seriesModal') ? 'block' : 'flex';
+    }
+
+    function closeModalWithHistory(id) {
+      const el = document.getElementById(id);
+      if (el && el.style.display !== 'none') {
+        el.style.display = 'none';
+        if (id === 'detailModal' || id === 'episodeModal') {
+          const vBox = id === 'detailModal' ? document.getElementById('videoBox') : document.getElementById('episodeVideoBox');
+          if (vBox) vBox.innerHTML = '';
+        }
+        activeModalId = null;
       }
     }
 
-    function popSearchStateIfNeeded() {
-      if (inSearchHistoryState) {
-        inSearchHistoryState = false;
-        history.back();
-      }
-    }
-
-    window.addEventListener('popstate', () => {
-      if (inSearchHistoryState) {
-        inSearchHistoryState = false;
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = '';
-        renderHomeSections();
+    window.addEventListener('popstate', (e) => {
+      if (activeModalId) {
+        closeModalWithHistory(activeModalId);
+        e.preventDefault();
+        return;
       }
     });
 
     function switchView(viewName) {
-      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.value = '';
       
@@ -859,7 +862,6 @@
     }
 
     function clearSearchInput() {
-      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -954,7 +956,6 @@
       document.body.classList.toggle('search-active', searching);
 
       if (searching) {
-        pushSearchState();
         heroSlider.style.display = 'none';
         searchContainer.style.display = 'block';
         mainContent.style.display = 'none';
@@ -980,7 +981,7 @@
 
       const topScroll = document.getElementById('topScroll');
       topScroll.innerHTML = '';
-      [...catalog].sort((a, b) => (b.views || 0) - (b.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+      [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
 
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
@@ -1006,12 +1007,11 @@
         const val = document.getElementById('searchInput').value.trim();
         if (val === "9009") {
           e.preventDefault();
-          popSearchStateIfNeeded();
           document.getElementById('searchInput').value = '';
           isCreatorMode = !isCreatorMode;
           localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
           document.body.classList.toggle('creator-mode', isCreatorMode);
-          if (isCreatorMode) openUploadModal();
+          if (isCreatorMode) openModalWithHistory('uploadModal');
           renderHomeSections();
         }
       }
@@ -1077,8 +1077,7 @@
     }
 
     function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-      if (id === 'detailModal') document.getElementById('videoBox').innerHTML = '';
+      closeModalWithHistory(id);
     }
 
     function toggleContentTypeFields() {
@@ -1155,7 +1154,7 @@
       }
 
       toggleContentTypeFields();
-      document.getElementById('uploadModal').style.display = 'flex';
+      openModalWithHistory('uploadModal');
     }
 
     function editItem(id) {
@@ -1218,7 +1217,7 @@
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
-      closeModal('uploadModal');
+      closeModalWithHistory('uploadModal');
     }
 
     let currentSeriesData = null;
@@ -1247,14 +1246,14 @@
           });
         }
         renderEpisodesForSelectedSeason();
-        document.getElementById('seriesModal').style.display = 'block';
+        openModalWithHistory('seriesModal');
       } else {
         document.getElementById('detailTitle').innerText = item.title;
         document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
         document.getElementById('detailViews').innerText = `👁️ ${item.views} reproducciones`;
         document.getElementById('detailDesc').innerText = item.desc || '';
         renderVideoInBox(document.getElementById('videoBox'), item.video, item.title);
-        document.getElementById('detailModal').style.display = 'flex';
+        openModalWithHistory('detailModal');
       }
     }
 
@@ -1297,7 +1296,7 @@
     function editSeriesEpisode(seriesId, sIdx, eIdx) {
       const item = catalog.find(x => x.id == seriesId);
       if (item) {
-        document.getElementById('seriesModal').style.display = 'none';
+        closeModalWithHistory('seriesModal');
         openUploadModal(item);
       }
     }
@@ -1318,15 +1317,14 @@
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video, `Capítulo ${ep.num}: ${ep.title}`);
-      document.getElementById('episodeModal').style.display = 'flex';
+      openModalWithHistory('episodeModal');
     }
 
     function closeEpisodePlayer() {
-      document.getElementById('episodeModal').style.display = 'none';
-      document.getElementById('episodeVideoBox').innerHTML = '';
+      closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN DEFINITIVO: SOPORTE COMPATIBLE CON DROPBOX Y OTROS SERVIDORES */
+    /* MOTOR DE REPRODUCCIÓN OPTIMIZADO PARA SOPORTE DE PANTALLA COMPLETA Y ROTACIÓN */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1340,7 +1338,6 @@
       if (cleanUrl.includes('<iframe')) {
         innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}>`);
       } else if (cleanUrl.includes('dropbox.com')) {
-        // Corrección definitiva para Dropbox: se transforma al visor seguro embebido
         let embedDropboxUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
         if (cleanUrl.includes('/scl/fi/')) {
           embedDropboxUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
