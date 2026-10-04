@@ -10,6 +10,7 @@
       --card-bg: #120b20;
       --accent-purple: #7c3aed;
       --accent-light: #c084fc;
+      --player-green: #22c55e;
       --text-white: #f8fafc;
       --text-gray: #94a3b8;
       --border-purple: rgba(124, 58, 237, 0.25);
@@ -25,7 +26,7 @@
 
     html { scroll-behavior: smooth; }
 
-    button { transition: transform 0.15s ease; }
+    button { transition: transform 0.15s ease; cursor: pointer; }
     button:active { transform: scale(0.95); }
 
     body {
@@ -215,7 +216,6 @@
       z-index: 2000; padding: 10px; align-items: center; justify-content: center; overflow: hidden;
     }
 
-    /* Modal ultra compacto para asegurar que el reproductor quede arriba a la vista sin scroll */
     .modal-box {
       background: #0b0614; padding: 10px; border-radius: 12px;
       width: 100%; max-width: 550px; border: 1px solid var(--border-purple);
@@ -483,7 +483,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO OPTIMIZADO ARRIBA */
+    /* CONTENEDOR DE VIDEO NATIVO CON DISEÑO PERSONALIZADO ESTILO REPRODUCTOR */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -500,51 +500,127 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
-    .video-box iframe, .video-box video { 
-      width: 100% !important; 
-      height: 100% !important; 
-      border: none !important; 
+    .video-box iframe {
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
       position: absolute;
       top: 0; left: 0;
-      object-fit: contain !important;
-      background: #000;
     }
 
-    /* BARRA FLOTANTE DE CONTROLES (SALIR Y PANTALLA COMPLETA) */
-    .video-overlay-controls {
-      position: absolute;
-      inset: 0;
-      z-index: 999999;
-      pointer-events: none;
+    /* ESTILOS DEL REPRODUCTOR NATIVO PERSONALIZADO (IDÉNTICO A LA IMAGEN) */
+    .custom-player-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #000;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .custom-player-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Icono central grande de pausa / play al tocar */
+    .center-play-pause-indicator {
+      position: absolute;
+      font-size: 3.5rem;
+      color: var(--player-green);
+      background: rgba(0, 0, 0, 0.6);
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .center-play-pause-indicator.show {
+      opacity: 1;
+    }
+
+    /* Barra de progreso superior en la línea inferior del video */
+    .custom-progress-container {
+      position: absolute;
+      bottom: 45px;
+      left: 12px;
+      right: 12px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .custom-progress-filled {
+      height: 100%;
+      background: var(--player-green);
+      width: 0%;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    /* Barra de controles inferior */
+    .custom-controls-bar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45px;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
-      padding: 12px;
-      background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%);
+      padding: 0 12px;
+      z-index: 10;
+      color: var(--player-green);
+      font-size: 0.8rem;
       opacity: 1;
       transition: opacity 0.3s ease;
     }
-    .video-overlay-controls.hidden {
+    .custom-controls-bar.hidden {
       opacity: 0;
       pointer-events: none;
     }
-    .video-overlay-controls button {
-      pointer-events: auto;
-      background: rgba(124, 58, 237, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #fff;
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
+
+    .controls-left, .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .custom-controls-bar button {
+      background: none;
+      border: none;
+      color: var(--player-green);
+      font-size: 1.1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      justify-content: center;
     }
-    .btn-exit-player {
-      background: rgba(239, 68, 68, 0.9) !important;
+    .custom-controls-bar button svg {
+      width: 18px; height: 18px;
+      fill: var(--player-green);
+    }
+
+    .time-display {
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--player-green);
+      letter-spacing: 0.5px;
+    }
+
+    .btn-exit-custom {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border: 1px solid rgba(239, 68, 68, 0.5) !important;
+      color: #ef4444 !important;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
     }
 
     #episodeModal .modal-box {
@@ -846,7 +922,6 @@
       img.src = NO_COVER_SVG;
     }
 
-    // GESTIÓN DE HISTORIAL INTELIGENTE PARA EL BOTÓN "ATRÁS"
     let activeModalId = null;
 
     function openModalWithHistory(id) {
@@ -874,91 +949,6 @@
         return;
       }
     });
-
-    // SISTEMA DE PANTALLA COMPLETA Y SALIDA DE MODO HORIZONTAL
-    function triggerBoxFullscreen(btnEl) {
-      const vBox = btnEl.closest('.video-box');
-      const overlay = vBox.querySelector('.video-overlay-controls');
-      
-      if (!document.fullscreenElement && !document.webkitFullscreenElement && !vBox.classList.contains('forced-fs')) {
-        if (vBox.requestFullscreen) {
-          vBox.requestFullscreen().then(() => {
-            if (screen.orientation && screen.orientation.lock) {
-              screen.orientation.lock('landscape').catch(() => {});
-            }
-            if (overlay) overlay.classList.add('hidden');
-          }).catch(() => {
-            forceVisualLandscape(vBox);
-            if (overlay) overlay.classList.add('hidden');
-          });
-        } else if (vBox.webkitRequestFullscreen) {
-          vBox.webkitRequestFullscreen();
-          if (overlay) overlay.classList.add('hidden');
-        } else {
-          forceVisualLandscape(vBox);
-          if (overlay) overlay.classList.add('hidden');
-        }
-      } else {
-        exitBoxFullscreen(vBox);
-      }
-    }
-
-    function exitBoxFullscreen(vBox) {
-      const overlay = vBox.querySelector('.video-overlay-controls');
-      if (document.fullscreenElement || document.webkitFullscreenElement) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
-      }
-      if (vBox.classList.contains('forced-fs')) {
-        vBox.classList.remove('forced-fs');
-        vBox.style.position = '';
-        vBox.style.inset = '';
-        vBox.style.width = '';
-        vBox.style.height = '';
-        vBox.style.zIndex = '';
-        vBox.style.borderRadius = '';
-        vBox.style.margin = '';
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock().catch(() => {});
-        }
-      }
-      if (overlay) overlay.classList.remove('hidden');
-    }
-
-    function forceVisualLandscape(vBox) {
-      const overlay = vBox.querySelector('.video-overlay-controls');
-      if (!vBox.classList.contains('forced-fs')) {
-        vBox.classList.add('forced-fs');
-        vBox.style.position = 'fixed';
-        vBox.style.inset = '0';
-        vBox.style.width = '100vw';
-        vBox.style.height = '100vh';
-        vBox.style.zIndex = '99999999';
-        vBox.style.borderRadius = '0';
-        vBox.style.margin = '0';
-        if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock('landscape').catch(() => {});
-        }
-        if (overlay) overlay.classList.add('hidden');
-      }
-    }
-
-    function exitPlayerOrLandscape(btnEl) {
-      const vBox = btnEl.closest('.video-box');
-      if (vBox.classList.contains('forced-fs') || document.fullscreenElement || document.webkitFullscreenElement) {
-        exitBoxFullscreen(vBox);
-      } else {
-        // Cerrar el reproductor actual / modal abierto
-        if (document.getElementById('episodeModal').style.display === 'flex') {
-          closeEpisodePlayer();
-        } else if (document.getElementById('detailModal').style.display === 'flex') {
-          closeModal('detailModal');
-        }
-      }
-    }
 
     function switchView(viewName) {
       const searchInput = document.getElementById('searchInput');
@@ -1450,7 +1440,21 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON BOTÓN SALIR Y PANTALLA COMPLETA INTELIGENTE */
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "00:00";
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = Math.floor(seconds % 60);
+      const mStr = m < 10 ? "0" + m : m;
+      const sStr = s < 10 ? "0" + s : s;
+      if (h > 0) {
+        const hStr = h < 10 ? "0" + h : h;
+        return `${hStr}:${mStr}:${sStr}`;
+      }
+      return `${mStr}:${sStr}`;
+    }
+
+    /* MOTOR DEL REPRODUCTOR NATIVO PERSONALIZADO (ESTILO IMAGEN) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1458,74 +1462,215 @@
       }
 
       let cleanUrl = vInput.trim();
-      let innerContent = '';
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      if (cleanUrl.includes('<iframe')) {
-        innerContent = cleanUrl.replace(/<iframe/i, `<iframe ${iframeAttributes}>`);
-      } else if (cleanUrl.includes('dropbox.com')) {
-        let embedDropboxUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
-        if (cleanUrl.includes('/scl/fi/')) {
-          embedDropboxUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
-          if (!embedDropboxUrl.includes('raw=1')) embedDropboxUrl += (embedDropboxUrl.includes('?') ? '&' : '?') + 'raw=1';
-        }
-        innerContent = `<iframe src="${embedDropboxUrl}" ${iframeAttributes}></iframe>`;
-      } else if (cleanUrl.includes('voe.sx')) {
+      // Si es un iframe externo (VOE, OK.ru, Drive), se muestra como iframe
+      if (cleanUrl.includes('<iframe') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
-        if (!embedUrl.includes('/e/')) {
-          const parts = embedUrl.split('voe.sx/');
+        if (cleanUrl.includes('dropbox.com')) {
+          embedUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+        } else if (cleanUrl.includes('voe.sx') && !cleanUrl.includes('/e/')) {
+          const parts = cleanUrl.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1].split(/[?#/]/)[0]}`;
-        }
-        innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
-      } else if (cleanUrl.includes('ok.ru')) {
-        let embedUrl = cleanUrl;
-        if (!embedUrl.includes('videoembed')) {
-          const match = embedUrl.match(/\/video\/([0-9]+)/);
+        } else if (cleanUrl.includes('ok.ru') && !cleanUrl.includes('videoembed')) {
+          const match = cleanUrl.match(/\/video\/([0-9]+)/);
           if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
+        } else if (cleanUrl.includes('drive.google.com')) {
+          let fileId = '';
+          const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) fileId = match[1];
+          else {
+            const urlParams = new URLSearchParams(cleanUrl.split('?')[1]);
+            if (urlParams.get('id')) fileId = urlParams.get('id');
+          }
+          embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         }
-        innerContent = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
-      } else if (cleanUrl.includes('drive.google.com')) {
-        let fileId = '';
-        const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-          fileId = match[1];
-        } else {
-          const urlParams = new URLSearchParams(cleanUrl.split('?')[1]);
-          if (urlParams.get('id')) fileId = urlParams.get('id');
-        }
-        const embedDriveUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-        innerContent = `<iframe src="${embedDriveUrl}" ${iframeAttributes}></iframe>`;
-      } else {
-        innerContent = `<video src="${cleanUrl}" controls autoplay></video>`;
+        
+        vBox.innerHTML = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
+        return;
       }
 
-      vBox.innerHTML = innerContent + `
-        <div class="video-overlay-controls">
-          <button class="btn-exit-player" onclick="exitPlayerOrLandscape(this)">✕ Salir</button>
-          <button onclick="triggerBoxFullscreen(this)">Pantalla completa</button>
+      // Si es un enlace directo (.mp4 o Dropbox raw), creamos el reproductor nativo estilizado como en la imagen
+      if (cleanUrl.includes('dropbox.com') && !cleanUrl.includes('raw=1')) {
+        cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+      }
+
+      vBox.innerHTML = `
+        <div class="custom-player-wrapper" id="customPlayer">
+          <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
+          <div class="center-play-pause-indicator" id="centerIndicator">❚❚</div>
+          
+          <div class="custom-progress-container" id="progressContainer">
+            <div class="custom-progress-filled" id="progressFilled"></div>
+          </div>
+
+          <div class="custom-controls-bar" id="controlsBar">
+            <div class="controls-left">
+              <button id="playPauseBtn" title="Reproducir/Pausar">
+                <svg id="playIcon" viewBox="0 0 24 24" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <svg id="pauseIcon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+              </button>
+              <button onclick="skipTime(-10)" title="Retroceder 10s">
+                <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"></path></svg>
+              </button>
+              <button onclick="skipTime(10)" title="Adelantar 10s">
+                <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6-8.5-6z"></path></svg>
+              </button>
+              <button id="muteBtn" title="Silenciar">
+                <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              </button>
+              <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+            </div>
+            <div class="controls-right">
+              <button class="btn-exit-custom" onclick="exitCustomPlayer(this)">Salir</button>
+              <button onclick="toggleSettings()" title="Ajustes">⚙️</button>
+              <button onclick="togglePiP()" title="Picture in Picture">🗗</button>
+              <button onclick="toggleCustomFullscreen(this)" title="Pantalla Completa">⛶</button>
+            </div>
+          </div>
         </div>
       `;
 
-      let hideTimeout = null;
-      const overlay = vBox.querySelector('.video-overlay-controls');
+      const video = vBox.querySelector('#nativeVideo');
+      const playPauseBtn = vBox.querySelector('#playPauseBtn');
+      const playIcon = vBox.querySelector('#playIcon');
+      const pauseIcon = vBox.querySelector('#pauseIcon');
+      const centerIndicator = vBox.querySelector('#centerIndicator');
+      const progressContainer = vBox.querySelector('#progressContainer');
+      const progressFilled = vBox.querySelector('#progressFilled');
+      const timeDisplay = vBox.querySelector('#timeDisplay');
+      const controlsBar = vBox.querySelector('#controlsBar');
+      const playerWrapper = vBox.querySelector('#customPlayer');
 
-      function hideControlsSoon() {
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(() => {
-          overlay.classList.add('hidden');
+      let hideTimer = null;
+
+      function showControlsForAWhile() {
+        controlsBar.classList.remove('hidden');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          if (!video.paused) {
+            controlsBar.classList.add('hidden');
+          }
         }, 3000);
       }
 
-      // Ocultar controles automáticamente tras 3 segundos
-      hideControlsSoon();
-
-      // Al tocar la pantalla, mostrar controles temporalmente
-      vBox.addEventListener('click', (e) => {
-        if (!e.target.closest('button')) {
-          overlay.classList.remove('hidden');
-          hideControlsSoon();
+      function togglePlay() {
+        if (video.paused) {
+          video.play();
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+          centerIndicator.innerText = "▶";
+          showControlsForAWhile();
+        } else {
+          video.pause();
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+          centerIndicator.innerText = "❚❚";
+          controlsBar.classList.remove('hidden');
         }
-      });
+        centerIndicator.classList.add('show');
+        setTimeout(() => centerIndicator.classList.remove('show'), 600);
+      }
+
+      playPauseBtn.onclick = togglePlay;
+      video.onclick = togglePlay;
+      playerWrapper.onclick = (e) => {
+        if (e.target === playerWrapper || e.target === video) {
+          togglePlay();
+        }
+      };
+
+      video.ontimeupdate = () => {
+        const current = video.currentTime;
+        const duration = video.duration || 0;
+        const percent = duration > 0 ? (current / duration) * 100 : 0;
+        progressFilled.style.width = percent + '%';
+        timeDisplay.innerText = `${formatTime(current)} / ${formatTime(duration)}`;
+      };
+
+      progressContainer.onclick = (e) => {
+        const rect = progressContainer.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        if (video.duration) {
+          video.currentTime = pos * video.duration;
+        }
+      };
+
+      showControlsForAWhile();
+    }
+
+    function skipTime(seconds) {
+      const video = document.getElementById('nativeVideo');
+      if (video) video.currentTime += seconds;
+    }
+
+    function toggleSettings() {
+      alert("Ajustes de reproducción predeterminados de NaPlus.");
+    }
+
+    async function togglePiP() {
+      const video = document.getElementById('nativeVideo');
+      if (video && document.pictureInPictureEnabled) {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture();
+        } else {
+          await video.requestPictureInPicture();
+        }
+      }
+    }
+
+    function toggleCustomFullscreen(btn) {
+      const wrapper = btn.closest('.custom-player-wrapper');
+      if (!document.fullscreenElement && !document.webkitFullscreenElement && !wrapper.classList.contains('forced-fs')) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock('landscape').catch(() => {});
+            }
+          }).catch(() => forceVisualLandscapeCustom(wrapper));
+        } else if (wrapper.webkitRequestFullscreen) {
+          wrapper.webkitRequestFullscreen();
+        } else {
+          forceVisualLandscapeCustom(wrapper);
+        }
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else forceVisualLandscapeCustom(wrapper);
+      }
+    }
+
+    function forceVisualLandscapeCustom(wrapper) {
+      if (!wrapper.classList.contains('forced-fs')) {
+        wrapper.classList.add('forced-fs');
+        wrapper.style.position = 'fixed';
+        wrapper.style.inset = '0';
+        wrapper.style.width = '100vw';
+        wrapper.style.height = '100vh';
+        wrapper.style.zIndex = '99999999';
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
+      } else {
+        wrapper.classList.remove('forced-fs');
+        wrapper.style.position = '';
+        wrapper.style.inset = '';
+        wrapper.style.width = '';
+        wrapper.style.height = '';
+        wrapper.style.zIndex = '';
+      }
+    }
+
+    function exitCustomPlayer(btn) {
+      const wrapper = btn.closest('.custom-player-wrapper');
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        document.exitFullscreen();
+      }
+      if (document.getElementById('episodeModal').style.display === 'flex') {
+        closeEpisodePlayer();
+      } else if (document.getElementById('detailModal').style.display === 'flex') {
+        closeModal('detailModal');
+      }
     }
 
     renderHomeSections();
