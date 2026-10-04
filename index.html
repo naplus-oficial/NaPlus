@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO Y PANTALLA COMPLETA TOTALMENTE FORZADA */
+    /* CONTENEDOR DE VIDEO Y OCULTAMIENTO AUTOMÁTICO DEL BOTÓN EN PANTALLA COMPLETA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -497,22 +497,12 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
-    /* Estilos cuando la caja entra en modo pantalla completa nativa */
-    .video-box:fullscreen, .video-box:-webkit-full-screen {
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: none !important;
-      max-height: none !important;
-      border: none !important;
-      border-radius: 0 !important;
-      margin: 0 !important;
-      background: #000 !important;
-    }
-    .video-box:fullscreen iframe, .video-box:fullscreen video,
-    .video-box:-webkit-full-screen iframe, .video-box:-webkit-full-screen video {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain !important;
+    /* Cuando la caja está en pantalla completa (o forzada), el botón desaparece por completo */
+    .video-box:fullscreen .fullscreen-trigger-btn,
+    .video-box:-webkit-full-screen .fullscreen-trigger-btn,
+    .video-box:-moz-full-screen .fullscreen-trigger-btn,
+    .video-box.forced-fs .fullscreen-trigger-btn {
+      display: none !important;
     }
 
     .video-box iframe, .video-box video { 
@@ -529,19 +519,19 @@
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: #7c3aed;
-      border: 2px solid #fff;
+      background: rgba(124, 58, 237, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: #fff;
-      padding: 9px 18px;
-      border-radius: 25px;
-      font-size: 0.8rem;
-      font-weight: 800;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
       cursor: pointer;
       z-index: 999999;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
     .fullscreen-trigger-btn:active { transform: scale(0.95); }
 
@@ -872,7 +862,7 @@
       }
     });
 
-    // SISTEMA DE PANTALLA COMPLETA A NIVEL DE CONTENEDOR CON BLOQUEO HORIZONTAL
+    // SISTEMA DE PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL (OCULTA EL BOTÓN AUTOMÁTICAMENTE)
     function triggerBoxFullscreen(btnEl) {
       const vBox = btnEl.closest('.video-box');
       
@@ -1416,7 +1406,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON BOTÓN FLOTANTE DE PANTALLA COMPLETA TOTAL */
+    /* MOTOR DE REPRODUCCIÓN CON BOTÓN "Pantalla completa" QUE SE OCULTA AUTOMÁTICAMENTE */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1467,7 +1457,7 @@
 
       vBox.innerHTML = innerContent + `
         <button class="fullscreen-trigger-btn" onclick="triggerBoxFullscreen(this)">
-          ⛶ Pantalla Completa / Horizontal
+          Pantalla completa
         </button>
       `;
     }
