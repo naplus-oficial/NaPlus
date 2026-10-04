@@ -384,7 +384,7 @@
       overflow-y: auto;
     }
 
-    /* NUEVO DISEÑO MODAL SERIE (Inspirado en la imagen de referencia) */
+    /* MODAL SERIE */
     .modal-box-series {
       background: #07040d;
       padding: 0;
@@ -471,7 +471,6 @@
       font-weight: 500;
     }
 
-    /* BOTÓN REPRODUCIR PRINCIPAL */
     .stream-play-main-btn {
       background: #ffffff;
       color: #000000;
@@ -490,7 +489,6 @@
       box-shadow: 0 4px 12px rgba(255,255,255,0.15);
     }
 
-    /* BOTONES SECUNDARIOS (TRÁILER / MI LISTA) */
     .stream-actions-row {
       display: flex;
       justify-content: center;
@@ -541,7 +539,7 @@
       display: inline-block;
     }
 
-    /* PESTAÑAS (EPISODIOS / EXTRAS) */
+    /* PESTAÑAS (Solo Episodios ahora) */
     .stream-tabs-bar {
       display: flex;
       border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -550,16 +548,13 @@
     }
     .stream-tab {
       background: none; border: none;
-      color: var(--text-gray);
+      color: #fff;
       font-size: 0.95rem; font-weight: 700;
       padding: 10px 0;
       cursor: pointer;
       position: relative;
     }
-    .stream-tab.active {
-      color: #fff;
-    }
-    .stream-tab.active::after {
+    .stream-tab::after {
       content: '';
       position: absolute;
       bottom: -1px; left: 0; right: 0;
@@ -568,7 +563,6 @@
       border-radius: 3px 3px 0 0;
     }
 
-    /* CONTENEDOR DE SELECTOR DE TEMPORADA Y EPISODIOS */
     .stream-content-area {
       padding: 20px;
     }
@@ -587,14 +581,8 @@
       outline: none;
       cursor: pointer;
     }
-    .stream-download-all {
-      background: none; border: none;
-      color: #fff; font-size: 0.8rem; font-weight: 600;
-      display: flex; align-items: center; gap: 6px;
-      cursor: pointer;
-    }
 
-    /* LISTA DE EPISODIOS (Estilo Disney+/Max exacto a la imagen) */
+    /* LISTA DE EPISODIOS */
     .stream-episodes-list {
       display: flex;
       flex-direction: column;
@@ -638,11 +626,6 @@
     .stream-ep-duration {
       font-size: 0.75rem;
       color: var(--text-gray);
-    }
-    .stream-ep-download-icon {
-      background: none; border: none;
-      color: #fff; font-size: 1.1rem;
-      cursor: pointer; padding: 10px;
     }
     .stream-edit-ep-btn {
       display: none;
@@ -799,7 +782,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE SERIE (Nuevo diseño exacto a imagen de referencia) -->
+  <!-- MODAL DETALLE SERIE -->
   <div class="modal-box-series" id="seriesModal">
     <div class="stream-top-actions">
       <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
@@ -824,7 +807,7 @@
         </button>
 
         <div class="stream-actions-row">
-          <button class="stream-action-ico-btn" onclick="alert('Tráiler no disponible')">
+          <button class="stream-action-ico-btn" onclick="playTrailer()">
             <div class="stream-action-ico-circle">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </div>
@@ -843,24 +826,20 @@
       </div>
     </div>
 
-    <!-- Pestañas -->
+    <!-- Pestaña Episodios -->
     <div class="stream-tabs-bar">
-      <button class="stream-tab active">Episodios</button>
-      <button class="stream-tab" onclick="alert('No hay extras adicionales')">Extras</button>
+      <button class="stream-tab">Episodios</button>
     </div>
 
     <div class="stream-content-area">
       <div class="stream-season-row">
         <select id="seasonSelect" class="stream-season-select" onchange="renderEpisodesForSelectedSeason()"></select>
-        <button class="stream-download-all" onclick="alert('Descarga completada')">
-          Descargar todos ⬇
-        </button>
       </div>
       <div class="stream-episodes-list" id="episodesListContainer"></div>
     </div>
   </div>
 
-  <!-- MODAL REPRODUCTOR DE EPISODIO -->
+  <!-- MODAL REPRODUCTOR DE EPISODIO / TRÁILER -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 550px;">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
@@ -868,7 +847,7 @@
       <h3 id="epModalTitle"></h3>
       <p id="epModalDesc" style="color:var(--text-gray); font-size:0.8rem; margin-bottom:12px;"></p>
       <div class="form-actions">
-        <button class="btn-cancel" onclick="closeEpisodePlayer()">Volver a Episodios</button>
+        <button class="btn-cancel" onclick="closeEpisodePlayer()">Volver</button>
       </div>
     </div>
   </div>
@@ -906,6 +885,10 @@
         <div class="form-group">
           <label>URL de Portada</label>
           <input type="url" id="coverInput" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>URL de Tráiler de YouTube (opcional)</label>
+          <input type="url" id="trailerInput" placeholder="https://youtube.com/watch?v=...">
         </div>
 
         <div class="form-group" id="movieVideoGroup">
@@ -976,6 +959,7 @@
     "year": "2024",
     "desc": "El Chacal es un escurridizo asesino de élite que mata por encargo, con una precisión letal. Sin embargo, tras su última misión, se topa con una tenaz oficial de inteligencia británica que comienza a rastrear su pista por toda Europa.",
     "cover": "https://image.tmdb.org/t/p/original/e7QdDLU3VNAZlS8546MSqSqJoLt.jpg",
+    "trailer": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "video": "",
     "seasons": [
       {
@@ -1638,7 +1622,7 @@
           },
           {
             "num": 7,
-            "title": "Susan es la nueva negra",
+            "title": "Susan is la nueva negra",
             "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
             "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
             "video": "https://ok.ru/video/16679640173275"
@@ -2638,6 +2622,7 @@
       document.getElementById('yearInput').value = item ? item.year : '2026';
       document.getElementById('descInput').value = item ? item.desc : '';
       document.getElementById('coverInput').value = item ? item.cover : '';
+      document.getElementById('trailerInput').value = item && item.trailer ? item.trailer : '';
       document.getElementById('videoInput').value = item && item.video ? item.video : '';
 
       toggleContentTypeFields();
@@ -2755,6 +2740,7 @@
         year: document.getElementById('yearInput').value,
         desc: document.getElementById('descInput').value.trim(),
         cover: document.getElementById('coverInput').value.trim(),
+        trailer: document.getElementById('trailerInput').value.trim(),
         video: type === 'movie' ? document.getElementById('videoInput').value.trim() : '',
         seasons: type === 'series' ? seasonsData : [],
         views: id ? (catalog.find(x => x.id == id)?.views || 0) : Math.floor(Math.random() * 500) + 50,
@@ -2958,9 +2944,8 @@
           <div class="stream-ep-info" onclick="playEpisode(${sIdx}, ${eIdx})">
             <div class="stream-ep-title">${epNumDisplay}. ${ep.title || 'Capítulo ' + epNumDisplay}</div>
             <div class="stream-ep-duration">20min</div>
-            <button class="stream-edit-ep-btn" onclick="event.stopPropagation(); openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏️️ Editar</button>
+            <button class="stream-edit-ep-btn" onclick="event.stopPropagation(); openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏ Editar</button>
           </div>
-          <button class="stream-ep-download-icon" onclick="alert('Descarga iniciada')" title="Descargar">⬇</button>
         `;
         fragment.appendChild(itemDiv);
       });
@@ -2974,6 +2959,19 @@
       const firstSeason = currentSeriesData.seasons[0];
       if (!firstSeason.episodes || !firstSeason.episodes.length) return;
       playEpisode(0, 0);
+    }
+
+    function playTrailer() {
+      if (!currentSeriesData || !currentSeriesData.trailer) {
+        alert("Este contenido no tiene un tráiler disponible.");
+        return;
+      }
+      document.getElementById('seriesModal').style.display = 'none';
+      document.getElementById('epModalTitle').innerText = `Tráiler: ${currentSeriesData.title}`;
+      document.getElementById('epModalDesc').innerText = "";
+      const vBox = document.getElementById('episodeVideoBox');
+      renderVideoInBox(vBox, currentSeriesData.trailer);
+      document.getElementById('episodeModal').style.display = 'flex';
     }
 
     function openSingleEpisodeEdit(seasonIdx, epIdx) {
@@ -3061,6 +3059,31 @@
           iframeEl.setAttribute('mozallowfullscreen', '');
           iframeEl.setAttribute('scrolling', 'no');
         }
+        return;
+      }
+
+      if (vInput.includes('youtube.com') || vInput.includes('youtu.be')) {
+        let embedUrl = vInput.trim();
+        if (embedUrl.includes('watch?v=')) {
+          const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        } else if (embedUrl.includes('youtu.be/')) {
+          const videoId = embedUrl.split('youtu.be/')[1].split(/[?#]/)[0];
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        } else if (!embedUrl.includes('/embed/')) {
+          embedUrl = embedUrl.replace('watch?v=', 'embed/');
+        }
+        vBox.innerHTML = `
+          <iframe 
+            src="${embedUrl}" 
+            frameborder="0" 
+            scrolling="no"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen
+            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
+          </iframe>`;
         return;
       }
 
