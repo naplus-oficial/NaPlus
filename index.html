@@ -212,15 +212,14 @@
 
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); backdrop-filter: blur(8px);
-      z-index: 2000; padding: 10px; align-items: flex-start; justify-content: center; overflow-y: auto;
+      background: rgba(0,0,0,0.96); backdrop-filter: blur(8px);
+      z-index: 2000; padding: 6px; align-items: flex-start; justify-content: center; overflow-y: auto;
     }
 
-    /* Modal optimizado para que el reproductor quede arriba a la vista sin hacer scroll */
     .modal-box {
-      background: #0b0614; padding: 10px; border-radius: 12px;
-      width: 100%; max-width: 600px; border: 1px solid var(--border-purple);
-      position: relative; margin-top: 10px; max-height: 98vh; overflow-y: auto;
+      background: #0b0614; padding: 8px; border-radius: 12px;
+      width: 100%; max-width: 650px; border: 1px solid var(--border-purple);
+      position: relative; margin-top: 5px; max-height: 98vh; overflow-y: auto;
       box-shadow: 0 25px 50px rgba(0,0,0,0.9);
       display: flex; flex-direction: column; gap: 6px;
     }
@@ -232,11 +231,11 @@
     }
 
     .btn-close {
-      position: absolute; top: 8px; right: 8px;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-      color: #fff; border: 1px solid rgba(255,255,255,0.2);
-      width: 30px; height: 30px; border-radius: 50%;
-      font-size: 0.8rem; cursor: pointer; z-index: 2250;
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      color: #fff; border: 1px solid rgba(255,255,255,0.25);
+      width: 32px; height: 32px; border-radius: 50%;
+      font-size: 0.85rem; cursor: pointer; z-index: 2250;
       display: flex; align-items: center; justify-content: center;
     }
 
@@ -484,11 +483,11 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO ARRIBA */
+    /* CONTENEDOR DE VIDEO AMPLIADO ARRIBA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
-      max-height: 42vh;
+      max-height: 75vh;
       background: #000; 
       margin-bottom: 2px; 
       border-radius: 8px; 
@@ -509,7 +508,41 @@
       top: 0; left: 0;
     }
 
-    /* REPRODUCTOR PERSONALIZADO ESTILO IMAGEN */
+    /* BARRA DE SUPERPOSICIÓN UNIVERSAL (PARA PANTALLA COMPLETA Y SALIR EN IFRAMES Y NATIVOS) */
+    .iframe-overlay-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 45px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+      z-index: 99999;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .iframe-overlay-bar.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .iframe-overlay-bar button {
+      background: rgba(124, 58, 237, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-iframe-fs {
+      background: #22c55e !important;
+      border-color: rgba(255,255,255,0.6) !important;
+    }
+
+    /* REPRODUCTOR PERSONALIZADO ESTILO IMAGEN PARA .MP4 */
     .custom-player-wrapper {
       position: relative;
       width: 100%;
@@ -650,7 +683,7 @@
 
     @media (max-width: 600px) {
       #detailModal .modal-box {
-        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 6px; margin-top: 0;
+        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 4px; margin-top: 0;
       }
       .series-main-title { font-size: 1.8rem; }
     }
@@ -741,7 +774,7 @@
       <h3 id="detailTitle" style="font-size: 0.95rem; margin-top: 2px;"></h3>
       <p id="detailMeta" style="color:var(--accent-light); font-size:0.7rem;"></p>
       <p id="detailViews" style="color:var(--text-gray); font-size:0.6rem;"></p>
-      <p id="detailDesc" style="color:var(--text-gray); font-size:0.7rem; line-height: 1.2; max-height: 40px; overflow-y: auto;"></p>
+      <p id="detailDesc" style="color:var(--text-gray); font-size:0.7rem; line-height: 1.2; max-height: 35px; overflow-y: auto;"></p>
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal('detailModal')">Cerrar</button>
       </div>
@@ -786,7 +819,7 @@
   <!-- MODAL REPRODUCTOR DE EPISODIOS -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box">
-      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 9999999; top: 8px; right: 8px;">✕</button>
+      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 9999999; top: 6px; right: 6px;">✕</button>
       <div class="video-box" id="episodeVideoBox"></div>
     </div>
   </div>
@@ -1451,7 +1484,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR INTELIGENTE DE REPRODUCTOR (IFRAME PARA CLOUD / VIDEO NATIVO PARA .MP4) */
+    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON BARRA FLOTANTE PARA HORIZONTAL EN IFRAMES Y NATIVO) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1461,7 +1494,7 @@
       let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe integrado
+      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe con barra superior integrada
       if (cleanUrl.includes('<iframe') || cleanUrl.includes('dropbox.com') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
         if (cleanUrl.includes('dropbox.com')) {
@@ -1487,14 +1520,37 @@
         }
 
         vBox.innerHTML = `
-          <div style="position:relative; width:100%; height:100%;">
+          <div style="position:relative; width:100%; height:100%;" id="iframeWrapper">
+            <div class="iframe-overlay-bar" id="iframeOverlayBar">
+              <button class="btn-exit-custom" onclick="exitCustomPlayer(this)">✕ Salir</button>
+              <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Horizontal / Pantalla Completa</button>
+            </div>
             <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
           </div>
         `;
+
+        const wrapper = vBox.querySelector('#iframeWrapper');
+        const bar = vBox.querySelector('#iframeOverlayBar');
+        let hideTimer = null;
+
+        function showBar() {
+          bar.classList.remove('hidden');
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(() => {
+            bar.classList.add('hidden');
+          }, 3500);
+        }
+
+        showBar();
+        wrapper.onclick = (e) => {
+          if (!e.target.closest('button')) {
+            showBar();
+          }
+        };
         return;
       }
 
-      // Si es un archivo de video directo (.mp4), se renderiza con el reproductor personalizado estilo imagen
+      // Si es un archivo de video directo (.mp4), se renderiza con el reproductor personalizado
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
@@ -1599,6 +1655,27 @@
       if (video) video.currentTime += seconds;
     }
 
+    function toggleIframeFullscreen(btn) {
+      const wrapper = btn.closest('#iframeWrapper');
+      if (!document.fullscreenElement && !document.webkitFullscreenElement && !wrapper.classList.contains('forced-fs')) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock('landscape').catch(() => {});
+            }
+          }).catch(() => forceVisualLandscapeCustom(wrapper));
+        } else if (wrapper.webkitRequestFullscreen) {
+          wrapper.webkitRequestFullscreen();
+        } else {
+          forceVisualLandscapeCustom(wrapper);
+        }
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else forceVisualLandscapeCustom(wrapper);
+      }
+    }
+
     function toggleCustomFullscreen(btn) {
       const wrapper = btn.closest('.custom-player-wrapper');
       if (!document.fullscreenElement && !document.webkitFullscreenElement && !wrapper.classList.contains('forced-fs')) {
@@ -1642,7 +1719,6 @@
     }
 
     function exitCustomPlayer(btn) {
-      const wrapper = btn.closest('.custom-player-wrapper');
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         document.exitFullscreen();
       }
