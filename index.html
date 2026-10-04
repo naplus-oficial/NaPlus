@@ -212,16 +212,17 @@
 
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
-      z-index: 2000; padding: 10px; align-items: center; justify-content: center; overflow: hidden;
+      background: rgba(0,0,0,0.95); backdrop-filter: blur(8px);
+      z-index: 2000; padding: 10px; align-items: flex-start; justify-content: center; overflow-y: auto;
     }
 
+    /* Modal optimizado para que el reproductor quede arriba a la vista sin hacer scroll */
     .modal-box {
       background: #0b0614; padding: 10px; border-radius: 12px;
-      width: 100%; max-width: 550px; border: 1px solid var(--border-purple);
-      position: relative; max-height: 98vh; overflow-y: auto;
+      width: 100%; max-width: 600px; border: 1px solid var(--border-purple);
+      position: relative; margin-top: 10px; max-height: 98vh; overflow-y: auto;
       box-shadow: 0 25px 50px rgba(0,0,0,0.9);
-      display: flex; flex-direction: column; gap: 4px;
+      display: flex; flex-direction: column; gap: 6px;
     }
 
     .modal-box-series {
@@ -483,7 +484,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO NATIVO CON DISEÑO PERSONALIZADO ESTILO REPRODUCTOR */
+    /* CONTENEDOR DE VIDEO ARRIBA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -508,7 +509,7 @@
       top: 0; left: 0;
     }
 
-    /* ESTILOS DEL REPRODUCTOR NATIVO PERSONALIZADO (IDÉNTICO A LA IMAGEN) */
+    /* REPRODUCTOR PERSONALIZADO ESTILO IMAGEN */
     .custom-player-wrapper {
       position: relative;
       width: 100%;
@@ -526,13 +527,12 @@
       object-fit: contain;
     }
 
-    /* Icono central grande de pausa / play al tocar */
     .center-play-pause-indicator {
       position: absolute;
-      font-size: 3.5rem;
+      font-size: 3rem;
       color: var(--player-green);
       background: rgba(0, 0, 0, 0.6);
-      width: 80px; height: 80px;
+      width: 70px; height: 70px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       opacity: 0;
@@ -544,12 +544,11 @@
       opacity: 1;
     }
 
-    /* Barra de progreso superior en la línea inferior del video */
     .custom-progress-container {
       position: absolute;
-      bottom: 45px;
-      left: 12px;
-      right: 12px;
+      bottom: 42px;
+      left: 10px;
+      right: 10px;
       height: 4px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 2px;
@@ -564,16 +563,15 @@
       position: relative;
     }
 
-    /* Barra de controles inferior */
     .custom-controls-bar {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 45px;
-      background: rgba(0, 0, 0, 0.85);
+      height: 42px;
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 0 10px;
       z-index: 10;
       color: var(--player-green);
       font-size: 0.8rem;
@@ -588,34 +586,33 @@
     .controls-left, .controls-right {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .custom-controls-bar button {
       background: none;
       border: none;
       color: var(--player-green);
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .custom-controls-bar button svg {
-      width: 18px; height: 18px;
+      width: 17px; height: 17px;
       fill: var(--player-green);
     }
 
     .time-display {
       font-family: monospace;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--player-green);
-      letter-spacing: 0.5px;
     }
 
     .btn-exit-custom {
-      background: rgba(239, 68, 68, 0.2) !important;
-      border: 1px solid rgba(239, 68, 68, 0.5) !important;
+      background: rgba(239, 68, 68, 0.25) !important;
+      border: 1px solid rgba(239, 68, 68, 0.6) !important;
       color: #ef4444 !important;
       padding: 3px 8px;
       border-radius: 4px;
@@ -653,7 +650,7 @@
 
     @media (max-width: 600px) {
       #detailModal .modal-box {
-        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 8px; justify-content: flex-start;
+        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 6px; margin-top: 0;
       }
       .series-main-title { font-size: 1.8rem; }
     }
@@ -741,10 +738,10 @@
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
       <div class="video-box" id="videoBox"></div>
-      <h3 id="detailTitle" style="font-size: 1rem; margin-top: 2px;"></h3>
+      <h3 id="detailTitle" style="font-size: 0.95rem; margin-top: 2px;"></h3>
       <p id="detailMeta" style="color:var(--accent-light); font-size:0.7rem;"></p>
       <p id="detailViews" style="color:var(--text-gray); font-size:0.6rem;"></p>
-      <p id="detailDesc" style="color:var(--text-gray); font-size:0.7rem; line-height: 1.2; max-height: 45px; overflow-y: auto;"></p>
+      <p id="detailDesc" style="color:var(--text-gray); font-size:0.7rem; line-height: 1.2; max-height: 40px; overflow-y: auto;"></p>
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal('detailModal')">Cerrar</button>
       </div>
@@ -789,7 +786,7 @@
   <!-- MODAL REPRODUCTOR DE EPISODIOS -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box">
-      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 9999999; top: 10px; right: 10px;">✕</button>
+      <button class="btn-close" onclick="closeEpisodePlayer()" style="z-index: 9999999; top: 8px; right: 8px;">✕</button>
       <div class="video-box" id="episodeVideoBox"></div>
     </div>
   </div>
@@ -1454,7 +1451,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* MOTOR DEL REPRODUCTOR NATIVO PERSONALIZADO (ESTILO IMAGEN) */
+    /* GESTOR INTELIGENTE DE REPRODUCTOR (IFRAME PARA CLOUD / VIDEO NATIVO PARA .MP4) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1464,11 +1461,14 @@
       let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es un iframe externo (VOE, OK.ru, Drive), se muestra como iframe
-      if (cleanUrl.includes('<iframe') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
+      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe integrado
+      if (cleanUrl.includes('<iframe') || cleanUrl.includes('dropbox.com') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
         if (cleanUrl.includes('dropbox.com')) {
           embedUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+          if (cleanUrl.includes('/scl/fi/')) {
+            embedUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+          }
         } else if (cleanUrl.includes('voe.sx') && !cleanUrl.includes('/e/')) {
           const parts = cleanUrl.split('voe.sx/');
           if (parts[1]) embedUrl = `https://voe.sx/e/${parts[1].split(/[?#/]/)[0]}`;
@@ -1485,16 +1485,16 @@
           }
           embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
         }
-        
-        vBox.innerHTML = `<iframe src="${embedUrl}" ${iframeAttributes}></iframe>`;
+
+        vBox.innerHTML = `
+          <div style="position:relative; width:100%; height:100%;">
+            <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
+          </div>
+        `;
         return;
       }
 
-      // Si es un enlace directo (.mp4 o Dropbox raw), creamos el reproductor nativo estilizado como en la imagen
-      if (cleanUrl.includes('dropbox.com') && !cleanUrl.includes('raw=1')) {
-        cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
-      }
-
+      // Si es un archivo de video directo (.mp4), se renderiza con el reproductor personalizado estilo imagen
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
@@ -1516,15 +1516,10 @@
               <button onclick="skipTime(10)" title="Adelantar 10s">
                 <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6-8.5-6z"></path></svg>
               </button>
-              <button id="muteBtn" title="Silenciar">
-                <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-              </button>
               <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
             </div>
             <div class="controls-right">
               <button class="btn-exit-custom" onclick="exitCustomPlayer(this)">Salir</button>
-              <button onclick="toggleSettings()" title="Ajustes">⚙️</button>
-              <button onclick="togglePiP()" title="Picture in Picture">🗗</button>
               <button onclick="toggleCustomFullscreen(this)" title="Pantalla Completa">⛶</button>
             </div>
           </div>
@@ -1602,21 +1597,6 @@
     function skipTime(seconds) {
       const video = document.getElementById('nativeVideo');
       if (video) video.currentTime += seconds;
-    }
-
-    function toggleSettings() {
-      alert("Ajustes de reproducción predeterminados de NaPlus.");
-    }
-
-    async function togglePiP() {
-      const video = document.getElementById('nativeVideo');
-      if (video && document.pictureInPictureEnabled) {
-        if (document.pictureInPictureElement) {
-          await document.exitPictureInPicture();
-        } else {
-          await video.requestPictureInPicture();
-        }
-      }
     }
 
     function toggleCustomFullscreen(btn) {
