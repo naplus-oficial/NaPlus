@@ -398,6 +398,7 @@
       overflow-y: auto;
       z-index: 2100;
       display: none;
+      -webkit-overflow-scrolling: touch;
     }
 
     .stream-header-bg {
@@ -564,7 +565,7 @@
     }
 
     .stream-content-area {
-      padding: 20px;
+      padding: 20px 20px 140px 20px; /* Padding inferior generoso para que nunca se corten los últimos episodios */
     }
     .stream-season-row {
       display: flex;
@@ -587,7 +588,6 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      padding-bottom: 50px;
     }
     .stream-ep-item {
       display: flex;
@@ -955,96 +955,6 @@
 
     let catalog = /*CATALOG_START*/[
   {
-    "id": 1791092456921,
-    "type": "series",
-    "title": "Coven Academy",
-    "genre": "Cienciaficción, Drama, Comedia",
-    "year": "2026",
-    "desc": "Jóvenes aprendices de bruja se unen para defender Nueva Orleans contra una fuerza oscura que se aproxima.",
-    "cover": "https://image.tmdb.org/t/p/w500/hcmeaEjGZE1mYfPp4KFd8mNgYbO.jpg",
-    "trailer": "https://youtu.be/2sKdv5utHok?si=5J2mk6GL3ggOV-CT",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "Educación de hechizos",
-            "img": "https://image.tmdb.org/t/p/w780/kM6xjNJcswdBqpAO6ctQaSiflZk.jpg",
-            "desc": "Briar llega a su nueva escuela y descubre un mundo mágico oculto en Nueva Orleans.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-academy:8"
-          },
-          {
-            "num": 2,
-            "title": "Sangre, sudor y miedos",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/110/c26b3489fdcaab7adab1fa89a032186b/579x325-Q100_c26b3489fdcaab7adab1fa89a032186b.jpg",
-            "desc": "Briar se escapa para unirse a Ollie en un tour de fantasmas.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E2:7"
-          },
-          {
-            "num": 3,
-            "title": "Madre de todos los secretos",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/109/c12bc10dbb6c07701cab136377cb234e/579x325-Q100_c12bc10dbb6c07701cab136377cb234e.jpg",
-            "desc": "Briar hace un descubrimiento sorprendente sobre su mamá.",
-            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261004_024730_63:8"
-          },
-          {
-            "num": 4,
-            "title": "Callejones sin salida",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/110/c26b3489fdcaab7adab1fa89a032186b/579x325-Q100_c26b3489fdcaab7adab1fa89a032186b.jpg",
-            "desc": "Briar se enfoca en un sospechoso de la muerte de su madre.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E4:9"
-          },
-          {
-            "num": 5,
-            "title": "Viaje de poder",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3NCeBOPxJLXqMRcYou2KE329GL0AgE-4jl4ve6ulJ3wR0GQLXt95jck0&s=10",
-            "desc": "Briar busca un aliado inesperado para recuperar sus poderes.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E5:c"
-          },
-          {
-            "num": 6,
-            "title": "Las rosas son rojas",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/104/a8d91d14ce7c972be500d827de7310c7/579x325-Q100_a8d91d14ce7c972be500d827de7310c7.jpg",
-            "desc": "Briar y Jake investigan nuevas pistas fuera de la escuela.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E6:d"
-          },
-          {
-            "num": 7,
-            "title": "Elige tu venado",
-            "img": "https://images.martincid.com/2026/09/mGFtH5pUXDd4hSXUfl8HnHlRWJV.jpg",
-            "desc": "Briar asiste a su primera fiesta del colegio.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E7:f"
-          },
-          {
-            "num": 8,
-            "title": "El juego de la adivinación",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/108/14ddd1e37053370d95f76e10a7b1782d/579x325-Q100_14ddd1e37053370d95f76e10a7b1782d.jpg",
-            "desc": "Briar encuentra un dispositivo extraño y Sasha descubre un secreto.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E8:401a01001b"
-          },
-          {
-            "num": 9,
-            "title": "Prueba de fuego",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/104/a8d91d14ce7c972be500d827de7310c7/579x325-Q100_a8d91d14ce7c972be500d827de7310c7.jpg",
-            "desc": "Las chicas enfrentan un examen difícil y Jake recurre a Mr. Cole.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E9:5"
-          },
-          {
-            "num": 10,
-            "title": "Distorsión temporal",
-            "img": "https://cdn1.edgedatg.com/aws/v2/abcf/CovenAcademy/video/101/c6790335a8af19c7042d631235b2d888/579x325-Q100_c6790335a8af19c7042d631235b2d888.jpg",
-            "desc": "Tegan ayuda a las chicas a descubrir el pasado.",
-            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E10:e"
-          }
-        ]
-      }
-    ],
-    "views": 213,
-    "dateAdded": 1791092456921
-  },
-  {
     "id": 1790955167205,
     "type": "series",
     "title": "El Chacal",
@@ -1052,7 +962,7 @@
     "year": "2024",
     "desc": "El Chacal es un escurridizo asesino de élite que mata por encargo, con una precisión letal. Sin embargo, tras su última misión, se topa con una tenaz oficial de inteligencia británica que comienza a rastrear su pista por toda Europa.",
     "cover": "https://image.tmdb.org/t/p/original/e7QdDLU3VNAZlS8546MSqSqJoLt.jpg",
-    "trailer": "https://youtu.be/HZ9d6uLr0Xk?si=CVCuCUBJyEu8v3eE",
+    "trailer": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "video": "",
     "seasons": [
       {
@@ -1063,7 +973,7 @@
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
             "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://odysee.com/@Romualdoignacio:0/Elchacal-1:5"
+            "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
           },
           {
             "num": 2,
@@ -1089,7 +999,7 @@
         ]
       }
     ],
-    "views": 192,
+    "views": 114,
     "dateAdded": 1790955167205
   },
   {
@@ -1122,7 +1032,7 @@
           {
             "num": 3,
             "title": "Destructor de mundos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10w_ZTSjnSeK44m5prWg%3A1790908764435&ei=XBm_arOQGrux5OUPp9uOwQI&oq=el+problema+de+los+tres+cuerpos+serie+capitulo+3&gs_lp=EhJtb2JpbGUtZ3dzLXdpei1pbWciMGVsIHByb2JsZW1hIGRlIGxvcyB0cmVzIGN1ZXJwb3Mgc2VyaWUgY2FwaXR1bG8gMzIIEAAYiQUYogRIxhFQowhYlQ1wAHgAkAEAmAF2oAHPAqoBAzAuM7gBA8gBAPgBAZgCA6AC6wLCAgcQIxjJAhgnwgIIEAAYgAQYogSYAwCIBgGSBwMwLjOgB8UJsgcDMC4zuAfrAsIHBzAuMS4xLjHIBxqACAE&sclient=mobile-gws-wiz-img#sv=CAMSVxoyKhBlLVlyV1lqUU1BUnFhLW5NMg5ZcldZalFNQVJxYS1uTToOS3RzQlAzWGpTRTBYU00gBCoXCgFzEhBlLVlyV1lqUU1BUnFhLW5NGAEwAUoECAEQAhgHIJX6urkGSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10",
             "desc": "Obsesionados con su misión en el juego virtual, Jin y Jack se apresuran para resolver un acertijo complejo. Sin embargo, el paso al siguiente nivel trae consecuencias desastrosas.",
             "video": "https://ok.ru/video/16684098587355"
           },
@@ -1136,7 +1046,7 @@
           {
             "num": 5,
             "title": "Juicio final",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10qOLCEdEz1hp00-GPGIG-3u1gWGdeiARGQBcrTwr5AWQKTVY06UMJWAgbFItvDrlVwOdjAMornqgKKeBV4RR62it_Ied5k4b2OjUkF96gdhW5Oa2RYKkqdz7-ppYUdtzNkV68Q1xBvXRQBkO9GlWFa4XFKWQ6metDEPfe1NvKmLL-CY9DMyPLB4XuWx0gQ&q=el+problema+de+los+tres+cuerpos+serie+capitulo+5&sa=X&ved=2ahUKEwiH39n3yZuXAxXSrJUCHT6nNWwQtKgLegQIEhAB&biw=384&bih=635&dpr=2.81#sv=CAMSVxoyKhBlLWlTd0pMVkhOamtsZWhNMg5pU3dKTFZITmprbGVoTToOVmh6ZHFiVGw4Z1hNVk0gBCoXCgFzEhBlLWlTd0pMVkhOamtsZWhNGAEwAUoECAEQAhgHIMj1_IIKSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10",
             "desc": "Mientras el nivel de amenaza aumenta, se pone en marcha una misión secreta en territorio peligroso para obtener información del enemigo. La Tierra recibe un mensaje aterrador.",
             "video": "https://ok.ru/video/16692258933467"
           },
@@ -1164,7 +1074,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 91,
     "dateAdded": 1790908626680
   },
   {
@@ -1274,7 +1184,7 @@
         ]
       }
     ],
-    "views": 327,
+    "views": 321,
     "dateAdded": 1790899010591
   },
   {
@@ -1321,7 +1231,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 93,
     "dateAdded": 1790897174446
   },
   {
@@ -1471,7 +1381,7 @@
         ]
       }
     ],
-    "views": 192,
+    "views": 190,
     "dateAdded": 1790869921110
   },
   {
@@ -1497,7 +1407,7 @@
     "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
     "video": "https://voe.sx/e/xctz9a4atwnh",
     "seasons": [],
-    "views": 366,
+    "views": 365,
     "dateAdded": 1790858421339
   },
   {
@@ -1523,7 +1433,7 @@
     "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
     "video": "https://voe.sx/e/jx8q5z1ls85u",
     "seasons": [],
-    "views": 540,
+    "views": 530,
     "dateAdded": 1790855769248
   },
   {
@@ -1549,7 +1459,7 @@
     "cover": "https://m.media-amazon.com/images/S/pv-target-images/97861408fdee827dc2691577544a58eb713a641b3bd0b51425c9e91a37dd8713.png",
     "video": "https://voe.sx/e/xkrbh6bha3bg",
     "seasons": [],
-    "views": 103,
+    "views": 102,
     "dateAdded": 1790852393903
   },
   {
@@ -1626,7 +1536,7 @@
           },
           {
             "num": 2,
-            "title": "Mis dos papás",
+            "title": "Mis dois papás",
             "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
             "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
             "video": "https://ok.ru/video/16671801936603"
@@ -1715,7 +1625,7 @@
           },
           {
             "num": 7,
-            "title": "Susan es la nueva negra",
+            "title": "Susan is la nueva negra",
             "img": "https://pixel.disco.nowtv.com/uuid/e94b1dd7-f990-44e7-ae0e-1764e5d813e9/LAND_16_9?language=en-GB&proposition=NOWOTT&version=db1dc664-8696-38aa-8567-de75cde37b41",
             "desc": "Un policía encuentra la marihuana de John y Ted. Susan asume la culpa y va a prisión, mientras la familia se adapta a la vida sin ella.",
             "video": "https://ok.ru/video/16679640173275"
@@ -1988,7 +1898,7 @@
         ]
       }
     ],
-    "views": 292,
+    "views": 291,
     "dateAdded": 1790783678102
   },
   {
@@ -2089,7 +1999,7 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
+    "id": 179069448763,
     "type": "movie",
     "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
     "genre": "Terror",
@@ -2110,7 +2020,7 @@
     "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
     "video": "https://voe.sx/e/g0xdl5xf7x30",
     "views": 361,
-    "dateAdded": 1790755820564
+    "dateAdded": 1790755820554
   },
   {
     "id": 1790754583454,
@@ -2194,7 +2104,7 @@
     "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
     "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
     "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 501,
+    "views": 500,
     "dateAdded": 1790646768137
   },
   {
