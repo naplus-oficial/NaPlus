@@ -25,9 +25,7 @@
 
     html { scroll-behavior: smooth; }
 
-    button {
-      transition: transform 0.15s ease;
-    }
+    button { transition: transform 0.15s ease; }
     button:active { transform: scale(0.95); }
 
     body {
@@ -38,7 +36,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* BARRA SUPERIOR FIJA / FLOTANTE */
+    /* BARRA SUPERIOR */
     header {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -95,13 +93,9 @@
     }
 
     .nav-item svg {
-      width: 22px;
-      height: 22px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 22px; height: 22px;
+      fill: none; stroke: currentColor;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
       transition: transform 0.2s ease;
     }
 
@@ -124,7 +118,6 @@
       height: 460px;
       background: #000;
       overflow: hidden;
-      margin-top: 0;
       margin-bottom: 15px;
       transform: translateZ(0);
       touch-action: pan-y;
@@ -141,7 +134,6 @@
       padding: 24px 20px;
       background-size: cover;
       background-position: center;
-      will-change: opacity;
     }
 
     .hbo-slide.active { opacity: 1; z-index: 2; }
@@ -203,7 +195,7 @@
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
     .hbo-btn-add:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
     .hbo-btn-add svg {
@@ -241,8 +233,7 @@
       left: 13px; top: 50%;
       transform: translateY(-50%);
       color: var(--text-gray);
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       pointer-events: none;
     }
     .search-box .search-icon svg {
@@ -393,8 +384,9 @@
       overflow-y: auto;
     }
 
+    /* NUEVO DISEÑO MODAL SERIE (Inspirado en la imagen de referencia) */
     .modal-box-series {
-      background: #000;
+      background: #07040d;
       padding: 0;
       border-radius: 0;
       width: 100vw;
@@ -407,6 +399,258 @@
       z-index: 2100;
       display: none;
     }
+
+    .stream-header-bg {
+      position: relative;
+      width: 100%;
+      min-height: 420px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .stream-header-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7,4,13,0.2) 20%, rgba(7,4,13,0.8) 75%, #07040d 100%);
+    }
+
+    .stream-top-actions {
+      position: absolute;
+      top: 15px; right: 15px; left: 15px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      z-index: 2260;
+    }
+    .stream-top-btn {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .stream-info-container {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 15px;
+    }
+    .stream-title-text {
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    }
+    .stream-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+    }
+    .stream-badge-box {
+      background: rgba(255,255,255,0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.65rem;
+    }
+    .stream-meta-info {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    /* BOTÓN REPRODUCIR PRINCIPAL */
+    .stream-play-main-btn {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(255,255,255,0.15);
+    }
+
+    /* BOTONES SECUNDARIOS (TRÁILER / MI LISTA) */
+    .stream-actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 16px;
+    }
+    .stream-action-ico-btn {
+      background: none;
+      border: none;
+      color: var(--text-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .stream-action-ico-circle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .stream-action-ico-btn.active-list .stream-action-ico-circle {
+      background: rgba(124, 58, 237, 0.3);
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+
+    .stream-synopsis {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    .stream-synopsis.truncated {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .stream-read-more {
+      background: none; border: none;
+      color: var(--accent-light); font-weight: 700;
+      font-size: 0.8rem; cursor: pointer; padding: 0; margin-top: 4px;
+      display: inline-block;
+    }
+
+    /* PESTAÑAS (EPISODIOS / EXTRAS) */
+    .stream-tabs-bar {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 0 20px;
+      gap: 30px;
+    }
+    .stream-tab {
+      background: none; border: none;
+      color: var(--text-gray);
+      font-size: 0.95rem; font-weight: 700;
+      padding: 10px 0;
+      cursor: pointer;
+      position: relative;
+    }
+    .stream-tab.active {
+      color: #fff;
+    }
+    .stream-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 3px;
+      background: #fff;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* CONTENEDOR DE SELECTOR DE TEMPORADA Y EPISODIOS */
+    .stream-content-area {
+      padding: 20px;
+    }
+    .stream-season-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .stream-season-select {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      outline: none;
+      cursor: pointer;
+    }
+    .stream-download-all {
+      background: none; border: none;
+      color: #fff; font-size: 0.8rem; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      cursor: pointer;
+    }
+
+    /* LISTA DE EPISODIOS (Estilo Disney+/Max exacto a la imagen) */
+    .stream-episodes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 50px;
+    }
+    .stream-ep-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .stream-ep-thumb-box {
+      width: 120px; height: 68px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #1a1528;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .stream-ep-thumb-box img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .stream-ep-play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem;
+    }
+    .stream-ep-info {
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    .stream-ep-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .stream-ep-duration {
+      font-size: 0.75rem;
+      color: var(--text-gray);
+    }
+    .stream-ep-download-icon {
+      background: none; border: none;
+      color: #fff; font-size: 1.1rem;
+      cursor: pointer; padding: 10px;
+    }
+    .stream-edit-ep-btn {
+      display: none;
+      background: #2563eb; color: #fff; border: none;
+      padding: 3px 8px; border-radius: 4px; font-size: 0.65rem;
+      font-weight: 600; cursor: pointer; margin-top: 4px;
+    }
+    body.creator-mode .stream-edit-ep-btn { display: inline-block; }
 
     .btn-close {
       position: absolute;
@@ -432,162 +676,41 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* ENCABEZADO DE SERIE */
-    .hbo-backdrop-header {
-      position: relative;
-      width: 100%;
-      min-height: 230px;
-      padding: 40px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      background-size: cover;
-      background-position: center;
-    }
-    .hbo-backdrop-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 70%, #000 100%);
-    }
-    .hbo-header-content { position: relative; z-index: 2; }
-    .hbo-header-content h2 { font-size: 1.4rem; margin-bottom: 4px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .hbo-header-content p { font-size: 0.8rem; color: #d1d5db; margin-bottom: 2px; }
-    
-    .synopsis-container { font-size: 0.8rem; color: var(--text-gray); line-height: 1.35; margin-top: 4px; }
-    .synopsis-text.truncated { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .read-more-btn { background: none; border: none; color: var(--accent-light); font-weight: 600; font-size: 0.75rem; cursor: pointer; padding: 0; margin-top: 2px; display: inline-block; }
-
-    .season-selector-container { padding: 15px 20px 5px; }
-    .season-selector-hbo {
-      background: #120b20;
-      border: 1px solid var(--border-purple);
-      color: #fff;
-      padding: 9px 12px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      width: 100%;
-      outline: none;
-    }
-
-    .hbo-episodes-list { display: flex; flex-direction: column; gap: 15px; padding: 10px 20px 90px; }
-    .hbo-ep-card { display: flex; flex-direction: column; gap: 6px; }
-    .hbo-ep-row { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-    .hbo-thumb { width: 130px; height: 74px; object-fit: cover; border-radius: 4px; background: #1a1528; flex-shrink: 0; position: relative; }
-    .hbo-play-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); color: #fff; font-size: 1.1rem; }
-    .hbo-ep-details { flex-grow: 1; overflow: hidden; }
-    .hbo-ep-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
-    .hbo-ep-desc { font-size: 0.75rem; color: var(--text-gray); line-height: 1.35; }
-
-    .hbo-edit-btn {
-      display: none;
-      background: #2563eb;
-      border: none;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      cursor: pointer;
-      align-self: flex-start;
-      margin-top: 2px;
-    }
-    body.creator-mode .hbo-edit-btn { display: inline-block; }
-
     .video-box { 
-      width: 100%; 
-      aspect-ratio: 16/9; 
-      background: #000; 
-      margin-bottom: 12px; 
-      border-radius: 6px; 
-      overflow: hidden; 
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 12px; border-radius: 6px; overflow: hidden; position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .video-box iframe { 
-      width: 100%; 
-      height: 100%; 
-      border: none; 
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+    .video-box iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
     
-    /* Contenedor del reproductor nativo y barra de calidad */
     .native-player-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      width: 100%; height: 100%; position: relative; background: #000; display: flex; flex-direction: column; justify-content: center;
     }
-    .native-player-container video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .native-player-container video { width: 100%; height: 100%; object-fit: contain; }
     .player-controls-bar {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      position: absolute; top: 10px; right: 10px; z-index: 10;
+      background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 6px;
     }
-    .player-controls-bar label {
-      font-size: 0.7rem;
-      color: #cbd5e1;
-    }
-    .quality-selector {
-      background: #07040d;
-      color: #fff;
-      border: 1px solid var(--border-purple);
-      border-radius: 4px;
-      font-size: 0.7rem;
-      padding: 2px 4px;
-      outline: none;
-    }
+    .player-controls-bar label { font-size: 0.7rem; color: #cbd5e1; }
+    .quality-selector { background: #07040d; color: #fff; border: 1px solid var(--border-purple); border-radius: 4px; font-size: 0.7rem; padding: 2px 4px; outline: none; }
 
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
 
     @media (max-width: 600px) {
       #detailModal .modal-box, #episodeModal .modal-box {
-        max-width: 100%;
-        max-height: 100%;
-        height: 100%;
-        border-radius: 0;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
+        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 12px; display: flex; flex-direction: column;
       }
-      #detailModal .video-box, #episodeModal .video-box {
-        flex-shrink: 0;
-        border-radius: 4px;
-      }
+      #detailModal .video-box, #episodeModal .video-box { flex-shrink: 0; border-radius: 4px; }
     }
 
-    :fullscreen .btn-close, :-webkit-full-screen .btn-close {
-      display: none !important;
-    }
+    :fullscreen .btn-close, :-webkit-full-screen .btn-close { display: none !important; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="logo" onclick="switchView('home')">NaPlus</div>
-    <div class="header-actions" style="display: none;"></div>
   </header>
 
   <div id="viewHome" class="view-section active">
@@ -661,6 +784,7 @@
     </button>
   </nav>
 
+  <!-- MODAL DETALLE PELÍCULA -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
@@ -675,30 +799,68 @@
     </div>
   </div>
 
+  <!-- MODAL DETALLE SERIE (Nuevo diseño exacto a imagen de referencia) -->
   <div class="modal-box-series" id="seriesModal">
-    <button class="btn-close" onclick="closeModal('seriesModal')">✕</button>
-    
-    <div class="hbo-backdrop-header" id="hboBackdropHeader">
-      <div class="hbo-backdrop-overlay"></div>
-      <div class="hbo-header-content">
-        <h2 id="seriesTitle"></h2>
-        <p id="seriesMeta" style="color:var(--accent-light);"></p>
-        <p id="seriesViews" style="font-size:0.7rem; color:#cbd5e1;"></p>
-        <div class="synopsis-container">
-          <div class="synopsis-text truncated" id="seriesDesc"></div>
-          <button class="read-more-btn" id="readMoreBtn" onclick="toggleSynopsis()" style="display: none;">Leer más</button>
+    <div class="stream-top-actions">
+      <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+      </button>
+      <button class="stream-top-btn" onclick="closeModal('seriesModal')">✕</button>
+    </div>
+
+    <div class="stream-header-bg" id="streamHeaderBg">
+      <div class="stream-header-gradient"></div>
+      <div class="stream-info-container">
+        <div class="stream-title-text" id="seriesTitle"></div>
+        <div class="stream-badges-row">
+          <span class="stream-badge-box">HD</span>
+          <span class="stream-badge-box">5.1</span>
+          <span class="stream-badge-box">CC</span>
         </div>
+        <div class="stream-meta-info" id="seriesMeta"></div>
+        
+        <button class="stream-play-main-btn" onclick="playFirstEpisodeOfSeries()">
+          ▶ Reproducir
+        </button>
+
+        <div class="stream-actions-row">
+          <button class="stream-action-ico-btn" onclick="alert('Tráiler no disponible')">
+            <div class="stream-action-ico-circle">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </div>
+            Tráiler
+          </button>
+          <button class="stream-action-ico-btn" id="streamFavBtn" onclick="toggleFavoriteFromSeriesModal()">
+            <div class="stream-action-ico-circle">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            Mi Lista
+          </button>
+        </div>
+
+        <div class="stream-synopsis truncated" id="seriesDesc"></div>
+        <button class="stream-read-more" id="readMoreBtn" onclick="toggleSynopsis()" style="display:none;">Más</button>
       </div>
     </div>
 
-    <div style="max-width: 650px; margin: 0 auto;">
-      <div class="season-selector-container">
-        <select id="seasonSelect" class="season-selector-hbo" onchange="renderEpisodesForSelectedSeason()"></select>
+    <!-- Pestañas -->
+    <div class="stream-tabs-bar">
+      <button class="stream-tab active">Episodios</button>
+      <button class="stream-tab" onclick="alert('No hay extras adicionales')">Extras</button>
+    </div>
+
+    <div class="stream-content-area">
+      <div class="stream-season-row">
+        <select id="seasonSelect" class="stream-season-select" onchange="renderEpisodesForSelectedSeason()"></select>
+        <button class="stream-download-all" onclick="alert('Descarga completada')">
+          Descargar todos ⬇
+        </button>
       </div>
-      <div class="hbo-episodes-list" id="episodesListContainer"></div>
+      <div class="stream-episodes-list" id="episodesListContainer"></div>
     </div>
   </div>
 
+  <!-- MODAL REPRODUCTOR DE EPISODIO -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 550px;">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
@@ -711,6 +873,7 @@
     </div>
   </div>
 
+  <!-- MODAL SUBIR / EDITAR CONTENIDO -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -746,7 +909,7 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Código de Video (Odysee, VK Video, VOE, OK.ru, Drive o .mp4)</label>
+          <label>Enlace o Código de Video (Odysee, VK, VOE, OK.ru, Drive o .mp4)</label>
           <input type="text" id="videoInput" placeholder="https://odysee.com/..., https://vk.com/... o .mp4">
         </div>
 
@@ -764,6 +927,7 @@
     </div>
   </div>
 
+  <!-- MODAL EDITAR CAPÍTULO -->
   <div class="modal-overlay" id="editEpisodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 380px;">
       <button class="btn-close" onclick="closeModal('editEpisodeModal')">✕</button>
@@ -788,7 +952,7 @@
           <textarea id="modalEpDesc" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (Odysee, VK Video, VOE, OK.ru, Drive o Iframe)</label>
+          <label>Enlace de Video (Odysee, VK, VOE, OK.ru, Drive o Iframe)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -822,7 +986,7 @@
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
             "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://odysee.com/@Romualdoignacio:0/Elchacal-1:5"
+            "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
           },
           {
             "num": 2,
@@ -848,7 +1012,7 @@
         ]
       }
     ],
-    "views": 184,
+    "views": 114,
     "dateAdded": 1790955167205
   },
   {
@@ -881,7 +1045,7 @@
           {
             "num": 3,
             "title": "Destructor de mundos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10w_ZTSjnSeK44m5prWg%3A1790908764435&ei=XBm_arOQGrux5OUPp9uOwQI&oq=el+problema+de+los+tres+cuerpos+serie+capitulo+3&gs_lp=EhJtb2JpbGUtZ3dzLXdpei1pbWciMGVsIHByb2JsZW1hIGRlIGxvcyB0cmVzIGN1ZXJwb3Mgc2VyaWUgY2FwaXR1bG8gMzIIEAAYiQUYogRIxhFQowhYlQ1wAHgAkAEAmAF2oAHPAqoBAzAuM7gBA8gBAPgBAZgCA6AC6wLCAgcQIxjJAhgnwgIIEAAYgAQYogSYAwCIBgGSBwMwLjOgB8UJsgcDMC4zuAfrAsIHBzAuMS4xLjHIBxqACAE&sclient=mobile-gws-wiz-img#sv=CAMSVxoyKhBlLVlyV1lqUU1BUnFhLW5NMg5ZcldZalFNQVJxYS1uTToOS3RzQlAzWGpTRTBYU00gBCoXCgFzEhBlLVlyV1lqUU1BUnFhLW5NGAEwAUoECAEQAhgHIJX6urkGSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10",
             "desc": "Obsesionados con su misión en el juego virtual, Jin y Jack se apresuran para resolver un acertijo complejo. Sin embargo, el paso al siguiente nivel trae consecuencias desastrosas.",
             "video": "https://ok.ru/video/16684098587355"
           },
@@ -895,7 +1059,7 @@
           {
             "num": 5,
             "title": "Juicio final",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10qOLCEdEz1hp00-GPGIG-3u1gWGdeiARGQBcrTwr5AWQKTVY06UMJWAgbFItvDrlVwOdjAMornqgKKeBV4RR62it_Ied5k4b2OjUkF96gdhW5Oa2RYKkqdz7-ppYUdtzNkV68Q1xBvXRQBkO9GlWFa4XFKWQ6metDEPfe1NvKmLL-CY9DMyPLB4XuWx0gQ&q=el+problema+de+los+tres+cuerpos+serie+capitulo+5&sa=X&ved=2ahUKEwiH39n3yZuXAxXSrJUCHT6nNWwQtKgLegQIEhAB&biw=384&bih=635&dpr=2.81#sv=CAMSVxoyKhBlLWlTd0pMVkhOamtsZWhNMg5pU3dKTFZITmprbGVoTToOVmh6ZHFiVGw4Z1hNVk0gBCoXCgFzEhBlLWlTd0pMVkhOamtsZWhNGAEwAUoECAEQAhgHIMj1_IIKSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10",
             "desc": "Mientras el nivel de amenaza aumenta, se pone en marcha una misión secreta en territorio peligroso para obtener información del enemigo. La Tierra recibe un mensaje aterrador.",
             "video": "https://ok.ru/video/16692258933467"
           },
@@ -923,7 +1087,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 91,
     "dateAdded": 1790908626680
   },
   {
@@ -1033,7 +1197,7 @@
         ]
       }
     ],
-    "views": 327,
+    "views": 321,
     "dateAdded": 1790899010591
   },
   {
@@ -1080,7 +1244,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 93,
     "dateAdded": 1790897174446
   },
   {
@@ -1230,7 +1394,7 @@
         ]
       }
     ],
-    "views": 191,
+    "views": 190,
     "dateAdded": 1790869921110
   },
   {
@@ -1256,7 +1420,7 @@
     "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
     "video": "https://voe.sx/e/xctz9a4atwnh",
     "seasons": [],
-    "views": 366,
+    "views": 365,
     "dateAdded": 1790858421339
   },
   {
@@ -1282,7 +1446,7 @@
     "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
     "video": "https://voe.sx/e/jx8q5z1ls85u",
     "seasons": [],
-    "views": 540,
+    "views": 530,
     "dateAdded": 1790855769248
   },
   {
@@ -1385,7 +1549,7 @@
           },
           {
             "num": 2,
-            "title": "Mis dos papás",
+            "title": "Mis dois papás",
             "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
             "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
             "video": "https://ok.ru/video/16671801936603"
@@ -1747,7 +1911,7 @@
         ]
       }
     ],
-    "views": 292,
+    "views": 291,
     "dateAdded": 1790783678102
   },
   {
@@ -1848,7 +2012,7 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
+    "id": 179069448763,
     "type": "movie",
     "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
     "genre": "Terror",
@@ -1869,7 +2033,7 @@
     "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
     "video": "https://voe.sx/e/g0xdl5xf7x30",
     "views": 361,
-    "dateAdded": 1790755820564
+    "dateAdded": 1790755820554
   },
   {
     "id": 1790754583454,
@@ -2125,7 +2289,7 @@
     }
 
     function toggleFavorite(id, e) {
-      e.stopPropagation();
+      if (e) e.stopPropagation();
       if (myFavorites.includes(id)) {
         myFavorites = myFavorites.filter(favId => favId !== id);
       } else {
@@ -2137,6 +2301,27 @@
       renderMoviesGrid();
       renderSeriesGrid();
       renderMyList();
+      if (currentSeriesData && currentSeriesData.id === id) {
+        updateSeriesModalFavButton();
+      }
+    }
+
+    function toggleFavoriteFromSeriesModal() {
+      if (currentSeriesData) {
+        toggleFavorite(currentSeriesData.id);
+      }
+    }
+
+    function updateSeriesModalFavButton() {
+      if (!currentSeriesData) return;
+      const btn = document.getElementById('streamFavBtn');
+      if (!btn) return;
+      const isFav = myFavorites.includes(currentSeriesData.id);
+      if (isFav) {
+        btn.classList.add('active-list');
+      } else {
+        btn.classList.remove('active-list');
+      }
     }
 
     let currentSlide = 0;
@@ -2174,7 +2359,7 @@
             <div class="hbo-slide-title">${item.title}</div>
             <div class="hbo-slide-meta">${item.year} • ${item.genre.split(',')[0]}</div>
             <div class="hbo-slide-btns">
-              <button class="hbo-btn-play" onclick="openContentDetail(${item.id})">▶ Ver</button>
+              <button class="hbo-btn-play" onclick="openContentDetail(${item.id})">▶ Reproducir</button>
               <button class="hbo-btn-add ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
                 <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
               </button>
@@ -2672,12 +2857,13 @@
 
       if (item.type === 'series') {
         currentSeriesData = item;
-        const headerBg = document.getElementById('hboBackdropHeader');
+        const headerBg = document.getElementById('streamHeaderBg');
         headerBg.style.backgroundImage = `url('${item.cover}')`;
 
         document.getElementById('seriesTitle').innerText = item.title;
-        document.getElementById('seriesMeta').innerText = `${item.genre} • ${item.year}`;
-        document.getElementById('seriesViews').innerText = `👁️ ${item.views} reproducciones`;
+        
+        const seasonsCount = item.seasons ? item.seasons.length : 0;
+        document.getElementById('seriesMeta').innerText = `${item.year} • ${seasonsCount} temporada${seasonsCount > 1 ? 's' : ''} • ${item.genre}`;
         
         const descEl = document.getElementById('seriesDesc');
         const readMoreBtn = document.getElementById('readMoreBtn');
@@ -2691,6 +2877,8 @@
             readMoreBtn.style.display = 'none';
           }
         }, 50);
+
+        updateSeriesModalFavButton();
 
         const seasonSelect = document.getElementById('seasonSelect');
         seasonSelect.innerHTML = '';
@@ -2724,7 +2912,7 @@
         btn.innerText = 'Menos';
       } else {
         descEl.classList.add('truncated');
-        btn.innerText = 'Leer más';
+        btn.innerText = 'Más';
       }
     }
 
@@ -2760,26 +2948,32 @@
         const hasOwnImg = ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null';
         const thumbImg = hasOwnImg ? ep.img.trim() : imagePool[Math.floor(Math.random() * imagePool.length)];
         
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'hbo-ep-card';
-        cardDiv.innerHTML = `
-          <div class="hbo-ep-row" onclick="playEpisode(${sIdx}, ${eIdx})">
-            <div class="hbo-thumb">
-              <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" onerror="handleImgError(this)">
-              <div class="hbo-play-icon">▶</div>
-            </div>
-            <div class="hbo-ep-details">
-              <div class="hbo-ep-title">${epNumDisplay}. ${ep.title || 'Capítulo ' + epNumDisplay}</div>
-              <div class="hbo-ep-desc">${ep.desc || 'Sin sinopsis.'}</div>
-            </div>
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'stream-ep-item';
+        itemDiv.innerHTML = `
+          <div class="stream-ep-thumb-box" onclick="playEpisode(${sIdx}, ${eIdx})">
+            <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="lazy" decoding="async" onerror="handleImgError(this)">
+            <div class="stream-ep-play-overlay">▶</div>
           </div>
-          <button class="hbo-edit-btn" onclick="openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏️ Editar Capítulo</button>
+          <div class="stream-ep-info" onclick="playEpisode(${sIdx}, ${eIdx})">
+            <div class="stream-ep-title">${epNumDisplay}. ${ep.title || 'Capítulo ' + epNumDisplay}</div>
+            <div class="stream-ep-duration">20min</div>
+            <button class="stream-edit-ep-btn" onclick="event.stopPropagation(); openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏️️ Editar</button>
+          </div>
+          <button class="stream-ep-download-icon" onclick="alert('Descarga iniciada')" title="Descargar">⬇</button>
         `;
-        fragment.appendChild(cardDiv);
+        fragment.appendChild(itemDiv);
       });
 
       container.innerHTML = '';
       container.appendChild(fragment);
+    }
+
+    function playFirstEpisodeOfSeries() {
+      if (!currentSeriesData || !currentSeriesData.seasons || !currentSeriesData.seasons.length) return;
+      const firstSeason = currentSeriesData.seasons[0];
+      if (!firstSeason.episodes || !firstSeason.episodes.length) return;
+      playEpisode(0, 0);
     }
 
     function openSingleEpisodeEdit(seasonIdx, epIdx) {
@@ -2839,6 +3033,14 @@
       document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) {
         document.getElementById('seriesModal').style.display = 'block';
+      }
+    }
+
+    function shareCurrentSeries() {
+      if (navigator.share && currentSeriesData) {
+        navigator.share({ title: currentSeriesData.title, text: currentSeriesData.desc, url: window.location.href }).catch(() => {});
+      } else {
+        alert("Enlace copiado al portapapeles.");
       }
     }
 
