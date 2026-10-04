@@ -509,7 +509,9 @@
       z-index: 1;
     }
 
-    /* BARRA SUPERIOR FIJA Y LIMPIA PARA IFRAMES (OK.RU, DROPBOX, DRIVE) */
+    /* BARRA SUPERIOR FIJA Y LIMPIA PARA IFRAMES (OK.RU, DROPBOX, DRIVE)
+       Ahora se oculta sola a los pocos segundos y reaparece al tocar el
+       video, igual que en una app de streaming real. */
     .iframe-overlay-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -521,6 +523,12 @@
       padding: 0 12px;
       z-index: 99999;
       pointer-events: auto;
+      opacity: 1;
+      transition: opacity 0.25s ease;
+    }
+    .iframe-overlay-bar.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
     
     .discreet-close-btn {
@@ -981,7 +989,13 @@
         el.style.display = 'none';
         if (id === 'detailModal' || id === 'episodeModal') {
           const vBox = id === 'detailModal' ? document.getElementById('videoBox') : document.getElementById('episodeVideoBox');
-          if (vBox) vBox.innerHTML = '';
+          if (vBox) {
+            if (vBox._naplusBlurHandler) {
+              window.removeEventListener('blur', vBox._naplusBlurHandler);
+              vBox._naplusBlurHandler = null;
+            }
+            vBox.innerHTML = '';
+          }
         }
         activeModalId = null;
       }
@@ -1501,6 +1515,11 @@
 
     /* GESTOR DE REPRODUCTOR (OK.RU, DROPBOX Y DRIVE EN IFRAME CON ACCESO TOTAL AL VÍDEO) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
+      if (vBox._naplusBlurHandler) {
+        window.removeEventListener('blur', vBox._naplusBlurHandler);
+        vBox._naplusBlurHandler = null;
+      }
+
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
@@ -1532,14 +1551,15 @@
         }
 
         vBox.innerHTML = `
-          <div style="position:relative; width:100%; height:100%;" id="iframeWrapper">
-            <div class="iframe-overlay-bar" id="iframeOverlayBar">
+          <div class="iframe-wrapper" style="position:relative; width:100%; height:100%;">
+            <div class="iframe-overlay-bar">
               <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
             <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
           </div>
         `;
+        setupIframeOverlayAutoHide(vBox);
         return;
       }
 
@@ -1658,13 +1678,44 @@
       showControlsForAWhile();
     }
 
+    /* Muestra la barra del reproductor (X y Pantalla Completa) unos segundos
+       al abrir el video y la oculta sola. Como el video de Dropbox/OK.ru/Drive
+       vive dentro de un iframe de otro sitio, la página no puede "ver" los
+       toques que el usuario hace ahí dentro (por seguridad del navegador),
+       pero sí detecta el instante en que el foco pasa de la página al iframe,
+       que es justo lo que pasa apenas se toca el video. Por eso usamos eso
+       para volver a mostrar la barra. */
+    function setupIframeOverlayAutoHide(vBox) {
+      const wrapper = vBox.querySelector('.iframe-wrapper');
+      const bar = vBox.querySelector('.iframe-overlay-bar');
+      const iframeEl = vBox.querySelector('iframe');
+      if (!wrapper || !bar || !iframeEl) return;
+
+      let hideTimer = null;
+      function showBarTemporarily() {
+        bar.classList.remove('hidden');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => bar.classList.add('hidden'), 2500);
+      }
+
+      const blurHandler = () => {
+        if (document.activeElement === iframeEl) {
+          showBarTemporarily();
+        }
+      };
+      window.addEventListener('blur', blurHandler);
+      vBox._naplusBlurHandler = blurHandler;
+
+      showBarTemporarily();
+    }
+
     function skipTime(seconds) {
       const video = document.getElementById('nativeVideo');
       if (video) video.currentTime += seconds;
     }
 
     function toggleIframeFullscreen(btn) {
-      const wrapper = btn.closest('#iframeWrapper');
+      const wrapper = btn.closest('.iframe-wrapper');
       if (!document.fullscreenElement && !document.webkitFullscreenElement && !wrapper.classList.contains('forced-fs')) {
         if (wrapper.requestFullscreen) {
           wrapper.requestFullscreen().then(() => {
