@@ -878,7 +878,7 @@
     </div>
   </div>
 
-  <!-- MODAL SUBIR / EDITAR CONTENIDO (INPUTS CAMBIADOS A TEXT PARA EVITAR BLOQUEOS) -->
+  <!-- MODAL SUBIR / EDITAR CONTENIDO -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -1039,7 +1039,7 @@
     "title": "El problema de los tres cuerpos",
     "genre": "Cienciaficción, Drama",
     "year": "2024",
-    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existencial se cierne sobre toda la humanidad.",
+    "desc": "Cinco amigos hacen descubrimientos asombrosos, mientras las leyes de la naturaleza se revelan ante sus ojos y una amenaza existential se cierne sobre toda la humanidad.",
     "cover": "https://image.tmdb.org/t/p/original/6Dc9mMl083cVpNknWzALCw7JYPH.jpg",
     "video": "",
     "seasons": [
@@ -2001,9 +2001,9 @@
           },
           {
             "num": 8,
-            "title": "El murmurlo",
+            "title": "El murmullo",
             "duration": "59 min",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmurlo_01.jpg",
+            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmullo_01.jpg",
             "desc": "Tras una pérdida devastadora, una pareja de ornitólogos se muda a una casa aislada para estudiar aves. Sin embargo, la historia del lugar está escrita con sangre y dolor.",
             "video": "https://ok.ru/video/16669987506907"
           }
@@ -2443,12 +2443,18 @@
 
     function toggleContentTypeFields() {
       const type = document.getElementById('typeInput').value;
+      const seasonsContainer = document.getElementById('seasonsContainer');
       if (type === 'series') {
         document.getElementById('movieVideoGroup').style.display = 'none';
         document.getElementById('seriesSeasonsGroup').style.display = 'block';
+        if (seasonsContainer.children.length === 0) {
+          addSeasonField();
+        }
       } else {
         document.getElementById('movieVideoGroup').style.display = 'block';
         document.getElementById('seriesSeasonsGroup').style.display = 'none';
+        // Limpiamos los campos de series para que no bloqueen con "required" oculto
+        seasonsContainer.innerHTML = '';
       }
     }
 
@@ -2470,9 +2476,6 @@
         const container = document.getElementById('seasonsContainer');
         container.innerHTML = '';
         item.seasons.forEach((season) => addSeasonField(season));
-      } else {
-        document.getElementById('seasonsContainer').innerHTML = '';
-        if (!item) addSeasonField();
       }
 
       document.getElementById('uploadModal').style.display = 'flex';
@@ -2556,7 +2559,6 @@
       const id = document.getElementById('editId').value;
       const type = document.getElementById('typeInput').value;
 
-      // Obtener o solicitar token de GitHub de forma segura
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token || !token.trim()) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
@@ -2636,24 +2638,31 @@
 
       if (success) {
         alert("¡Guardado y publicado con éxito en la nube para todos!");
-      } else {
-        // Si falla por token vencido/inválido, permitimos reconfigurarlo limpiándolo
-        if (confirm("⚠️ Hubo un error al conectar con GitHub. ¿Deseas actualizar/reingresar tu token de acceso?")) {
-          localStorage.removeItem('naPlus_gh_token');
-        }
       }
     }
 
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) return false;
+      if (!token) {
+        alert("No hay token de GitHub configurado.");
+        return false;
+      }
 
       try {
         const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-          headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
+          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
         });
         
-        if (!getRes.ok) return false;
+        if (!getRes.ok) {
+          const errData = await getRes.json().catch(() => ({}));
+          alert(`Error al conectar con GitHub (${getRes.status}): ${errData.message || getRes.statusText}\nVerifica que tu token sea válido.`);
+          if (getRes.status === 401 || getRes.status === 403) {
+            if (confirm("¿Deseas restablecer tu token de GitHub?")) {
+              localStorage.removeItem('naPlus_gh_token');
+            }
+          }
+          return false;
+        }
 
         const getData = await getRes.json();
         const sha = getData.sha;
@@ -2662,7 +2671,7 @@
         const catalogJson = JSON.stringify(catalog, null, 2);
         
         if (fileText.includes('/*CATALOG_START*/')) {
-          fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/${catalogJson}/*CATALOG_END*/`);
+          fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n${catalogJson}\n/*CATALOG_END*/`);
         } else {
           fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
         }
@@ -2672,8 +2681,9 @@
         const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
           method: 'PUT',
           headers: {
-            'Authorization': 'token ' + token,
-            'Content-Type': 'application/json'
+            'Authorization': 'Bearer ' + token.trim(),
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
             message: 'Actualización automática NaPlus',
@@ -2682,9 +2692,16 @@
           })
         });
 
-        return putRes.ok;
+        if (!putRes.ok) {
+          const errData = await putRes.json().catch(() => ({}));
+          alert(`Error al guardar en GitHub (${putRes.status}): ${errData.message || putRes.statusText}`);
+          return false;
+        }
+
+        return true;
       } catch (err) {
         console.error(err);
+        alert(`Error de red o ejecución: ${err.message || err}`);
         return false;
       }
     }
