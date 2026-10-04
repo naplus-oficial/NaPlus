@@ -134,6 +134,7 @@
       padding: 24px 20px;
       background-size: cover;
       background-position: center;
+      cursor: pointer;
     }
 
     .hbo-slide.active { opacity: 1; z-index: 2; }
@@ -142,6 +143,7 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.6) 60%, var(--bg-dark) 100%);
+      pointer-events: none;
     }
 
     .hbo-slide-content {
@@ -216,6 +218,7 @@
       z-index: 10;
       display: flex;
       gap: 5px;
+      pointer-events: auto;
     }
 
     .hbo-dot {
@@ -384,7 +387,7 @@
       overflow-y: auto;
     }
 
-    /* MODAL SERIE */
+    /* MODAL SERIE (Optimizado para eliminar espacio negro excesivo y reducir separación) */
     .modal-box-series {
       background: #07040d;
       padding: 0;
@@ -404,18 +407,18 @@
     .stream-header-bg {
       position: relative;
       width: 100%;
-      min-height: 420px;
+      min-height: 320px; /* Reducido para evitar exceso de espacio vertical */
       background-size: cover;
       background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 20px;
+      padding: 15px 20px;
     }
     .stream-header-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.2) 20%, rgba(7,4,13,0.8) 75%, #07040d 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.2) 10%, rgba(7,4,13,0.8) 75%, #07040d 100%);
     }
 
     .stream-top-actions {
@@ -442,20 +445,20 @@
     .stream-info-container {
       position: relative;
       z-index: 2;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     .stream-title-text {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       line-height: 1.1;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     }
     .stream-badges-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-size: 0.75rem;
     }
     .stream-badge-box {
@@ -468,7 +471,7 @@
     .stream-meta-info {
       font-size: 0.8rem;
       color: #cbd5e1;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       font-weight: 500;
     }
 
@@ -477,16 +480,16 @@
       color: #000000;
       border: none;
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       box-shadow: 0 4px 12px rgba(255,255,255,0.15);
     }
 
@@ -494,7 +497,7 @@
       display: flex;
       justify-content: center;
       gap: 30px;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
     .stream-action-ico-btn {
       background: none;
@@ -524,8 +527,8 @@
     .stream-synopsis {
       font-size: 0.85rem;
       color: var(--text-gray);
-      line-height: 1.4;
-      margin-bottom: 20px;
+      line-height: 1.35;
+      margin-bottom: 6px;
     }
     .stream-synopsis.truncated {
       display: -webkit-box;
@@ -536,11 +539,11 @@
     .stream-read-more {
       background: none; border: none;
       color: var(--accent-light); font-weight: 700;
-      font-size: 0.8rem; cursor: pointer; padding: 0; margin-top: 4px;
+      font-size: 0.8rem; cursor: pointer; padding: 0; margin-top: 2px;
       display: inline-block;
     }
 
-    /* PESTAÑAS (Solo Episodios ahora) */
+    /* PESTAÑAS */
     .stream-tabs-bar {
       display: flex;
       border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -565,13 +568,13 @@
     }
 
     .stream-content-area {
-      padding: 20px 20px 140px 20px; /* Padding inferior generoso para que nunca se corten los últimos episodios */
+      padding: 15px 20px 70px 20px; /* Padding inferior ajustado para eliminar el gran espacio negro */
     }
     .stream-season-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .stream-season-select {
       background: transparent;
@@ -587,7 +590,7 @@
     .stream-episodes-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .stream-ep-item {
       display: flex;
@@ -2339,6 +2342,9 @@
         const slide = document.createElement('div');
         slide.className = `hbo-slide ${idx === 0 ? 'active' : ''}`;
         slide.style.backgroundImage = `url('${item.cover}')`;
+        // Al tocar el slide del carrusel se abren los detalles como plataforma normal
+        slide.onclick = () => openContentDetail(item.id);
+
         const isFav = myFavorites.includes(item.id);
         slide.innerHTML = `
           <div class="hbo-slide-overlay"></div>
@@ -2346,7 +2352,7 @@
             <div class="hbo-slide-title">${item.title}</div>
             <div class="hbo-slide-meta">${item.year} • ${item.genre.split(',')[0]}</div>
             <div class="hbo-slide-btns">
-              <button class="hbo-btn-play" onclick="openContentDetail(${item.id})">▶ Reproducir</button>
+              <button class="hbo-btn-play" onclick="event.stopPropagation(); openContentDetail(${item.id})">▶ Reproducir</button>
               <button class="hbo-btn-add ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
                 <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
               </button>
@@ -2357,7 +2363,7 @@
 
         const dot = document.createElement('div');
         dot.className = `hbo-dot ${idx === 0 ? 'active' : ''}`;
-        dot.onclick = () => { goToSlide(idx); restartSliderInterval(); };
+        dot.onclick = (e) => { e.stopPropagation(); goToSlide(idx); restartSliderInterval(); };
         dotsContainer.appendChild(dot);
       });
 
