@@ -387,7 +387,7 @@
       overflow-y: auto;
     }
 
-    /* MODAL SERIE OPTIMIZADO SIN ESPACIO NEGRO Y CON BARRA SUPERIOR LIMPIA */
+    /* MODAL SERIE ESTÉTICO - PORTADA COMPLETA SIN CUADRO NEGRO */
     .modal-box-series {
       background: #07040d;
       padding: 0;
@@ -404,27 +404,35 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    /* BARRA SUPERIOR FLOTANTE SOBRE LA PORTADA */
     .stream-top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 65px;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 10px;
-      padding: 15px 20px 5px 20px;
-      background: #07040d;
-      position: relative;
+      padding: 0 20px;
+      background: linear-gradient(180deg, rgba(7,4,13,0.7) 0%, rgba(7,4,13,0) 100%);
       z-index: 2260;
+      pointer-events: none;
     }
     .stream-top-btn {
-      background: rgba(255,255,255,0.1);
+      pointer-events: auto;
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.15);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       width: 36px; height: 36px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       font-size: 1rem;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
+    .stream-top-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
 
     .stream-header-bg {
       position: relative;
@@ -434,12 +442,12 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 10px 20px 16px 20px;
+      padding: 70px 20px 16px 20px; /* Deja espacio arriba para los botones flotantes */
     }
     .stream-header-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.1) 0%, rgba(7,4,13,0.85) 75%, #07040d 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.2) 0%, rgba(7,4,13,0.85) 75%, #07040d 100%);
     }
 
     .stream-info-container {
@@ -787,7 +795,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE SERIE -->
+  <!-- MODAL DETALLE SERIE - PORTADA LIMPIA SIN BLOQUE NEGRO -->
   <div class="modal-box-series" id="seriesModal">
     <div class="stream-top-bar">
       <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
