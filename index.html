@@ -506,6 +506,7 @@
       border: none !important;
       position: absolute;
       top: 0; left: 0;
+      z-index: 1;
     }
 
     /* BARRA SUPERIOR DISCRETA PARA IFRAMES */
@@ -513,7 +514,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 48px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -592,7 +593,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 48px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1503,7 +1504,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON VISIBILIDAD INICIAL DE 5 SEGUNDOS) */
+    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON CAPA TÁCTIL PARA IFRAMES) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1513,7 +1514,7 @@
       let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe con barra superior discreta
+      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe con capa de toque interactiva
       if (cleanUrl.includes('<iframe') || cleanUrl.includes('dropbox.com') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
         if (cleanUrl.includes('dropbox.com')) {
@@ -1544,12 +1545,13 @@
               <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
+            <div id="iframeTouchOverlay" style="position:absolute; inset:0; z-index:2; background:transparent;"></div>
             <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
           </div>
         `;
 
-        const wrapper = vBox.querySelector('#iframeWrapper');
         const bar = vBox.querySelector('#iframeOverlayBar');
+        const touchOverlay = vBox.querySelector('#iframeTouchOverlay');
         let hideTimer = null;
 
         function showBar() {
@@ -1560,17 +1562,15 @@
           }, 5000);
         }
 
-        // Mostrar barra al iniciar y ocultar después de 5s
+        // Mostrar barra al iniciar y ocultar automáticamente tras 5 segundos
         showBar();
 
-        wrapper.onclick = (e) => {
-          if (!e.target.closest('button')) {
-            if (bar.classList.contains('hidden')) {
-              showBar();
-            } else {
-              bar.classList.add('hidden');
-              clearTimeout(hideTimer);
-            }
+        touchOverlay.onclick = (e) => {
+          if (bar.classList.contains('hidden')) {
+            showBar();
+          } else {
+            bar.classList.add('hidden');
+            clearTimeout(hideTimer);
           }
         };
         return;
@@ -1688,7 +1688,6 @@
         }
       };
 
-      // Mostrar controles al iniciar y ocultar tras 5 segundos
       showControlsForAWhile();
     }
 
