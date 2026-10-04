@@ -509,7 +509,52 @@
       z-index: 1;
     }
 
-    /* REPRODUCTOR PERSONALIZADO PARA DROPBOX Y .MP4 */
+    /* BARRA SUPERIOR DISCRETA PARA IFRAMES (OK.RU, DROPBOX, DRIVE) */
+    .iframe-overlay-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      z-index: 99999;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .iframe-overlay-bar.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .discreet-close-btn {
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .btn-iframe-fs {
+      background: rgba(124, 58, 237, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* REPRODUCTOR PERSONALIZADO PARA .MP4 DIRECTOS */
     .custom-player-wrapper {
       position: relative;
       width: 100%;
@@ -560,32 +605,6 @@
     .custom-top-bar.hidden {
       opacity: 0;
       pointer-events: none;
-    }
-
-    .discreet-close-btn {
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-size: 0.8rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .btn-iframe-fs {
-      background: rgba(124, 58, 237, 0.85) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      padding: 5px 12px;
-      border-radius: 16px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
     }
 
     .custom-progress-container {
@@ -861,8 +880,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (Dropbox, Google Drive o .mp4)</label>
-          <input type="text" id="videoInput" placeholder="Dropbox, Google Drive o .mp4">
+          <label>Enlace de Video (Dropbox, OK.ru, Drive o .mp4)</label>
+          <input type="text" id="videoInput" placeholder="Dropbox, OK.ru, Drive o .mp4">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -909,7 +928,7 @@
             "title": "La venganza",
             "img": "https://pixel.disco.skyshowtime.com/uuid/2d783975-b8a1-3820-ba10-bbc19f892868/LAND_16_9?language=es-ES&proposition=SKYSHOWTIME&version=0d604691-fea1-3f70-bbad-974885922fd0&downsize=3840%3A*&format=webp&quality=9",
             "desc": "Con su cliente anterior retirándose del pago, la reputación del Chacal está en juego y comienza a planear su venganza.",
-            "video": "https://www.dropbox.com/scl/fi/sample/video.mp4?dl=0"
+            "video": "https://ok.ru/video/16692972686043"
           }
         ]
       }
@@ -925,7 +944,7 @@
     "year": "1998",
     "desc": "Un hombre mitad vampiro, mitad mortal, se convierte en protector de la raza mortal, mientras mata a vampiros.",
     "cover": "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p21512_p_v8_ad.jpg",
-    "video": "https://www.dropbox.com/s/sample/blade.mp4?dl=0",
+    "video": "https://www.dropbox.com/scl/fi/sample/video.mp4?dl=0",
     "seasons": [],
     "views": 232,
     "dateAdded": 1790867112502
@@ -1274,7 +1293,7 @@
           <input type="url" class="ep-img" placeholder="URL Miniatura (Imagen)" value="${epData ? epData.img || '' : ''}">
         </div>
         <div style="margin-bottom:6px;">
-          <input type="text" class="ep-video" placeholder="Enlace de Video (Dropbox, Drive, .mp4)" value="${epData ? epData.video || '' : ''}">
+          <input type="text" class="ep-video" placeholder="Enlace de Video (Dropbox, OK.ru, Drive, .mp4)" value="${epData ? epData.video || '' : ''}">
         </div>
         <div>
           <textarea class="ep-desc" rows="1" placeholder="Descripción breve del episodio...">${epData ? epData.desc || '' : ''}</textarea>
@@ -1485,35 +1504,28 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* CONVERTIDOR DE ENLACE DROPBOX A STREAMING DIRECTO */
-    function getDirectVideoUrl(url) {
-      let u = url.trim();
-      if (u.includes('dropbox.com')) {
-        if (u.includes('dl=0')) {
-          u = u.replace('dl=0', 'raw=1');
-        } else if (u.includes('dl=1')) {
-          u = u.replace('dl=1', 'raw=1');
-        } else if (!u.includes('raw=1')) {
-          u += (u.includes('?') ? '&' : '?') + 'raw=1';
-        }
-      }
-      return u;
-    }
-
-    /* GESTOR DE REPRODUCTOR (DROPBOX Y .MP4 CON REPRODUCTOR NATIVO FLUIDO) */
+    /* GESTOR DE REPRODUCTOR (OK.RU, DROPBOX Y DRIVE EN IFRAME CON PANTALLA COMPLETA) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
       }
 
-      let cleanUrl = getDirectVideoUrl(vInput);
+      let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es Google Drive (iframe)
-      if (cleanUrl.includes('drive.google.com') || cleanUrl.includes('<iframe')) {
+      if (cleanUrl.includes('<iframe') || cleanUrl.includes('dropbox.com') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
-        if (cleanUrl.includes('drive.google.com')) {
+        
+        if (cleanUrl.includes('dropbox.com')) {
+          embedUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+          if (cleanUrl.includes('/scl/fi/')) {
+            embedUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+          }
+        } else if (cleanUrl.includes('ok.ru') && !cleanUrl.includes('videoembed')) {
+          const match = cleanUrl.match(/\/video\/([0-9]+)/);
+          if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
+        } else if (cleanUrl.includes('drive.google.com')) {
           let fileId = '';
           const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
           if (match && match[1]) fileId = match[1];
@@ -1526,7 +1538,7 @@
 
         vBox.innerHTML = `
           <div style="position:relative; width:100%; height:100%;" id="iframeWrapper">
-            <div class="custom-top-bar" id="iframeOverlayBar">
+            <div class="iframe-overlay-bar" id="iframeOverlayBar">
               <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
@@ -1560,10 +1572,10 @@
         return;
       }
 
-      // Reproductor personalizado para archivos .mp4 y Dropbox
+      // Reproductor personalizado para archivos .mp4 directos
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
-          <video id="nativeVideo" src="${cleanUrl}" playsinline preload="metadata"></video>
+          <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
           <div class="center-play-pause-indicator" id="centerIndicator">❚❚</div>
           
           <div class="custom-top-bar" id="customTopBar">
