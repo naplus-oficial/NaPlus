@@ -929,8 +929,8 @@
         </div>
 
         <div class="form-group" style="margin-top: 15px; border-top: 1px solid var(--border-purple); padding-top: 12px;">
-          <label>Token de GitHub (Opcional - para sincronizar online)</label>
-          <input type="password" id="ghTokenInput" placeholder="ghp_... (dejar vacío si solo guardás localmente)">
+          <label>Token de GitHub (Opcional - ghp_... o github_pat_...)</label>
+          <input type="password" id="ghTokenInput" placeholder="Token para sincronizar online en GitHub">
         </div>
 
         <div class="form-actions" style="margin-top: 15px;">
@@ -2552,7 +2552,7 @@
       const type = document.getElementById('typeInput').value;
 
       const tokenInput = document.getElementById('ghTokenInput').value.trim();
-      if (tokenInput.startsWith('ghp_')) {
+      if (tokenInput.startsWith('ghp_') || tokenInput.startsWith('github_pat_')) {
         localStorage.setItem('naPlus_gh_token', tokenInput);
       } else if (tokenInput === '') {
         localStorage.removeItem('naPlus_gh_token');
@@ -2619,12 +2619,12 @@
       closeModal('uploadModal');
 
       // Sincronizar en segundo plano si hay token
-      publishToGitHubAutomatically();
+      await publishToGitHubAutomatically();
     }
 
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token || !token.startsWith('ghp_')) {
+      if (!token || (!token.startsWith('ghp_') && !token.startsWith('github_pat_'))) {
         return; // Guardado localmente con éxito sin interrumpir
       }
 
@@ -2851,7 +2851,7 @@
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       closeModal('editEpisodeModal');
       openContentDetail(currentSeriesData.id);
-      publishToGitHubAutomatically();
+      await publishToGitHubAutomatically();
     }
 
     function playEpisode(seasonIdx, epIdx) {
