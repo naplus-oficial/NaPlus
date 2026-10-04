@@ -481,7 +481,7 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO CON BOTÓN DE FORZADO TOTAL DE PANTALLA COMPLETA */
+    /* CONTENEDOR DE VIDEO Y PANTALLA COMPLETA TOTALMENTE FORZADA */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
@@ -495,6 +495,24 @@
       justify-content: center;
       border: 1px solid rgba(124, 58, 237, 0.3);
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    /* Estilos cuando la caja entra en modo pantalla completa nativa */
+    .video-box:fullscreen, .video-box:-webkit-full-screen {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      background: #000 !important;
+    }
+    .video-box:fullscreen iframe, .video-box:fullscreen video,
+    .video-box:-webkit-full-screen iframe, .video-box:-webkit-full-screen video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
     }
 
     .video-box iframe, .video-box video { 
@@ -514,7 +532,7 @@
       background: #7c3aed;
       border: 2px solid #fff;
       color: #fff;
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 25px;
       font-size: 0.8rem;
       font-weight: 800;
@@ -523,7 +541,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.9);
     }
     .fullscreen-trigger-btn:active { transform: scale(0.95); }
 
@@ -854,43 +872,50 @@
       }
     });
 
-    // SISTEMA ABSOLUTO DE PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL FORZADA
+    // SISTEMA DE PANTALLA COMPLETA A NIVEL DE CONTENEDOR CON BLOQUEO HORIZONTAL
     function triggerBoxFullscreen(btnEl) {
-      const vBox = btnEl.parentElement;
-      const targetElem = vBox.querySelector('video') || vBox.querySelector('iframe') || vBox;
+      const vBox = btnEl.closest('.video-box');
       
-      // Intentar API Fullscreen estándar y bloqueo de orientación horizontal
-      const requestMethod = targetElem.requestFullscreen || targetElem.webkitRequestFullscreen || targetElem.msRequestFullscreen || vBox.requestFullscreen;
-      
-      if (requestMethod) {
-        requestMethod.call(targetElem).then(() => {
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
-          }
-        }).catch(() => {
-          // Si el navegador bloquea la API nativa, forzamos expansión visual total en pantalla
-          forceVisualLandscapeFullscreen(vBox);
-        });
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (vBox.requestFullscreen) {
+          vBox.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock('landscape').catch(() => {});
+            }
+          }).catch(() => {
+            forceVisualLandscape(vBox);
+          });
+        } else if (vBox.webkitRequestFullscreen) {
+          vBox.webkitRequestFullscreen();
+        } else {
+          forceVisualLandscape(vBox);
+        }
       } else {
-        forceVisualLandscapeFullscreen(vBox);
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else {
+          forceVisualLandscape(vBox);
+        }
       }
     }
 
-    function forceVisualLandscapeFullscreen(vBox) {
-      if (!vBox.classList.contains('forced-fullscreen')) {
-        vBox.classList.add('forced-fullscreen');
+    function forceVisualLandscape(vBox) {
+      if (!vBox.classList.contains('forced-fs')) {
+        vBox.classList.add('forced-fs');
         vBox.style.position = 'fixed';
         vBox.style.inset = '0';
         vBox.style.width = '100vw';
         vBox.style.height = '100vh';
-        vBox.style.zIndex = '9999999';
+        vBox.style.zIndex = '99999999';
         vBox.style.borderRadius = '0';
         vBox.style.margin = '0';
         if (screen.orientation && screen.orientation.lock) {
           screen.orientation.lock('landscape').catch(() => {});
         }
       } else {
-        vBox.classList.remove('forced-fullscreen');
+        vBox.classList.remove('forced-fs');
         vBox.style.position = '';
         vBox.style.inset = '';
         vBox.style.width = '';
@@ -1391,7 +1416,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON BOTÓN FLOTANTE DE FORZADO ABSOLUTO (PANTALLA COMPLETA + HORIZONTAL) */
+    /* MOTOR DE REPRODUCCIÓN CON BOTÓN FLOTANTE DE PANTALLA COMPLETA TOTAL */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
