@@ -509,7 +509,7 @@
       z-index: 1;
     }
 
-    /* BARRA SUPERIOR DISCRETA PARA IFRAMES */
+    /* BARRA SUPERIOR DISCRETA */
     .iframe-overlay-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -554,7 +554,7 @@
       cursor: pointer;
     }
 
-    /* REPRODUCTOR PERSONALIZADO ESTILO IMAGEN PARA .MP4 Y DROPBOX */
+    /* REPRODUCTOR PERSONALIZADO PARA .MP4 DIRECTOS */
     .custom-player-wrapper {
       position: relative;
       width: 100%;
@@ -1504,7 +1504,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR DE REPRODUCTOR (DROPBOX CONVERTIDO A STREAMING NATIVO Y GOOGLE DRIVE) */
+    /* GESTOR DE REPRODUCTOR (DROPBOX Y DRIVE INCORPORADOS EN IFRAME CON BARRA TÁCTIL) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1514,18 +1514,16 @@
       let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es un enlace de Dropbox, transformarlo a enlace directo raw=1 para reproducción nativa fluida
-      if (cleanUrl.includes('dropbox.com')) {
-        cleanUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
-        if (cleanUrl.includes('/scl/fi/')) {
-          cleanUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
-        }
-      }
-
-      // Si es Google Drive (iframe)
-      if (cleanUrl.includes('drive.google.com') || cleanUrl.includes('<iframe')) {
+      // Si es Dropbox o Google Drive, se inserta en un iframe para que se ejecute directamente dentro de tu página
+      if (cleanUrl.includes('dropbox.com') || cleanUrl.includes('drive.google.com') || cleanUrl.includes('<iframe')) {
         let embedUrl = cleanUrl;
-        if (cleanUrl.includes('drive.google.com')) {
+        
+        if (cleanUrl.includes('dropbox.com')) {
+          embedUrl = cleanUrl.replace(/[?#].*$/, '') + '?raw=1';
+          if (cleanUrl.includes('/scl/fi/')) {
+            embedUrl = cleanUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+          }
+        } else if (cleanUrl.includes('drive.google.com')) {
           let fileId = '';
           const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
           if (match && match[1]) fileId = match[1];
@@ -1547,6 +1545,7 @@
           </div>
         `;
 
+        const wrapper = vBox.querySelector('#iframeWrapper');
         const bar = vBox.querySelector('#iframeOverlayBar');
         const touchOverlay = vBox.querySelector('#iframeTouchOverlay');
         let hideTimer = null;
@@ -1559,6 +1558,7 @@
           }, 5000);
         }
 
+        // Mostrar barra al inicio y ocultar automáticamente tras 5 segundos
         showBar();
 
         touchOverlay.onclick = (e) => {
@@ -1572,7 +1572,7 @@
         return;
       }
 
-      // Reproductor personalizado para archivos .mp4 y Dropbox
+      // Reproductor personalizado para archivos .mp4 directos
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
