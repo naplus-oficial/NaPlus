@@ -29,9 +29,7 @@
 
     html { scroll-behavior: smooth; }
 
-    button {
-      transition: transform 0.15s ease;
-    }
+    button { transition: transform 0.15s ease; }
     button:active { transform: scale(0.95); }
 
     body {
@@ -82,28 +80,18 @@
     }
 
     .nav-item {
-      background: none;
-      border: none;
+      background: none; border: none;
       color: var(--text-gray);
-      font-size: 0.65rem;
-      font-weight: 500;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      width: 25%;
+      font-size: 0.65rem; font-weight: 500;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; width: 25%;
       transition: color 0.2s ease;
     }
 
     .nav-item svg {
-      width: 22px;
-      height: 22px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 22px; height: 22px;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
       transition: transform 0.2s ease;
     }
 
@@ -155,8 +143,8 @@
     .hbo-slide-content { position: relative; z-index: 3; text-align: left; }
     .hbo-slide-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
     .hbo-slide-meta { font-size: 0.8rem; color: var(--accent-light); margin-bottom: 12px; font-weight: 500; }
+    
     .hbo-slide-btns { display: flex; gap: 10px; align-items: center; }
-
     .hbo-btn-play {
       background: #fff; color: #000; border: none;
       padding: 9px 20px; border-radius: 6px;
@@ -197,13 +185,11 @@
     .search-box input:focus { border-color: var(--accent-light); background: rgba(255, 255, 255, 0.08); }
     .clear-search-btn {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--text-gray); font-size: 1.1rem;
-      cursor: pointer; padding: 4px; display: none;
+      background: none; border: none; color: var(--text-gray); font-size: 1.1rem; cursor: pointer; padding: 4px; display: none;
     }
     .clear-search-btn:hover { color: #fff; }
 
     .section-title { font-size: 1rem; font-weight: 700; margin: 20px 20px 10px; color: #e2e8f0; display: flex; align-items: center; gap: 6px; }
-
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 10px;
       scrollbar-width: none; -webkit-overflow-scrolling: touch; transform: translateZ(0);
@@ -225,8 +211,8 @@
 
     .card-fav-btn {
       position: absolute; top: 6px; left: 6px;
-      background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.15); color: #fff;
+      background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff;
       width: 30px; height: 30px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
       transition: transform 0.2s ease, background 0.2s ease;
@@ -238,9 +224,8 @@
     .admin-btns { display: none; position: absolute; top: 6px; right: 6px; gap: 4px; z-index: 10; }
     body.creator-mode .admin-btns { display: flex; }
     .admin-btns button {
-      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.15); color: #fff;
-      width: 26px; height: 26px; border-radius: 50%; font-size: 0.7rem;
+      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff; width: 26px; height: 26px; border-radius: 50%; font-size: 0.7rem;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
@@ -266,28 +251,39 @@
       position: absolute; top: 15px; right: 15px;
       background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
       color: #fff; border: 1px solid rgba(255,255,255,0.15);
-      width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer; z-index: 2250;
+      width: 34px; height: 34px; border-radius: 50%;
+      font-size: 1rem; cursor: pointer; z-index: 2250;
       display: flex; align-items: center; justify-content: center;
     }
 
     .modal-box h3 { margin-bottom: 12px; padding-right: 30px; font-size: 1.1rem; }
+
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.75rem; color: var(--text-gray); margin-bottom: 4px; font-weight: 500; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 9px 12px;
-      background: #07040d; border: 1px solid var(--border-purple);
-      color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
+      width: 100%; padding: 9px 12px; background: #07040d;
+      border: 1px solid var(--border-purple); color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
     .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
     .hbo-backdrop-header {
-      position: relative; width: 100%; min-height: 230px; padding: 40px 20px 20px;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      background-size: cover; background-position: center;
+      position: relative;
+      width: 100%;
+      min-height: 230px;
+      padding: 40px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-size: cover;
+      background-position: center;
     }
-    .hbo-backdrop-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 70%, #000 100%); }
+    .hbo-backdrop-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 70%, #000 100%);
+    }
     .hbo-header-content { position: relative; z-index: 2; }
     .hbo-header-content h2 { font-size: 1.4rem; margin-bottom: 4px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     .hbo-header-content p { font-size: 0.8rem; color: #d1d5db; margin-bottom: 2px; }
@@ -302,48 +298,62 @@
       padding: 9px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; width: 100%; outline: none;
     }
 
-    .hbo-episodes-list { display: flex; flex-direction: column; gap: 15px; padding: 10px 20px 90px; }
+    .hbo-episodes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 10px 20px 90px;
+    }
+
     .hbo-ep-card { display: flex; flex-direction: column; gap: 6px; }
     .hbo-ep-row { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-    .hbo-thumb { width: 130px; height: 74px; object-fit: cover; border-radius: 4px; background: #1a1528; flex-shrink: 0; position: relative; }
-    .hbo-play-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); color: #fff; font-size: 1.1rem; }
+    .hbo-thumb {
+      width: 130px; height: 74px; object-fit: cover; border-radius: 4px;
+      background: #1a1528; flex-shrink: 0; position: relative;
+    }
+    .hbo-play-icon {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.35); color: #fff; font-size: 1.1rem;
+    }
     .hbo-ep-details { flex-grow: 1; overflow: hidden; }
     .hbo-ep-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
     .hbo-ep-desc { font-size: 0.75rem; color: var(--text-gray); line-height: 1.35; }
-
     .hbo-edit-btn {
       display: none; background: #2563eb; border: none; color: #fff;
-      padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;
-      cursor: pointer; align-self: flex-start; margin-top: 2px;
+      padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
+      align-self: flex-start; margin-top: 2px;
     }
     body.creator-mode .hbo-edit-btn { display: inline-block; }
 
     /* ---------- REPRODUCTOR ---------- */
-    .video-box {
-      width: 100%; aspect-ratio: 16/9; background: #000;
-      margin-bottom: 15px; border-radius: 10px; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+    .video-box { 
+      width: 100%;
+      aspect-ratio: 16/9; 
+      background: #000; 
+      margin-bottom: 15px; 
+      border-radius: 10px; 
+      overflow: hidden; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       border: 1px solid rgba(124, 58, 237, 0.35);
       box-shadow: 0 10px 30px rgba(0,0,0,0.75);
     }
-    .video-box iframe, .video-box video { width: 100%; height: 100%; border: none; display: block; }
-
+    .video-box iframe, .video-box video {
+      width: 100%; height: 100%; border: none; display: block;
+    }
     .video-box:fullscreen, .video-box:-webkit-full-screen {
-      width: 100vw; height: 100vh; aspect-ratio: unset;
-      border-radius: 0; border: none; margin-bottom: 0;
+      width: 100vw; height: 100vh; aspect-ratio: unset; border-radius: 0; border: none; margin-bottom: 0;
     }
 
     .video-loading {
       position: absolute; inset: 0; z-index: 2;
-      display: flex; align-items: center; justify-content: center;
-      background: #000;
+      display: flex; align-items: center; justify-content: center; background: #000;
     }
     .video-loading .spinner {
-      width: 34px; height: 34px;
-      border: 3px solid rgba(255,255,255,0.15);
-      border-top-color: var(--accent-light);
-      border-radius: 50%;
+      width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: var(--accent-light); border-radius: 50%;
       animation: naplusSpin 0.8s linear infinite;
     }
     @keyframes naplusSpin { to { transform: rotate(360deg); } }
@@ -351,17 +361,24 @@
     .video-fs-btn {
       position: absolute; bottom: 10px; right: 10px; z-index: 20;
       width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,0.2); color: #fff;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: background 0.2s ease, border-color 0.2s ease;
     }
-    .video-fs-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .video-fs-btn:hover, .video-fs-btn.active { background: rgba(124,58,237,0.85); border-color: var(--accent-light); }
+    .video-fs-btn svg {
+      width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .video-fs-btn:hover, .video-fs-btn.active {
+      background: rgba(124,58,237,0.85); border-color: var(--accent-light);
+    }
 
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
-    .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
+    .admin-episode-card {
+      background: #07040d; border: 1px solid var(--border-purple);
+      padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative;
+    }
   </style>
 </head>
 <body>
@@ -442,6 +459,7 @@
     </button>
   </nav>
 
+  <!-- MODAL DETALLE PELÍCULA -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
@@ -456,9 +474,9 @@
     </div>
   </div>
 
+  <!-- MODAL VISTA SERIE -->
   <div class="modal-box-series" id="seriesModal">
     <button class="btn-close" onclick="closeModal('seriesModal')">✕</button>
-
     <div class="hbo-backdrop-header" id="hboBackdropHeader">
       <div class="hbo-backdrop-overlay"></div>
       <div class="hbo-header-content">
@@ -471,7 +489,6 @@
         </div>
       </div>
     </div>
-
     <div style="max-width: 650px; margin: 0 auto;">
       <div class="season-selector-container">
         <select id="seasonSelect" class="season-selector-hbo" onchange="renderEpisodesForSelectedSeason()"></select>
@@ -480,6 +497,7 @@
     </div>
   </div>
 
+  <!-- MODAL REPRODUCTOR DE EPISODIOS -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 550px;">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
@@ -492,6 +510,7 @@
     </div>
   </div>
 
+  <!-- MODAL SUBIR / EDITAR -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -545,6 +564,7 @@
     </div>
   </div>
 
+  <!-- MODAL EDITAR CAPÍTULO SUELTO -->
   <div class="modal-overlay" id="editEpisodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 380px;">
       <button class="btn-close" onclick="closeModal('editEpisodeModal')">✕</button>
@@ -662,7 +682,7 @@
           {
             "num": 3,
             "title": "Destructor de mundos",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10w_ZTSjnSeK44m5prWg%3A1790908764435&ei=XBm_arOQGrux5OUPp9uOwQI&oq=el+problema+de+los+tres+cuerpos+serie+capitulo+3&gs_lp=EhJtb2JpbGUtZ3dzLXdpei1pbWciMGVsIHByb2JsZW1hIGRlIGxvcyB0cmVzIGN1ZXJwb3Mgc2VyaWUgY2FwaXR1bG8gMzIIEAAYiQUYogRIxhFQowhYlQ1wAHgAkAEAmAF2oAHPAqoBAzAuM7gBA8gBAPgBAZgCA6AC6wLCAgcQIxjJAhgnwgIIEAAYgAQYogSYAwCIBgGSBwMwLjOgB8UJsgcDMC4zuAfrAsIHBzAuMS4xLjHIBxqACAE&sclient=mobile-gws-wiz-img#sv=CAMSVxoyKhBlLVlyV1lqUU1BUnFhLW5NMg5ZcldZalFNQVJxYS1uTToOS3RzQlAzWGpTRTBYU00gBCoXCgFzEhBlLVlyV1lqUU1BUnFhLW5NGAEwAUoECAEQAhgHIJX6urkGSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjTl177u6v2sZQpZDJz9ycivO6IiL_8erhFoOjXSYQHmPFJgTJK3YJOfEh&s=10",
             "desc": "Obsesionados con su misión en el juego virtual, Jin y Jack se apresuran para resolver un acertijo complejo. Sin embargo, el paso al siguiente nivel trae consecuencias desastrosas.",
             "video": "https://ok.ru/video/16684098587355"
           },
@@ -676,7 +696,7 @@
           {
             "num": 5,
             "title": "Juicio final",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10qOLCEdEz1hp00-GPGIG-3u1gWGdeiARGQBcrTwr5AWQKTVY06UMJWAgbFItvDrlVwOdjAMornqgKKeBV4RR62it_Ied5k4b2OjUkF96gdhW5Oa2RYKkqdz7-ppYUdtzNkV68Q1xBvXRQBkO9GlWFa4XFKWQ6metDEPfe1NvKmLL-CY9DMyPLB4XuWx0gQ&q=el+problema+de+los+tres+cuerpos+serie+capitulo+5&sa=X&ved=2ahUKEwiH39n3yZuXAxXSrJUCHT6nNWwQtKgLegQIEhAB&biw=384&bih=635&dpr=2.81#sv=CAMSVxoyKhBlLWlTd0pMVkhOamtsZWhNMg5pU3dKTFZITmprbGVoTToOVmh6ZHFiVGw4Z1hNVk0gBCoXCgFzEhBlLWlTd0pMVkhOamtsZWhNGAEwAUoECAEQAhgHIMj1_IIKSggQAhgBIAIoAQ",
+            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGKBZt65tLB3Csq84HRL4VDY24898qE6Wet9ZkVSGXaqMoFazyx6B-Cb0f&s=10",
             "desc": "Mientras el nivel de amenaza aumenta, se pone en marcha una misión secreta en territorio peligroso para obtener información del enemigo. La Tierra recibe un mensaje aterrador.",
             "video": "https://ok.ru/video/16692258933467"
           },
@@ -1166,7 +1186,7 @@
           },
           {
             "num": 2,
-            "title": "Mis dos papás",
+            "title": "Mis dois papás",
             "img": "https://pixel.disco.skyshowtime.com/uuid/459dad2c-7984-3656-8853-7f9d72fbb5b4/LAND_16_9?language=en-US&proposition=SKYSHOWTIME&version=0cb8bed8-1b0b-30aa-8e66-1a2d68d6a808",
             "desc": "El plan de Ted y John para vengarse del matón del colegio los coloca sin querer en el papel de padres.",
             "video": "https://ok.ru/video/16671801936603"
@@ -1629,175 +1649,6 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
-    "type": "movie",
-    "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
-    "genre": "Terror",
-    "year": "2025",
-    "desc": "Wendy intenta rescatar a su hermano de Peter Pan, un perturbado secuestrador y asesino de niños que promete a los pequeños que, al morir, irán a la Tierra de Nunca Jamás.",
-    "cover": "https://play-lh.googleusercontent.com/HYVVxiMk_Gthbg5v7_JQpG4BvyqhZVhmVRdesAuWlWshUhYBAAqp2V9VwbuT1pKljEz8ijvAG1w7Ru7e2Q",
-    "video": "https://ok.ru/video/16664606411483",
-    "views": 445,
-    "dateAdded": 1790769448763
-  },
-  {
-    "id": 1790755820554,
-    "type": "movie",
-    "title": "Piraña 3DD",
-    "genre": "Terror, Comedia",
-    "year": "2012",
-    "desc": "Nadie está a salvo de un banco de peces prehistóricos que, buscando carne, clavan sus afilados dientes en los clientes del exitoso parque acuático Big Wet.",
-    "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
-    "video": "https://voe.sx/e/g0xdl5xf7x30",
-    "views": 361,
-    "dateAdded": 1790755820564
-  },
-  {
-    "id": 1790754583454,
-    "type": "movie",
-    "title": "Marble Hornet",
-    "genre": "Terror",
-    "year": "2015",
-    "desc": "Unos amigos descubren unas cintas de vídeo en las que un aterrador hombre sin rostro, vestido con un elegante traje, persigue a una familia hasta llevar a sus miembros a la locura. Ahora que lo han visto, el monstruo comienza a acosarlos sin descanso.",
-    "cover": "https://static.wikia.nocookie.net/vsdebating/images/f/fe/The_Operator.jpg/revision/latest/scale-to-width-down/1200?cb=20180302100112",
-    "video": "https://voe.sx/e/bj0ouh6neklp",
-    "views": 285,
-    "dateAdded": 1790754583455
-  },
-  {
-    "id": 1790651263999,
-    "type": "movie",
-    "title": "Piraña 3D",
-    "genre": "Terror, Comedia",
-    "year": "2010",
-    "desc": "Las vacaciones de primavera se vuelven una pesadilla en un popular centro turístico, en donde cientos de peces prehistóricos que se alimentan de humanos han llegado para comerse a los indefensos bañistas.",
-    "cover": "https://image.tmdb.org/t/p/original/lIodGaZNJbbShF5bDgf51cqpAKa.jpg",
-    "video": "https://ok.ru/video/16646131878619",
-    "views": 501,
-    "dateAdded": 1790651263999
-  },
-  {
-    "id": 1790649801930,
-    "type": "movie",
-    "title": "The Void (Conjuros del más allá)",
-    "genre": "Terror, Cienciaficción",
-    "year": "2016",
-    "desc": "Figuras cubiertas con capuchas, propias de una secta, atrapan a un agente de policía, pacientes y empleados en el interior de un hospital, que es una puerta abierta a la maldad.",
-    "cover": "https://www.joblo.com/wp-content/uploads/2015/12/the-void.jpg",
-    "video": "https://voe.sx/e/jgsbe2igvkwy",
-    "views": 381,
-    "dateAdded": 1790649801930
-  },
-  {
-    "id": 1790649103198,
-    "type": "movie",
-    "title": "I lost my body (Perdí mi cuerpo)",
-    "genre": "Drama, Romance, Animación",
-    "year": "2019",
-    "desc": "La historia de Naoufel, un joven que se enamora de Gabrielle, en París. En otra parte de la ciudad, la mano de un joven escapa de un laboratorio de disección, decidida a encontrar su cuerpo nuevamente.",
-    "cover": "https://a.ltrbxd.com/resized/film-poster/5/1/4/7/0/2/514702-i-lost-my-body-0-600-0-900-crop.jpg?v=d58f4ad597",
-    "video": "https://ok.ru/video/16645961091803",
-    "views": 349,
-    "dateAdded": 1790649103198
-  },
-  {
-    "id": 1790647825990,
-    "type": "movie",
-    "title": "Shutter",
-    "genre": "Terror",
-    "year": "2004",
-    "desc": "Un fotógrafo y su novia atropellan a una mujer con su automóvil, pero ahora deben enfrentar la ira de su espíritu vengativo.",
-    "cover": "https://m.media-amazon.com/images/I/612oSHMX54L._AC_UF894,1000_QL80_.jpg",
-    "video": "https://ok.ru/video/16645864032987",
-    "views": 459,
-    "dateAdded": 1790647825990
-  },
-  {
-    "id": 1790646943641,
-    "type": "movie",
-    "title": "Jujutsu Kaisen: El tesoro escondido/El tesoro perdido",
-    "genre": "Animación, Acción, Drama",
-    "year": "2026",
-    "desc": "Antes de ser enemigos, Satoru Gojo y Suguru Geto eran compañeros de instituto y amigos. Los dos poderosos hechiceros reciben el encargo de proteger a Riko Amanai",
-    "cover": "https://image.tmdb.org/t/p/original/gO0B3CwQ0gmLSFk9YwkNMvvvp0a.jpg",
-    "video": "https://ok.ru/video/16645678828251",
-    "seasons": [],
-    "views": 98,
-    "dateAdded": 1790646943641
-  },
-  {
-    "id": 1790646768137,
-    "type": "movie",
-    "title": "5 centímetros por segundo",
-    "genre": "Animación, Romance, Drama",
-    "year": "2007",
-    "desc": "Las vidas de Akari Shinohara y Takaki Tono se separaron al acabar la escuela. A pesar de los intentos por mantener el contacto, el tiempo acaba distanciándoles. Aun así, Takaki no puede quitarse de la cabeza la idea de reencontrarse con ella.",
-    "cover": "https://www.selecta-vision.com/wp-content/uploads/2024/07/5cm-artwork-1449x2048.jpg",
-    "video": "https://voe.sx/e/m83tplphumkr",
-    "views": 499,
-    "dateAdded": 1790646768137
-  },
-  {
-    "id": 1790646629199,
-    "type": "movie",
-    "title": "Somos los Miller (We're the Millers)",
-    "genre": "Comedia",
-    "year": "2013",
-    "desc": "Un traficante crea una familia falsa como parte de su plan para mover un enorme cargo de hierba de los Estados Unidos a México.",
-    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/e6ITLpsQP9FMBF4jDyvHpWUYV64.jpg",
-    "video": "https://voe.sx/e/qif8izzgsxum",
-    "views": 555,
-    "dateAdded": 1790646629199
-  },
-  {
-    "id": 1790646464102,
-    "type": "movie",
-    "title": "V/H/S: Viral",
-    "genre": "Terror",
-    "year": "2014",
-    "desc": "Una persecución policiaca por las calles de Los Ángeles inspira a docenas de jóvenes obsesionados con la fama para capturar imágenes lascivas, pero no son conscientes que enfrentarán sus propias muertes como estrellas de la sensación de su video.",
-    "cover": "https://images.justwatch.com/poster/309926499/s718/v-h-s-viral.jpg",
-    "video": "https://ok.ru/video/16645563353819",
-    "views": 217,
-    "dateAdded": 1790646464102
-  },
-  {
-    "id": 1790646338112,
-    "type": "movie",
-    "title": "V/H/S 2: Las crónicas del miedo 2",
-    "genre": "Terror",
-    "year": "2013",
-    "desc": "Mientras se realiza una búsqueda sobre el paradero de un estudiante desaparecido, una pareja observa horribles historias grabadas en una colección de videocintas.",
-    "cover": "https://play-lh.googleusercontent.com/LossrrWKrnNop4AxnkA5cYMxNDqDWXBTpCUWMgPimKgLwfYSSasoE64g7qjrlu0ZZW0",
-    "video": "https://ok.ru/video/16645514988251",
-    "views": 229,
-    "dateAdded": 1790646338112
-  },
-  {
-    "id": 1790646185225,
-    "type": "movie",
-    "title": "V/H/S: Las crónicas del miedo",
-    "genre": "Terror",
-    "year": "2012",
-    "desc": "Contratada para robar una cinta VHS de una casa alejada, una banda de ladrones descubre un cadáver, viejos televisores y muchas imágenes encriptadas y perturbadoras.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/9e4b343e30ec4de545da0d441f539e1dad78d27cb16974010de57558fa8d2a7d.png",
-    "video": "https://ok.ru/video/16645441915611",
-    "views": 65,
-    "dateAdded": 1790646185225
-  },
-  {
-    "id": 1790645942165,
-    "type": "movie",
-    "title": "El final de la calle Oak",
-    "genre": "Acción, Cienciaficción",
-    "year": "2026",
-    "desc": "La familia Platt se une para desenvolverse en su nuevo entorno después de que un evento cósmico traslada su barrio residencial a un lugar desconocido y sterrador.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/73c3544aaac37e4c6bd8620234a55085d5498746efda9a28630927af5fda06d6.jpg",
-    "video": "https://ok.ru/video/16645391256283",
-    "views": 369,
-    "dateAdded": 1790645942165
-  },
-  {
     "id": 1790645806977,
     "type": "movie",
     "title": "[REC]",
@@ -1825,10 +1676,6 @@
       document.body.classList.add('creator-mode');
     }
 
-    /* ---------- Pantalla completa real, controlada por nosotros ----------
-       Se expande el CUADRO que contiene al video (no se depende del botón
-       interno del reproductor de VOE/OK.ru, que a veces no tiene permiso
-       para expandirse). Funciona siempre, y gira la pantalla a horizontal. */
     function toggleVideoFullscreen(el, btn) {
       if (!el) return;
       const isFs = document.fullscreenElement === el || document.webkitFullscreenElement === el;
@@ -1837,7 +1684,10 @@
         return;
       }
       const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-      if (!req) { alert('Tu navegador no soporta pantalla completa en este modo.'); return; }
+      if (!req) {
+        alert('Tu navegador no soporta pantalla completa en este modo.');
+        return;
+      }
       const result = req.call(el);
       const afterEnter = () => {
         if (screen.orientation && screen.orientation.lock) {
@@ -1850,6 +1700,7 @@
 
     document.addEventListener('fullscreenchange', syncFsButtons);
     document.addEventListener('webkitfullscreenchange', syncFsButtons);
+
     function syncFsButtons() {
       document.querySelectorAll('.video-fs-btn').forEach(btn => {
         const box = btn.closest('.video-box');
@@ -1860,7 +1711,6 @@
 
     const FULLSCREEN_ICON = '<svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
 
-    /* ---------- Imágenes confiables ---------- */
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
     );
@@ -1876,9 +1726,7 @@
       }
     }
 
-    /* ---------- Control del botón "atrás" mientras se busca ---------- */
     let inSearchHistoryState = false;
-
     function pushSearchState() {
       if (!inSearchHistoryState) {
         inSearchHistoryState = true;
@@ -1905,10 +1753,8 @@
     function switchView(viewName) {
       popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.value = '';
-      }
-
+      if (searchInput) { searchInput.value = ''; }
+      
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
 
@@ -1973,7 +1819,6 @@
     function renderHeroSlider() {
       const sliderContainer = document.getElementById('hboHeroSlider');
       const dotsContainer = document.getElementById('hboSliderDots');
-
       const recentItems = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).slice(0, 6);
       if (recentItems.length === 0) return;
 
@@ -2006,7 +1851,6 @@
         dot.onclick = () => { goToSlide(idx); restartSliderInterval(); };
         dotsContainer.appendChild(dot);
       });
-
       restartSliderInterval();
     }
 
@@ -2022,11 +1866,7 @@
       const slider = document.getElementById('hboHeroSlider');
       if (!slider) return;
       let startX = null, startY = null, dragging = false;
-
-      slider.addEventListener('pointerdown', e => {
-        startX = e.clientX; startY = e.clientY; dragging = true;
-      });
-
+      slider.addEventListener('pointerdown', e => { startX = e.clientX; startY = e.clientY; dragging = true; });
       slider.addEventListener('pointerup', e => {
         if (!dragging || startX === null) { dragging = false; return; }
         dragging = false;
@@ -2042,10 +1882,483 @@
         }
         startX = null; startY = null;
       });
-
       slider.addEventListener('pointercancel', () => { dragging = false; startX = null; });
     })();
 
     function renderHomeSections() {
       const searchInput = document.getElementById('searchInput');
-      const query = searchI
+      const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      const searchContainer = document.getElementById('searchResultsContainer');
+      const mainContent = document.getElementById('mainHomeContent');
+      const heroSlider = document.getElementById('hboHeroSlider');
+      const clearBtn = document.getElementById('clearSearchBtn');
+
+      if (clearBtn) clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+      const searching = query.length > 0 && query !== "9009";
+      document.body.classList.toggle('search-active', searching);
+
+      if (searching) {
+        pushSearchState();
+        heroSlider.style.display = 'none';
+        searchContainer.style.display = 'block';
+        mainContent.style.display = 'none';
+        const searchGrid = document.getElementById('searchGrid');
+        searchGrid.innerHTML = '';
+        const matches = catalog.filter(i => i.title.toLowerCase().includes(query) || i.genre.toLowerCase().includes(query));
+        if (matches.length > 0) {
+          matches.forEach(item => searchGrid.appendChild(createCardElement(item)));
+        } else {
+          searchGrid.innerHTML = '<div class="empty-msg">No se encontraron resultados.</div>';
+        }
+        return;
+      } else {
+        heroSlider.style.display = 'block';
+        searchContainer.style.display = 'none';
+        mainContent.style.display = 'block';
+        renderHeroSlider();
+      }
+
+      const recentScroll = document.getElementById('recentScroll');
+      recentScroll.innerHTML = '';
+      [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => recentScroll.appendChild(createCardElement(item)));
+
+      const topScroll = document.getElementById('topScroll');
+      topScroll.innerHTML = '';
+      [...catalog].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+
+      const genreContainer = document.getElementById('genreRowsContainer');
+      genreContainer.innerHTML = '';
+      let allGenres = [];
+      catalog.forEach(item => {
+        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allGenres.includes(g.trim())) allGenres.push(g.trim()); });
+      });
+      allGenres.sort();
+
+      allGenres.forEach(genre => {
+        const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `🎬 ${genre}`;
+          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+          genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
+        }
+      });
+    }
+
+    function checkSecretCode(e) {
+      if (e.key === 'Enter') {
+        const val = document.getElementById('searchInput').value.trim();
+        if (val === "9009") {
+          e.preventDefault();
+          document.getElementById('searchInput').value = '';
+          isCreatorMode = !isCreatorMode;
+          localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
+          document.body.classList.toggle('creator-mode', isCreatorMode);
+          if (isCreatorMode) openModalWithHistory('uploadModal');
+          renderHomeSections();
+        }
+      }
+    }
+
+    function renderMoviesGrid() {
+      const movies = catalog.filter(i => i.type === 'movie');
+      const topScroll = document.getElementById('moviesTopScroll');
+      topScroll.innerHTML = '';
+      [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+
+      const grid = document.getElementById('moviesGrid');
+      grid.innerHTML = '';
+      movies.forEach(item => grid.appendChild(createCardElement(item)));
+    }
+
+    function renderSeriesGrid() {
+      const series = catalog.filter(i => i.type === 'series');
+      const topScroll = document.getElementById('seriesTopScroll');
+      topScroll.innerHTML = '';
+      [...series].sort((a, b) => (b.views || 0) - (b.views || 0)).slice(0, 10).forEach(item => topScroll.appendChild(createCardElement(item)));
+
+      const grid = document.getElementById('seriesGrid');
+      grid.innerHTML = '';
+      series.forEach(item => grid.appendChild(createCardElement(item)));
+    }
+
+    function renderMyList() {
+      const grid = document.getElementById('myListGrid');
+      grid.innerHTML = '';
+      catalog.filter(i => myFavorites.includes(i.id)).forEach(item => grid.appendChild(createCardElement(item)));
+      if (grid.children.length === 0) grid.innerHTML = '<div class="empty-msg">No tenés elementos guardados.</div>';
+    }
+
+    function createCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openContentDetail(item.id);
+      const isFav = myFavorites.includes(item.id);
+      const badge = item.type === 'series' ? '📺' : '🎬';
+
+      card.innerHTML = `
+        <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+        </button>
+        <div class="admin-btns">
+          <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
+          <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
+        </div>
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="lazy" onerror="handleImgError(this)">
+        <div class="card-info">
+          <div class="card-title">${item.title}</div>
+          <div class="card-sub">${badge} • ${item.year}</div>
+        </div>
+      `;
+      return card;
+    }
+
+    let searchDebounceTimer = null;
+    function handleSearch() {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(renderHomeSections, 100);
+    }
+
+    let activeModalId = null;
+    function openModalWithHistory(id) {
+      activeModalId = id;
+      history.pushState({ modalOpen: id }, '', location.href);
+      document.getElementById(id).style.display = (id === 'seriesModal') ? 'block' : 'flex';
+    }
+
+    function closeModalWithHistory(id) {
+      const el = document.getElementById(id);
+      if (el && el.style.display !== 'none') {
+        el.style.display = 'none';
+        if (id === 'detailModal' || id === 'episodeModal') {
+          const vBox = id === 'detailModal' ? document.getElementById('videoBox') : document.getElementById('episodeVideoBox');
+          if (vBox) vBox.innerHTML = '';
+        }
+        activeModalId = null;
+      }
+    }
+
+    window.addEventListener('popstate', (e) => {
+      if (activeModalId) {
+        closeModalWithHistory(activeModalId);
+        e.preventDefault();
+        return;
+      }
+    });
+
+    function closeModal(id) {
+      closeModalWithHistory(id);
+    }
+
+    function toggleContentTypeFields() {
+      const type = document.getElementById('typeInput').value;
+      document.getElementById('movieVideoGroup').style.display = type === 'series' ? 'none' : 'block';
+      document.getElementById('seriesSeasonsGroup').style.display = type === 'series' ? 'block' : 'none';
+    }
+
+    function addSeasonField(seasonData = null) {
+      const container = document.getElementById('seasonsContainer');
+      const sIdx = container.children.length;
+      
+      const sDiv = document.createElement('div');
+      sDiv.className = 'admin-episode-card';
+      sDiv.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <input type="text" class="season-name-input" placeholder="Nombre de Temporada" value="${seasonData ? seasonData.name : 'Temporada ' + (sIdx + 1)}" style="font-weight:700; width:70%;">
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.75rem;" onclick="this.closest('.admin-episode-card').remove()">Eliminar Temporada</button>
+        </div>
+        <div class="episodes-container"></div>
+        <button type="button" class="btn-submit" style="background:#2563eb; font-size:0.75rem; padding:6px; margin-top:6px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Episodio</button>
+      `;
+      container.appendChild(sDiv);
+
+      const epContainer = sDiv.querySelector('.episodes-container');
+      if (seasonData && seasonData.episodes) {
+        seasonData.episodes.forEach(ep => addEpisodeField(epContainer, ep));
+      } else {
+        addEpisodeField(epContainer);
+      }
+    }
+
+    function addEpisodeField(epContainer, epData = null) {
+      const eIdx = epContainer.children.length + 1;
+      const eDiv = document.createElement('div');
+      eDiv.style.cssText = "background:#000; border:1px solid rgba(255,255,255,0.08); padding:8px; border-radius:6px; margin-bottom:6px;";
+      eDiv.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="font-size:0.7rem; color:var(--accent-light); font-weight:700;">Capítulo</span>
+          <button type="button" class="btn-cancel" style="color:#ef4444; font-size:0.7rem; padding:0;" onclick="this.parentNode.parentNode.remove()">✕ Eliminar</button>
+        </div>
+        <div style="display:grid; grid-template-columns: 50px 1fr; gap:6px; margin-bottom:6px;">
+          <input type="number" class="ep-num" placeholder="N°" value="${epData ? epData.num : eIdx}">
+          <input type="text" class="ep-title" placeholder="Título" value="${epData ? epData.title : ''}">
+        </div>
+        <div style="margin-bottom:6px;"><input type="url" class="ep-img" placeholder="URL Miniatura" value="${epData ? epData.img || '' : ''}"></div>
+        <div style="margin-bottom:6px;"><input type="text" class="ep-video" placeholder="Enlace de Video (VOE, OK.ru, Drive)" value="${epData ? epData.video || '' : ''}"></div>
+        <div><textarea class="ep-desc" rows="1" placeholder="Descripción...">${epData ? epData.desc || '' : ''}</textarea></div>
+      `;
+      epContainer.appendChild(eDiv);
+    }
+
+    function openUploadModal(item = null) {
+      document.getElementById('editId').value = item ? item.id : '';
+      document.getElementById('formTitle').innerText = item ? 'Editar Contenido' : 'Subir Contenido';
+      document.getElementById('typeInput').value = item ? item.type : 'movie';
+      document.getElementById('titleInput').value = item ? item.title : '';
+      document.getElementById('genreInput').value = item ? item.genre : '';
+      document.getElementById('yearInput').value = item ? item.year : '2026';
+      document.getElementById('descInput').value = item ? item.desc : '';
+      document.getElementById('coverInput').value = item ? item.cover : '';
+      document.getElementById('videoInput').value = item && item.video ? item.video : '';
+      
+      const seasonsContainer = document.getElementById('seasonsContainer');
+      seasonsContainer.innerHTML = '';
+      if (item && item.type === 'series' && item.seasons) {
+        item.seasons.forEach(s => addSeasonField(s));
+      }
+
+      toggleContentTypeFields();
+      openModalWithHistory('uploadModal');
+    }
+
+    function editItem(id) {
+      const item = catalog.find(x => x.id == id);
+      if (item) openUploadModal(item);
+    }
+
+    async function deleteItem(id) {
+      if (confirm("¿Seguro que querés eliminar esta obra del catálogo?")) {
+        catalog = catalog.filter(x => x.id != id);
+        localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+        renderHomeSections();
+      }
+    }
+
+    async function submitContent(e) {
+      e.preventDefault();
+      const id = document.getElementById('editId').value;
+      const type = document.getElementById('typeInput').value;
+
+      let seasons = [];
+      if (type === 'series') {
+        document.querySelectorAll('.admin-episode-card').forEach(sBlock => {
+          const sName = sBlock.querySelector('.season-name-input').value.trim() || "Temporada";
+          let episodes = [];
+          sBlock.querySelectorAll('.episodes-container > div').forEach(eBlock => {
+            episodes.push({
+              num: parseInt(eBlock.querySelector('.ep-num').value) || 1,
+              title: eBlock.querySelector('.ep-title').value.trim() || "Episodio",
+              img: eBlock.querySelector('.ep-img').value.trim(),
+              video: eBlock.querySelector('.ep-video').value.trim(),
+              desc: eBlock.querySelector('.ep-desc').value.trim()
+            });
+          });
+          seasons.push({ name: sName, episodes: episodes });
+        });
+      }
+
+      const existingItem = id ? catalog.find(x => x.id == id) : null;
+
+      const newItem = {
+        id: id ? parseInt(id) : Date.now(),
+        type: type,
+        title: document.getElementById('titleInput').value.trim(),
+        genre: document.getElementById('genreInput').value.trim(),
+        year: document.getElementById('yearInput').value,
+        desc: document.getElementById('descInput').value.trim(),
+        cover: document.getElementById('coverInput').value.trim(),
+        video: type === 'movie' ? document.getElementById('videoInput').value.trim() : '',
+        seasons: seasons,
+        views: existingItem ? (existingItem.views || 50) : 50,
+        dateAdded: existingItem ? (existingItem.dateAdded || Date.now()) : Date.now()
+      };
+
+      if (id) {
+        catalog = catalog.map(x => x.id == id ? newItem : x);
+      } else {
+        catalog.unshift(newItem);
+      }
+
+      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+      renderHomeSections();
+      closeModalWithHistory('uploadModal');
+    }
+
+    let currentSeriesData = null;
+
+    function openContentDetail(id) {
+      const item = catalog.find(x => x.id == id);
+      if (!item) return;
+      item.views = (item.views || 0) + 1;
+      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+
+      if (item.type === 'series') {
+        currentSeriesData = item;
+        document.getElementById('hboBackdropHeader').style.backgroundImage = `url('${item.cover}')`;
+        document.getElementById('seriesTitle').innerText = item.title;
+        document.getElementById('seriesMeta').innerText = `${item.year} • Temporadas: ${item.seasons ? item.seasons.length : 0}`;
+        document.getElementById('seriesViews').innerText = `👁️ ${item.views} reproducciones`;
+        
+        const descEl = document.getElementById('seriesDesc');
+        descEl.innerText = item.desc || '';
+        descEl.classList.add('truncated');
+        const readMoreBtn = document.getElementById('readMoreBtn');
+        readMoreBtn.style.display = (item.desc && item.desc.length > 100) ? 'inline-block' : 'none';
+        readMoreBtn.innerText = 'Leer más';
+
+        const seasonSelect = document.getElementById('seasonSelect');
+        seasonSelect.innerHTML = '';
+        if (item.seasons) {
+          item.seasons.forEach((s, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx; opt.innerText = s.name;
+            seasonSelect.appendChild(opt);
+          });
+        }
+        renderEpisodesForSelectedSeason();
+        openModalWithHistory('seriesModal');
+      } else {
+        document.getElementById('detailTitle').innerText = item.title;
+        document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
+        document.getElementById('detailViews').innerText = `👁️ ${item.views} reproducciones`;
+        document.getElementById('detailDesc').innerText = item.desc || '';
+        renderVideoInBox(document.getElementById('videoBox'), item.video);
+        openModalWithHistory('detailModal');
+      }
+    }
+
+    function toggleSynopsis() {
+      const descEl = document.getElementById('seriesDesc');
+      const btn = document.getElementById('readMoreBtn');
+      if (descEl.classList.contains('truncated')) {
+        descEl.classList.remove('truncated');
+        btn.innerText = 'Menos';
+      } else {
+        descEl.classList.add('truncated');
+        btn.innerText = 'Leer más';
+      }
+    }
+
+    function renderEpisodesForSelectedSeason() {
+      if (!currentSeriesData || !currentSeriesData.seasons) return;
+      const sIdx = document.getElementById('seasonSelect').value;
+      const season = currentSeriesData.seasons[sIdx];
+      const container = document.getElementById('episodesListContainer');
+      container.innerHTML = '';
+
+      if (!season || !season.episodes) return;
+      season.episodes.forEach((ep, eIdx) => {
+        const epCard = document.createElement('div');
+        epCard.className = 'hbo-ep-card';
+        epCard.innerHTML = `
+          <div class="hbo-ep-row" onclick="playEpisode(${sIdx}, ${eIdx})">
+            <div class="hbo-thumb">
+              <img src="${ep.img || currentSeriesData.cover}" data-orig="${ep.img || currentSeriesData.cover}" alt="Ep" loading="lazy" onerror="handleImgError(this)" style="width:100%; height:100%; object-fit:cover;">
+              <div class="hbo-play-icon">▶</div>
+            </div>
+            <div class="hbo-ep-details">
+              <div class="hbo-ep-title">${ep.num}. ${ep.title}</div>
+              <div class="hbo-ep-desc">${ep.desc || ''}</div>
+            </div>
+          </div>
+          <button class="hbo-edit-btn" onclick="openSingleEpisodeEdit(${sIdx}, ${eIdx})">Editar Capítulo</button>
+        `;
+        container.appendChild(epCard);
+      });
+    }
+
+    function playEpisode(seasonIdx, epIdx) {
+      const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
+      document.getElementById('epModalTitle').innerText = `${ep.num}. ${ep.title}`;
+      document.getElementById('epModalDesc').innerText = ep.desc || '';
+      renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
+      openModalWithHistory('episodeModal');
+    }
+
+    function closeEpisodePlayer() {
+      closeModalWithHistory('episodeModal');
+    }
+
+    function openSingleEpisodeEdit(sIdx, eIdx) {
+      const ep = currentSeriesData.seasons[sIdx].episodes[eIdx];
+      document.getElementById('editEpSeasonIdx').value = sIdx;
+      document.getElementById('editEpItemIdx').value = eIdx;
+      document.getElementById('modalEpNum').value = ep.num;
+      document.getElementById('modalEpTitle').value = ep.title;
+      document.getElementById('modalEpImg').value = ep.img || '';
+      document.getElementById('modalEpDesc').value = ep.desc || '';
+      document.getElementById('modalEpVideo').value = ep.video || '';
+      openModalWithHistory('editEpisodeModal');
+    }
+
+    function saveSingleEpisodeEdit(e) {
+      e.preventDefault();
+      const sIdx = parseInt(document.getElementById('editEpSeasonIdx').value);
+      const eIdx = parseInt(document.getElementById('editEpItemIdx').value);
+      if (currentSeriesData && currentSeriesData.seasons[sIdx] && currentSeriesData.seasons[sIdx].episodes[eIdx]) {
+        currentSeriesData.seasons[sIdx].episodes[eIdx] = {
+          num: parseInt(document.getElementById('modalEpNum').value) || 1,
+          title: document.getElementById('modalEpTitle').value.trim(),
+          img: document.getElementById('modalEpImg').value.trim(),
+          desc: document.getElementById('modalEpDesc').value.trim(),
+          video: document.getElementById('modalEpVideo').value.trim()
+        };
+        catalog = catalog.map(x => x.id === currentSeriesData.id ? currentSeriesData : x);
+        localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+        renderEpisodesForSelectedSeason();
+        closeModalWithHistory('editEpisodeModal');
+      }
+    }
+
+    function renderVideoInBox(vBox, vInput) {
+      if (!vInput) {
+        vBox.innerHTML = '<div class="empty-msg">Enlace de video no disponible.</div>';
+        return;
+      }
+
+      let cleanUrl = vInput.trim();
+      const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
+
+      if (cleanUrl.includes('<iframe') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
+        let embedUrl = cleanUrl;
+
+        if (cleanUrl.includes('<iframe')) {
+          const matchSrc = cleanUrl.match(/src="([^"]+)"/);
+          if (matchSrc && matchSrc[1]) embedUrl = matchSrc[1];
+        } else if (cleanUrl.includes('voe.sx') && !cleanUrl.includes('/e/')) {
+          const parts = cleanUrl.split('/');
+          const id = parts[parts.length - 1] || parts[parts.length - 2];
+          if (id) embedUrl = `https://voe.sx/e/${id}`;
+        } else if (cleanUrl.includes('ok.ru') && !cleanUrl.includes('videoembed')) {
+          const match = cleanUrl.match(/\/video\/([0-9]+)/);
+          if (match) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
+        } else if (cleanUrl.includes('drive.google.com')) {
+          let fileId = '';
+          const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) fileId = match[1];
+          else {
+            const urlParams = new URLSearchParams(cleanUrl.split('?')[1]);
+            if (urlParams.get('id')) fileId = urlParams.get('id');
+          }
+          embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+
+        vBox.innerHTML = `
+          <div class="video-loading"><div class="spinner"></div></div>
+          <iframe src="${embedUrl}" ${iframeAttributes} onload="this.previousElementSibling.style.display='none'"></iframe>
+          <button class="video-fs-btn" onclick="toggleVideoFullscreen(this.closest('.video-box'), this)" title="Pantalla completa">${FULLSCREEN_ICON}</button>
+        `;
+        return;
+      }
+
+      vBox.innerHTML = `
+        <div class="video-loading"><div class="spinner"></div></div>
+        <video src="${cleanUrl}" controls playsinline preload="metadata" onloadeddata="this.previousElementSibling.style.display='none'"></video>
+        <button class="video-fs-btn" onclick="toggleVideoFullscreen(this.closest('.video-box'), this)" title="Pantalla completa">${FULLSCREEN_ICON}</button>
+      `;
+    }
+
+    renderHomeSections();
+  </script>
+</body>
+</html>
