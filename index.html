@@ -212,14 +212,16 @@
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
-      z-index: 2000; padding: 15px; align-items: center; justify-content: center; overflow-y: auto;
+      z-index: 2000; padding: 10px; align-items: center; justify-content: center; overflow-y: auto;
     }
 
+    /* Modal compacto para que el reproductor y el botón queden a la vista inmediatamente */
     .modal-box {
-      background: #0b0614; padding: 20px; border-radius: 14px;
+      background: #0b0614; padding: 12px; border-radius: 12px;
       width: 100%; max-width: 600px; border: 1px solid var(--border-purple);
-      position: relative; max-height: 95vh; overflow-y: auto;
+      position: relative; max-height: 98vh; overflow-y: auto;
       box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+      display: flex; flex-direction: column; gap: 6px;
     }
 
     .modal-box-series {
@@ -229,11 +231,11 @@
     }
 
     .btn-close {
-      position: absolute; top: 15px; right: 15px;
+      position: absolute; top: 10px; right: 10px;
       background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
       color: #fff; border: 1px solid rgba(255,255,255,0.2);
-      width: 36px; height: 36px; border-radius: 50%;
-      font-size: 1rem; cursor: pointer; z-index: 2250;
+      width: 32px; height: 32px; border-radius: 50%;
+      font-size: 0.9rem; cursor: pointer; z-index: 2250;
       display: flex; align-items: center; justify-content: center;
     }
 
@@ -243,8 +245,8 @@
       width: 100%; padding: 9px 12px; background: #07040d;
       border: 1px solid var(--border-purple); color: #fff; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
-    .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px; }
-    .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 5px; }
+    .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 6px 10px; cursor: pointer; font-size: 0.8rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
     .season-block {
@@ -481,13 +483,13 @@
       font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* CONTENEDOR DE VIDEO Y OCULTAMIENTO AUTOMÁTICO DEL BOTÓN EN PANTALLA COMPLETA */
+    /* CONTENEDOR DE VIDEO */
     .video-box { 
       width: 100%;
       aspect-ratio: 16/9; 
       background: #000; 
-      margin-bottom: 15px; 
-      border-radius: 10px; 
+      margin-bottom: 4px; 
+      border-radius: 8px; 
       overflow: hidden; 
       position: relative;
       display: flex;
@@ -495,14 +497,6 @@
       justify-content: center;
       border: 1px solid rgba(124, 58, 237, 0.3);
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-
-    /* Cuando la caja está en pantalla completa (o forzada), el botón desaparece por completo */
-    .video-box:fullscreen .fullscreen-trigger-btn,
-    .video-box:-webkit-full-screen .fullscreen-trigger-btn,
-    .video-box:-moz-full-screen .fullscreen-trigger-btn,
-    .video-box.forced-fs .fullscreen-trigger-btn {
-      display: none !important;
     }
 
     .video-box iframe, .video-box video { 
@@ -515,6 +509,7 @@
       background: #000;
     }
 
+    /* BOTÓN DE PANTALLA COMPLETA CON CONTROL DE OCULTAMIENTO AUTOMÁTICO */
     .fullscreen-trigger-btn {
       position: absolute;
       bottom: 12px;
@@ -532,8 +527,13 @@
       align-items: center;
       gap: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      opacity: 1;
+      transition: opacity 0.3s ease;
     }
-    .fullscreen-trigger-btn:active { transform: scale(0.95); }
+    .fullscreen-trigger-btn.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
     #episodeModal .modal-box {
       width: 100vw !important;
@@ -564,7 +564,7 @@
 
     @media (max-width: 600px) {
       #detailModal .modal-box {
-        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 15px;
+        max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; padding: 10px;
       }
       .series-main-title { font-size: 1.8rem; }
     }
@@ -652,10 +652,10 @@
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
       <div class="video-box" id="videoBox"></div>
-      <h3 id="detailTitle"></h3>
-      <p id="detailMeta" style="color:var(--accent-light); font-size:0.8rem; margin-bottom:6px;"></p>
-      <p id="detailViews" style="color:var(--text-gray); font-size:0.7rem; margin-bottom:6px;"></p>
-      <p id="detailDesc" style="color:var(--text-gray); font-size:0.8rem; margin-bottom:12px;"></p>
+      <h3 id="detailTitle" style="font-size: 1.05rem;"></h3>
+      <p id="detailMeta" style="color:var(--accent-light); font-size:0.75rem;"></p>
+      <p id="detailViews" style="color:var(--text-gray); font-size:0.65rem;"></p>
+      <p id="detailDesc" style="color:var(--text-gray); font-size:0.75rem; line-height: 1.3; max-height: 70px; overflow-y: auto;"></p>
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal('detailModal')">Cerrar</button>
       </div>
@@ -781,7 +781,7 @@
             "num": 1,
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
-            "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
+            "desc": "Когда un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
             "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
           },
           {
@@ -862,7 +862,7 @@
       }
     });
 
-    // SISTEMA DE PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL (OCULTA EL BOTÓN AUTOMÁTICAMENTE)
+    // SISTEMA DE PANTALLA COMPLETA Y ROTACIÓN HORIZONTAL
     function triggerBoxFullscreen(btnEl) {
       const vBox = btnEl.closest('.video-box');
       
@@ -1406,7 +1406,7 @@
       closeModalWithHistory('episodeModal');
     }
 
-    /* MOTOR DE REPRODUCCIÓN CON BOTÓN "Pantalla completa" QUE SE OCULTA AUTOMÁTICAMENTE */
+    /* MOTOR DE REPRODUCCIÓN CON OCULTAMIENTO AUTOMÁTICO Y TACTO PARA MOSTRAR */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1460,6 +1460,30 @@
           Pantalla completa
         </button>
       `;
+
+      // Lógica de auto-ocultamiento y toque para mostrar
+      let hideTimeout = null;
+      const btn = vBox.querySelector('.fullscreen-trigger-btn');
+
+      function showButtonTemporarily() {
+        btn.classList.remove('hidden');
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+          btn.classList.add('hidden');
+        }, 3000);
+      }
+
+      // Ocultar automáticamente a los 3 segundos de empezar
+      hideTimeout = setTimeout(() => {
+        btn.classList.add('hidden');
+      }, 3000);
+
+      // Al tocar/hacer clic en la caja de video, muestra el botón temporalmente
+      vBox.addEventListener('click', (e) => {
+        if (e.target !== btn && !btn.contains(e.target)) {
+          showButtonTemporarily();
+        }
+      });
     }
 
     renderHomeSections();
