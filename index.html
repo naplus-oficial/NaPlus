@@ -746,8 +746,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Código de Video (VK Video, VOE, OK.ru, Drive o .mp4)</label>
-          <input type="text" id="videoInput" placeholder="https://vk.com/video..., https://voe.sx/... o .mp4">
+          <label>Enlace o Código de Video (Odysee, VK Video, VOE, OK.ru, Drive o .mp4)</label>
+          <input type="text" id="videoInput" placeholder="https://odysee.com/..., https://vk.com/... o .mp4">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -788,7 +788,7 @@
           <textarea id="modalEpDesc" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (VK Video, VOE, OK.ru, Drive o Iframe)</label>
+          <label>Enlace de Video (Odysee, VK Video, VOE, OK.ru, Drive o Iframe)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -822,7 +822,7 @@
             "title": "El último asesinato",
             "img": "https://m.media-amazon.com/images/M/MV5BZTgxNDMyMTMtNzRiNC00OTQzLWFmYzEtYmE0YjA2OTlmZDlkXkEyXkFqcGc@._V1_.jpg",
             "desc": "Cuando un asesino de élite lleva a cabo su último asesinato, llama la atención de una oficial de inteligencia que comienza a darle caza.",
-            "video": "https://m.vkvideo.ru/video1131229633_456239017"
+            "video": "https://drive.google.com/file/d/1rEf171Dp1PWoT75vmNBb7krrHK20yX9n/view?usp=drivesdk"
           },
           {
             "num": 2,
@@ -848,7 +848,7 @@
         ]
       }
     ],
-    "views": 181,
+    "views": 114,
     "dateAdded": 1790955167205
   },
   {
@@ -923,7 +923,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 91,
     "dateAdded": 1790908626680
   },
   {
@@ -1033,7 +1033,7 @@
         ]
       }
     ],
-    "views": 327,
+    "views": 321,
     "dateAdded": 1790899010591
   },
   {
@@ -1080,7 +1080,7 @@
         ]
       }
     ],
-    "views": 94,
+    "views": 93,
     "dateAdded": 1790897174446
   },
   {
@@ -1230,7 +1230,7 @@
         ]
       }
     ],
-    "views": 191,
+    "views": 190,
     "dateAdded": 1790869921110
   },
   {
@@ -1256,7 +1256,7 @@
     "cover": "https://i.ebayimg.com/images/g/kF4AAOSwb3tj0Y9w/s-l1200.jpg",
     "video": "https://voe.sx/e/xctz9a4atwnh",
     "seasons": [],
-    "views": 366,
+    "views": 365,
     "dateAdded": 1790858421339
   },
   {
@@ -1282,7 +1282,7 @@
     "cover": "https://images.vpro.nl/27qycv8svnog/w_667/pfn_fkc5chymrqg.jpg",
     "video": "https://voe.sx/e/jx8q5z1ls85u",
     "seasons": [],
-    "views": 540,
+    "views": 530,
     "dateAdded": 1790855769248
   },
   {
@@ -1747,7 +1747,7 @@
         ]
       }
     ],
-    "views": 292,
+    "views": 291,
     "dateAdded": 1790783678102
   },
   {
@@ -1848,7 +1848,7 @@
     "dateAdded": 1790770226823
   },
   {
-    "id": 1790769448763,
+    "id": 179069448763,
     "type": "movie",
     "title": "Peter Pan: Pesadilla en la tierra de nunca jamás",
     "genre": "Terror",
@@ -1869,7 +1869,7 @@
     "cover": "https://image.tmdb.org/t/p/original/vbJObKz2s4ZkMiQwfl5EM1IIt5d.jpg",
     "video": "https://voe.sx/e/g0xdl5xf7x30",
     "views": 361,
-    "dateAdded": 1790755820564
+    "dateAdded": 1790755820554
   },
   {
     "id": 1790754583454,
@@ -2506,7 +2506,7 @@
         </div>
         <input type="url" class="ep-img" placeholder="URL de miniatura específica (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="1" placeholder="Sinopsis del capítulo" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Link de video (VK Video, VOE, OK.ru, Drive...)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;">
+        <input type="text" class="ep-video" placeholder="Link de video (Odysee, VK, VOE, OK.ru, Drive...)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;">
       `;
       container.appendChild(epDiv);
     }
@@ -2905,7 +2905,6 @@
         return;
       }
 
-      // Soporte integrado para VK Video (vk.com / vkvideo.ru)
       if (vInput.includes('vk.com') || vInput.includes('vkvideo.ru')) {
         let embedUrl = vInput.trim();
         if (!embedUrl.includes('video_ext.php')) {
@@ -2928,7 +2927,25 @@
         return;
       }
 
-      // Si es de Google Drive o un enlace directo de video
+      if (vInput.includes('odysee.com')) {
+        let embedUrl = vInput.trim();
+        if (!embedUrl.includes('$/embed/')) {
+          embedUrl = embedUrl.replace('odysee.com/', 'odysee.com/$/embed/');
+        }
+        vBox.innerHTML = `
+          <iframe 
+            src="${embedUrl}" 
+            frameborder="0" 
+            scrolling="no"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen
+            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
+          </iframe>`;
+        return;
+      }
+
       let directUrl = vInput.trim();
       if (directUrl.includes('drive.google.com/file/d/')) {
         const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
