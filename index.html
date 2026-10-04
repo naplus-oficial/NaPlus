@@ -508,12 +508,12 @@
       top: 0; left: 0;
     }
 
-    /* BARRA DE SUPERPOSICIÓN PARA IFRAMES CON BOTÓN X DESTACADO */
+    /* BARRA SUPERIOR DISCRETA PARA IFRAMES (CON BOTÓN X DISCRETO QUE APARECE AL TOCAR) */
     .iframe-overlay-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 52px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+      height: 48px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -527,15 +527,15 @@
       pointer-events: none;
     }
     
-    .floating-x-btn {
-      background: rgba(239, 68, 68, 0.9);
+    .discreet-close-btn {
+      background: rgba(0, 0, 0, 0.6);
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      width: 36px;
-      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      font-size: 1rem;
-      font-weight: 800;
+      font-size: 0.8rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -543,13 +543,13 @@
     }
 
     .btn-iframe-fs {
-      background: rgba(124, 58, 237, 0.9) !important;
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(124, 58, 237, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25);
       color: #fff;
-      padding: 6px 12px;
+      padding: 5px 12px;
       border-radius: 16px;
       font-size: 0.75rem;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
     }
 
@@ -591,8 +591,8 @@
     .custom-top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 52px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+      height: 48px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -817,7 +817,7 @@
             ▶ REPRODUCIR
           </button>
         </div>
-        <p style="font-size: 0.7rem; color: var(--text-gray);" id="seriesViews">👁️ 0 reproducciones</p>
+        <p style="font-size: 0.7rem; color: var(--text-gray);" id="seriesViews">👁️️ 0 reproducciones</p>
         <div class="series-synopsis" id="seriesDesc"></div>
       </div>
     </div>
@@ -1503,7 +1503,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR INTELIGENTE DE REPRODUCTOR CON X CLARA Y 5 SEGUNDOS */
+    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON BOTÓN X DISCRETO Y 5 SEGUNDOS DE VISIBILIDAD AL TOCAR) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1513,7 +1513,7 @@
       let cleanUrl = vInput.trim();
       const iframeAttributes = 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen';
 
-      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe con barra superior y botón X
+      // Si es un servicio en la nube (Dropbox, Google Drive, VOE, OK.ru) se renderiza mediante visor iframe con barra superior discreta
       if (cleanUrl.includes('<iframe') || cleanUrl.includes('dropbox.com') || cleanUrl.includes('voe.sx') || cleanUrl.includes('ok.ru') || cleanUrl.includes('drive.google.com')) {
         let embedUrl = cleanUrl;
         if (cleanUrl.includes('dropbox.com')) {
@@ -1540,8 +1540,8 @@
 
         vBox.innerHTML = `
           <div style="position:relative; width:100%; height:100%;" id="iframeWrapper">
-            <div class="iframe-overlay-bar" id="iframeOverlayBar">
-              <button class="floating-x-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
+            <div class="iframe-overlay-bar hidden" id="iframeOverlayBar">
+              <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
             <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
@@ -1560,7 +1560,6 @@
           }, 5000); // 5 segundos exactos
         }
 
-        showBar();
         wrapper.onclick = (e) => {
           if (!e.target.closest('button')) {
             if (bar.classList.contains('hidden')) {
@@ -1574,14 +1573,14 @@
         return;
       }
 
-      // Si es un archivo de video directo (.mp4), se renderiza con el reproductor personalizado que incluye la X arriba
+      // Si es un archivo de video directo (.mp4), se renderiza con el reproductor personalizado
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
           <div class="center-play-pause-indicator" id="centerIndicator">❚❚</div>
           
-          <div class="custom-top-bar" id="customTopBar">
-            <button class="floating-x-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
+          <div class="custom-top-bar hidden" id="customTopBar">
+            <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
             <button class="btn-iframe-fs" onclick="toggleCustomFullscreen(this)">⛶ Pantalla Completa</button>
           </div>
 
@@ -1589,7 +1588,7 @@
             <div class="custom-progress-filled" id="progressFilled"></div>
           </div>
 
-          <div class="custom-controls-bar" id="controlsBar">
+          <div class="custom-controls-bar hidden" id="controlsBar">
             <div class="controls-left">
               <button id="playPauseBtn" title="Reproducir/Pausar">
                 <svg id="playIcon" viewBox="0 0 24 24" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -1685,8 +1684,6 @@
           video.currentTime = pos * video.duration;
         }
       };
-
-      showControlsForAWhile();
     }
 
     function skipTime(seconds) {
