@@ -508,7 +508,7 @@
       top: 0; left: 0;
     }
 
-    /* BARRA SUPERIOR DISCRETA PARA IFRAMES (CON BOTÓN X DISCRETO QUE APARECE AL TOCAR) */
+    /* BARRA SUPERIOR DISCRETA PARA IFRAMES */
     .iframe-overlay-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -817,7 +817,7 @@
             ▶ REPRODUCIR
           </button>
         </div>
-        <p style="font-size: 0.7rem; color: var(--text-gray);" id="seriesViews">👁️️ 0 reproducciones</p>
+        <p style="font-size: 0.7rem; color: var(--text-gray);" id="seriesViews">👁️ 0 reproducciones</p>
         <div class="series-synopsis" id="seriesDesc"></div>
       </div>
     </div>
@@ -1503,7 +1503,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON BOTÓN X DISCRETO Y 5 SEGUNDOS DE VISIBILIDAD AL TOCAR) */
+    /* GESTOR INTELIGENTE DE REPRODUCTOR (CON VISIBILIDAD INICIAL DE 5 SEGUNDOS) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1540,7 +1540,7 @@
 
         vBox.innerHTML = `
           <div style="position:relative; width:100%; height:100%;" id="iframeWrapper">
-            <div class="iframe-overlay-bar hidden" id="iframeOverlayBar">
+            <div class="iframe-overlay-bar" id="iframeOverlayBar">
               <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
@@ -1557,8 +1557,11 @@
           clearTimeout(hideTimer);
           hideTimer = setTimeout(() => {
             bar.classList.add('hidden');
-          }, 5000); // 5 segundos exactos
+          }, 5000);
         }
+
+        // Mostrar barra al iniciar y ocultar después de 5s
+        showBar();
 
         wrapper.onclick = (e) => {
           if (!e.target.closest('button')) {
@@ -1579,7 +1582,7 @@
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
           <div class="center-play-pause-indicator" id="centerIndicator">❚❚</div>
           
-          <div class="custom-top-bar hidden" id="customTopBar">
+          <div class="custom-top-bar" id="customTopBar">
             <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
             <button class="btn-iframe-fs" onclick="toggleCustomFullscreen(this)">⛶ Pantalla Completa</button>
           </div>
@@ -1588,7 +1591,7 @@
             <div class="custom-progress-filled" id="progressFilled"></div>
           </div>
 
-          <div class="custom-controls-bar hidden" id="controlsBar">
+          <div class="custom-controls-bar" id="controlsBar">
             <div class="controls-left">
               <button id="playPauseBtn" title="Reproducir/Pausar">
                 <svg id="playIcon" viewBox="0 0 24 24" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -1632,7 +1635,7 @@
             controlsBar.classList.add('hidden');
             customTopBar.classList.add('hidden');
           }
-        }, 5000); // 5 segundos exactos
+        }, 5000);
       }
 
       function togglePlay() {
@@ -1684,6 +1687,9 @@
           video.currentTime = pos * video.duration;
         }
       };
+
+      // Mostrar controles al iniciar y ocultar tras 5 segundos
+      showControlsForAWhile();
     }
 
     function skipTime(seconds) {
