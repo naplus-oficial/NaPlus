@@ -509,7 +509,7 @@
       z-index: 1;
     }
 
-    /* BARRA SUPERIOR DISCRETA PARA IFRAMES (OK.RU, DROPBOX, DRIVE) */
+    /* BARRA SUPERIOR FIJA Y LIMPIA PARA IFRAMES (OK.RU, DROPBOX, DRIVE) */
     .iframe-overlay-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -520,12 +520,7 @@
       align-items: center;
       padding: 0 12px;
       z-index: 99999;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-    .iframe-overlay-bar.hidden {
-      opacity: 0;
-      pointer-events: none;
+      pointer-events: auto;
     }
     
     .discreet-close-btn {
@@ -1504,7 +1499,7 @@
       return `${mStr}:${sStr}`;
     }
 
-    /* GESTOR DE REPRODUCTOR (OK.RU, DROPBOX Y DRIVE EN IFRAME CON PANTALLA COMPLETA) */
+    /* GESTOR DE REPRODUCTOR (OK.RU, DROPBOX Y DRIVE EN IFRAME CON ACCESO TOTAL AL VÍDEO) */
     function renderVideoInBox(vBox, vInput, titleText = "NaPlus Streaming") {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1542,37 +1537,13 @@
               <button class="discreet-close-btn" onclick="exitCustomPlayer(this)" title="Cerrar">✕</button>
               <button class="btn-iframe-fs" onclick="toggleIframeFullscreen(this)">⛶ Pantalla Completa</button>
             </div>
-            <div id="iframeTouchOverlay" style="position:absolute; inset:0; z-index:2; background:transparent;"></div>
             <iframe src="${embedUrl}" ${iframeAttributes}></iframe>
           </div>
         `;
-
-        const bar = vBox.querySelector('#iframeOverlayBar');
-        const touchOverlay = vBox.querySelector('#iframeTouchOverlay');
-        let hideTimer = null;
-
-        function showBar() {
-          bar.classList.remove('hidden');
-          clearTimeout(hideTimer);
-          hideTimer = setTimeout(() => {
-            bar.classList.add('hidden');
-          }, 5000);
-        }
-
-        showBar();
-
-        touchOverlay.onclick = (e) => {
-          if (bar.classList.contains('hidden')) {
-            showBar();
-          } else {
-            bar.classList.add('hidden');
-            clearTimeout(hideTimer);
-          }
-        };
         return;
       }
 
-      // Reproductor personalizado para archivos .mp4 directos
+      /* Reproductor personalizado para archivos .mp4 directos */
       vBox.innerHTML = `
         <div class="custom-player-wrapper" id="customPlayer">
           <video id="nativeVideo" src="${cleanUrl}" playsinline></video>
