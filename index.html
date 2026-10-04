@@ -928,11 +928,6 @@
           <button type="button" class="btn-submit" style="background: #2563eb; width: 100%; margin-top: 6px; font-size: 0.75rem; padding: 6px;" onclick="addSeasonField()">+ Agregar Temporada</button>
         </div>
 
-        <div class="form-group" style="margin-top: 15px; border-top: 1px solid var(--border-purple); padding-top: 12px;">
-          <label>Token de GitHub (Opcional - ghp_... o github_pat_...)</label>
-          <input type="password" id="ghTokenInput" placeholder="Token para sincronizar online en GitHub">
-        </div>
-
         <div class="form-actions" style="margin-top: 15px;">
           <button type="button" class="btn-cancel" onclick="closeModal('uploadModal')">Cancelar</button>
           <button type="submit" class="btn-submit" id="saveBtn">Guardar y Publicar</button>
@@ -2468,9 +2463,6 @@
       document.getElementById('coverInput').value = item ? item.cover : '';
       document.getElementById('trailerInput').value = item && item.trailer ? item.trailer : '';
       document.getElementById('videoInput').value = item && item.video ? item.video : '';
-      
-      const savedToken = localStorage.getItem('naPlus_gh_token') || '';
-      document.getElementById('ghTokenInput').value = savedToken;
 
       toggleContentTypeFields();
 
@@ -2551,11 +2543,16 @@
       const id = document.getElementById('editId').value;
       const type = document.getElementById('typeInput').value;
 
-      const tokenInput = document.getElementById('ghTokenInput').value.trim();
-      if (tokenInput.startsWith('ghp_') || tokenInput.startsWith('github_pat_')) {
-        localStorage.setItem('naPlus_gh_token', tokenInput);
-      } else if (tokenInput === '') {
-        localStorage.removeItem('naPlus_gh_token');
+      // Asegurar token automático (lo pide por prompt solo la primera vez)
+      let token = localStorage.getItem('naPlus_gh_token');
+      if (!token) {
+        token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
+        if (token && token.trim()) {
+          localStorage.setItem('naPlus_gh_token', token.trim());
+        } else {
+          alert("⚠️ Se necesita el token para publicar en la nube.");
+          return;
+        }
       }
 
       let seasonsData = [];
@@ -2618,22 +2615,29 @@
       renderMyList();
       closeModal('uploadModal');
 
-      // Sincronizar en segundo plano si hay token
-      await publishToGitHubAutomatically();
+      const saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) saveBtn.innerText = "Publicando...";
+
+      const success = await publishToGitHubAutomatically();
+      if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
+
+      if (success) {
+        alert("¡Guardado y publicado con éxito en la nube!");
+      } else {
+        alert("⚠️ Hubo un error al publicar en GitHub (verifica que tu token sea válido).");
+      }
     }
 
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token || (!token.startsWith('ghp_') && !token.startsWith('github_pat_'))) {
-        return; // Guardado localmente con éxito sin interrumpir
-      }
+      if (!token) return false;
 
       try {
         const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
           headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
         });
         
-        if (!getRes.ok) return;
+        if (!getRes.ok) return false;
 
         const getData = await getRes.json();
         const sha = getData.sha;
@@ -2649,7 +2653,7 @@
 
         const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
 
-        await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'token ' + token,
@@ -2661,8 +2665,11 @@
             sha: sha
           })
         });
+
+        return putRes.ok;
       } catch (err) {
         console.error(err);
+        return false;
       }
     }
 
