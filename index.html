@@ -878,7 +878,7 @@
     </div>
   </div>
 
-  <!-- MODAL SUBIR / EDITAR CONTENIDO -->
+  <!-- MODAL SUBIR / EDITAR CONTENIDO (INPUTS CAMBIADOS A TEXT PARA EVITAR BLOQUEOS) -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -910,11 +910,11 @@
         </div>
         <div class="form-group">
           <label>URL de Portada</label>
-          <input type="url" id="coverInput" required placeholder="https://...">
+          <input type="text" id="coverInput" required placeholder="https://...">
         </div>
         <div class="form-group">
           <label>URL de Tráiler de YouTube (opcional)</label>
-          <input type="url" id="trailerInput" placeholder="https://youtube.com/watch?v=...">
+          <input type="text" id="trailerInput" placeholder="https://youtube.com/watch?v=...">
         </div>
 
         <div class="form-group" id="movieVideoGroup">
@@ -958,7 +958,7 @@
         </div>
         <div class="form-group">
           <label>URL de Miniatura Específica</label>
-          <input type="url" id="modalEpImg" placeholder="https://...">
+          <input type="text" id="modalEpImg" placeholder="https://...">
         </div>
         <div class="form-group">
           <label>Sinopsis del Capítulo</label>
@@ -2001,9 +2001,9 @@
           },
           {
             "num": 8,
-            "title": "El murmullo",
+            "title": "El murmurlo",
             "duration": "59 min",
-            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmullo_01.jpg",
+            "img": "https://s3.us-west-004.backblazeb2.com/mdc-media/2022/10/el_murmurlo_01.jpg",
             "desc": "Tras una pérdida devastadora, una pareja de ornitólogos se muda a una casa aislada para estudiar aves. Sin embargo, la historia del lugar está escrita con sangre y dolor.",
             "video": "https://ok.ru/video/16669987506907"
           }
@@ -2514,7 +2514,7 @@
           <input type="text" class="ep-duration" placeholder="Duración (ej. 45 min)" value="${epData ? (epData.duration || '45 min') : '45 min'}" style="width:85px; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
           <button type="button" onclick="this.closest('.ep-item-row').remove()" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem;">✕</button>
         </div>
-        <input type="url" class="ep-img" placeholder="URL de miniatura específica (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
+        <input type="text" class="ep-img" placeholder="URL de miniatura específica (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis del capítulo" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
         <input type="text" class="ep-video" placeholder="Link de video (Odysee, VK, VOE, OK.ru, Drive...)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
@@ -2538,19 +2538,32 @@
       }
     }
 
+    // Funciones de codificación UTF-8 seguras para GitHub API
+    function utoa(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+      }));
+    }
+
+    function atou(str) {
+      return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+    }
+
     async function submitContent(e) {
       e.preventDefault();
       const id = document.getElementById('editId').value;
       const type = document.getElementById('typeInput').value;
 
-      // Asegurar token automático (lo pide por prompt solo la primera vez)
+      // Obtener o solicitar token de GitHub de forma segura
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) {
+      if (!token || !token.trim()) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
         if (token && token.trim()) {
           localStorage.setItem('naPlus_gh_token', token.trim());
         } else {
-          alert("⚠️ Se necesita el token para publicar en la nube.");
+          alert("⚠️ Se necesita el token de GitHub para poder publicar en la nube.");
           return;
         }
       }
@@ -2616,15 +2629,18 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando...";
+      if (saveBtn) saveBtn.innerText = "Publicando en la nube...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y publicado con éxito en la nube!");
+        alert("¡Guardado y publicado con éxito en la nube para todos!");
       } else {
-        alert("⚠️ Hubo un error al publicar en GitHub (verifica que tu token sea válido).");
+        // Si falla por token vencido/inválido, permitimos reconfigurarlo limpiándolo
+        if (confirm("⚠️ Hubo un error al conectar con GitHub. ¿Deseas actualizar/reingresar tu token de acceso?")) {
+          localStorage.removeItem('naPlus_gh_token');
+        }
       }
     }
 
@@ -2642,7 +2658,7 @@
         const getData = await getRes.json();
         const sha = getData.sha;
 
-        let fileText = new TextDecoder().decode(Uint8Array.from(atob(getData.content), c => c.charCodeAt(0)));
+        let fileText = atou(getData.content);
         const catalogJson = JSON.stringify(catalog, null, 2);
         
         if (fileText.includes('/*CATALOG_START*/')) {
@@ -2651,7 +2667,7 @@
           fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
         }
 
-        const updatedBase64 = btoa(unescape(encodeURIComponent(fileText)));
+        const updatedBase64 = utoa(fileText);
 
         const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
           method: 'PUT',
