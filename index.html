@@ -387,7 +387,8 @@
       overflow-y: auto;
     }
 
-    .modal-box-series {
+    /* NUEVA INTERFAZ MODAL ESTILO NETFLIX PARA PELÍCULAS */
+    .modal-box-movie {
       background: #07040d;
       padding: 0;
       border-radius: 0;
@@ -401,6 +402,125 @@
       z-index: 2100;
       display: none;
       -webkit-overflow-scrolling: touch;
+    }
+
+    .movie-header-bg {
+      position: relative;
+      width: 100%;
+      min-height: 420px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 70px 20px 20px 20px;
+    }
+    .movie-header-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.7) 60%, #07040d 100%);
+    }
+
+    .movie-info-container {
+      position: relative;
+      z-index: 2;
+    }
+    .movie-main-title {
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+      text-transform: uppercase;
+    }
+    .movie-meta-info {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .movie-btn-play {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(255,255,255,0.15);
+    }
+    .movie-btn-download {
+      background: #27272a;
+      color: #ffffff;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    .movie-actions-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 30px;
+      margin-bottom: 16px;
+    }
+    .movie-action-ico-btn {
+      background: none;
+      border: none;
+      color: var(--text-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .movie-action-ico-circle {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .movie-action-ico-btn.active-list .movie-action-ico-circle,
+    .movie-action-ico-btn.liked .movie-action-ico-circle {
+      background: rgba(124, 58, 237, 0.3);
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+
+    .movie-synopsis {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .movie-genres-tags {
+      font-size: 0.75rem;
+      color: var(--accent-light);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .movie-content-area {
+      padding: 10px 20px 50px 20px;
     }
 
     .stream-top-bar {
@@ -431,6 +551,22 @@
       transition: transform 0.2s ease, background 0.2s ease;
     }
     .stream-top-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
+
+    .modal-box-series {
+      background: #07040d;
+      padding: 0;
+      border-radius: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      position: fixed;
+      inset: 0;
+      overflow-y: auto;
+      z-index: 2100;
+      display: none;
+      -webkit-overflow-scrolling: touch;
+    }
 
     .stream-header-bg {
       position: relative;
@@ -737,6 +873,7 @@
     </div>
 
     <div id="mainHomeContent">
+      <div id="recommendedContainer"></div>
       <div class="section-title">🔥 Lo Más Reciente</div>
       <div class="horizontal-scroll" id="recentScroll"></div>
 
@@ -789,22 +926,65 @@
     </button>
   </nav>
 
-  <!-- MODAL DETALLE PELÍCULA -->
-  <div class="modal-overlay" id="detailModal">
-    <div class="modal-box">
-      <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
-      <div class="video-box" id="videoBox"></div>
-      <h3 id="detailTitle"></h3>
-      <p id="detailMeta" style="color:var(--accent-light); font-size:0.8rem; margin-bottom:6px;"></p>
-      <p id="detailViews" style="color:var(--text-gray); font-size:0.7rem; margin-bottom:6px;"></p>
-      <p id="detailDesc" style="color:var(--text-gray); font-size:0.8rem; margin-bottom:12px;"></p>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="closeModal('detailModal')">Cerrar</button>
+  <!-- MODAL NUEVA INTERFAZ EXCLUSIVA PARA PELÍCULAS -->
+  <div class="modal-box-movie" id="movieDetailModal">
+    <div class="stream-top-bar">
+      <button class="stream-top-btn" onclick="shareCurrentMovie()" title="Compartir">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+      </button>
+      <button class="stream-top-btn" onclick="closeModal('movieDetailModal')">✕</button>
+    </div>
+
+    <div class="movie-header-bg" id="movieHeaderBg">
+      <div class="movie-header-gradient"></div>
+      <div class="movie-info-container">
+        <div class="movie-main-title" id="movieTitle"></div>
+        <div class="movie-meta-info" id="movieMeta"></div>
+        
+        <button class="movie-btn-play" onclick="playCurrentMovie()">
+          ▶ Ver ahora
+        </button>
+        <button class="movie-btn-download" onclick="downloadCurrentMovie()">
+          ⬇ Descargar
+        </button>
+
+        <div class="movie-actions-row">
+          <button class="movie-action-ico-btn" id="movieFavBtn" onclick="toggleFavoriteFromMovieModal()">
+            <div class="movie-action-ico-circle">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            Mi lista
+          </button>
+          <button class="movie-action-ico-btn" id="movieLikeBtn" onclick="toggleLikeFromMovieModal()">
+            <div class="movie-action-ico-circle">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            </div>
+            Calificar
+          </button>
+        </div>
+
+        <div class="movie-synopsis" id="movieDesc"></div>
+        <div class="movie-genres-tags" id="movieGenres"></div>
+      </div>
+    </div>
+
+    <div class="movie-content-area" id="moviePlayerArea" style="display:none;">
+      <div class="video-box" id="movieVideoBox"></div>
+      <div style="text-align: right; margin-top: 10px;">
+        <button class="btn-cancel" onclick="hideMoviePlayer()">Ocultar reproductor</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DETALLE SERIE -->
+  <!-- MODAL REPRODUCTOR NATIVO DE PELÍCULA EN PANTALLA COMPLETA -->
+  <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500;">
+    <div class="modal-box" style="max-width: 750px; background:#000; padding:0; border:none;">
+      <button class="btn-close" onclick="closeMoviePlayerModal()">✕</button>
+      <div class="video-box" id="fullscreenMovieVideoBox" style="aspect-ratio:16/9; margin-bottom:0;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE SERIE (INTACTO) -->
   <div class="modal-box-series" id="seriesModal">
     <div class="stream-top-bar">
       <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
@@ -991,6 +1171,9 @@
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
     }
 
+    // SISTEMA DE LIKES Y RECOMENDACIONES BASADO EN GÉNEROS
+    let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
+
     async function autoSyncCatalogFromCloud() {
       try {
         const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
@@ -1122,11 +1305,20 @@
       if (currentSeriesData && currentSeriesData.id === id) {
         updateSeriesModalFavButton();
       }
+      if (currentMovieData && currentMovieData.id === id) {
+        updateMovieModalFavButton();
+      }
     }
 
     function toggleFavoriteFromSeriesModal() {
       if (currentSeriesData) {
         toggleFavorite(currentSeriesData.id);
+      }
+    }
+
+    function toggleFavoriteFromMovieModal() {
+      if (currentMovieData) {
+        toggleFavorite(currentMovieData.id);
       }
     }
 
@@ -1139,6 +1331,47 @@
         btn.classList.add('active-list');
       } else {
         btn.classList.remove('active-list');
+      }
+    }
+
+    function updateMovieModalFavButton() {
+      if (!currentMovieData) return;
+      const btn = document.getElementById('movieFavBtn');
+      if (!btn) return;
+      const isFav = myFavorites.includes(currentMovieData.id);
+      if (isFav) {
+        btn.classList.add('active-list');
+      } else {
+        btn.classList.remove('active-list');
+      }
+    }
+
+    function toggleLikeMovie(id) {
+      if (movieLikes.includes(id)) {
+        movieLikes = movieLikes.filter(item => item !== id);
+      } else {
+        movieLikes.push(id);
+      }
+      localStorage.setItem('naPlus_movie_likes', JSON.stringify(movieLikes));
+      updateMovieModalLikeButton();
+      renderHomeSections(); // Actualiza las recomendaciones basadas en gustos
+    }
+
+    function toggleLikeFromMovieModal() {
+      if (currentMovieData) {
+        toggleLikeMovie(currentMovieData.id);
+      }
+    }
+
+    function updateMovieModalLikeButton() {
+      if (!currentMovieData) return;
+      const btn = document.getElementById('movieLikeBtn');
+      if (!btn) return;
+      const isLiked = movieLikes.includes(currentMovieData.id);
+      if (isLiked) {
+        btn.classList.add('liked');
+      } else {
+        btn.classList.remove('liked');
       }
     }
 
@@ -1278,6 +1511,9 @@
         renderHeroSlider();
       }
 
+      // RENDERIZAR RECOMENDACIONES BASADAS EN LIKES DE PELÍCULAS
+      renderRecommendationsSection();
+
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
       const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
@@ -1322,6 +1558,52 @@
           genreContainer.appendChild(scrollDiv);
         }
       });
+    }
+
+    function renderRecommendationsSection() {
+      const recContainer = document.getElementById('recommendedContainer');
+      recContainer.innerHTML = '';
+
+      if (movieLikes.length === 0) return;
+
+      // Calcular qué géneros de películas tienen más "likes" del usuario
+      const genreCounts = {};
+      movieLikes.forEach(likedId => {
+        const item = catalog.find(i => i.id === likedId);
+        if (item && item.type === 'movie' && item.genre) {
+          item.genre.split(',').forEach(g => {
+            const cleanG = g.trim();
+            if (cleanG) {
+              genreCounts[cleanG] = (genreCounts[cleanG] || 0) + 1;
+            }
+          });
+        }
+      });
+
+      const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
+      if (sortedGenres.length === 0) return;
+
+      const topGenre = sortedGenres[0];
+      // Filtrar películas de ese género principal que no tengan like todavía
+      const recommendedMovies = catalog.filter(i => 
+        i.type === 'movie' && 
+        !movieLikes.includes(i.id) && 
+        i.genre && 
+        i.genre.toLowerCase().includes(topGenre.toLowerCase())
+      );
+
+      if (recommendedMovies.length > 0) {
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'section-title';
+        titleDiv.innerText = `✨ Recomendado para ti (${topGenre})`;
+
+        const scrollDiv = document.createElement('div');
+        scrollDiv.className = 'horizontal-scroll';
+        recommendedMovies.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+
+        recContainer.appendChild(titleDiv);
+        recContainer.appendChild(scrollDiv);
+      }
     }
 
     function checkSecretCode(e) {
@@ -1444,7 +1726,10 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
-      if (id === 'detailModal') document.getElementById('videoBox').innerHTML = '';
+      if (id === 'movieDetailModal') {
+        document.getElementById('moviePlayerArea').style.display = 'none';
+        document.getElementById('movieVideoBox').innerHTML = '';
+      }
     }
 
     function toggleContentTypeFields() {
@@ -1693,7 +1978,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática NaPlus',
+            message: 'Actualización automática NaPlus - Interfaz Película y Recomendaciones',
             content: updatedBase64,
             sha: sha
           })
@@ -1714,6 +1999,7 @@
     }
 
     let currentSeriesData = null;
+    let currentMovieData = null;
 
     function openContentDetail(id) {
       const item = catalog.find(x => x.id == id);
@@ -1760,15 +2046,48 @@
         renderEpisodesForSelectedSeason();
         document.getElementById('seriesModal').style.display = 'block';
       } else {
-        document.getElementById('detailTitle').innerText = item.title;
-        document.getElementById('detailMeta').innerText = `${item.genre} • ${item.year}`;
-        document.getElementById('detailViews').innerText = `👁️ ${item.views} reproducciones`;
-        document.getElementById('detailDesc').innerText = item.desc || 'Sin descripción.';
+        // NUEVA INTERFAZ PARA PELÍCULAS
+        currentMovieData = item;
+        const movieHeaderBg = document.getElementById('movieHeaderBg');
+        movieHeaderBg.style.backgroundImage = `url('${item.cover}')`;
 
-        const vBox = document.getElementById('videoBox');
-        renderVideoInBox(vBox, item.video);
-        document.getElementById('detailModal').style.display = 'flex';
+        document.getElementById('movieTitle').innerText = item.title;
+        document.getElementById('movieMeta').innerText = `18+ • 1h 53min • ${item.year}`;
+        document.getElementById('movieDesc').innerText = item.desc || 'Sin descripción disponible.';
+        document.getElementById('movieGenres').innerText = item.genre || '';
+
+        updateMovieModalFavButton();
+        updateMovieModalLikeButton();
+
+        document.getElementById('moviePlayerArea').style.display = 'none';
+        document.getElementById('movieDetailModal').style.display = 'block';
       }
+    }
+
+    function playCurrentMovie() {
+      if (!currentMovieData) return;
+      const modal = document.getElementById('moviePlayerModal');
+      const vBox = document.getElementById('fullscreenMovieVideoBox');
+      renderVideoInBox(vBox, currentMovieData.video);
+      modal.style.display = 'flex';
+    }
+
+    function downloadCurrentMovie() {
+      if (!currentMovieData || !currentMovieData.video) {
+        alert("Enlace de descarga no disponible.");
+        return;
+      }
+      window.open(currentMovieData.video, '_blank');
+    }
+
+    function closeMoviePlayerModal() {
+      document.getElementById('moviePlayerModal').style.display = 'none';
+      document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
+    }
+
+    function hideMoviePlayer() {
+      document.getElementById('moviePlayerArea').style.display = 'none';
+      document.getElementById('movieVideoBox').innerHTML = '';
     }
 
     function toggleSynopsis() {
@@ -1923,6 +2242,14 @@
     function shareCurrentSeries() {
       if (navigator.share && currentSeriesData) {
         navigator.share({ title: currentSeriesData.title, text: currentSeriesData.desc, url: window.location.href }).catch(() => {});
+      } else {
+        alert("Enlace copiado al portapapeles.");
+      }
+    }
+
+    function shareCurrentMovie() {
+      if (navigator.share && currentMovieData) {
+        navigator.share({ title: currentMovieData.title, text: currentMovieData.desc, url: window.location.href }).catch(() => {});
       } else {
         alert("Enlace copiado al portapapeles.");
       }
