@@ -388,7 +388,7 @@
       overflow-y: auto;
     }
 
-    /* ESTILO ESTILIZADO HBO PARA PELÍCULAS */
+    /* ESTILO MODAL PELÍCULA CON PÓSTER DIFUMINADO HACIA EL FONDO */
     .modal-box-movie {
       background: #07040d;
       padding: 0;
@@ -408,18 +408,19 @@
     .movie-header-bg {
       position: relative;
       width: 100%;
-      min-height: 480px;
+      min-height: 520px;
       background-size: cover;
       background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 85px 20px 24px 20px;
+      padding: 85px 20px 30px 20px;
     }
     .movie-header-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.25) 0%, rgba(7,4,13,0.85) 75%, #07040d 100%);
+      /* Difumina suavemente el póster hacia el color de fondo general #07040d */
+      background: linear-gradient(180deg, rgba(7,4,13,0.15) 0%, rgba(7,4,13,0.55) 50%, rgba(7,4,13,0.92) 85%, #07040d 100%);
     }
 
     .movie-info-container {
@@ -492,6 +493,16 @@
       background: rgba(124, 58, 237, 0.3);
       border-color: var(--accent-light);
       color: var(--accent-light);
+    }
+
+    /* ANIMACIÓN PULSO / REBOTE AL GUARDAR (MI LISTA) */
+    @keyframes pulseSave {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.25); background: rgba(192, 132, 252, 0.4); }
+      100% { transform: scale(1); }
+    }
+    .animate-save {
+      animation: pulseSave 0.4s ease-in-out;
     }
 
     /* ANIMACIÓN FLOTANTE CORAZÓN VIOLETA */
@@ -954,8 +965,8 @@
         </button>
 
         <div class="movie-actions-row">
-          <button class="movie-action-ico-btn" id="movieFavBtn" onclick="toggleFavoriteFromMovieModal()">
-            <div class="movie-action-ico-circle">
+          <button class="movie-action-ico-btn" id="movieFavBtn" onclick="toggleFavoriteFromMovieModal(event)">
+            <div class="movie-action-ico-circle" id="movieFavCircle">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
             </div>
             Mi lista
@@ -1176,7 +1187,6 @@
 
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
 
-    // CACHÉ DE RECOMENDACIONES FIJAS HASTA RECARGAR LA PÁGINA (REQUIERE MÚLTIPLES LIKES)
     let sessionRecommendedPool = [];
     function computeSessionRecommendations() {
       if (catalog.length === 0) return;
@@ -1326,6 +1336,15 @@
 
     function toggleFavorite(id, e) {
       if (e) e.stopPropagation();
+
+      // Mini animación al tocar guardar en las tarjetas o modal
+      const targetElem = e ? e.currentTarget : document.getElementById('movieFavCircle');
+      if (targetElem) {
+        targetElem.classList.remove('animate-save');
+        void targetElem.offsetWidth;
+        targetElem.classList.add('animate-save');
+      }
+
       if (myFavorites.includes(id)) {
         myFavorites = myFavorites.filter(favId => favId !== id);
       } else {
@@ -1351,9 +1370,9 @@
       }
     }
 
-    function toggleFavoriteFromMovieModal() {
+    function toggleFavoriteFromMovieModal(e) {
       if (currentMovieData) {
-        toggleFavorite(currentMovieData.id);
+        toggleFavorite(currentMovieData.id, e);
       }
     }
 
@@ -1414,11 +1433,9 @@
       const isLiked = movieLikes.includes(currentMovieData.id);
       if (isLiked) {
         btn.classList.add('liked');
-        // Cambiar icono de pulgar a corazón violeta
         svgIcon.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#c084fc" stroke="#c084fc"></path>';
       } else {
         btn.classList.remove('liked');
-        // Restaurar icono de pulgar
         svgIcon.innerHTML = '<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>';
       }
     }
@@ -1559,7 +1576,6 @@
         renderHeroSlider();
       }
 
-      // RECOMENDADO EN HOME (BASADO EN CACHÉ DE SESIÓN / RECARGA)
       renderHomeRecommendations();
 
       const recentScroll = document.getElementById('recentScroll');
@@ -1994,7 +2010,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática NaPlus - HBO Movie UI & Recommendations',
+            message: 'Actualización automática NaPlus - Póster Difuminado & Animación Guardar',
             content: updatedBase64,
             sha: sha
           })
@@ -2062,7 +2078,6 @@
         renderEpisodesForSelectedSeason();
         document.getElementById('seriesModal').style.display = 'block';
       } else {
-        // INTERFAZ DE PELÍCULA ESTILO HBO PERFECTAMENTE ALINEADA
         currentMovieData = item;
         const movieHeaderBg = document.getElementById('movieHeaderBg');
         movieHeaderBg.style.backgroundImage = `url('${item.cover}')`;
