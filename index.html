@@ -4686,9 +4686,20 @@
       console.log("Cambiando calidad de video a: ", quality);
       if (!isPaused) videoEl.play();
     }
+  async function cargarCatalogo() {
+    try {
+      const response = await fetch('database.json');
+      catalog = await response.json();
+      renderHomeSections();
+    } catch (error) {
+      console.error('Error al cargar database.json:', error);
+    }
+  }
 
-    renderHomeSections();
-    autoSyncCatalogFromCloud();
+  cargarCatalogo();
+  autoSyncCatalogFromCloud();
+
+    
   </script>
 </body>
 </html>
