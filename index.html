@@ -419,7 +419,6 @@
     .movie-header-gradient {
       position: absolute;
       inset: 0;
-      /* Difumina suavemente el póster hacia el color de fondo general #07040d */
       background: linear-gradient(180deg, rgba(7,4,13,0.15) 0%, rgba(7,4,13,0.55) 50%, rgba(7,4,13,0.92) 85%, #07040d 100%);
     }
 
@@ -486,7 +485,7 @@
       border: 1px solid rgba(255,255,255,0.15);
       display: flex; align-items: center; justify-content: center;
       color: #fff;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .movie-action-ico-btn.active-list .movie-action-ico-circle,
     .movie-action-ico-btn.liked .movie-action-ico-circle {
@@ -495,14 +494,14 @@
       color: var(--accent-light);
     }
 
-    /* ANIMACIÓN PULSO / REBOTE AL GUARDAR (MI LISTA) */
-    @keyframes pulseSave {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.25); background: rgba(192, 132, 252, 0.4); }
-      100% { transform: scale(1); }
+    /* NUEVA ANIMACIÓN ORGÁNICA Y ELEGANTE PARA GUARDAR (MI LISTA) */
+    @keyframes smoothPulseSave {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.6); }
+      40% { transform: scale(1.22); box-shadow: 0 0 15px 5px rgba(192, 132, 252, 0.4); background: rgba(124, 58, 237, 0.45); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0); }
     }
-    .animate-save {
-      animation: pulseSave 0.4s ease-in-out;
+    .animate-save-smooth {
+      animation: smoothPulseSave 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     /* ANIMACIÓN FLOTANTE CORAZÓN VIOLETA */
@@ -1269,33 +1268,44 @@
       }
     }
 
-    let inSearchHistoryState = false;
+    // GESTIÓN DE HISTORIAL PARA EL BOTÓN "ATRÁS" DEL CELULAR SIN SALIR DE LA WEB
+    let activeModalStack = [];
 
-    function pushSearchState() {
-      if (!inSearchHistoryState) {
-        inSearchHistoryState = true;
-        history.pushState({ naplusSearch: true }, '', location.href);
+    function pushModalState(modalId) {
+      if (!activeModalStack.includes(modalId)) {
+        activeModalStack.push(modalId);
+        history.pushState({ modalOpen: modalId }, '', location.href);
       }
     }
 
-    function popSearchStateIfNeeded() {
-      if (inSearchHistoryState) {
-        inSearchHistoryState = false;
-        history.back();
-      }
-    }
-
-    window.addEventListener('popstate', () => {
-      if (inSearchHistoryState) {
-        inSearchHistoryState = false;
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = '';
+    window.addEventListener('popstate', (e) => {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput && searchInput.value.trim().length > 0) {
+        searchInput.value = '';
         renderHomeSections();
+        return;
       }
+
+      if (activeModalStack.length > 0) {
+        const topModal = activeModalStack.pop();
+        const el = document.getElementById(topModal);
+        if (el) el.style.display = 'none';
+        if (topModal === 'moviePlayerModal' || topModal === 'episodeModal') {
+          document.getElementById('episodeVideoBox').innerHTML = '';
+          document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
+        }
+        return;
+      }
+
+      // Evita salir de la app web al presionar atrás
+      history.pushState(null, '', location.href);
     });
 
+    // Inicializar estado base para atrapar el botón atrás
+    history.pushState(null, '', location.href);
+
     function switchView(viewName) {
-      popSearchStateIfNeeded();
+      activeModalStack = [];
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -1325,7 +1335,6 @@
     }
 
     function clearSearchInput() {
-      popSearchStateIfNeeded();
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.value = '';
@@ -1337,12 +1346,11 @@
     function toggleFavorite(id, e) {
       if (e) e.stopPropagation();
 
-      // Mini animación al tocar guardar en las tarjetas o modal
       const targetElem = e ? e.currentTarget : document.getElementById('movieFavCircle');
       if (targetElem) {
-        targetElem.classList.remove('animate-save');
+        targetElem.classList.remove('animate-save-smooth');
         void targetElem.offsetWidth;
-        targetElem.classList.add('animate-save');
+        targetElem.classList.add('animate-save-smooth');
       }
 
       if (myFavorites.includes(id)) {
@@ -1556,7 +1564,6 @@
       document.body.classList.toggle('search-active', searching);
 
       if (searching) {
-        pushSearchState();
         heroSlider.style.display = 'none';
         searchContainer.style.display = 'block';
         mainContent.style.display = 'none';
@@ -1647,7 +1654,6 @@
         const val = document.getElementById('searchInput').value.trim();
         if (val === "9009") {
           e.preventDefault();
-          popSearchStateIfNeeded();
           document.getElementById('searchInput').value = '';
           
           isCreatorMode = !isCreatorMode;
@@ -1802,6 +1808,7 @@
         item.seasons.forEach((season) => addSeasonField(season));
       }
 
+      pushModalState('uploadModal');
       document.getElementById('uploadModal').style.display = 'flex';
     }
 
@@ -2010,7 +2017,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática NaPlus - Póster Difuminado & Animación Guardar',
+            message: 'Actualización automática NaPlus - Smooth Save & History Management',
             content: updatedBase64,
             sha: sha
           })
@@ -2076,6 +2083,7 @@
           });
         }
         renderEpisodesForSelectedSeason();
+        pushModalState('seriesModal');
         document.getElementById('seriesModal').style.display = 'block';
       } else {
         currentMovieData = item;
@@ -2092,6 +2100,7 @@
         renderMovieRecommendations(item);
 
         document.getElementById('movieDetailModal').scrollTop = 0;
+        pushModalState('movieDetailModal');
         document.getElementById('movieDetailModal').style.display = 'block';
       }
     }
@@ -2118,6 +2127,7 @@
       const modal = document.getElementById('moviePlayerModal');
       const vBox = document.getElementById('fullscreenMovieVideoBox');
       renderVideoInBox(vBox, currentMovieData.video);
+      pushModalState('moviePlayerModal');
       modal.style.display = 'flex';
     }
 
@@ -2210,6 +2220,7 @@
       document.getElementById('epModalDesc').innerText = "";
       const vBox = document.getElementById('episodeVideoBox');
       renderVideoInBox(vBox, currentSeriesData.trailer);
+      pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
     }
 
@@ -2225,6 +2236,7 @@
       document.getElementById('modalEpDesc').value = ep.desc || '';
       document.getElementById('modalEpVideo').value = ep.video || '';
       document.getElementById('seriesModal').style.display = 'none';
+      pushModalState('editEpisodeModal');
       document.getElementById('editEpisodeModal').style.display = 'flex';
     }
 
@@ -2264,6 +2276,7 @@
       document.getElementById('epModalDesc').innerText = ep.desc || '';
       const vBox = document.getElementById('episodeVideoBox');
       renderVideoInBox(vBox, ep.video);
+      pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
     }
 
