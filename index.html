@@ -19,7 +19,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -269,13 +269,14 @@
 
     /* SCROLL HORIZONTAL */
     .section-title {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      margin: 20px 20px 10px;
-      color: #e2e8f0;
+      margin: 22px 20px 10px;
+      color: #f1f5f9;
       display: flex;
       align-items: center;
       gap: 6px;
+      letter-spacing: -0.2px;
     }
 
     .horizontal-scroll {
@@ -387,7 +388,7 @@
       overflow-y: auto;
     }
 
-    /* NUEVA INTERFAZ MODAL ESTILO NETFLIX PARA PELÍCULAS */
+    /* NUEVA INTERFAZ MODAL ESTILO STREAMING PARA PELÍCULAS */
     .modal-box-movie {
       background: #07040d;
       padding: 0;
@@ -407,18 +408,17 @@
     .movie-header-bg {
       position: relative;
       width: 100%;
-      min-height: 420px;
       background-size: cover;
       background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 70px 20px 20px 20px;
+      padding: 75px 20px 24px 20px;
     }
     .movie-header-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.7) 60%, #07040d 100%);
+      background: linear-gradient(180deg, rgba(7,4,13,0.3) 0%, rgba(7,4,13,0.82) 65%, #07040d 100%);
     }
 
     .movie-info-container {
@@ -426,18 +426,18 @@
       z-index: 2;
     }
     .movie-main-title {
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 8px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-      text-transform: uppercase;
+      line-height: 1.15;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+      letter-spacing: -0.5px;
     }
     .movie-meta-info {
       font-size: 0.8rem;
-      color: #cbd5e1;
-      margin-bottom: 14px;
-      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      font-weight: 500;
     }
 
     .movie-btn-play {
@@ -445,7 +445,7 @@
       color: #000000;
       border: none;
       width: 100%;
-      padding: 12px;
+      padding: 13px;
       border-radius: 8px;
       font-size: 0.95rem;
       font-weight: 800;
@@ -454,30 +454,14 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 12px rgba(255,255,255,0.15);
-    }
-    .movie-btn-download {
-      background: #27272a;
-      color: #ffffff;
-      border: none;
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
       margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(255,255,255,0.18);
     }
 
     .movie-actions-row {
       display: flex;
       justify-content: flex-start;
-      gap: 30px;
+      gap: 32px;
       margin-bottom: 16px;
     }
     .movie-action-ico-btn {
@@ -488,8 +472,10 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 500;
       cursor: pointer;
+      position: relative;
     }
     .movie-action-ico-circle {
       width: 38px; height: 38px;
@@ -498,6 +484,7 @@
       border: 1px solid rgba(255,255,255,0.15);
       display: flex; align-items: center; justify-content: center;
       color: #fff;
+      transition: all 0.2s ease;
     }
     .movie-action-ico-btn.active-list .movie-action-ico-circle,
     .movie-action-ico-btn.liked .movie-action-ico-circle {
@@ -506,23 +493,41 @@
       color: var(--accent-light);
     }
 
+    /* ANIMACIÓN FLOTANTE CORAZÓN VIOLETA */
+    @keyframes floatHeart {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-55px) scale(1.4); opacity: 0; }
+    }
+    .floating-heart {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--accent-light);
+      font-size: 1.2rem;
+      pointer-events: none;
+      animation: floatHeart 0.75s ease-out forwards;
+      z-index: 3000;
+    }
+
     .movie-synopsis {
-      font-size: 0.85rem;
-      color: var(--text-gray);
-      line-height: 1.4;
-      margin-bottom: 8px;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 6px;
     }
     .movie-genres-tags {
       font-size: 0.75rem;
       color: var(--accent-light);
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       font-weight: 600;
     }
 
     .movie-content-area {
-      padding: 10px 20px 50px 20px;
+      padding: 0 0 40px 0;
     }
 
+    /* BARRA SUPERIOR MODAL */
     .stream-top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -552,6 +557,7 @@
     }
     .stream-top-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
 
+    /* ESTILOS DE SERIE (MANTENIDOS INTACTOS) */
     .modal-box-series {
       background: #07040d;
       padding: 0;
@@ -944,9 +950,6 @@
         <button class="movie-btn-play" onclick="playCurrentMovie()">
           ▶ Ver ahora
         </button>
-        <button class="movie-btn-download" onclick="downloadCurrentMovie()">
-          ⬇ Descargar
-        </button>
 
         <div class="movie-actions-row">
           <button class="movie-action-ico-btn" id="movieFavBtn" onclick="toggleFavoriteFromMovieModal()">
@@ -955,11 +958,11 @@
             </div>
             Mi lista
           </button>
-          <button class="movie-action-ico-btn" id="movieLikeBtn" onclick="toggleLikeFromMovieModal()">
+          <button class="movie-action-ico-btn" id="movieLikeBtn" onclick="toggleLikeFromMovieModal(event)">
             <div class="movie-action-ico-circle">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
             </div>
-            Calificar
+            Me gusta
           </button>
         </div>
 
@@ -968,11 +971,9 @@
       </div>
     </div>
 
-    <div class="movie-content-area" id="moviePlayerArea" style="display:none;">
-      <div class="video-box" id="movieVideoBox"></div>
-      <div style="text-align: right; margin-top: 10px;">
-        <button class="btn-cancel" onclick="hideMoviePlayer()">Ocultar reproductor</button>
-      </div>
+    <div class="movie-content-area" id="movieRecommendedSection">
+      <div class="section-title" id="movieRecTitle">Recomendado</div>
+      <div class="horizontal-scroll" id="movieRecScroll"></div>
     </div>
   </div>
 
@@ -984,7 +985,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE SERIE (INTACTO) -->
+  <!-- MODAL DETALLE SERIE (MANTENIDO INTACTO) -->
   <div class="modal-box-series" id="seriesModal">
     <div class="stream-top-bar">
       <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
@@ -1346,20 +1347,32 @@
       }
     }
 
-    function toggleLikeMovie(id) {
+    function toggleLikeMovie(id, event) {
+      const btn = event ? event.currentTarget : document.getElementById('movieLikeBtn');
       if (movieLikes.includes(id)) {
         movieLikes = movieLikes.filter(item => item !== id);
       } else {
         movieLikes.push(id);
+        // Animación flotante corazón violeta
+        if (btn) {
+          const heart = document.createElement('div');
+          heart.className = 'floating-heart';
+          heart.innerHTML = '💜';
+          btn.appendChild(heart);
+          setTimeout(() => heart.remove(), 750);
+        }
       }
       localStorage.setItem('naPlus_movie_likes', JSON.stringify(movieLikes));
       updateMovieModalLikeButton();
-      renderHomeSections(); // Actualiza las recomendaciones basadas en gustos
+      renderHomeSections();
+      if (currentMovieData && currentMovieData.id === id) {
+        renderMovieRecommendations(currentMovieData);
+      }
     }
 
-    function toggleLikeFromMovieModal() {
+    function toggleLikeFromMovieModal(event) {
       if (currentMovieData) {
-        toggleLikeMovie(currentMovieData.id);
+        toggleLikeMovie(currentMovieData.id, event);
       }
     }
 
@@ -1511,8 +1524,8 @@
         renderHeroSlider();
       }
 
-      // RENDERIZAR RECOMENDACIONES BASADAS EN LIKES DE PELÍCULAS
-      renderRecommendationsSection();
+      // RECOMENDACIÓN INTELIGENTE EN HOME (RND O BASADO EN LIKES)
+      renderHomeRecommendations();
 
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
@@ -1560,46 +1573,50 @@
       });
     }
 
-    function renderRecommendationsSection() {
+    function renderHomeRecommendations() {
       const recContainer = document.getElementById('recommendedContainer');
       recContainer.innerHTML = '';
 
-      if (movieLikes.length === 0) return;
+      if (catalog.length === 0) return;
 
-      // Calcular qué géneros de películas tienen más "likes" del usuario
-      const genreCounts = {};
-      movieLikes.forEach(likedId => {
-        const item = catalog.find(i => i.id === likedId);
-        if (item && item.type === 'movie' && item.genre) {
-          item.genre.split(',').forEach(g => {
-            const cleanG = g.trim();
-            if (cleanG) {
-              genreCounts[cleanG] = (genreCounts[cleanG] || 0) + 1;
-            }
-          });
+      let targetItems = [];
+      let sectionTitleText = "✨ Recomendado";
+
+      if (movieLikes.length > 0) {
+        // Calcular géneros más gustados
+        const genreCounts = {};
+        movieLikes.forEach(likedId => {
+          const item = catalog.find(i => i.id === likedId);
+          if (item && item.genre) {
+            item.genre.split(',').forEach(g => {
+              const cleanG = g.trim();
+              if (cleanG) genreCounts[cleanG] = (genreCounts[cleanG] || 0) + 1;
+            });
+          }
+        });
+        const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
+        if (sortedGenres.length > 0) {
+          const topGenre = sortedGenres[0];
+          targetItems = catalog.filter(i => i.genre && i.genre.toLowerCase().includes(topGenre.toLowerCase()) && !movieLikes.includes(i.id));
+          sectionTitleText = `✨ Recomendado para ti (${topGenre})`;
         }
-      });
+      }
 
-      const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
-      if (sortedGenres.length === 0) return;
+      // Si no hay suficientes por likes, rellenar con aleatorios (random)
+      if (targetItems.length < 3) {
+        const shuffled = [...catalog].sort(() => 0.5 - Math.random());
+        targetItems = shuffled.slice(0, 10);
+        sectionTitleText = "✨ Recomendado";
+      }
 
-      const topGenre = sortedGenres[0];
-      // Filtrar películas de ese género principal que no tengan like todavía
-      const recommendedMovies = catalog.filter(i => 
-        i.type === 'movie' && 
-        !movieLikes.includes(i.id) && 
-        i.genre && 
-        i.genre.toLowerCase().includes(topGenre.toLowerCase())
-      );
-
-      if (recommendedMovies.length > 0) {
+      if (targetItems.length > 0) {
         const titleDiv = document.createElement('div');
         titleDiv.className = 'section-title';
-        titleDiv.innerText = `✨ Recomendado para ti (${topGenre})`;
+        titleDiv.innerText = sectionTitleText;
 
         const scrollDiv = document.createElement('div');
         scrollDiv.className = 'horizontal-scroll';
-        recommendedMovies.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+        targetItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
 
         recContainer.appendChild(titleDiv);
         recContainer.appendChild(scrollDiv);
@@ -1726,10 +1743,6 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
-      if (id === 'movieDetailModal') {
-        document.getElementById('moviePlayerArea').style.display = 'none';
-        document.getElementById('movieVideoBox').innerHTML = '';
-      }
     }
 
     function toggleContentTypeFields() {
@@ -1978,7 +1991,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática NaPlus - Interfaz Película y Recomendaciones',
+            message: 'Actualización automática NaPlus - Optimizaciones Película',
             content: updatedBase64,
             sha: sha
           })
@@ -1986,7 +1999,7 @@
 
         if (!putRes.ok) {
           const errData = await putRes.json().catch(() => ({}));
-          alert(`Error al guardar en GitHub (${putRes.status}): ${errData.message || putRes.statusText}`);
+          alert(`Error al guardar en GitHub (${putRes.status}): ${errData.message || errData.statusText}`);
           return false;
         }
 
@@ -2046,7 +2059,7 @@
         renderEpisodesForSelectedSeason();
         document.getElementById('seriesModal').style.display = 'block';
       } else {
-        // NUEVA INTERFAZ PARA PELÍCULAS
+        // INTERFAZ DE PELÍCULA OPTIMIZADA
         currentMovieData = item;
         const movieHeaderBg = document.getElementById('movieHeaderBg');
         movieHeaderBg.style.backgroundImage = `url('${item.cover}')`;
@@ -2058,10 +2071,57 @@
 
         updateMovieModalFavButton();
         updateMovieModalLikeButton();
+        renderMovieRecommendations(item);
 
-        document.getElementById('moviePlayerArea').style.display = 'none';
         document.getElementById('movieDetailModal').style.display = 'block';
       }
+    }
+
+    function renderMovieRecommendations(currentMovie) {
+      const scrollContainer = document.getElementById('movieRecScroll');
+      const titleElem = document.getElementById('movieRecTitle');
+      scrollContainer.innerHTML = '';
+
+      let pool = [];
+      let recTitleText = "Recomendado";
+
+      if (movieLikes.length > 0) {
+        // Extraer géneros del usuario
+        const genreCounts = {};
+        movieLikes.forEach(likedId => {
+          const m = catalog.find(i => i.id === likedId);
+          if (m && m.genre) {
+            m.genre.split(',').forEach(g => {
+              const clean = g.trim();
+              if (clean) genreCounts[clean] = (genreCounts[clean] || 0) + 1;
+            });
+          }
+        });
+        const topGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
+        if (topGenres.length > 0) {
+          const favoriteGenre = topGenres[0];
+          pool = catalog.filter(i => i.type === 'movie' && i.id !== currentMovie.id && i.genre && i.genre.toLowerCase().includes(favoriteGenre.toLowerCase()));
+          recTitleText = `Recomendado (${favoriteGenre})`;
+        }
+      }
+
+      // Si no hay suficientes por likes, mezclar aleatoriamente contenido random
+      if (pool.length < 3) {
+        pool = catalog.filter(i => i.type === 'movie' && i.id !== currentMovie.id);
+        pool.sort(() => 0.5 - Math.random());
+        recTitleText = "Recomendado";
+      }
+
+      titleElem.innerText = recTitleText;
+
+      if (pool.length === 0) {
+        scrollContainer.innerHTML = '<div class="empty-msg">No hay recomendaciones disponibles.</div>';
+        return;
+      }
+
+      pool.forEach(item => {
+        scrollContainer.appendChild(createCardElement(item));
+      });
     }
 
     function playCurrentMovie() {
@@ -2072,22 +2132,9 @@
       modal.style.display = 'flex';
     }
 
-    function downloadCurrentMovie() {
-      if (!currentMovieData || !currentMovieData.video) {
-        alert("Enlace de descarga no disponible.");
-        return;
-      }
-      window.open(currentMovieData.video, '_blank');
-    }
-
     function closeMoviePlayerModal() {
       document.getElementById('moviePlayerModal').style.display = 'none';
       document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
-    }
-
-    function hideMoviePlayer() {
-      document.getElementById('moviePlayerArea').style.display = 'none';
-      document.getElementById('movieVideoBox').innerHTML = '';
     }
 
     function toggleSynopsis() {
