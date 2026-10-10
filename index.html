@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
+  
+  <!-- CONFIGURACIÓN PWA PARA PWABUILDER -->
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22NaPlus%22%2C%22short_name%22%3A%22NaPlus%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2307040d%22%2C%22theme_color%22%3A%22%237c3aed%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fi.imgur.com%2F56W0cvy.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+  <meta name="theme-color" content="#7c3aed">
+
   <style>
     :root {
       --bg-dark: #07040d;
@@ -1220,7 +1225,6 @@
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
     let seriesLikes = JSON.parse(localStorage.getItem('naPlus_series_likes')) || [];
 
-    // SISTEMA DE PRECARGA INVISIBLE PARA QUE LAS IMÁGENES CARGUEN AL INSTANTE
     function preloadAllImages() {
       const urls = new Set();
       catalog.forEach(item => {
@@ -2111,7 +2115,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática NaPlus - Speed & Image Preload Optimization',
+            message: 'Actualización automática NaPlus - PWA Manifest added',
             content: updatedBase64,
             sha: sha
           })
