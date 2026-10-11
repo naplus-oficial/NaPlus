@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 HBO MAX (NÚMEROS DISEÑADOS Y CENTRADOS)[span_2](start_span)[span_2](end_span)
+       ESTILO TOP 10 HBO MAX (NÚMEROS VECTORIALES LIMPIOS Y PROFESIONALES)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -332,7 +332,7 @@
 
     .top10-scroll-container {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       overflow-x: auto;
       padding: 15px 20px 20px 20px;
       scrollbar-width: none;
@@ -351,34 +351,29 @@
       cursor: pointer;
     }
 
-    /* NÚMERO 3D ESTILIZADO Y CORREGIDO PARA QUE EL "10" ENTRE COMPLETO[span_3](start_span)[span_3](end_span) */
+    /* NÚMEROS PERFECTAMENTE DISEÑADOS, CLAROS Y SIN DEFORMACIONES */
     .top10-number-svg {
       position: absolute;
-      left: -38px;
-      bottom: -4px;
-      font-size: 8.5rem;
-      font-weight: 900;
-      line-height: 1;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #07040d;
-      -webkit-text-stroke: 2.5px rgba(255, 255, 255, 0.85);
-      text-shadow: 4px 4px 18px rgba(0,0,0,0.95), 0 0 20px rgba(192,132,252,0.15);
+      left: -28px;
+      bottom: -6px;
+      width: 90px;
+      height: 135px;
       z-index: 1;
       pointer-events: none;
       user-select: none;
-      letter-spacing: -12px;
+      filter: drop-shadow(4px 6px 14px rgba(0,0,0,0.9));
     }
 
     .top10-poster-box {
       position: relative;
-      width: 125px;
+      width: 118px;
       aspect-ratio: 2/3;
       border-radius: 8px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 50px;
+      margin-left: 57px;
       box-shadow: 0 8px 22px rgba(0,0,0,0.7);
       transition: transform 0.2s ease;
     }
@@ -1769,6 +1764,25 @@
       slider.addEventListener('pointercancel', () => { dragging = false; startX = null; });
     })();
 
+    function getCleanTop10Svg(rank) {
+      return `
+        <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg" class="top10-number-svg">
+          <style>
+            .num-text {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              font-weight: 900;
+              font-size: 115px;
+              fill: #07040d;
+              stroke: rgba(255, 255, 255, 0.9);
+              stroke-width: 3.5px;
+              paint-order: stroke fill;
+            }
+          </style>
+          <text x="50%" y="112" text-anchor="middle" class="num-text">${rank}</text>
+        </svg>
+      `;
+    }
+
     function renderTop10Element(item, rank) {
       const div = document.createElement('div');
       div.className = 'top10-item-card';
@@ -1777,7 +1791,7 @@
       const isFav = myFavorites.includes(item.id);
 
       div.innerHTML = `
-        <div class="top10-number-svg">${rank}</div>
+        ${getCleanTop10Svg(rank)}
         <div class="top10-poster-box">
           <button class="top10-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
             <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
@@ -2267,7 +2281,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Mejora diseño y espaciado de números Top 10 estilo HBO',
+            message: 'Mejora diseño SVG limpio y profesional para números Top 10',
             content: updatedBase64,
             sha: sha
           })
