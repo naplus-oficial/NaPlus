@@ -629,7 +629,7 @@
     "featured": false,
     "views": 94,
     "dateAdded": 1791560436031
-  }
+  },
   {
     "id": 1791545754323,
     "type": "series",
@@ -728,7 +728,7 @@
             "title": "Q.E.P.D. (Que en pestilencia descanse)",
             "duration": "45 min",
             "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABSKNXnsOc44mwu7M93UcL3oH_1aKT8ZF32noEhe2RqK3EZsR2oOqy_Ra7w-Y0rzRPjl_tFLvK7uVpXl6vQmkhR4IzfFJUUYpAp6P.jpg?r=f50",
-            "desc": "Abby Borden busca el remedio a su profunda insatisfacción. Lizzie libera décadas de frustración cuando un plan brutal se pone en marcha.",
+            "desc": "Abby Borden\nAbby busca el remedio a su profunda insatisfacción. Lizzie libera décadas de frustración cuando un plan brutal se pone en marcha.",
             "video": "https://ok.ru/video/16773121116891"
           },
           {
@@ -895,7 +895,1138 @@
         ]
       }
     ],
+    "featured": false,
     "views": 89,
     "dateAdded": 1791472581391
-  }
-]
+  },
+  {
+    "id": 1791471566495,
+    "type": "series",
+    "title": "Burn the witch",
+    "genre": "Fantasía, Animación, Acción",
+    "year": "2020",
+    "desc": "Noel Niihashi y Ninny Spangcole son brujas y agentes de protección de Wing Bind, una organización para la conservación y manejo de dragones. Su misión es proteger y administrar a los dragones dentro de Londres en nombre de la gente.",
+    "cover": "https://m.media-amazon.com/images/M/MV5BZmEwNjcwMWEtY2MxMS00YTNhLTk1ZDQtMTgyMDY0ZDBlMWM0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Las brujas tocan una nueva flauta",
+            "duration": "20 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/927b22967c9b873c74e96b30f96957634e77affe8d31cbf11247800ae1a7f301.png",
+            "desc": "Ninny Spangcole y Noel Niihashi, dos miembros de Wing Bind en Reverse London, reciben la misión de cuidar a un joven poseído por un dragón. Aunque la idea no les hace mucha ilusión, aceptan el trabajo.",
+            "video": "https://ok.ru/video/16768468781787"
+          },
+          {
+            "num": 2,
+            "title": "Traje de camuflaje/Ella me hace especial",
+            "duration": "20 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/927b22967c9b873c74e96b30f96957634e77affe8d31cbf11247800ae1a7f301.png",
+            "desc": "Balgo Parks parece atraer a los dragones, algo que ciertos grupos consideran peligroso, por lo que deciden eliminarlo. Ninny y Noel intentan protegerlo mientras investigan.",
+            "video": "https://ok.ru/video/16768493554395"
+          },
+          {
+            "num": 3,
+            "title": "Si un león pudiera hablar no lo entenderíamos",
+            "duration": "20 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/927b22967c9b873c74e96b30f96957634e77affe8d31cbf11247800ae1a7f301.png",
+            "desc": "Un misterioso y poderoso dragón aparece en escena y las rencillas deben quedar de lado para acabar con él. No hay duda: es un Märchen… ¿cómo es posible?",
+            "video": "https://ok.ru/video/16768516623067"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 424,
+    "dateAdded": 1791471566495
+  },
+  {
+    "id": 1791465275903,
+    "type": "series",
+    "title": "Carrie",
+    "genre": "Terror, Drama",
+    "year": "2026",
+    "desc": "Adaptación a serie limitada de la novela de Stephen King \"Carrie\", centrada en una estudiante de instituto con poderes telequinéticos.",
+    "cover": "https://static0.srcdn.com/wordpress/wp-content/uploads/sharedimages/2026/07/carrie-poster.jpg?q=49&fit=contain&w=480&dpr=2",
+    "trailer": "https://youtu.be/B_vsRtjJV7M?si=yg640YTzHWbHPcPv",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Primera hora",
+            "duration": "55 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "Tras la muerte de su padre, Carrie se ve obligada a asistir por primera vez a una escuela pública. Su emoción se convierte en horror cuando un incidente en el vestuario de las chicas se transforma en una humillante introducción a la vida en el colegio Ewen.",
+            "video": "https://ok.ru/video/16767200529115"
+          },
+          {
+            "num": 2,
+            "title": "Lengua extranjera",
+            "duration": "51 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "La directora Grayle y la señorita Desjardin investigan el incidente del vestuario mientras Carrie se niega a identificar a las responsables. Sus misteriosos poderes siguen desarrollándose y empieza a hacer nuevas conexiones en la escuela.",
+            "video": "https://ok.ru/video/16767344577243"
+          },
+          {
+            "num": 3,
+            "title": "Estudios sociales",
+            "duration": "48 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "Carrie se escapa para asistir a su primera fiesta de secundaria y tiene una rara oportunidad de divertirse. Sin embargo, los problemas personales de Chris la llevan a tomar una decisión imprudente.",
+            "video": "https://ok.ru/video/16767378066139"
+          },
+          {
+            "num": 4,
+            "title": "Artes dramáticas",
+            "duration": "52 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "CarrieRed_ se hace público y sumerge al colegio Ewen en el caos. Carrie explora su voz, movimiento e improvisación en un entorno cada vez más hostil.",
+            "video": "https://ok.ru/video/16767428397787"
+          },
+          {
+            "num": 5,
+            "title": "Educación física",
+            "duration": "48 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "Enfocada en la salud, el fitness y el ejercicio, Carrie se enfrenta a nuevas pruebas físicas y sociales mientras sus poderes se intensifican.",
+            "video": "https://ok.ru/video/16768198904539"
+          },
+          {
+            "num": 6,
+            "title": "Economía doméstica",
+            "duration": "48 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "Carrie aprende habilidades prácticas para la vida independiente, pero el control asfixiante de su madre Margaret genera tensiones cada vez más peligrosas en casa.",
+            "video": "https://ok.ru/video/16768209259227"
+          },
+          {
+            "num": 7,
+            "title": "Literatura romántica",
+            "duration": "59 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "El poder de la emoción y la experiencia individual toma el centro del escenario mientras se acercan los eventos del baile y las relaciones se complican.",
+            "video": "https://ok.ru/video/16768215485147"
+          },
+          {
+            "num": 8,
+            "title": "Física avanzada",
+            "duration": "52 min",
+            "img": "https://m.media-amazon.com/images/M/MV5BYTdmMGFjZDYtZDY1OS00MDYyLThiNmQtYzAwNjg5YTg0MGYyXkEyXkFqcGc@._V1_QL75_UX388_.jpg",
+            "desc": "Por cada acción hay una reacción opuesta de igual intensidad. El enfrentamiento final pone a prueba todo lo que Carrie ha aprendido y el alcance real de sus poderes.",
+            "video": "https://ok.ru/video/16768224004827"
+          }
+        ]
+      }
+    ],
+    "featured": true,
+    "views": 166,
+    "dateAdded": 1791465275903
+  },
+  {
+    "id": 1791432314176,
+    "type": "series",
+    "title": "Junji Ito: Historias Extrañas para Noches de Insomnio",
+    "genre": "Terror",
+    "year": "2026",
+    "desc": "Las pesadillas del artista japonés de manga de terror Junji Ito (Uzumaki) cobran vida en esta antología de terror, donde una serie de historias escalofriantes transforman situaciones cotidianas en sucesos extraños y perturbadores.",
+    "cover": "https://m.media-amazon.com/images/M/MV5BZTM0ODVkMTctYzkzMC00ZWVlLTkyNzMtYzkyMzZiYzMzYzFiXkEyXkFqcGc@._V1_.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Mal de amores (parte 1)",
+            "duration": "30 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/55eaf3258385d050df85ab84fc7f0b2df3c5d72b5d0b6cef94f3b5462bd864c7._SX1080_FMjpg_.jpg",
+            "desc": "Ryusuke regresa a su pueblo natal envuelto en niebla, donde las chicas están obsesionadas con un ritual de adivinación en las encrucijadas. El terror comienza cuando un apuesto y siniestro chico de negro",
+            "video": "https://ok.ru/video/16760949181147"
+          }
+        ]
+      }
+    ],
+    "featured": true,
+    "views": 350,
+    "dateAdded": 1791432314176
+  },
+  {
+    "id": 1791429566246,
+    "type": "series",
+    "title": "Hora de aventura: Misiones secundarias",
+    "genre": "Animación, Acción",
+    "year": "2026",
+    "desc": "Esta nueva producción acompaña al joven héroe Finn y a su mejor amigo, el perro mágico Jake, mientras se embarcan en aventuras por la fantástica Tierra de Ooo, festejando con los habitantes de las nubes y combatiendo el mal en el camino.",
+    "cover": "https://pbs.twimg.com/media/HSXsDIkXwAAuyza?format=webp&name=large",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Hermanos y flechas",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn participa en un torneo de ballesta para demostrar su hombría, mientras Jake duda si decirle que es pésimo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_000402_517:f"
+          },
+          {
+            "num": 2,
+            "title": "Insecto Dandy",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn debe dominar las formalidades de la alta sociedad antes de enfrentarse a un insecto caballero en un duelo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_000435_992:b"
+          },
+          {
+            "num": 3,
+            "title": "Palabras malditas",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn descubre que Jake enterró maldiciones demoníacas y debe convencerlo de enfrentar a sus demonios… ¡literalmente!",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_000439_643:d"
+          },
+          {
+            "num": 4,
+            "title": "Princesa rescate",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn y Jake deben detener al Rey Helado, quien persigue un romance ilusorio y no correspondido con una princesa.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_000445_083:a523e4c530"
+          },
+          {
+            "num": 5,
+            "title": "Tipo heroico",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "El poder de Jake para detectar fantasmas lo pone en peligro, y Finn corre para salvarlo de un niño fantasma.",
+            "video": "https://odysee.com/VID_20261008_000454_215:b58afa0c52e65c79fe18c95dc52361034c8cf989"
+          },
+          {
+            "num": 6,
+            "title": "Coro helado",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn y Jake entrenan a tres dulces abuelitas para enfrentar una batalla contra la temible Rapta Abuelas.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_004133_180:c"
+          },
+          {
+            "num": 7,
+            "title": "Princesa muñeca",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "El Rey Helado se enamora de una hermosa princesa sin saber que en realidad es una muñeca creada por Finn y Jake.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_004135_545:8"
+          },
+          {
+            "num": 8,
+            "title": "Hijo de la reina de los duendes",
+            "duration": "11 min",
+            "img": "https://i.ytimg.com/vi/OEznILDuGj4/maxresdefault.jpg",
+            "desc": "Finn y Jake ayudan al Rey Helado a cuidar al maniático hijo de la Reina de los Duendes.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261008_004137_815:61510c161c"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 463,
+    "dateAdded": 1791429566246
+  },
+  {
+    "id": 1791427936124,
+    "type": "movie",
+    "title": "Blade ll",
+    "genre": "Acción, Terror, Cienciaficción",
+    "year": "2002",
+    "desc": "Blade forma una alianza con un grupo de enemigos empedernidos con el fin de luchar contra los vampiros más poderosos.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/23d70b44fc6e23ab2ab5d46317eab600cca52186a56b08ebc392f2829c1c7997.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/VID_20261007_233824_486:b",
+    "seasons": [],
+    "featured": false,
+    "views": 263,
+    "dateAdded": 1791427936124
+  },
+  {
+    "id": 1791410074453,
+    "type": "series",
+    "title": "Spider-Noir",
+    "genre": "Acción, Cienciaficción",
+    "year": "2026",
+    "desc": "Representación de acción real de Spider-Man Noir. La versión alternativa de Spider-Man surge en una versión de Nueva York durante la Gran Depresión.",
+    "cover": "https://i.ebayimg.com/images/g/XfsAAeSwjchpvCau/s-l1200.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Entra a mi oficina",
+            "duration": "46 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Nueva York, 1933: el investigador privado Ben Reilly, que hace años colgó la máscara de vigilante, acepta un trabajo barato de infidelidad sobre una cantante de club y termina en la órbita de un jefe del crimen.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261007_183215_993:2"
+          },
+          {
+            "num": 2,
+            "title": "Pisa con cuidado",
+            "duration": "42 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Ben busca a un guardaespaldas desaparecido cuyo historial militar lo vincula a la mafia. Cuando las amenazas llegan a su secretaria, considera volver a ponerse la máscara.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261007_183218_442:2"
+          },
+          {
+            "num": 3,
+            "title": "Doble cruz",
+            "duration": "47 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Contratado por el propio jefe del crimen para descubrir quién filtró información sobre un envío de alcohol, Ben sigue el rastro del dinero mientras una redada policial acorrala a dos hombres con poderes.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPNB3:4"
+          },
+          {
+            "num": 4,
+            "title": "Un error que nunca volveré a cometer",
+            "duration": "49 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Ben se enfrenta a las consecuencias de sus acciones pasadas mientras profundiza en el caso y las conexiones con su antigua vida como la Araña.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPNB4:e"
+          },
+          {
+            "num": 5,
+            "title": "Traición",
+            "duration": "49 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Las lealtades se ponen a prueba cuando secretos y engaños salen a la luz en el mundo del crimen organizado de Nueva York.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPNB5:5"
+          },
+          {
+            "num": 6,
+            "title": "Pesadilla en una camilla",
+            "duration": "42 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Ben enfrenta una crisis personal y física mientras la investigación lo lleva a descubrimientos oscuros y peligrosos.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPNB6:9"
+          },
+          {
+            "num": 7,
+            "title": "Héroe de nadie",
+            "duration": "42 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Con la vida de quienes lo rodean en peligro, Ben debe decidir hasta dónde está dispuesto a llegar para protegerlos.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Sp:883"
+          },
+          {
+            "num": 8,
+            "title": "El hombre de la máscara",
+            "duration": "48 min",
+            "img": "https://www.cinemascomics.com/wp-content/uploads/2026/02/spider-noir-poster.jpg",
+            "desc": "Ben se confronta de lleno con su pasado como la Araña en un enfrentamiento final que define su destino.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPNB8:a"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 344,
+    "dateAdded": 1791410074453
+  },
+  {
+    "id": 1791405819863,
+    "type": "series",
+    "title": "Spider-Noir",
+    "genre": "Acción, Cienciaficción",
+    "year": "2026",
+    "desc": "Representación de acción real de Spider-Man Noir. La versión alternativa de Spider-Man surge en una versión de Nueva York durante la Gran Depresión.",
+    "cover": "https://hips.hearstapps.com/hmg-prod/images/b87bdf34-84fc-490a-984c-8c0bbc9a0e6d.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Entra a mi oficina",
+            "duration": "46 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Nueva York, 1933: el investigador privado Ben Reilly, que hace años colgó la máscara de vigilante, acepta un trabajo barato de infidelidad sobre una cantante de club y termina en la órbita de un jefe del crimen.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_202157_677:7"
+          },
+          {
+            "num": 2,
+            "title": "Pisa con cuidado",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Ben busca a un guardaespaldas desaparecido cuyo historial militar lo vincula a la mafia. Cuando las amenazas llegan a su secretaria, considera volver a ponerse la máscara.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_202201_098:2"
+          },
+          {
+            "num": 3,
+            "title": "Doble cruz",
+            "duration": "47 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Contratado por el propio jefe del crimen para descubrir quién filtró información sobre un envío de alcohol, Ben sigue el rastro del dinero mientras una redada policial acorrala a dos hombres con poderes.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_202204_661:2"
+          },
+          {
+            "num": 4,
+            "title": "Un error que nunca volveré a cometer",
+            "duration": "49 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Ben se enfrenta a las consecuencias de sus acciones pasadas mientras profundiza en el caso y las conexiones con su antigua vida como la Araña.",
+            "video": "https://odysee.com/VID_20261006_202206_619:a"
+          },
+          {
+            "num": 5,
+            "title": "Traición",
+            "duration": "49 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Las lealtades se ponen a prueba cuando secretos y engaños salen a la luz en el mundo del crimen organizado de Nueva York.",
+            "video": "https://odysee.com/VID_20261006_202210_238:a"
+          },
+          {
+            "num": 6,
+            "title": "Pesadilla en una camilla",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Ben enfrenta una crisis personal y física mientras la investigación lo lleva a descubrimientos oscuros y peligrosos.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261007_175132_540:f"
+          },
+          {
+            "num": 7,
+            "title": "El héroe de nadie",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Con la vida de quienes lo rodean en peligro, Ben debe decidir hasta dónde está dispuesto a llegar para protegerlos.",
+            "video": "https://odysee.com/@Romualdoignacio:0/SPN7:f"
+          },
+          {
+            "num": 8,
+            "title": "El hombre de la máscara",
+            "duration": "48 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/ce45e50f4a4bc85a9d1efb90e879216aabc38f879273df1b2e99683b86d47074._SX1080_FMjpg_.jpg",
+            "desc": "Ben se confronta de lleno con su pasado como la Araña en un enfrentamiento final que define su destino.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261007_175142_743:f5a17e7837"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 286,
+    "dateAdded": 1791405819863
+  },
+  {
+    "id": 1791321531520,
+    "type": "movie",
+    "title": "Maboroshi",
+    "genre": "Animación, Drama, Romance",
+    "year": "2023",
+    "desc": "La explosión de una fábrica provoca que un pequeño pueblo quede congelado en el tiempo, dejando a Masamune, de 14 años, y a sus amigos lidiando con una realidad que se derrumba rápidamente.",
+    "cover": "https://images.justwatch.com/poster/311237083/s718/alice-to-therese-no-maboroshi-kojo.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_180323_264",
+    "seasons": [],
+    "views": 466,
+    "dateAdded": 1791321531520
+  },
+  {
+    "id": 1791319531822,
+    "type": "movie",
+    "title": "Siempre el mismo día",
+    "genre": "Romance, Drama",
+    "year": "2011",
+    "desc": "A pesar de ser muy diferentes, una mujer idealista y un mujeriego rico llevan veinte años reuniéndose en la fecha del aniversario de graduación de su universidad.",
+    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCxdbNDRP48wHb0H50vAY3Z1NWy-E1f5P99cs19FBW9OMmSKz9p9mJqaj&s=10",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_173211_548",
+    "seasons": [],
+    "views": 496,
+    "dateAdded": 1791319531822
+  },
+  {
+    "id": 1791318626896,
+    "type": "movie",
+    "title": "Your name",
+    "genre": "Romance, Drama, Animación",
+    "year": "2016",
+    "desc": "Dos extraños se encuentran vinculados de una manera extraña, pero, cuando se forma una conexión, ¿será la distancia lo único que los mantendrá separados?",
+    "cover": "https://static.wikia.nocookie.net/doblaje/images/3/3b/Your_Name.jpg/revision/latest/scale-to-width-down/1200?cb=20240213023736&path-prefix=es",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/YNam:5",
+    "seasons": [],
+    "views": 184,
+    "dateAdded": 1791318626896
+  },
+  {
+    "id": 1791316988973,
+    "type": "movie",
+    "title": "El tiempo contigo",
+    "genre": "Fantasía, Romance, Animación",
+    "year": "2019",
+    "desc": "Durante una época de lluvia sin fin, Hodaka, estudiante de escuela secundaria, escapa del problemático hogar del que proviene, en una zona rural, y huye a Tokio, donde se hace amigo de una chica huérfana capaz de alterar el tiempo atmosférico.",
+    "cover": "https://static.wikia.nocookie.net/doblaje/images/e/e0/El_tiempo_contigo_2019.jpg/revision/latest?cb=20240213023858&path-prefix=es",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_163328_074",
+    "seasons": [],
+    "views": 180,
+    "dateAdded": 1791316988973
+  },
+  {
+    "id": 1791316349289,
+    "type": "movie",
+    "title": "Las ventajas de ser invisible",
+    "genre": "Drama, Romance",
+    "year": "2012",
+    "desc": "Un tímido estudiante de primer año con depresión lidia con el suicidio de su mejor amigo y con su primer amor en esta historia sobre la transición a la adultez.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/0bf85f45dd8a43abe54307d0c9b0668c075c044b958407b4a95683949adc3860.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/LvdI:99c77cb43f7d35cd2f94879c519faec8ff3dc04f",
+    "seasons": [],
+    "views": 394,
+    "dateAdded": 1791316349289
+  },
+  {
+    "id": 1791300347654,
+    "type": "movie",
+    "title": "Vertigo 2: Punto muerto",
+    "genre": "Drama",
+    "year": "2026",
+    "desc": "En duelo por la muerte de su hermana Shiloh, Jax Hunter se une con la audaz amiga de Shiloh, Luce. Juntos abordan el peligroso monte Kwan en Tailandia. Cuando un deslizamiento de rocas los atrapa en una tabla estrecha a 4.000 pies de altura, Jax debe enfrentar sus miedos para sobrevivir.",
+    "cover": "https://cloudfront-us-east-1.images.arcpublishing.com/abccolor/5ICIIFFMXJAPBNDTD7V53UJXOA.webp",
+    "trailer": "",
+    "video": "https://odysee.com/VID_20261006_113458_697:24155022bafeee578b90c22fc5b932e0e91f86d3",
+    "seasons": [],
+    "featured": true,
+    "views": 92,
+    "dateAdded": 1791300347654
+  },
+  {
+    "id": 1791294145606,
+    "type": "movie",
+    "title": "Insidious: Fuera del más allá",
+    "genre": "Terror",
+    "year": "2026",
+    "desc": "Gemma, una joven madre que cría a su hija en la casa en la que creció, descubre que puede viajar a The Further, donde posee la capacidad de traer lo que allí vive de vuelta al mundo real.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/06c06888e88cd7fff4339a677134a62900623b081d154111e033129629d2a3ee.jpg",
+    "trailer": "https://youtu.be/jwMnqtlD0Uc?si=c8Slmn34i149yOCO",
+    "video": "https://odysee.com/@Romualdoignacio:0/Ins:f7",
+    "seasons": [],
+    "featured": true,
+    "views": 240,
+    "dateAdded": 1791294145606
+  },
+  {
+    "id": 1791291351608,
+    "type": "series",
+    "title": "Gannibal",
+    "genre": "Terror",
+    "year": "2022",
+    "desc": "Recién destinado a Kuge, un pequeño pueblo rural, el agente de policía Daigo Agawa se enfrenta a un cadáver desfigurado. Una marca de mordisco humano llama la atención de Daigo.",
+    "cover": "https://image.tmdb.org/t/p/original/AvjCytHUq6AN6rYOFQFATrWbGSR.jpg",
+    "trailer": "https://youtu.be/coUGfFI1iI8?si=4Wac9pN1Ckvs1ZJZ",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Ofrenda de flores",
+            "duration": "49 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo inspecciona el cadáver de una presunta víctima de un ataque de oso y descubre algo inquietante.",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL1:9"
+          },
+          {
+            "num": 2,
+            "title": "Ataque",
+            "duration": "33 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo se topa con el cortejo fúnebre de Gin y presencia una acusación impactante.",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL2:3"
+          },
+          {
+            "num": 3,
+            "title": "Bala mortal",
+            "duration": "40 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo se despierta en el hospital, pero el peligro acecha",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL3"
+          },
+          {
+            "num": 4,
+            "title": "Línea de tiro",
+            "duration": "42 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Con el caso de Kano resuelto, la vida en el pueblo es pacífica para los Agawa… al menos por ahora.",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL4:8"
+          },
+          {
+            "num": 5,
+            "title": "Rastro",
+            "duration": "52 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo conoce a Utada, quien arroja más luz sobre la muerte de Kano y el pueblo de Kuge.",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL5:6"
+          },
+          {
+            "num": 6,
+            "title": "Premonición",
+            "duration": "54 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo descubre que Gin Goto presentaba síntomas similares a la enfermedad del kuru antes de morir.",
+            "video": "https://odysee.com/@Romualdoignacio:0/GNL6:9"
+          },
+          {
+            "num": 7,
+            "title": "Promesa",
+            "duration": "60 min",
+            "img": "https://cnbl-cdn.bamgrid.com/assets/f4a6a1b6dcdc41b2230fb8dda08adc1f5581a70ae5e277caf5270ba91d574cc0/original",
+            "desc": "Daigo es salvado por el jefe, quien crea una fuerza especial en el pueblo de Kuge.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_104748_970:1"
+          }
+        ]
+      }
+    ],
+    "views": 390,
+    "dateAdded": 1791291351608
+  },
+  {
+    "id": 1791289041949,
+    "type": "series",
+    "title": "Drácula",
+    "genre": "Terror",
+    "year": "2020",
+    "desc": "Inspirado en el personaje del conde Drácula de Bram Stoker, el vampiro viaja de Transilvania a Londres para saciar su sed de sangre.",
+    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/9AcqMErO43aNST20bdHZusJ3qiz.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Las reglas de la bestia",
+            "duration": "90 min",
+            "img": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABUw0xPhH1WbJKAcuuSS913CaZrPZfzNFI9HgrY7P5mAtkA3BYJ31B5quzmVoN8C_ai6pzQNsBIstztImq0KwO7nSdUmKxIslPUEN.jpg?r=058",
+            "desc": "Una monja poco convencional ayuda a un abogado atormentado a ordenar los recuerdos de su condenado viaje de negocios al castillo del conde Drácula.",
+            "video": "https://odysee.com/@Romualdoignacio:0/D-1:6"
+          },
+          {
+            "num": 2,
+            "title": "Novio sangriento",
+            "duration": "90 min",
+            "img": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABUw0xPhH1WbJKAcuuSS913CaZrPZfzNFI9HgrY7P5mAtkA3BYJ31B5quzmVoN8C_ai6pzQNsBIstztImq0KwO7nSdUmKxIslPUEN.jpg?r=058",
+            "desc": "Un barco dirigido a Inglaterra vira hacia un destino terrible orquestado por un oscuro pasajero. Pero Drácula pronto encuentra un obstáculo en su camino.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261006_084303_061:f"
+          },
+          {
+            "num": 3,
+            "title": "La bruja del mal",
+            "duration": "90 min",
+            "img": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABUw0xPhH1WbJKAcuuSS913CaZrPZfzNFI9HgrY7P5mAtkA3BYJ31B5quzmVoN8C_ai6pzQNsBIstztImq0KwO7nSdUmKxIslPUEN.jpg?r=058",
+            "desc": "Drácula aparece en una tierra extraña, donde retoma sus viejos hábitos, conoce a una hermosa joven y debe enfrentarse a un desafío aterrador.",
+            "video": "https://odysee.com/@Romualdoignacio:0/D-3:f"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 166,
+    "dateAdded": 1791289041949
+  },
+  {
+    "id": 1791259512823,
+    "type": "movie",
+    "title": "Los hermanos Grimm",
+    "genre": "Acción, Fantasía",
+    "year": "2005",
+    "desc": "Dos estafadores quedan atrapados en un cuento de hadas real tras la desaparición de varias sirvientas en un bosque encantado.",
+    "cover": "https://http2.mlstatic.com/D_NQ_NP_667846-MLA82250411434_022025-F.webp",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/LHG",
+    "seasons": [],
+    "views": 155,
+    "dateAdded": 1791259512823
+  },
+  {
+    "id": 1791247414815,
+    "type": "movie",
+    "title": "Spider-Man: Un nuevo día",
+    "genre": "Acción, Cienciaficción",
+    "year": "2026",
+    "desc": "A medida que las exigencias a las que se ve sometido Spider-Man se intensifican, la presión desencadena una sorprendente evolución física que pone en peligro su existencia. Al mismo tiempo, una nueva y extraña ola de delitos da lugar a una de las amenazas más poderosas a las que se ha enfrentado jamás.",
+    "cover": "https://image.tmdb.org/t/p/original/rG5OhgBvF0zRI7lw5lhOUYi196K.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/SP.UD",
+    "seasons": [],
+    "featured": true,
+    "views": 241,
+    "dateAdded": 1791247414815
+  },
+  {
+    "id": 1791244585225,
+    "type": "movie",
+    "title": "Supergirl",
+    "genre": "Cienciaficción, Acción",
+    "year": "2026",
+    "desc": "Un adversario inesperado y despiadado ataca demasiado cerca de casa. Kara Zor-El, también conocida como Supergirl, une fuerzas a regañadientes con un compañero improbable en un épico viaje interestelar de venganza y justicia.",
+    "cover": "https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/-q8AAeSwb~hoeBh9/$_57.JPG?set_id=880000500F",
+    "trailer": "https://youtu.be/S2JsnctozH4?si=m5Ck47ETSFtrdPGz",
+    "video": "https://odysee.com/@Romualdoignacio:0/SP%C3%91:923ade991b",
+    "seasons": [],
+    "featured": false,
+    "views": 97,
+    "dateAdded": 1791244585225
+  },
+  {
+    "id": 1791240182387,
+    "type": "series",
+    "title": "Parasyte: Los grises",
+    "genre": "Acción, Terror",
+    "year": "2024",
+    "desc": "La gente se levanta para combatir a los parásitos que están tomando posesión de los huéspedes humanos y ganando poder.",
+    "cover": "https://images.justwatch.com/poster/316900761/s718/parasyte-the-grey.jpg",
+    "trailer": "https://youtu.be/_Ho8NeAmvXk?si=Ve80ZElf-bxdPe_L",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Episodio 1",
+            "duration": "58 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eNlxs3HXCHIjY7AagxXva3aYCfzr1mu7Jz6db7cdqZpq6mBjRZkpCz7kbdkdTbh-mVpWl6JzT0Nw.jpg?r=3d7",
+            "desc": "Luego de un brutal ataque, Jeong Su-in se da cuenta de que ya no es la misma persona. Choi Jun-kyung descubre que los monstruos están formando una organización.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Parasyte--Los-grises-E1:b"
+          },
+          {
+            "num": 2,
+            "title": "Episodio 2",
+            "duration": "40 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eNlxs3HXCHIjY7AagxXva3aYCfzr1mu7Jz6db7cdqZpq6mBjRZkpCz7kbdkdTbh-mVpWl6JzT0Nw.jpg?r=3d7",
+            "desc": "En busca de su hermana, Seol Kang-woo investiga la iglesia Saejin, donde encuentra a Su-in. Pero los problemas no tardan en llegar y ambos deben luchar por sus vidas.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261005_191250_510:9"
+          },
+          {
+            "num": 3,
+            "title": "Episodio 3",
+            "duration": "41 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eNlxs3HXCHIjY7AagxXva3aYCfzr1mu7Jz6db7cdqZpq6mBjRZkpCz7kbdkdTbh-mVpWl6JzT0Nw.jpg?r=3d7",
+            "desc": "Después de una redada en la iglesia Saejin, Jun-kyung empieza a sospechar que Kim Chul-min esconde algo. Más tarde lo sigue hasta una reunión con Su-in y Kang-woo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Parasyte--Los-grises-E3:7"
+          },
+          {
+            "num": 4,
+            "title": "Episodio 4",
+            "duration": "50 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eNlxs3HXCHIjY7AagxXva3aYCfzr1mu7Jz6db7cdq",
+            "desc": "Luego de revelarle a Chul-min todo lo que sabe, Kang-woo accede a ayudarlo a salvar a Su-in. Pero cuando el plan se complica, varias vidas penden de un hilo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261005_191256_428:6"
+          },
+          {
+            "num": 5,
+            "title": "Episodio 5",
+            "duration": "46 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eN",
+            "desc": "Su-in intenta advertirle a Jun-kyung que está en peligro. Durante una redada del Equipo Gris, Su-in y Kang-woo se dan cuenta de que todo es parte de un plan mayor.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Parasyte--Los-grises-E5:1"
+          },
+          {
+            "num": 6,
+            "title": "Episodio 6",
+            "duration": "50 min",
+            "img": "https://occ-0-2794-2218.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABSN3ua_HsV2XYlKo0DwlWvXCFUMfntQML_2nZ6bzrAlGl5eN",
+            "desc": "Su-in se reúne con Seol Kyung-hee, quien le propone una alianza. Pero los parásitos están a punto de tomar el control, y solo Heidi puede detenerlos.",
+            "video": "https://odysee.com/VID_20261005_191434_874:9d477758477e90dd6e7bef6fc7006632631db101"
+          }
+        ]
+      }
+    ],
+    "views": 235,
+    "dateAdded": 1791240182388
+  },
+  {
+    "id": 1791233262221,
+    "type": "movie",
+    "title": "Vivarium",
+    "genre": "Terror, Cienciaficción",
+    "year": "2019",
+    "desc": "Una joven pareja visita una inmobiliaria para comprar una casa. Un extraño agente los acompaña a una nueva, misteriosa y peculiar urbanización para mostrarles una vivienda. Allí, quedarán atrapados dentro de una pesadilla.",
+    "cover": "https://i.ebayimg.com/images/g/yRoAAOSwOtpicNQm/s-l1200.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/Vivarium",
+    "seasons": [],
+    "views": 159,
+    "dateAdded": 1791233262222
+  },
+  {
+    "id": 1791232126478,
+    "type": "movie",
+    "title": "Área 51",
+    "genre": "Cienciaficción, Terror",
+    "year": "2011",
+    "desc": "El terror golpea cuando unos reporteros visitan una base secreta que guarda extraterrestres.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/7da3d41b95652058ff56a45b3107183c8fe63bab3b49a7d22ef154fdcbd3697e.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/%C3%81rea-51",
+    "seasons": [],
+    "views": 518,
+    "dateAdded": 1791232126478
+  },
+  {
+    "id": 1791229912407,
+    "type": "movie",
+    "title": "Paul",
+    "genre": "Cienciaficción, Comedia",
+    "year": "2011",
+    "desc": "",
+    "cover": "https://m.media-amazon.com/images/M/MV5BYTI1YjY3OGYtYjYxYi00ZGU1LThkOTMtZWRlMDhiNjY3ODZlXkEyXkFqcGc@._V1_.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/Paul:cf9fc7cb4ae56fb8d5cc906787b7a9b1098b8c5c",
+    "seasons": [],
+    "views": 231,
+    "dateAdded": 1791229912407
+  },
+  {
+    "id": 1791219471572,
+    "type": "movie",
+    "title": "El día de la revelación",
+    "genre": "Cienciaficción, Drama",
+    "year": "2026",
+    "desc": "Una presentadora de noticias meteorológicas descubre que puede hablar lo que parece ser un idioma extraño. Al mismo tiempo, un hombre encuentra pruebas robadas del gobierno que prueban la existencia de vida extraterrestre.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/f7e83372fb69dd255f2e42d1d2596e90797f65aaa1beed42330e870c027a6c09.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/El-di:5",
+    "seasons": [],
+    "views": 372,
+    "dateAdded": 1791219471572
+  },
+  {
+    "id": 1791218454368,
+    "type": "movie",
+    "title": "Los elegidos",
+    "genre": "Terror, Cienciaficción",
+    "year": "2013",
+    "desc": "Lacey y Daniel descubren que su familia es el objetivo de una inimaginable y terrorífica fuerza mortal. Ambos tendrán que hacer todo lo que esté en sus manos para resolver este oscuro misterio y salvar sus vidas.",
+    "cover": "https://image.tmdb.org/t/p/original/6GEA7duhO7s6RkjwDmOVU2gQd8T.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/Los-elegidos-:9",
+    "seasons": [],
+    "views": 479,
+    "dateAdded": 1791218454368
+  },
+  {
+    "id": 1791206560041,
+    "type": "movie",
+    "title": "Bodycam",
+    "genre": "Terror",
+    "year": "2025",
+    "desc": "Durante una llamada rutinaria por disturbios domésticos, un trágico accidente lleva a dos oficiales de policía a una pesadilla implacable que revela la existencia de un culto aterrador.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/5aee30e7b6e05eaa60267b915f4420d1f243dd31023177b85c344283533a5ea5.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/Bodycam:0",
+    "seasons": [],
+    "views": 78,
+    "dateAdded": 1791206560041
+  },
+  {
+    "id": 1791169430971,
+    "type": "series",
+    "title": "Rumbo al infierno",
+    "genre": "Terror",
+    "year": "2021",
+    "desc": "Criaturas sobrenaturales llevan a los condenados al infierno. En medio del caos y el misterio, también surge una secta religiosa cruel y violenta.",
+    "cover": "https://images.justwatch.com/poster/291520464/s718/hellbound.jpg",
+    "trailer": "https://youtu.be/XgIkPdJ-Wjs?si=HVgBWUbl5e1p8olO",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Episodio 1",
+            "duration": "49 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "La gente mira horrorizada mientras bestias sobrenaturales persiguen y matan a un hombre en plena luz del día. Jung Jinsu declara que solo los pecadores van al infierno.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-sl:9"
+          },
+          {
+            "num": 2,
+            "title": "Episodio 2",
+            "duration": "53 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "La Nueva Verdad le ofrece un cuantioso pago a Park Jungja, una mujer condenada, a cambio de poder transmitir en vivo el momento en que se decida su destino.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-infierno-T1E2"
+          },
+          {
+            "num": 3,
+            "title": "Episodio 3",
+            "duration": "53 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Jinsu predica sobre rectitud ante un mundo pasmado. El detective Jin Kyunghun busca a su hija desaparecida. La Lanza tiene a Min Hyejin en el punto de mira.",
+            "video": "https://odysee.com/Rumbo-al-infierno-T1E3:6ad8bc485107e376571aeac6734b3fc7d12ec900"
+          },
+          {
+            "num": 4,
+            "title": "Episodio 4",
+            "duration": "42 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Bae Youngjae sigue a su colega a un muelle pesquero, donde es testigo de algo terrorífico. El profeta Ángel se aparece en un lugar inconcebible.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-infierno-T1E4:c"
+          },
+          {
+            "num": 5,
+            "title": "Episodio 5",
+            "duration": "55 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Youngjae, desesperado, localiza a un hombre que cree que podría tener respuestas. La Nueva Verdad se entera de una misteriosa organización con sus propios intereses.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-infierno-T1E5:0"
+          },
+          {
+            "num": 6,
+            "title": "Episodio 6",
+            "duration": "60 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Información perjudicial pende sobre La Nueva Verdad, que intenta proteger su poder e impedir que el público descubra la realidad.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-infierno-T1E6:1"
+          }
+        ]
+      },
+      {
+        "name": "Temporada 2",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Episodio 1",
+            "duration": "50 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Tras una serie de visiones, Jinsu es resucitado misteriosamente. Al darse cuenta de que está perdiendo poder, Kim Jeongchil acepta colaborar con el Gobierno.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-infierno-T1E1:f"
+          },
+          {
+            "num": 2,
+            "title": "Episodio 2",
+            "duration": "40 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Mientras se esconden, Kyunghun y su hija sufren un ataque repentino. La Nueva Verdad decide adelantar un anuncio.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rumbo-al-8kdi:2"
+          },
+          {
+            "num": 3,
+            "title": "Episodio 3",
+            "duration": "57 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Mientras se esconden, Kyunghun y su hija sufren un ataque repentino. La Nueva Verdad decide adelantar un anuncio.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261005_175315_035:e"
+          },
+          {
+            "num": 4,
+            "title": "Episodio 4",
+            "duration": "47 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Jinsu sigue adelante con su plan para enfrentar el dolor a toda costa.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261005_175317_293:5"
+          },
+          {
+            "num": 5,
+            "title": "Episodio 5",
+            "duration": "40 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "Las tensiones entre las facciones aumentan mientras se revelan más secretos sobre las resurrecciones y el verdadero poder de los condenados.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261005_175353_412:4"
+          },
+          {
+            "num": 6,
+            "title": "Episodio 6",
+            "duration": "57 min",
+            "img": "https://i.blogs.es/c70bcd/rumbo-al-infierno.netflix/840_560.jpeg",
+            "desc": "La lucha por el destino de la humanidad llega a su punto crítico en un mundo al borde del abismo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/Rum-y:5"
+          }
+        ]
+      }
+    ],
+    "views": 228,
+    "dateAdded": 1791169430971
+  },
+  {
+    "id": 1791167630358,
+    "type": "movie",
+    "title": "Drácula",
+    "genre": "Terror, Drama, Romance, Fantasía",
+    "year": "2025",
+    "desc": "Tras la muerte de su esposa, un príncipe medieval renuncia a Dios y se convierte en vampiro. Siglos después, en Londres del siglo XIX, ve a una mujer parecida a su difunta esposa, lo cual sella su destino.",
+    "cover": "https://proyectonaschy.com/wp-content/uploads/2025/08/dracula_a4-sinlogo-9900000000079e3c.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/Drac:3a4f19a120ae95a0f38831f7a24e3f951e8667b4",
+    "seasons": [],
+    "views": 198,
+    "dateAdded": 1791167630358
+  },
+  {
+    "id": 1791166206313,
+    "type": "movie",
+    "title": "Leviticus: Ritual de sangre",
+    "genre": "Terror, Romance",
+    "year": "2026",
+    "desc": "Dos adolescentes intentan escapar de una entidad violenta que adopta la forma de la persona que más desean.",
+    "cover": "https://cdn.displate.com/artwork/857x1200/2026-06-27/458bfad7-033a-4bbe-b619-df003c07a286.jpg",
+    "trailer": "",
+    "video": "https://odysee.com/@Romualdoignacio:0/Leviticus--Ritu",
+    "seasons": [],
+    "views": 166,
+    "dateAdded": 1791166206313
+  },
+  {
+    "id": 1791146051986,
+    "type": "movie",
+    "title": "El Ritual",
+    "genre": "Terror, Drama",
+    "year": "2017",
+    "desc": "Un grupo de amigos de la universidad organiza un viaje luego de la trágica muerte de uno de sus compañeros. Una presencia los atormentará al tomar un atajo para adentrarse en una parte misteriosa del bosque.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/1f0f2e2f1ce147db90f19dee2b7ab5b512c4c90e495a975544cdac4c33f94e0b.png",
+    "trailer": "https://youtu.be/7RO_ETsehsc?si=9ZU0ap_SeckeVfD7",
+    "video": "https://odysee.com/@Romualdoignacio:0/El-Ritual-:5",
+    "seasons": [],
+    "views": 96,
+    "dateAdded": 1791146051986
+  },
+  {
+    "id": 1791134769117,
+    "type": "movie",
+    "title": "The Sadness",
+    "genre": "Terror, Acción",
+    "year": "2021",
+    "desc": "Mientras Taiwán se ve azotada por una pandemia viral que convierte a ciudadanos pacíficos en maníacos sádicos y sedientos de sangre, una joven pareja debe luchar por reunirse antes de que ellos también se contagien.",
+    "cover": "https://m.media-amazon.com/images/S/pv-target-images/5eec4b16725392a884000792788a65c54617095486f079e32ae30b1dc15debde.jpg",
+    "trailer": "https://youtu.be/v3O4DKVIkB4?si=75DUXZ1Mj4JmAcnN",
+    "video": "https://odysee.com/@Romualdoignacio:0/The-Sadness-:d",
+    "seasons": [],
+    "views": 323,
+    "dateAdded": 1791134769118
+  },
+  {
+    "id": 1791092456921,
+    "type": "series",
+    "title": "Coven Academy",
+    "genre": "Fantasía, Drama, Comedia",
+    "year": "2026",
+    "desc": "Jóvenes aprendices de bruja se unen para defender Nueva Orleans contra una fuerza oscura que se aproxima.",
+    "cover": "https://image.tmdb.org/t/p/w500/hcmeaEjGZE1mYfPp4KFd8mNgYbO.jpg",
+    "trailer": "https://youtu.be/2sKdv5utHok?si=5J2mk6GL3ggOV-CT",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Educación de hechizos",
+            "duration": "30 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar llega a su nueva escuela y descubre un mundo mágico oculto en Nueva Orleans.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-academy:8"
+          },
+          {
+            "num": 2,
+            "title": "Sangre, sudor y miedos",
+            "duration": "20 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar se escapa para unirse a Ollie en un tour de fantasmas.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E2:7"
+          },
+          {
+            "num": 3,
+            "title": "Madre de todos los secretos",
+            "duration": "20 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar hace un descubrimiento sorprendente sobre su mamá.",
+            "video": "https://odysee.com/@Romualdoignacio:0/VID_20261004_024730_63:8"
+          },
+          {
+            "num": 4,
+            "title": "Callejones sin salida",
+            "duration": "20 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar se enfoca en un sospechoso de la muerte de su madre.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E4:9"
+          },
+          {
+            "num": 5,
+            "title": "Viaje de poder",
+            "duration": "20min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar busca un aliado inesperado para recuperar sus poderes.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E5:c"
+          },
+          {
+            "num": 6,
+            "title": "Las rosas son rojas",
+            "duration": "20 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar y Jake investigan nuevas pistas fuera de la escuela.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E6:d"
+          },
+          {
+            "num": 7,
+            "title": "Elige tu venado",
+            "duration": "45 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar asiste a su primera fiesta del colegio.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E7:f"
+          },
+          {
+            "num": 8,
+            "title": "El juego de la adivinación",
+            "duration": "45 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar encuentra un dispositivo extraño y Sasha descubre un secreto.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E8:401a01001b"
+          },
+          {
+            "num": 9,
+            "title": "Prueba de fuego",
+            "duration": "45 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Las chicas enfrentan un examen difícil y Jake recurre a Mr. Cole.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E9:5"
+          },
+          {
+            "num": 10,
+            "title": "Distorsión temporal",
+            "duration": "45 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Tegan ayuda a las chicas a descubrir el pasado.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E10:e"
+          },
+          {
+            "num": 11,
+            "title": "La noche en que ocurrió",
+            "duration": "11 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar busca respuestas sobre Mary antes de que se acabe el tiempo.",
+            "video": "https://odysee.com/@Romualdoignacio:0/The-Coven-Academy-E11:eab8d31e93"
+          },
+          {
+            "num": 12,
+            "title": "Entre mundos",
+            "duration": "14 min",
+            "img": "https://lumiere-a.akamaihd.net/v1/images/coven_e82ed76f.png?region=0,30,517,290",
+            "desc": "Briar arriesga su vida para salvar a una amiga y Jake sube de nivel
