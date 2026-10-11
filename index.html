@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 HBO MAX (GRANDE Y PROPORCIONADO 3D)[span_3](start_span)[span_3](end_span)
+       ESTILO TOP 10 HBO MAX (NÚMEROS DISEÑADOS Y CENTRADOS)[span_2](start_span)[span_2](end_span)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -332,7 +332,7 @@
 
     .top10-scroll-container {
       display: flex;
-      gap: 22px;
+      gap: 20px;
       overflow-x: auto;
       padding: 15px 20px 20px 20px;
       scrollbar-width: none;
@@ -343,41 +343,42 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 165px;
-      width: 165px;
+      min-width: 175px;
+      width: 175px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
       cursor: pointer;
     }
 
-    /* NÚMERO GRANDE 3D MÁS GIGANTE ESTILO MAX[span_4](start_span)[span_4](end_span) */
+    /* NÚMERO 3D ESTILIZADO Y CORREGIDO PARA QUE EL "10" ENTRE COMPLETO[span_3](start_span)[span_3](end_span) */
     .top10-number-svg {
       position: absolute;
-      left: -24px;
-      bottom: -6px;
-      font-size: 9rem;
+      left: -38px;
+      bottom: -4px;
+      font-size: 8.5rem;
       font-weight: 900;
       line-height: 1;
-      font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #07040d;
-      -webkit-text-stroke: 3px #cbd5e1;
-      text-shadow: 5px 5px 16px rgba(0,0,0,0.95), 0 0 25px rgba(203,213,225,0.25);
+      -webkit-text-stroke: 2.5px rgba(255, 255, 255, 0.85);
+      text-shadow: 4px 4px 18px rgba(0,0,0,0.95), 0 0 20px rgba(192,132,252,0.15);
       z-index: 1;
       pointer-events: none;
       user-select: none;
+      letter-spacing: -12px;
     }
 
     .top10-poster-box {
       position: relative;
-      width: 135px;
+      width: 125px;
       aspect-ratio: 2/3;
       border-radius: 8px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 32px;
+      margin-left: 50px;
       box-shadow: 0 8px 22px rgba(0,0,0,0.7);
       transition: transform 0.2s ease;
     }
@@ -1002,7 +1003,7 @@
     <div id="mainHomeContent">
       <div id="recommendedContainer"></div>
       
-      <!-- TOP 10 PELÍCULAS HOY (ESTILO HBO MAX GRANDE) -->
+      <!-- TOP 10 PELÍCULAS HOY (ESTILO HBO MAX) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -1011,7 +1012,7 @@
         <div class="top10-scroll-container" id="topMoviesScroll"></div>
       </div>
 
-      <!-- TOP 10 SERIES HOY (ESTILO HBO MAX GRANDE) -->
+      <!-- TOP 10 SERIES HOY (ESTILO HBO MAX) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -2266,7 +2267,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización tamaño Top 10 estilo HBO Max',
+            message: 'Mejora diseño y espaciado de números Top 10 estilo HBO',
             content: updatedBase64,
             sha: sha
           })
