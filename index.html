@@ -274,16 +274,13 @@
     }
     .clear-search-btn:hover { color: #fff; }
 
-    /* SCROLL HORIZONTAL */
+    /* TÍTULOS DE SECCIÓN PROFESIONALES Y DESTACADOS (SIN EMOJIS) */
     .section-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin: 22px 20px 10px;
-      color: #f1f5f9;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: -0.2px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 28px 20px 12px;
+      color: #ffffff;
+      letter-spacing: -0.3px;
     }
 
     .horizontal-scroll {
@@ -967,7 +964,7 @@
         <div class="top10-scroll-container" id="topSeriesScroll"></div>
       </div>
 
-      <div class="section-title">🔥 Lo Más Reciente</div>
+      <div class="section-title">Lo Más Reciente</div>
       <div class="horizontal-scroll" id="recentScroll"></div>
 
       <div id="genreRowsContainer"></div>
@@ -976,7 +973,7 @@
 
   <!-- VISTA PELÍCULAS -->
   <div id="viewMovies" class="view-section">
-    <div class="section-title" style="margin-top: 10px;">🎬 Películas</div>
+    <div class="section-title" style="margin-top: 10px;">Películas</div>
     <div class="top10-section-wrapper">
       <div class="top10-header-title">
         <span class="top10-title-main">TOP 10</span>
@@ -991,7 +988,7 @@
 
   <!-- VISTA SERIES -->
   <div id="viewSeries" class="view-section">
-    <div class="section-title" style="margin-top: 10px;">📺 Series</div>
+    <div class="section-title" style="margin-top: 10px;">Series</div>
     <div class="top10-section-wrapper">
       <div class="top10-header-title">
         <span class="top10-title-main">TOP 10</span>
@@ -1021,7 +1018,7 @@
 
   <!-- VISTA MI LISTA -->
   <div id="viewList" class="view-section">
-    <div class="section-title" style="margin-top: 10px;">🔖 Mi Lista - Guardados</div>
+    <div class="section-title" style="margin-top: 10px;">Mi Lista</div>
     <div class="grid" id="myListGrid"></div>
   </div>
 
@@ -1597,6 +1594,7 @@
 
     function renderHomeSections() {
       renderHeroSlider();
+      computeSessionRecommendations();
       renderHomeRecommendations();
 
       const topMoviesScroll = document.getElementById('topMoviesScroll');
@@ -1622,7 +1620,7 @@
       allIndividualGenres.forEach(genre => {
         const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
         if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `📖 ${genre}`;
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
           const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
           genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
           genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
@@ -1693,7 +1691,7 @@
       movieGenres.forEach(genre => {
         const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
         if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `🎬 ${genre}`;
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
           const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
           genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
           genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
@@ -1722,7 +1720,7 @@
       seriesGenres.forEach(genre => {
         const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
         if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `📺 ${genre}`;
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
           const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
           genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
           genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
@@ -1746,7 +1744,6 @@
       card.className = 'card';
       card.onclick = () => openContentDetail(item.id);
       const isFav = myFavorites.includes(item.id);
-      const badge = item.type === 'series' ? '📺' : '🎬';
 
       card.innerHTML = `
         <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
@@ -1759,7 +1756,7 @@
         <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
-          <div class="card-sub">${badge} • ${item.year}</div>
+          <div class="card-sub">${item.year}</div>
         </div>
       `;
       return card;
