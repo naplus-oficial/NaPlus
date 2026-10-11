@@ -274,7 +274,7 @@
     }
     .clear-search-btn:hover { color: #fff; }
 
-    /* TÍTULOS DE SECCIÓN PROFESIONALES Y DESTACADOS (SIN EMOJIS) */
+    /* TÍTULOS DE SECCIÓN GRANDES, LINDOS Y PROFESIONALES (SIN EMOJIS) */
     .section-title {
       font-size: 1.2rem;
       font-weight: 800;
@@ -1306,32 +1306,11 @@
 
     let sessionRecommendedPool = [];
     function computeSessionRecommendations() {
-      if (catalog.length === 0) return;
-      let targetItems = [];
-
-      const allLikes = [...movieLikes, ...seriesLikes];
-      if (allLikes.length >= 2) {
-        const genreCounts = {};
-        allLikes.forEach(likedId => {
-          const item = catalog.find(i => i.id === likedId);
-          if (item && item.genre) {
-            item.genre.split(',').forEach(g => {
-              const cleanG = g.trim();
-              if (cleanG) genreCounts[cleanG] = (genreCounts[cleanG] || 0) + 1;
-            });
-          }
-        });
-        const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
-        if (sortedGenres.length > 0 && genreCounts[sortedGenres[0]] >= 2) {
-          const topGenre = sortedGenres[0];
-          targetItems = catalog.filter(i => i.genre && i.genre.toLowerCase().includes(topGenre.toLowerCase()) && !allLikes.includes(i.id));
-        }
+      if (catalog.length === 0) {
+        sessionRecommendedPool = [];
+        return;
       }
-
-      if (targetItems.length < 3) {
-        const shuffled = [...catalog].sort(() => 0.5 - Math.random());
-        targetItems = shuffled;
-      }
+      let targetItems = [...catalog].sort(() => 0.5 - Math.random());
       sessionRecommendedPool = targetItems;
     }
     computeSessionRecommendations();
