@@ -296,9 +296,7 @@
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
-    /* ========================================================
-       ESTILO TOP 10 (NÚMEROS MÁS CHICOS Y PÓSTERS AÚN MÁS GRANDES)
-       ======================================================== */
+    /* TOP 10 */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
     }
@@ -351,7 +349,6 @@
       cursor: pointer;
     }
 
-    /* NÚMEROS MÁS COMPACTOS Y REFINADOS */
     .top10-number-svg {
       position: absolute;
       left: -20px;
@@ -364,7 +361,6 @@
       filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.9));
     }
 
-    /* PÓSTERS MÁS GRANDES Y DESTACADOS */
     .top10-poster-box {
       position: relative;
       width: 148px;
@@ -499,7 +495,6 @@
       overflow-y: auto;
     }
 
-    /* ESTILO MODAL PELÍCULA - DISEÑO HBO MAX */
     .modal-box-movie {
       background: #07040d;
       padding: 0;
@@ -649,7 +644,6 @@
       background: #07040d;
     }
 
-    /* BARRA SUPERIOR MODAL */
     .stream-top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -679,7 +673,6 @@
     }
     .stream-top-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
 
-    /* ESTILOS DE SERIE */
     .modal-box-series {
       background: #07040d;
       padding: 0;
@@ -999,7 +992,6 @@
     <div id="mainHomeContent">
       <div id="recommendedContainer"></div>
       
-      <!-- TOP 10 PELÍCULAS HOY (ESTILO HBO MAX) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -1008,7 +1000,6 @@
         <div class="top10-scroll-container" id="topMoviesScroll"></div>
       </div>
 
-      <!-- TOP 10 SERIES HOY (ESTILO HBO MAX) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -1127,7 +1118,6 @@
     </div>
   </div>
 
-  <!-- MODAL REPRODUCTOR NATIVO DE PELÍCULA -->
   <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 750px; background:#000; padding:0; border:none;">
       <button class="btn-close" onclick="closeMoviePlayerModal()">✕</button>
@@ -1185,13 +1175,11 @@
       </div>
     </div>
 
-    <!-- PESTAÑAS (EPISODIOS Y RECOMENDADOS) -->
     <div class="stream-tabs-bar">
       <button class="stream-tab active" id="tabEpisodesBtn" onclick="switchSeriesTab('episodes')">Episodios</button>
       <button class="stream-tab" id="tabRecommendedBtn" onclick="switchSeriesTab('recommended')">Quizá también te guste</button>
     </div>
 
-    <!-- CONTENIDO DE PESTAÑAS -->
     <div class="stream-content-area" id="seriesTabContentEpisodes">
       <div class="stream-season-row">
         <select id="seasonSelect" class="stream-season-select" onchange="renderEpisodesForSelectedSeason()"></select>
@@ -1204,7 +1192,6 @@
     </div>
   </div>
 
-  <!-- MODAL REPRODUCTOR DE EPISODIO / TRÁILER -->
   <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 550px;">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
@@ -1332,6 +1319,7 @@
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
+    const DB_FILE_PATH = "database.json";
 
     /*CATALOG_START*/
     let catalog = [];
@@ -1340,8 +1328,6 @@
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
       catalog = localDb;
-    } else {
-      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
     }
 
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
@@ -1400,10 +1386,32 @@
     computeSessionRecommendations();
     preloadAllImages();
 
+    // FUNCIÓN MEJORADA: FUERZA LA ACTUALIZACIÓN CONSTANTE DESDE LA NUBE
     async function autoSyncCatalogFromCloud() {
       try {
-        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
+        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
         const res = await fetch(rawUrl, { cache: 'no-store' });
+        if (res.ok) {
+          const cloudCatalog = await res.json();
+          if (Array.isArray(cloudCatalog)) {
+            catalog = cloudCatalog;
+            localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+            computeSessionRecommendations();
+            preloadAllImages();
+            renderHomeSections();
+            if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
+            if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
+            if (document.getElementById('viewList').classList.contains('active')) renderMyList();
+            return;
+          }
+        }
+      } catch (e) {
+        console.log("Intentando respaldo desde index.html...");
+      }
+
+      try {
+        const rawUrlIndex = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
+        const res = await fetch(rawUrlIndex, { cache: 'no-store' });
         if (res.ok) {
           const text = await res.text();
           const startMarker = "/*CATALOG_START*/";
@@ -1413,20 +1421,17 @@
           if (startIndex !== -1 && endIndex !== -1) {
             const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
             const cloudCatalog = JSON.parse(jsonStr);
-            if (Array.isArray(cloudCatalog) && cloudCatalog.length > 0) {
+            if (Array.isArray(cloudCatalog)) {
               catalog = cloudCatalog;
               localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
               computeSessionRecommendations();
               preloadAllImages();
               renderHomeSections();
-              if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
-              if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
-              if (document.getElementById('viewList').classList.contains('active')) renderMyList();
             }
           }
         }
-      } catch (e) {
-        console.log("Modo offline o error al sincronizar catálogo cloud:", e);
+      } catch (err) {
+        console.log("Modo offline o error de sincronización total:", err);
       }
     }
 
@@ -1461,7 +1466,7 @@
       }
     }
 
-    window.addEventListener('popstate', (e) => {
+    window.addEventListener('popstate', () => {
       const searchInput = document.getElementById('searchInput');
       if (searchInput && searchInput.value.trim().length > 0) {
         searchInput.value = '';
@@ -1488,9 +1493,7 @@
     function switchView(viewName) {
       activeModalStack = [];
       const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.value = '';
-      }
+      if (searchInput) searchInput.value = '';
       
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
@@ -1526,14 +1529,6 @@
 
     function toggleFavorite(id, e) {
       if (e) e.stopPropagation();
-
-      const targetElem = e ? e.currentTarget : document.getElementById('seriesFavCircle');
-      if (targetElem) {
-        targetElem.classList.remove('animate-save-smooth');
-        void targetElem.offsetWidth;
-        targetElem.classList.add('animate-save-smooth');
-      }
-
       if (myFavorites.includes(id)) {
         myFavorites = myFavorites.filter(favId => favId !== id);
       } else {
@@ -1545,124 +1540,6 @@
       renderMoviesGrid();
       renderSeriesGrid();
       renderMyList();
-      if (currentSeriesData && currentSeriesData.id === id) {
-        updateSeriesModalFavButton();
-      }
-      if (currentMovieData && currentMovieData.id === id) {
-        updateMovieModalFavButton();
-      }
-    }
-
-    function toggleFavoriteFromSeriesModal() {
-      if (currentSeriesData) {
-        toggleFavorite(currentSeriesData.id);
-      }
-    }
-
-    function toggleFavoriteFromMovieModal(e) {
-      if (currentMovieData) {
-        toggleFavorite(currentMovieData.id, e);
-      }
-    }
-
-    function updateSeriesModalFavButton() {
-      if (!currentSeriesData) return;
-      const btn = document.getElementById('streamFavBtn');
-      if (!btn) return;
-      const isFav = myFavorites.includes(currentSeriesData.id);
-      if (isFav) {
-        btn.classList.add('active-list');
-      } else {
-        btn.classList.remove('active-list');
-      }
-    }
-
-    function updateMovieModalFavButton() {
-      if (!currentMovieData) return;
-      const btn = document.getElementById('movieFavBtn');
-      if (!btn) return;
-      const isFav = myFavorites.includes(currentMovieData.id);
-      if (isFav) {
-        btn.classList.add('active-list');
-      } else {
-        btn.classList.remove('active-list');
-      }
-    }
-
-    function toggleLikeMovie(id, event) {
-      const btn = event ? event.currentTarget : document.getElementById('movieLikeBtn');
-      if (movieLikes.includes(id)) {
-        movieLikes = movieLikes.filter(item => item !== id);
-      } else {
-        movieLikes.push(id);
-        if (btn) {
-          const heart = document.createElement('div');
-          heart.className = 'floating-heart';
-          heart.innerHTML = '💜';
-          btn.appendChild(heart);
-          setTimeout(() => heart.remove(), 750);
-        }
-      }
-      localStorage.setItem('naPlus_movie_likes', JSON.stringify(movieLikes));
-      updateMovieModalLikeButton();
-    }
-
-    function toggleLikeFromMovieModal(event) {
-      if (currentMovieData) {
-        toggleLikeMovie(currentMovieData.id, event);
-      }
-    }
-
-    function updateMovieModalLikeButton() {
-      if (!currentMovieData) return;
-      const btn = document.getElementById('movieLikeBtn');
-      const svgIcon = document.getElementById('movieLikeSvgIcon');
-      if (!btn || !svgIcon) return;
-
-      const isLiked = movieLikes.includes(currentMovieData.id);
-      if (isLiked) {
-        btn.classList.add('liked');
-        svgIcon.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#c084fc" stroke="#c084fc"></path>';
-      } else {
-        btn.classList.remove('liked');
-        svgIcon.innerHTML = '<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>';
-      }
-    }
-
-    function toggleLikeSeries(event) {
-      if (!currentSeriesData) return;
-      const id = currentSeriesData.id;
-      const btn = event ? event.currentTarget : document.getElementById('seriesLikeBtn');
-      if (seriesLikes.includes(id)) {
-        seriesLikes = seriesLikes.filter(item => item !== id);
-      } else {
-        seriesLikes.push(id);
-        if (btn) {
-          const heart = document.createElement('div');
-          heart.className = 'floating-heart';
-          heart.innerHTML = '💜';
-          btn.appendChild(heart);
-          setTimeout(() => heart.remove(), 750);
-        }
-      }
-      localStorage.setItem('naPlus_series_likes', JSON.stringify(seriesLikes));
-      updateSeriesModalLikeButton();
-    }
-
-    function updateSeriesModalLikeButton() {
-      if (!currentSeriesData) return;
-      const btn = document.getElementById('seriesLikeBtn');
-      const svgIcon = document.getElementById('seriesLikeSvgIcon');
-      if (!btn || !svgIcon) return;
-
-      const isLiked = seriesLikes.includes(currentSeriesData.id);
-      if (isLiked) {
-        btn.classList.add('liked');
-        svgIcon.innerHTML = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#c084fc" stroke="#c084fc"></path>';
-      } else {
-        btn.classList.remove('liked');
-        svgIcon.innerHTML = '<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>';
-      }
     }
 
     let currentSlide = 0;
@@ -1683,7 +1560,6 @@
       const dotsContainer = document.getElementById('hboSliderDots');
       
       let displayItems = catalog.filter(item => item.featured);
-      
       if (displayItems.length === 0) {
         displayItems = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).slice(0, 6);
       } else {
@@ -1692,8 +1568,7 @@
 
       if (displayItems.length === 0) return;
 
-      const existingSlides = sliderContainer.querySelectorAll('.hbo-slide');
-      existingSlides.forEach(s => s.remove());
+      sliderContainer.querySelectorAll('.hbo-slide').forEach(s => s.remove());
       dotsContainer.innerHTML = '';
 
       displayItems.forEach((item, idx) => {
@@ -1737,40 +1612,12 @@
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
-    (function setupSliderSwipe() {
-      const slider = document.getElementById('hboHeroSlider');
-      if (!slider) return;
-      let startX = null, startY = null, dragging = false;
-
-      slider.addEventListener('pointerdown', e => {
-        startX = e.clientX; startY = e.clientY; dragging = true;
-      });
-
-      slider.addEventListener('pointerup', e => {
-        if (!dragging || startX === null) { dragging = false; return; }
-        dragging = false;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - (startY || 0);
-        const count = document.querySelectorAll('.hbo-slide').length;
-        if (count > 1 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-          let next = currentSlide + (dx < 0 ? 1 : -1);
-          if (next < 0) next = count - 1;
-          if (next >= count) next = 0;
-          goToSlide(next);
-          restartSliderInterval();
-        }
-        startX = null; startY = null;
-      });
-
-      slider.addEventListener('pointercancel', () => { dragging = false; startX = null; });
-    })();
-
     function getCleanTop10Svg(rank) {
       return `
         <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg" class="top10-number-svg">
           <style>
             .num-text {
-              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              font-family: system-ui, -apple-system, sans-serif;
               font-weight: 900;
               font-size: 115px;
               fill: #07040d;
@@ -1788,16 +1635,15 @@
       const div = document.createElement('div');
       div.className = 'top10-item-card';
       div.onclick = () => openContentDetail(item.id);
-
       const isFav = myFavorites.includes(item.id);
 
       div.innerHTML = `
         ${getCleanTop10Svg(rank)}
         <div class="top10-poster-box">
-          <button class="top10-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
+          <button class="top10-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
             <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
           </button>
-          <img src="${item.cover}" data-orig="${item.cover}" alt="Poster" loading="eager" decoding="async" onerror="handleImgError(this)">
+          <img src="${item.cover}" data-orig="${item.cover}" alt="Poster" loading="eager" onerror="handleImgError(this)">
         </div>
       `;
       return div;
@@ -1811,10 +1657,7 @@
       const heroSlider = document.getElementById('hboHeroSlider');
       const clearBtn = document.getElementById('clearSearchBtn');
 
-      if (clearBtn) {
-        clearBtn.style.display = query.length > 0 ? 'block' : 'none';
-      }
-
+      if (clearBtn) clearBtn.style.display = query.length > 0 ? 'block' : 'none';
       const searching = query.length > 0 && query !== "9009";
       document.body.classList.toggle('search-active', searching);
 
@@ -1840,55 +1683,33 @@
 
       renderHomeRecommendations();
 
-      // RENDERIZAR TOP 10 PELÍCULAS HOY
       const topMoviesScroll = document.getElementById('topMoviesScroll');
       topMoviesScroll.innerHTML = '';
-      const topMovies = catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      topMovies.forEach((item, idx) => topMoviesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topMoviesScroll.appendChild(renderTop10Element(item, idx + 1)));
 
-      // RENDERIZAR TOP 10 SERIES HOY
       const topSeriesScroll = document.getElementById('topSeriesScroll');
       topSeriesScroll.innerHTML = '';
-      const topSeries = catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      topSeries.forEach((item, idx) => topSeriesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topSeriesScroll.appendChild(renderTop10Element(item, idx + 1)));
 
       const recentScroll = document.getElementById('recentScroll');
       recentScroll.innerHTML = '';
-      const recentSorted = [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
-      recentSorted.forEach(item => recentScroll.appendChild(createCardElement(item)));
+      [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => recentScroll.appendChild(createCardElement(item)));
 
       const genreContainer = document.getElementById('genreRowsContainer');
       genreContainer.innerHTML = '';
-
       let allIndividualGenres = [];
       catalog.forEach(item => {
-        if (item.genre) {
-          item.genre.split(',').forEach(g => {
-            const cleanG = g.trim();
-            if (cleanG && !allIndividualGenres.includes(cleanG)) allIndividualGenres.push(cleanG);
-          });
-        }
+        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allIndividualGenres.includes(g.trim())) allIndividualGenres.push(g.trim()); });
       });
       allIndividualGenres.sort();
 
       allIndividualGenres.forEach(genre => {
-        const genreItems = catalog.filter(i => {
-          if (!i.genre) return false;
-          const itemGenres = i.genre.split(',').map(x => x.trim().toLowerCase());
-          return itemGenres.includes(genre.toLowerCase());
-        });
-
+        const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
         if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div');
-          titleDiv.className = 'section-title';
-          titleDiv.innerText = `🎬 ${genre}`;
-          
-          const scrollDiv = document.createElement('div');
-          scrollDiv.className = 'horizontal-scroll';
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `🎬 ${genre}`;
+          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
           genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-
-          genreContainer.appendChild(titleDiv);
-          genreContainer.appendChild(scrollDiv);
+          genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
         }
       });
     }
@@ -1896,19 +1717,11 @@
     function renderHomeRecommendations() {
       const recContainer = document.getElementById('recommendedContainer');
       recContainer.innerHTML = '';
-
       if (sessionRecommendedPool.length === 0) return;
-
-      const titleDiv = document.createElement('div');
-      titleDiv.className = 'section-title';
-      titleDiv.innerText = "Recomendado";
-
-      const scrollDiv = document.createElement('div');
-      scrollDiv.className = 'horizontal-scroll';
+      const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
+      const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
       sessionRecommendedPool.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-
-      recContainer.appendChild(titleDiv);
-      recContainer.appendChild(scrollDiv);
+      recContainer.appendChild(titleDiv); recContainer.appendChild(scrollDiv);
     }
 
     function checkSecretCode(e) {
@@ -1917,16 +1730,10 @@
         if (val === "9009") {
           e.preventDefault();
           document.getElementById('searchInput').value = '';
-          
           isCreatorMode = !isCreatorMode;
           localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
           document.body.classList.toggle('creator-mode', isCreatorMode);
-
-          if (isCreatorMode) {
-            openUploadModal();
-          } else {
-            alert("🔒 Modo Creador desactivado discretamente.");
-          }
+          if (isCreatorMode) openUploadModal();
           renderHomeSections();
         }
       }
@@ -1937,25 +1744,6 @@
       const topScroll = document.getElementById('moviesTopScroll');
       topScroll.innerHTML = '';
       [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
-
-      const genreContainer = document.getElementById('moviesGenreRowsContainer');
-      genreContainer.innerHTML = '';
-      let allGenres = [];
-      movies.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allGenres.includes(g.trim())) allGenres.push(g.trim()); });
-      });
-      allGenres.sort();
-
-      allGenres.forEach(genre => {
-        const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `🎬 ${genre}`;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
-        }
-      });
-
       const grid = document.getElementById('moviesGrid');
       grid.innerHTML = '';
       movies.forEach(item => grid.appendChild(createCardElement(item)));
@@ -1966,25 +1754,6 @@
       const topScroll = document.getElementById('seriesTopScroll');
       topScroll.innerHTML = '';
       [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
-
-      const genreContainer = document.getElementById('seriesGenreRowsContainer');
-      genreContainer.innerHTML = '';
-      let allGenres = [];
-      series.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allGenres.includes(g.trim())) allGenres.push(g.trim()); });
-      });
-      allGenres.sort();
-
-      allGenres.forEach(genre => {
-        const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `📺 ${genre}`;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
-        }
-      });
-
       const grid = document.getElementById('seriesGrid');
       grid.innerHTML = '';
       series.forEach(item => grid.appendChild(createCardElement(item)));
@@ -2001,19 +1770,18 @@
       const card = document.createElement('div');
       card.className = 'card';
       card.onclick = () => openContentDetail(item.id);
-
       const isFav = myFavorites.includes(item.id);
       const badge = item.type === 'series' ? '📺' : '🎬';
 
       card.innerHTML = `
-        <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="${isFav ? 'Quitar' : 'Guardar'}">
+        <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
           <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         </button>
         <div class="admin-btns">
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
         </div>
-        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" decoding="async" onerror="handleImgError(this)">
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${badge} • ${item.year}</div>
@@ -2038,9 +1806,7 @@
       if (type === 'series') {
         document.getElementById('movieVideoGroup').style.display = 'none';
         document.getElementById('seriesSeasonsGroup').style.display = 'block';
-        if (seasonsContainer.children.length === 0) {
-          addSeasonField();
-        }
+        if (seasonsContainer.children.length === 0) addSeasonField();
       } else {
         document.getElementById('movieVideoGroup').style.display = 'block';
         document.getElementById('seriesSeasonsGroup').style.display = 'none';
@@ -2060,7 +1826,6 @@
       document.getElementById('coverInput').value = item ? item.cover : '';
       document.getElementById('trailerInput').value = item && item.trailer ? item.trailer : '';
       document.getElementById('videoInput').value = item && item.video ? item.video : '';
-      
       document.getElementById('featuredInput').checked = item && item.featured === true;
 
       toggleContentTypeFields();
@@ -2090,7 +1855,6 @@
         <button type="button" class="btn-submit" style="background:#7c3aed; font-size:0.7rem; padding:4px 8px; margin-top:4px;" onclick="addEpisodeField(this.previousElementSibling)">+ Agregar Capítulo</button>
       `;
       container.appendChild(seasonDiv);
-
       const epContainer = seasonDiv.querySelector('.episodes-admin-container');
       if (seasonData && seasonData.episodes) {
         seasonData.episodes.forEach(ep => addEpisodeField(epContainer, ep));
@@ -2107,13 +1871,13 @@
         <div style="display:flex; gap:6px; margin-bottom:6px; align-items:center;">
           <span style="font-size:0.7rem; color:var(--accent-light); white-space:nowrap;">N°:</span>
           <input type="number" class="ep-num" value="${defaultEpNum}" style="width:55px; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
-          <input type="text" class="ep-title" placeholder="Título del capítulo" value="${epData ? (epData.title || '') : ''}" style="flex-grow:1; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
-          <input type="text" class="ep-duration" placeholder="Duración (ej. 45 min)" value="${epData ? (epData.duration || '45 min') : '45 min'}" style="width:85px; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
+          <input type="text" class="ep-title" placeholder="Título" value="${epData ? (epData.title || '') : ''}" style="flex-grow:1; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
+          <input type="text" class="ep-duration" placeholder="Duración" value="${epData ? (epData.duration || '45 min') : '45 min'}" style="width:85px; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.75rem;" required>
           <button type="button" onclick="this.closest('.ep-item-row').remove()" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem;">✕</button>
         </div>
-        <input type="text" class="ep-img" placeholder="URL de miniatura específica (opcional)" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
-        <textarea class="ep-desc" rows="2" placeholder="Sinopsis del capítulo" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Link de video (Odysee, VK, VOE, OK.ru, Drive...)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
+        <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
+        <input type="text" class="ep-video" placeholder="Link de video" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -2141,12 +1905,6 @@
       }));
     }
 
-    function atou(str) {
-      return decodeURIComponent(atob(str).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-    }
-
     async function submitContent(e) {
       e.preventDefault();
       const id = document.getElementById('editId').value;
@@ -2158,7 +1916,7 @@
         if (token && token.trim()) {
           localStorage.setItem('naPlus_gh_token', token.trim());
         } else {
-          alert("⚠️ Se necesita el token de GitHub para poder publicar en la nube.");
+          alert("⚠️ Se necesita el token de GitHub para publicar automáticamente.");
           return;
         }
       }
@@ -2170,25 +1928,16 @@
           const sName = sBlock.querySelector('.season-name').value.trim();
           const epRows = sBlock.querySelectorAll('.ep-item-row');
           let eps = [];
-          
           epRows.forEach((row, rIdx) => {
-            const numInput = row.querySelector('.ep-num');
-            const titleInput = row.querySelector('.ep-title');
-            const durationInput = row.querySelector('.ep-duration');
-            const imgInput = row.querySelector('.ep-img');
-            const descInput = row.querySelector('.ep-desc');
-            const videoInput = row.querySelector('.ep-video');
-
             eps.push({
-              num: numInput ? (parseInt(numInput.value) || (rIdx + 1)) : (rIdx + 1),
-              title: titleInput ? titleInput.value.trim() : '',
-              duration: durationInput ? durationInput.value.trim() : '45 min',
-              img: imgInput ? imgInput.value.trim() : '',
-              desc: descInput ? descInput.value.trim() : '',
-              video: videoInput ? videoInput.value.trim() : ''
+              num: parseInt(row.querySelector('.ep-num').value) || (rIdx + 1),
+              title: row.querySelector('.ep-title').value.trim(),
+              duration: row.querySelector('.ep-duration').value.trim() || '45 min',
+              img: row.querySelector('.ep-img').value.trim(),
+              desc: row.querySelector('.ep-desc').value.trim(),
+              video: row.querySelector('.ep-video').value.trim()
             });
           });
-
           eps.sort((a, b) => a.num - b.num);
           seasonsData.push({ name: sName, episodes: eps });
         });
@@ -2227,54 +1976,35 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando en la nube...";
+      if (saveBtn) saveBtn.innerText = "Publicando en base y nube...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y publicado con éxito en la nube para todos!");
+        alert("¡Guardado y sincronizado automáticamente con database.json y GitHub!");
       }
     }
 
+    // FUNCIÓN DE SINCRONIZACIÓN AUTOMÁTICA DUAL (database.json + index.html de respaldo)
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) {
-        alert("No hay token de GitHub configurado.");
-        return false;
-      }
+      if (!token) return false;
 
       try {
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        const catalogJson = JSON.stringify(catalog, null, 2);
+
+        // 1. Sincronizar database.json automáticamente
+        let dbSha = null;
+        const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
         });
-        
-        if (!getRes.ok) {
-          const errData = await getRes.json().catch(() => ({}));
-          alert(`Error al conectar con GitHub (${getRes.status}): ${errData.message || errData.statusText}\nVerifica que tu token sea válido.`);
-          if (getRes.status === 401 || getRes.status === 403) {
-            if (confirm("¿Deseas restablecer tu token de GitHub?")) {
-              localStorage.removeItem('naPlus_gh_token');
-            }
-          }
-          return false;
+        if (getDbRes.ok) {
+          const dbData = await getDbRes.json();
+          dbSha = dbData.sha;
         }
 
-        const getData = await getRes.json();
-        const sha = getData.sha;
-
-        let fileText = atou(getData.content);
-        const catalogJson = JSON.stringify(catalog, null, 2);
-        
-        if (fileText.includes('/*CATALOG_START*/')) {
-          fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n${catalogJson}\n/*CATALOG_END*/`);
-        } else {
-          fileText = fileText.replace(/let catalog = \[[\s\S]*?\];/, `let catalog = ${catalogJson};`);
-        }
-
-        const updatedBase64 = utoa(fileText);
-
-        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer ' + token.trim(),
@@ -2282,22 +2012,39 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Ajuste de tamaño: números Top 10 más compactos y pósters más grandes',
-            content: updatedBase64,
-            sha: sha
+            message: 'Actualización automática de database.json',
+            content: utoa(catalogJson),
+            sha: dbSha
           })
         });
 
-        if (!putRes.ok) {
-          const errData = await putRes.json().catch(() => ({}));
-          alert(`Error al guardar en GitHub (${putRes.status}): ${errData.message || errData.statusText}`);
-          return false;
+        // 2. Sincronizar index.html (como respaldo del catálogo)
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
+        });
+        if (getRes.ok) {
+          const getData = await getRes.json();
+          let fileText = decodeURIComponent(escape(atob(getData.content)));
+          if (fileText.includes('/*CATALOG_START*/')) {
+            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n${catalogJson}\n/*CATALOG_END*/`);
+          }
+          await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'Bearer ' + token.trim(),
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github+json'
+            },
+            body: JSON.stringify({
+              message: 'Sincronización de catálogo en index.html',
+              content: utoa(fileText),
+              sha: getData.sha
+            })
+          });
         }
-
         return true;
       } catch (err) {
         console.error(err);
-        alert(`Error de red o ejecución: ${err.message || err}`);
         return false;
       }
     }
@@ -2314,35 +2061,23 @@
 
       if (item.type === 'series') {
         currentSeriesData = item;
-        const headerBg = document.getElementById('streamHeaderBg');
-        headerBg.style.backgroundImage = `url('${item.cover}')`;
-
+        document.getElementById('streamHeaderBg').style.backgroundImage = `url('${item.cover}')`;
         document.getElementById('seriesTitle').innerText = item.title;
-        
         const seasonsCount = item.seasons ? item.seasons.length : 0;
-        const rating = item.ageRating || '+18';
-        document.getElementById('seriesMeta').innerText = `${rating} • ${item.year} • ${seasonsCount} temporada${seasonsCount > 1 ? 's' : ''} • ${item.genre}`;
+        document.getElementById('seriesMeta').innerText = `${item.ageRating || '+18'} • ${item.year} • ${seasonsCount} temporada${seasonsCount > 1 ? 's' : ''} • ${item.genre}`;
         
         const descEl = document.getElementById('seriesDesc');
-        const readMoreBtn = document.getElementById('readMoreBtn');
         descEl.innerText = item.desc || 'Sin sinopsis.';
         descEl.classList.add('truncated');
 
         setTimeout(() => {
-          if (descEl.scrollHeight > descEl.clientHeight) {
-            readMoreBtn.style.display = 'inline-block';
-          } else {
-            readMoreBtn.style.display = 'none';
-          }
+          document.getElementById('readMoreBtn').style.display = descEl.scrollHeight > descEl.clientHeight ? 'inline-block' : 'none';
         }, 50);
 
-        updateSeriesModalFavButton();
-        updateSeriesModalLikeButton();
         switchSeriesTab('episodes');
-
         const seasonSelect = document.getElementById('seasonSelect');
         seasonSelect.innerHTML = '';
-        if (item.seasons && item.seasons.length > 0) {
+        if (item.seasons) {
           item.seasons.forEach((s, idx) => {
             const opt = document.createElement('option');
             opt.value = idx;
@@ -2351,25 +2086,15 @@
           });
         }
         renderEpisodesForSelectedSeason();
-        renderSeriesRecommendations(item);
-
         pushModalState('seriesModal');
         document.getElementById('seriesModal').style.display = 'block';
       } else {
         currentMovieData = item;
-        const movieHeaderBg = document.getElementById('movieHeaderBg');
-        movieHeaderBg.style.backgroundImage = `url('${item.cover}')`;
-
-        const rating = item.ageRating || '+18';
+        document.getElementById('movieHeaderBg').style.backgroundImage = `url('${item.cover}')`;
         document.getElementById('movieTitle').innerText = item.title;
-        document.getElementById('movieMeta').innerText = `${rating} • 1h 53min • ${item.year}`;
-        document.getElementById('movieDesc').innerText = item.desc || 'Sin descripción disponible.';
+        document.getElementById('movieMeta').innerText = `${item.ageRating || '+18'} • ${item.year}`;
+        document.getElementById('movieDesc').innerText = item.desc || 'Sin descripción.';
         document.getElementById('movieGenres').innerText = item.genre || '';
-
-        updateMovieModalFavButton();
-        updateMovieModalLikeButton();
-        renderMovieRecommendations(item);
-
         document.getElementById('movieDetailModal').scrollTop = 0;
         pushModalState('movieDetailModal');
         document.getElementById('movieDetailModal').style.display = 'block';
@@ -2395,66 +2120,20 @@
       }
     }
 
-    function renderSeriesRecommendations(currentSeries) {
-      const grid = document.getElementById('seriesRecommendedGrid');
-      grid.innerHTML = '';
-
-      let seriesGenres = currentSeries.genre ? currentSeries.genre.split(',').map(g => g.trim().toLowerCase()) : [];
-
-      let matches = catalog.filter(i => i.id !== currentSeries.id && i.genre && i.genre.split(',').some(g => seriesGenres.includes(g.trim().toLowerCase())));
-
-      if (matches.length === 0) {
-        matches = catalog.filter(i => i.id !== currentSeries.id);
-      }
-
-      matches.sort(() => 0.5 - Math.random());
-
-      if (matches.length === 0) {
-        grid.innerHTML = '<div class="empty-msg">No hay recomendaciones disponibles.</div>';
-        return;
-      }
-
-      matches.forEach(item => {
-        grid.appendChild(createCardElement(item));
-      });
-    }
-
-    function renderMovieRecommendations(currentMovie) {
-      const scrollContainer = document.getElementById('movieRecScroll');
-      scrollContainer.innerHTML = '';
-
-      let pool = catalog.filter(i => i.type === 'movie' && i.id !== currentMovie.id);
-      pool.sort(() => 0.5 - Math.random());
-
-      if (pool.length === 0) {
-        scrollContainer.innerHTML = '<div class="empty-msg">No hay recomendaciones disponibles.</div>';
-        return;
-      }
-
-      pool.forEach(item => {
-        scrollContainer.appendChild(createCardElement(item));
-      });
-    }
-
     function playCurrentMovie() {
       if (!currentMovieData) return;
       const modal = document.getElementById('moviePlayerModal');
-      const vBox = document.getElementById('fullscreenMovieVideoBox');
-      renderVideoInBox(vBox, currentMovieData.video);
+      renderVideoInBox(document.getElementById('fullscreenMovieVideoBox'), currentMovieData.video);
       pushModalState('moviePlayerModal');
       modal.style.display = 'flex';
     }
 
     function playMovieTrailer() {
-      if (!currentMovieData || !currentMovieData.trailer) {
-        alert("Esta película no tiene un tráiler disponible.");
-        return;
-      }
+      if (!currentMovieData || !currentMovieData.trailer) return alert("Sin tráiler disponible.");
       document.getElementById('movieDetailModal').style.display = 'none';
       document.getElementById('epModalTitle').innerText = `Tráiler: ${currentMovieData.title}`;
       document.getElementById('epModalDesc').innerText = "";
-      const vBox = document.getElementById('episodeVideoBox');
-      renderVideoInBox(vBox, currentMovieData.trailer);
+      renderVideoInBox(document.getElementById('episodeVideoBox'), currentMovieData.trailer);
       pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
     }
@@ -2476,19 +2155,6 @@
       }
     }
 
-    function getSeriesImagePool(seriesData) {
-      const pool = [];
-      if (seriesData.cover) pool.push(seriesData.cover);
-      (seriesData.seasons || []).forEach(s => {
-        (s.episodes || []).forEach(e => {
-          if (e.img && typeof e.img === 'string' && e.img.trim() && e.img.trim() !== 'null') {
-            pool.push(e.img.trim());
-          }
-        });
-      });
-      return pool.length ? pool : [seriesData.cover];
-    }
-
     function renderEpisodesForSelectedSeason() {
       if (!currentSeriesData || !currentSeriesData.seasons) return;
       const sIdx = document.getElementById('seasonSelect').value;
@@ -2500,27 +2166,22 @@
         return;
       }
 
-      const imagePool = getSeriesImagePool(currentSeriesData);
       const fragment = document.createDocumentFragment();
-
       season.episodes.forEach((ep, eIdx) => {
         const epNumDisplay = ep.num !== undefined ? ep.num : (eIdx + 1);
-        const hasOwnImg = ep && ep.img && typeof ep.img === 'string' && ep.img.trim() !== '' && ep.img.trim() !== 'null';
-        const thumbImg = hasOwnImg ? ep.img.trim() : imagePool[Math.floor(Math.random() * imagePool.length)];
-        const epDuration = ep.duration || '45 min';
-        const epDesc = ep.desc ? ep.desc.trim() : '';
+        const thumbImg = (ep.img && ep.img.trim()) ? ep.img.trim() : currentSeriesData.cover;
         
         const itemDiv = document.createElement('div');
         itemDiv.className = 'stream-ep-item';
         itemDiv.innerHTML = `
           <div class="stream-ep-thumb-box" onclick="playEpisode(${sIdx}, ${eIdx})">
-            <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="eager" decoding="async" onerror="handleImgError(this)">
+            <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="eager" onerror="handleImgError(this)">
             <div class="stream-ep-play-overlay">▶</div>
           </div>
           <div class="stream-ep-info" onclick="playEpisode(${sIdx}, ${eIdx})">
             <div class="stream-ep-title">${epNumDisplay}. ${ep.title || 'Capítulo ' + epNumDisplay}</div>
-            <div class="stream-ep-duration">${epDuration}</div>
-            ${epDesc ? `<div class="stream-ep-desc">${epDesc}</div>` : ''}
+            <div class="stream-ep-duration">${ep.duration || '45 min'}</div>
+            ${ep.desc ? `<div class="stream-ep-desc">${ep.desc}</div>` : ''}
             <button class="stream-edit-ep-btn" onclick="event.stopPropagation(); openSingleEpisodeEdit(${sIdx}, ${eIdx})">✏ Editar</button>
           </div>
         `;
@@ -2533,28 +2194,21 @@
 
     function playFirstEpisodeOfSeries() {
       if (!currentSeriesData || !currentSeriesData.seasons || !currentSeriesData.seasons.length) return;
-      const firstSeason = currentSeriesData.seasons[0];
-      if (!firstSeason.episodes || !firstSeason.episodes.length) return;
       playEpisode(0, 0);
     }
 
     function playTrailer() {
-      if (!currentSeriesData || !currentSeriesData.trailer) {
-        alert("Este contenido no tiene un tráiler disponible.");
-        return;
-      }
+      if (!currentSeriesData || !currentSeriesData.trailer) return alert("Sin tráiler disponible.");
       document.getElementById('seriesModal').style.display = 'none';
       document.getElementById('epModalTitle').innerText = `Tráiler: ${currentSeriesData.title}`;
       document.getElementById('epModalDesc').innerText = "";
-      const vBox = document.getElementById('episodeVideoBox');
-      renderVideoInBox(vBox, currentSeriesData.trailer);
+      renderVideoInBox(document.getElementById('episodeVideoBox'), currentSeriesData.trailer);
       pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
     }
 
     function openSingleEpisodeEdit(seasonIdx, epIdx) {
-      const season = currentSeriesData.seasons[seasonIdx];
-      const ep = season.episodes[epIdx];
+      const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       document.getElementById('editEpSeasonIdx').value = seasonIdx;
       document.getElementById('editEpItemIdx').value = epIdx;
       document.getElementById('modalEpNum').value = ep.num !== undefined ? ep.num : 1;
@@ -2573,7 +2227,7 @@
       const sIdx = parseInt(document.getElementById('editEpSeasonIdx').value);
       const eIdx = parseInt(document.getElementById('editEpItemIdx').value);
 
-      const updatedEp = {
+      currentSeriesData.seasons[sIdx].episodes[eIdx] = {
         num: parseInt(document.getElementById('modalEpNum').value) || 1,
         title: document.getElementById('modalEpTitle').value.trim(),
         duration: document.getElementById('modalEpDuration').value.trim() || '45 min',
@@ -2581,14 +2235,10 @@
         desc: document.getElementById('modalEpDesc').value.trim(),
         video: document.getElementById('modalEpVideo').value.trim()
       };
-
-      currentSeriesData.seasons[sIdx].episodes[eIdx] = updatedEp;
       currentSeriesData.seasons[sIdx].episodes.sort((a, b) => a.num - b.num);
 
       const catIdx = catalog.findIndex(x => x.id === currentSeriesData.id);
-      if (catIdx !== -1) {
-        catalog[catIdx] = currentSeriesData;
-      }
+      if (catIdx !== -1) catalog[catIdx] = currentSeriesData;
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       closeModal('editEpisodeModal');
@@ -2599,11 +2249,9 @@
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       document.getElementById('seriesModal').style.display = 'none';
-      const epNumDisplay = ep.num !== undefined ? ep.num : '1';
-      document.getElementById('epModalTitle').innerText = `Capítulo ${epNumDisplay}: ${ep.title || ''}`;
+      document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num || 1}: ${ep.title || ''}`;
       document.getElementById('epModalDesc').innerText = ep.desc || '';
-      const vBox = document.getElementById('episodeVideoBox');
-      renderVideoInBox(vBox, ep.video);
+      renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
       pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
     }
@@ -2611,27 +2259,18 @@
     function closeEpisodePlayer() {
       document.getElementById('episodeModal').style.display = 'none';
       document.getElementById('episodeVideoBox').innerHTML = '';
-      if (currentSeriesData) {
-        document.getElementById('seriesModal').style.display = 'block';
-      } else if (currentMovieData) {
-        document.getElementById('movieDetailModal').style.display = 'block';
-      }
+      if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
+      else if (currentMovieData) document.getElementById('movieDetailModal').style.display = 'block';
     }
 
     function shareCurrentSeries() {
-      if (navigator.share && currentSeriesData) {
-        navigator.share({ title: currentSeriesData.title, text: currentSeriesData.desc, url: window.location.href }).catch(() => {});
-      } else {
-        alert("Enlace copiado al portapapeles.");
-      }
+      if (navigator.share && currentSeriesData) navigator.share({ title: currentSeriesData.title, url: window.location.href }).catch(() => {});
+      else alert("Enlace copiado.");
     }
 
     function shareCurrentMovie() {
-      if (navigator.share && currentMovieData) {
-        navigator.share({ title: currentMovieData.title, text: currentMovieData.desc, url: window.location.href }).catch(() => {});
-      } else {
-        alert("Enlace copiado al portapapeles.");
-      }
+      if (navigator.share && currentMovieData) navigator.share({ title: currentMovieData.title, url: window.location.href }).catch(() => {});
+      else alert("Enlace copiado.");
     }
 
     function renderVideoInBox(vBox, vInput) {
@@ -2639,165 +2278,23 @@
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
       }
-
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
-        const iframeEl = vBox.querySelector('iframe');
-        if (iframeEl) {
-          iframeEl.style.cssText = 'width:100%;height:100%;border:none;position:absolute;top:0;left:0;';
-          iframeEl.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share');
-          iframeEl.setAttribute('allowfullscreen', '');
-          iframeEl.setAttribute('webkitallowfullscreen', '');
-          iframeEl.setAttribute('mozallowfullscreen', '');
-          iframeEl.setAttribute('scrolling', 'no');
-        }
         return;
       }
-
       if (vInput.includes('youtube.com') || vInput.includes('youtu.be')) {
         let embedUrl = vInput.trim();
-        if (embedUrl.includes('watch?v=')) {
-          const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
-          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        } else if (embedUrl.includes('youtu.be/')) {
-          const videoId = embedUrl.split('youtu.be/')[1].split(/[?#]/)[0];
-          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        } else if (!embedUrl.includes('/embed/')) {
-          embedUrl = embedUrl.replace('watch?v=', 'embed/');
-        }
-        vBox.innerHTML = `
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
-          </iframe>`;
+        if (embedUrl.includes('watch?v=')) embedUrl = `https://www.youtube.com/embed/${embedUrl.split('watch?v=')[1].split('&')[0]}?autoplay=1`;
+        else if (embedUrl.includes('youtu.be/')) embedUrl = `https://www.youtube.com/embed/${embedUrl.split('youtu.be/')[1].split(/[?#]/)[0]}?autoplay=1`;
+        vBox.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;"></iframe>`;
         return;
       }
-
-      if (vInput.includes('voe.sx')) {
-        let embedUrl = vInput.trim();
-        if (!embedUrl.includes('/e/') && !embedUrl.includes('/embed')) {
-          const parts = embedUrl.split('voe.sx/');
-          if (parts[1]) {
-            const id = parts[1].split(/[?#/]/)[0];
-            embedUrl = `https://voe.sx/e/${id}`;
-          }
-        }
-        vBox.innerHTML = `
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
-          </iframe>`;
-        return;
-      }
-
-      if (vInput.includes('ok.ru')) {
-        let embedUrl = vInput.trim();
-        if (!embedUrl.includes('videoembed')) {
-          const match = embedUrl.match(/\/video\/([0-9]+)/);
-          if (match && match[1]) embedUrl = `https://ok.ru/videoembed/${match[1]}`;
-        }
-        vBox.innerHTML = `
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
-          </iframe>`;
-        return;
-      }
-
-      if (vInput.includes('vk.com') || vInput.includes('vkvideo.ru')) {
-        let embedUrl = vInput.trim();
-        if (!embedUrl.includes('video_ext.php')) {
-          const match = embedUrl.match(/video(-?[0-9]+)_([0-9]+)/);
-          if (match && match[1] && match[2]) {
-            embedUrl = `https://vk.com/video_ext.php?oid=${match[1]}&id=${match[2]}&hd=2`;
-          }
-        }
-        vBox.innerHTML = `
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
-          </iframe>`;
-        return;
-      }
-
-      if (vInput.includes('odysee.com')) {
-        let embedUrl = vInput.trim();
-        if (!embedUrl.includes('$/embed/')) {
-          embedUrl = embedUrl.replace('odysee.com/', 'odysee.com/$/embed/');
-        }
-        vBox.innerHTML = `
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-            style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;">
-          </iframe>`;
-        return;
-      }
-
-      let directUrl = vInput.trim();
-      if (directUrl.includes('drive.google.com/file/d/')) {
-        const match = directUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-          directUrl = `https://docs.google.com/uc?export=download&id=${match[1]}`;
-        }
-      }
-
-      vBox.innerHTML = `
-        <div class="native-player-container">
-          <div class="player-controls-bar">
-            <label for="qualitySelect">Calidad:</label>
-            <select id="qualitySelect" class="quality-selector" onchange="changeVideoQuality(this)">
-              <option value="auto">Automática</option>
-              <option value="1080">1080p</option>
-              <option value="720">720p</option>
-              <option value="480">480p</option>
-            </select>
-          </div>
-          <video id="customHtmlVideo" src="${directUrl}" controls autoplay playsinline webkit-playsinline></video>
-        </div>
-      `;
+      vBox.innerHTML = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
     }
 
-    function changeVideoQuality(selectElem) {
-      const quality = selectElem.value;
-      const videoEl = document.getElementById('customHtmlVideo');
-      if (!videoEl) return;
-      const isPaused = videoEl.paused;
-      console.log("Cambiando calidad de video a: ", quality);
-      if (!isPaused) videoEl.play();
-    }
-
-    renderHomeSections();
+    // Inicialización al cargar la página
     autoSyncCatalogFromCloud();
+    renderHomeSections();
   </script>
 </body>
 </html>
