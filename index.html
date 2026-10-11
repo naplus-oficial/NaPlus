@@ -112,27 +112,21 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList, #viewSearch { padding-top: 75px; }
 
-    /* CARRUSEL HERO DESLICABLE */
+    /* CARRUSEL HERO FLUIDO Y DESLIZABLE REAL */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
       height: 460px;
       background: #000;
-      overflow: hidden;
-      margin-bottom: 15px;
-      transform: translateZ(0);
-      touch-action: pan-y;
-      cursor: grab;
-    }
-    .hbo-hero-slider:active { cursor: grabbing; }
-
-    .hbo-slides-wrapper {
+      overflow-x: auto;
+      overflow-y: hidden;
       display: flex;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      will-change: transform;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 15px;
     }
+    .hbo-hero-slider::-webkit-scrollbar { display: none; }
 
     .hbo-slide {
       position: relative;
@@ -145,6 +139,8 @@
       background-size: cover;
       background-position: center;
       flex-shrink: 0;
+      scroll-snap-align: start;
+      cursor: pointer;
       user-select: none;
     }
 
@@ -227,14 +223,13 @@
       z-index: 10;
       display: flex;
       gap: 5px;
-      pointer-events: auto;
+      pointer-events: none;
     }
 
     .hbo-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
       background: rgba(255,255,255,0.4);
-      cursor: pointer;
     }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
@@ -945,8 +940,7 @@
 
   <!-- VISTA INICIO -->
   <div id="viewHome" class="view-section active">
-    <div class="hbo-hero-slider" id="hboHeroSlider">
-      <div class="hbo-slides-wrapper" id="hboSlidesWrapper"></div>
+    <div class="hbo-hero-slider" id="hboHeroSlider" onscroll="handleHeroScroll()">
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
@@ -1494,25 +1488,9 @@
       renderMyList();
     }
 
-    let currentSlide = 0;
-    let sliderInterval = null;
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    function restartSliderInterval() {
-      if (sliderInterval) clearInterval(sliderInterval);
-      const slides = document.querySelectorAll('.hbo-slide');
-      if (slides.length <= 1) return;
-      sliderInterval = setInterval(() => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        goToSlide(currentSlide);
-      }, 5000);
-    }
-
     function renderHeroSlider() {
-      const wrapper = document.getElementById('hboSlidesWrapper');
-      const dotsContainer = document.getElementById('hboSliderDots');
       const sliderContainer = document.getElementById('hboHeroSlider');
+      const dotsContainer = document.getElementById('hboSliderDots');
       
       let displayItems = catalog.filter(item => item.featured);
       if (displayItems.length === 0) {
@@ -1523,7 +1501,7 @@
 
       if (displayItems.length === 0) return;
 
-      wrapper.innerHTML = '';
+      sliderContainer.querySelectorAll('.hbo-slide').forEach(s => s.remove());
       dotsContainer.innerHTML = '';
 
       displayItems.forEach((item, idx) => {
@@ -1548,53 +1526,23 @@
             </div>
           </div>
         `;
-        wrapper.appendChild(slide);
+        sliderContainer.insertBefore(slide, dotsContainer);
 
         const dot = document.createElement('div');
         dot.className = `hbo-dot ${idx === 0 ? 'active' : ''}`;
-        dot.onclick = (e) => { e.stopPropagation(); goToSlide(idx); restartSliderInterval(); };
         dotsContainer.appendChild(dot);
       });
-
-      // Eventos táctiles y de ratón para deslizar manualmente
-      sliderContainer.onmousedown = (e) => { touchStartX = e.clientX; clearInterval(sliderInterval); };
-      sliderContainer.onmouseup = (e) => {
-        touchEndX = e.clientX;
-        handleSliderSwipe(displayItems.length);
-        restartSliderInterval();
-      };
-
-      sliderContainer.onttouchstart = (e) => { touchStartX = e.changedTouches[0].screenX; clearInterval(sliderInterval); };
-      sliderContainer.ontouchend = (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSliderSwipe(displayItems.length);
-        restartSliderInterval();
-      };
-
-      goToSlide(0);
-      restartSliderInterval();
     }
 
-    function handleSliderSwipe(totalSlides) {
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          currentSlide = (currentSlide + 1) % totalSlides;
-        } else {
-          currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        }
-        goToSlide(currentSlide);
-      }
-    }
-
-    function goToSlide(idx) {
-      currentSlide = idx;
-      const wrapper = document.getElementById('hboSlidesWrapper');
+    function handleHeroScroll() {
+      const slider = document.getElementById('hboHeroSlider');
+      if (!slider) return;
+      const slideWidth = slider.clientWidth;
+      if (!slideWidth) return;
+      const scrollPos = slider.scrollLeft;
+      const activeIdx = Math.round(scrollPos / slideWidth);
       const dots = document.querySelectorAll('.hbo-dot');
-      if (wrapper) {
-        wrapper.style.transform = `translateX(-${idx * 100}%)`;
-      }
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
     }
 
     function getCleanTop10Svg(rank) {
