@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 HBO MAX (TÍTULO Y NÚMEROS GIGANTES 3D)[span_2](start_span)[span_2](end_span)
+       ESTILO TOP 10 HBO MAX (GRANDE Y PROPORCIONADO 3D)[span_3](start_span)[span_3](end_span)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -332,9 +332,9 @@
 
     .top10-scroll-container {
       display: flex;
-      gap: 16px;
+      gap: 22px;
       overflow-x: auto;
-      padding: 10px 20px 15px 20px;
+      padding: 15px 20px 20px 20px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
       align-items: flex-end;
@@ -343,26 +343,26 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 120px;
-      width: 120px;
+      min-width: 165px;
+      width: 165px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
       cursor: pointer;
     }
 
-    /* NÚMERO GRANDE 3D PLATEADO DETRÁS DEL PÓSTER[span_3](start_span)[span_3](end_span) */
+    /* NÚMERO GRANDE 3D MÁS GIGANTE ESTILO MAX[span_4](start_span)[span_4](end_span) */
     .top10-number-svg {
       position: absolute;
-      left: -18px;
-      bottom: -4px;
-      font-size: 6.8rem;
+      left: -24px;
+      bottom: -6px;
+      font-size: 9rem;
       font-weight: 900;
       line-height: 1;
       font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
       color: #07040d;
-      -webkit-text-stroke: 2.5px #cbd5e1;
-      text-shadow: 4px 4px 12px rgba(0,0,0,0.9), 0 0 20px rgba(203,213,225,0.2);
+      -webkit-text-stroke: 3px #cbd5e1;
+      text-shadow: 5px 5px 16px rgba(0,0,0,0.95), 0 0 25px rgba(203,213,225,0.25);
       z-index: 1;
       pointer-events: none;
       user-select: none;
@@ -370,15 +370,15 @@
 
     .top10-poster-box {
       position: relative;
-      width: 95px;
+      width: 135px;
       aspect-ratio: 2/3;
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 25px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      margin-left: 32px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.7);
       transition: transform 0.2s ease;
     }
     .top10-item-card:active .top10-poster-box { transform: scale(0.96); }
@@ -392,17 +392,17 @@
 
     .top10-fav-btn {
       position: absolute;
-      top: 4px; left: 4px;
+      top: 6px; left: 6px;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      width: 26px; height: 26px;
+      width: 30px; height: 30px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; z-index: 5;
     }
-    .top10-fav-btn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .top10-fav-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
     .top10-fav-btn.saved svg { fill: var(--accent-light); stroke: var(--accent-light); }
 
     /* GRILLAS */
@@ -1002,7 +1002,7 @@
     <div id="mainHomeContent">
       <div id="recommendedContainer"></div>
       
-      <!-- TOP 10 PELÍCULAS HOY (ESTILO HBO MAX) -->
+      <!-- TOP 10 PELÍCULAS HOY (ESTILO HBO MAX GRANDE) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -1011,7 +1011,7 @@
         <div class="top10-scroll-container" id="topMoviesScroll"></div>
       </div>
 
-      <!-- TOP 10 SERIES HOY (ESTILO HBO MAX) -->
+      <!-- TOP 10 SERIES HOY (ESTILO HBO MAX GRANDE) -->
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -2266,7 +2266,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización sección Top 10 estilo HBO Max',
+            message: 'Actualización tamaño Top 10 estilo HBO Max',
             content: updatedBase64,
             sha: sha
           })
