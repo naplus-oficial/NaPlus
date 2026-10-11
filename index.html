@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 (NÚMEROS MÁS CHICOS, ESTILIZADOS Y PÓSTERS MÁS GRANDES)
+       ESTILO TOP 10 (NÚMEROS MÁS CHICOS Y PÓSTERS AÚN MÁS GRANDES)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -332,7 +332,7 @@
 
     .top10-scroll-container {
       display: flex;
-      gap: 18px;
+      gap: 16px;
       overflow-x: auto;
       padding: 15px 20px 20px 20px;
       scrollbar-width: none;
@@ -343,38 +343,38 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 185px;
-      width: 185px;
+      min-width: 195px;
+      width: 195px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
       cursor: pointer;
     }
 
-    /* NÚMEROS MÁS COMPACTOS Y ESTÉTICOS */
+    /* NÚMEROS MÁS COMPACTOS Y REFINADOS */
     .top10-number-svg {
       position: absolute;
-      left: -22px;
+      left: -20px;
       bottom: -4px;
-      width: 75px;
-      height: 110px;
+      width: 65px;
+      height: 95px;
       z-index: 1;
       pointer-events: none;
       user-select: none;
-      filter: drop-shadow(3px 5px 12px rgba(0,0,0,0.9));
+      filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.9));
     }
 
     /* PÓSTERS MÁS GRANDES Y DESTACADOS */
     .top10-poster-box {
       position: relative;
-      width: 135px;
+      width: 148px;
       aspect-ratio: 2/3;
       border-radius: 9px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 50px;
+      margin-left: 45px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.75);
       transition: transform 0.2s ease;
     }
@@ -2282,7 +2282,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Ajuste de tamaño para números Top 10 más compactos y pósters más grandes',
+            message: 'Ajuste de tamaño: números Top 10 más compactos y pósters más grandes',
             content: updatedBase64,
             sha: sha
           })
