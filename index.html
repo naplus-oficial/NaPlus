@@ -296,7 +296,9 @@
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
-    /* TOP 10 */
+    /* ========================================================
+       TOP 10 AJUSTADO: NÚMEROS MÁS CHICOS Y PÓSTERS MÁS GRANDES
+       ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
     }
@@ -341,36 +343,38 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 195px;
-      width: 195px;
+      min-width: 210px;
+      width: 210px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
       cursor: pointer;
     }
 
+    /* NÚMEROS MÁS COMPACTOS Y REFINADOS */
     .top10-number-svg {
       position: absolute;
-      left: -20px;
+      left: -12px;
       bottom: -4px;
-      width: 65px;
-      height: 95px;
+      width: 55px;
+      height: 80px;
       z-index: 1;
       pointer-events: none;
       user-select: none;
       filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.9));
     }
 
+    /* PÓSTERS AÚN MÁS GRANDES Y DESTACADOS */
     .top10-poster-box {
       position: relative;
-      width: 148px;
+      width: 165px;
       aspect-ratio: 2/3;
       border-radius: 9px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 45px;
+      margin-left: 38px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.75);
       transition: transform 0.2s ease;
     }
@@ -599,31 +603,6 @@
       background: rgba(124, 58, 237, 0.3);
       border-color: var(--accent-light);
       color: var(--accent-light);
-    }
-
-    @keyframes smoothPulseSave {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.6); }
-      40% { transform: scale(1.22); box-shadow: 0 0 15px 5px rgba(192, 132, 252, 0.4); background: rgba(124, 58, 237, 0.45); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0); }
-    }
-    .animate-save-smooth {
-      animation: smoothPulseSave 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes floatHeart {
-      0% { transform: translateY(0) scale(0.6); opacity: 1; }
-      100% { transform: translateY(-55px) scale(1.4); opacity: 0; }
-    }
-    .floating-heart {
-      position: absolute;
-      top: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--accent-light);
-      font-size: 1.2rem;
-      pointer-events: none;
-      animation: floatHeart 0.75s ease-out forwards;
-      z-index: 3000;
     }
 
     .movie-synopsis {
@@ -1386,7 +1365,6 @@
     computeSessionRecommendations();
     preloadAllImages();
 
-    // FUNCIÓN MEJORADA: FUERZA LA ACTUALIZACIÓN CONSTANTE DESDE LA NUBE
     async function autoSyncCatalogFromCloud() {
       try {
         const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
@@ -1986,7 +1964,6 @@
       }
     }
 
-    // FUNCIÓN DE SINCRONIZACIÓN AUTOMÁTICA DUAL (database.json + index.html de respaldo)
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token) return false;
@@ -1994,7 +1971,6 @@
       try {
         const catalogJson = JSON.stringify(catalog, null, 2);
 
-        // 1. Sincronizar database.json automáticamente
         let dbSha = null;
         const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
@@ -2018,7 +1994,6 @@
           })
         });
 
-        // 2. Sincronizar index.html (como respaldo del catálogo)
         const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
           headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
         });
@@ -2292,7 +2267,6 @@
       vBox.innerHTML = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
     }
 
-    // Inicialización al cargar la página
     autoSyncCatalogFromCloud();
     renderHomeSections();
   </script>
