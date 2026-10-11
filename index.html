@@ -1330,10 +1330,27 @@
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
-    const CURRENT_APP_VERSION = "2.7.0"; // Incrementa este número si quieres forzar actualización general inmediata en todos los dispositivos
+    const CURRENT_APP_VERSION = "2.8.0"; // Versión para forzar actualización de interfaz
 
     /*CATALOG_START*/
-    let catalog = [];
+    let catalog = [
+      {
+        "id": 1740000000000,
+        "type": "movie",
+        "title": "Ejemplo de Contenido",
+        "ageRating": "+16",
+        "genre": "Acción",
+        "year": "2026",
+        "desc": "Este es un elemento de prueba para asegurar que el catálogo tenga contenido.",
+        "cover": "https://images.unsplash.com/photo-1536440136628-849c177e76a1",
+        "trailer": "",
+        "video": "",
+        "seasons": [],
+        "featured": true,
+        "views": 100,
+        "dateAdded": 1740000000000
+      }
+    ];
     /*CATALOG_END*/
 
     // Verificación obligatoria de versión de interfaz y caché universal
@@ -1341,9 +1358,7 @@
       try {
         const localVersion = localStorage.getItem('naPlus_app_version');
         if (localVersion !== CURRENT_APP_VERSION) {
-          // Limpieza profunda de cachés y almacenamiento obsoleto para forzar nueva interfaz
           localStorage.setItem('naPlus_app_version', CURRENT_APP_VERSION);
-          localStorage.removeItem('naPlus_permanent_db');
           if ('caches' in window) {
             const cacheNames = await caches.keys();
             await Promise.all(cacheNames.map(name => caches.delete(name)));
@@ -2821,7 +2836,6 @@
 
     renderHomeSections();
     autoSyncCatalogFromCloud();
-    // Chequeo automático cada 10 segundos por si otro usuario sube contenido nuevo en vivo
     setInterval(autoSyncCatalogFromCloud, 10000);
   </script>
 </body>
