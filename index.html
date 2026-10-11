@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
   
-  <!-- CONFIGURACIÓN PWA Y MANIFEST -->
+  <!-- CONFIGURACIÓN PWA OFICIAL -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
@@ -394,7 +394,7 @@
     }
 
     /* ========================================================
-       ESTILO MODAL PELÍCULA - EXACTO ESTILO HBO MAX (GRANDE)
+       ESTILO MODAL PELÍCULA - DISEÑO HBO MAX
        ======================================================== */
     .modal-box-movie {
       background: #07040d;
@@ -449,7 +449,6 @@
       font-weight: 500;
     }
 
-    /* BOTÓN REPRODUCIR (BLANCO LIMPIO) */
     .movie-btn-play {
       background: #ffffff;
       color: #000000;
@@ -947,9 +946,7 @@
     </button>
   </nav>
 
-  <!-- ========================================================
-       MODAL DETALLE PELÍCULA (ESTILO HBO MAX ACTUALIZADO)
-       ======================================================== -->
+  <!-- MODAL INTERFAZ PELÍCULA -->
   <div class="modal-box-movie" id="movieDetailModal">
     <div class="stream-top-bar">
       <button class="stream-top-btn" onclick="shareCurrentMovie()" title="Compartir">
@@ -964,7 +961,6 @@
         <div class="movie-main-title" id="movieTitle"></div>
         <div class="movie-meta-info" id="movieMeta"></div>
         
-        <!-- BOTÓN VER AHORA (SIN OPCIÓN DE DESCARGA) -->
         <button class="movie-btn-play" onclick="playCurrentMovie()">
           ▶ Ver ahora
         </button>
@@ -995,9 +991,8 @@
       </div>
     </div>
 
-    <!-- RECOMENDACIONES ABAJO -->
     <div class="movie-content-area" id="movieRecommendedSection">
-      <div class="section-title" style="margin-left: 20px;">Quizá también te guste</div>
+      <div class="section-title">Quizá también te guste</div>
       <div class="horizontal-scroll" id="movieRecScroll"></div>
     </div>
   </div>
@@ -1060,11 +1055,13 @@
       </div>
     </div>
 
+    <!-- PESTAÑAS (EPISODIOS Y RECOMENDADOS) -->
     <div class="stream-tabs-bar">
       <button class="stream-tab active" id="tabEpisodesBtn" onclick="switchSeriesTab('episodes')">Episodios</button>
       <button class="stream-tab" id="tabRecommendedBtn" onclick="switchSeriesTab('recommended')">Quizá también te guste</button>
     </div>
 
+    <!-- CONTENIDO DE PESTAÑAS -->
     <div class="stream-content-area" id="seriesTabContentEpisodes">
       <div class="stream-season-row">
         <select id="seasonSelect" class="stream-season-select" onchange="renderEpisodesForSelectedSeason()"></select>
