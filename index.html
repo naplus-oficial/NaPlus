@@ -283,8 +283,21 @@
       letter-spacing: -0.3px;
     }
 
-    /* CARRUSELES HORIZONTALES CON PORTADAS MÁS GRANDES Y LLAMATIVAS */
+    /* CARRUSEL GENERAL (TAMAÑO NORMAL) */
     .horizontal-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 20px 10px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      transform: translateZ(0);
+    }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+    .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
+
+    /* CARRUSEL ESPECÍFICO PARA "QUIZÁ TAMBIÉN TE GUSTE" (PORTADAS GRANDES Y LLAMATIVAS) */
+    .horizontal-scroll-large {
       display: flex;
       gap: 14px;
       overflow-x: auto;
@@ -293,10 +306,10 @@
       -webkit-overflow-scrolling: touch;
       transform: translateZ(0);
     }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-    .horizontal-scroll .card { min-width: 145px; width: 145px; flex-shrink: 0; }
+    .horizontal-scroll-large::-webkit-scrollbar { display: none; }
+    .horizontal-scroll-large .card { min-width: 145px; width: 145px; flex-shrink: 0; }
 
-    /* TOP 10 */
+    /* TOP 10 (NÚMEROS UN POCO MÁS CHICOS, PORTADAS MÁS GRANDES) */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
     }
@@ -341,8 +354,8 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 210px;
-      width: 210px;
+      min-width: 225px;
+      width: 225px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
@@ -351,10 +364,10 @@
 
     .top10-number-svg {
       position: absolute;
-      left: -12px;
+      left: -8px;
       bottom: -4px;
-      width: 55px;
-      height: 80px;
+      width: 48px;
+      height: 70px;
       z-index: 1;
       pointer-events: none;
       user-select: none;
@@ -363,14 +376,14 @@
 
     .top10-poster-box {
       position: relative;
-      width: 165px;
+      width: 180px;
       aspect-ratio: 2/3;
       border-radius: 9px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 38px;
+      margin-left: 36px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.75);
       transition: transform 0.2s ease;
     }
@@ -401,21 +414,19 @@
     /* GRILLAS GENERALES */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 12px;
       padding: 0 20px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.04);
       cursor: pointer;
       position: relative;
       transform: translateZ(0);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-      transition: transform 0.2s ease;
     }
     .card:active { transform: scale(0.97); }
 
@@ -428,9 +439,9 @@
       pointer-events: none;
     }
 
-    .card-info { padding: 8px 10px; pointer-events: none; }
-    .card-title { font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-sub { font-size: 0.7rem; color: var(--text-gray); }
+    .card-info { padding: 6px 8px; pointer-events: none; }
+    .card-title { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-sub { font-size: 0.65rem; color: var(--text-gray); }
 
     .card-fav-btn {
       position: absolute;
@@ -1096,7 +1107,7 @@
 
     <div class="movie-recommendations-area">
       <div class="movie-rec-title">Quizá también te guste</div>
-      <div class="horizontal-scroll" id="movieRecommendationsScroll"></div>
+      <div class="horizontal-scroll-large" id="movieRecommendationsScroll"></div>
     </div>
   </div>
 
@@ -1615,7 +1626,7 @@
             .num-text {
               font-family: system-ui, -apple-system, sans-serif;
               font-weight: 900;
-              font-size: 115px;
+              font-size: 100px;
               fill: #07040d;
               stroke: rgba(255, 255, 255, 0.9);
               stroke-width: 3.5px;
@@ -1806,6 +1817,25 @@
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
         </div>
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
+        <div class="card-info">
+          <div class="card-title">${item.title}</div>
+          <div class="card-sub">${item.year}</div>
+        </div>
+      `;
+      return card;
+    }
+
+    function createLargeCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openContentDetail(item.id);
+      const isFav = myFavorites.includes(item.id);
+
+      card.innerHTML = `
+        <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+        </button>
         <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
@@ -2118,7 +2148,7 @@
         const recScroll = document.getElementById('movieRecommendationsScroll');
         recScroll.innerHTML = '';
         const otherMovies = catalog.filter(m => m.id !== item.id).sort(() => 0.5 - Math.random());
-        otherMovies.forEach(m => recScroll.appendChild(createCardElement(m)));
+        otherMovies.forEach(m => recScroll.appendChild(createLargeCardElement(m)));
 
         document.getElementById('movieDetailModal').scrollTop = 0;
         pushModalState('movieDetailModal');
