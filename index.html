@@ -112,26 +112,28 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList, #viewSearch { padding-top: 75px; }
 
-    /* CARRUSEL HERO FLUIDO ESTILO HBO REAL */
+    /* CARRUSEL HERO AUTOMÁTICO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
       height: 460px;
       background: #000;
-      overflow-x: auto;
-      overflow-y: hidden;
-      display: flex;
-      flex-wrap: nowrap;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden;
       margin-bottom: 15px;
+      transform: translateZ(0);
     }
-    .hbo-hero-slider::-webkit-scrollbar { display: none; }
+
+    .hbo-slides-wrapper {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
 
     .hbo-slide {
       position: relative;
-      flex: 0 0 100%;
+      min-width: 100%;
       width: 100%;
       height: 100%;
       display: flex;
@@ -140,8 +142,7 @@
       padding: 24px 20px;
       background-size: cover;
       background-position: center;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      flex-shrink: 0;
       cursor: pointer;
       user-select: none;
     }
@@ -942,7 +943,8 @@
 
   <!-- VISTA INICIO -->
   <div id="viewHome" class="view-section active">
-    <div class="hbo-hero-slider" id="hboHeroSlider" onscroll="handleHeroScroll()">
+    <div class="hbo-hero-slider" id="hboHeroSlider">
+      <div class="hbo-slides-wrapper" id="hboSlidesWrapper"></div>
       <div class="hbo-slider-dots" id="hboSliderDots"></div>
     </div>
 
@@ -1490,8 +1492,11 @@
       renderMyList();
     }
 
+    let currentSlide = 0;
+    let sliderInterval = null;
+
     function renderHeroSlider() {
-      const sliderContainer = document.getElementById('hboHeroSlider');
+      const wrapper = document.getElementById('hboSlidesWrapper');
       const dotsContainer = document.getElementById('hboSliderDots');
       
       let displayItems = catalog.filter(item => item.featured);
@@ -1503,7 +1508,7 @@
 
       if (displayItems.length === 0) return;
 
-      sliderContainer.querySelectorAll('.hbo-slide').forEach(s => s.remove());
+      wrapper.innerHTML = '';
       dotsContainer.innerHTML = '';
 
       displayItems.forEach((item, idx) => {
@@ -1528,23 +1533,29 @@
             </div>
           </div>
         `;
-        sliderContainer.insertBefore(slide, dotsContainer);
+        wrapper.appendChild(slide);
 
         const dot = document.createElement('div');
         dot.className = `hbo-dot ${idx === 0 ? 'active' : ''}`;
         dotsContainer.appendChild(dot);
       });
+
+      if (sliderInterval) clearInterval(sliderInterval);
+      currentSlide = 0;
+      sliderInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % displayItems.length;
+        goToSlide(currentSlide);
+      }, 4500);
     }
 
-    function handleHeroScroll() {
-      const slider = document.getElementById('hboHeroSlider');
-      if (!slider) return;
-      const slideWidth = slider.clientWidth;
-      if (!slideWidth) return;
-      const scrollPos = slider.scrollLeft;
-      const activeIdx = Math.round(scrollPos / slideWidth);
+    function goToSlide(idx) {
+      currentSlide = idx;
+      const wrapper = document.getElementById('hboSlidesWrapper');
       const dots = document.querySelectorAll('.hbo-dot');
-      dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+      if (wrapper) {
+        wrapper.style.transform = `translateX(-${idx * 100}%)`;
+      }
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
     function getCleanTop10Svg(rank) {
