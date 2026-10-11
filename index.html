@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 (NÚMEROS MÁS CHICOS Y PÓSTERS AÚN MÁS GRANDES)
+       ESTILO TOP 10 (NÚMEROS MÁS CHICOS Y PÓSTERS GRANDES)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -351,7 +351,6 @@
       cursor: pointer;
     }
 
-    /* NÚMEROS MÁS COMPACTOS Y REFINADOS */
     .top10-number-svg {
       position: absolute;
       left: -20px;
@@ -364,7 +363,6 @@
       filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.9));
     }
 
-    /* PÓSTERS MÁS GRANDES Y DESTACADOS */
     .top10-poster-box {
       position: relative;
       width: 148px;
@@ -1332,10 +1330,32 @@
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
     const FILE_PATH = "index.html";
+    const CURRENT_APP_VERSION = "2.7.0"; // Incrementa este número si quieres forzar actualización general inmediata en todos los dispositivos
 
     /*CATALOG_START*/
     let catalog = [];
     /*CATALOG_END*/
+
+    // Verificación obligatoria de versión de interfaz y caché universal
+    async function checkGlobalAppVersionAndSync() {
+      try {
+        const localVersion = localStorage.getItem('naPlus_app_version');
+        if (localVersion !== CURRENT_APP_VERSION) {
+          // Limpieza profunda de cachés y almacenamiento obsoleto para forzar nueva interfaz
+          localStorage.setItem('naPlus_app_version', CURRENT_APP_VERSION);
+          localStorage.removeItem('naPlus_permanent_db');
+          if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+          }
+          window.location.reload(true);
+          return;
+        }
+      } catch (e) {
+        console.log("Error al verificar versión global:", e);
+      }
+    }
+    checkGlobalAppVersionAndSync();
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
@@ -1400,6 +1420,7 @@
     computeSessionRecommendations();
     preloadAllImages();
 
+    // Sincronización automática de contenido en segundo plano para todos los usuarios
     async function autoSyncCatalogFromCloud() {
       try {
         const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
@@ -1414,14 +1435,18 @@
             const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
             const cloudCatalog = JSON.parse(jsonStr);
             if (Array.isArray(cloudCatalog) && cloudCatalog.length > 0) {
-              catalog = cloudCatalog;
-              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
-              preloadAllImages();
-              renderHomeSections();
-              if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
-              if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
-              if (document.getElementById('viewList').classList.contains('active')) renderMyList();
+              const currentLocalStr = JSON.stringify(catalog);
+              const cloudStr = JSON.stringify(cloudCatalog);
+              if (currentLocalStr !== cloudStr) {
+                catalog = cloudCatalog;
+                localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+                computeSessionRecommendations();
+                preloadAllImages();
+                renderHomeSections();
+                if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
+                if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
+                if (document.getElementById('viewList').classList.contains('active')) renderMyList();
+              }
             }
           }
         }
@@ -1840,13 +1865,11 @@
 
       renderHomeRecommendations();
 
-      // RENDERIZAR TOP 10 PELÍCULAS HOY
       const topMoviesScroll = document.getElementById('topMoviesScroll');
       topMoviesScroll.innerHTML = '';
       const topMovies = catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       topMovies.forEach((item, idx) => topMoviesScroll.appendChild(renderTop10Element(item, idx + 1)));
 
-      // RENDERIZAR TOP 10 SERIES HOY
       const topSeriesScroll = document.getElementById('topSeriesScroll');
       topSeriesScroll.innerHTML = '';
       const topSeries = catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
@@ -2282,7 +2305,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Ajuste de tamaño: números Top 10 más compactos y pósters más grandes',
+            message: 'Sincronización automática de contenido y actualización general',
             content: updatedBase64,
             sha: sha
           })
@@ -2798,6 +2821,8 @@
 
     renderHomeSections();
     autoSyncCatalogFromCloud();
+    // Chequeo automático cada 10 segundos por si otro usuario sube contenido nuevo en vivo
+    setInterval(autoSyncCatalogFromCloud, 10000);
   </script>
 </body>
 </html>
