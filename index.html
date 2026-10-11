@@ -297,7 +297,7 @@
     .horizontal-scroll .card { min-width: 110px; width: 110px; flex-shrink: 0; }
 
     /* ========================================================
-       ESTILO TOP 10 HBO MAX (NÚMEROS VECTORIALES LIMPIOS Y PROFESIONALES)
+       ESTILO TOP 10 (NÚMEROS MÁS CHICOS, ESTILIZADOS Y PÓSTERS MÁS GRANDES)
        ======================================================== */
     .top10-section-wrapper {
       margin: 28px 0 10px 0;
@@ -332,7 +332,7 @@
 
     .top10-scroll-container {
       display: flex;
-      gap: 16px;
+      gap: 18px;
       overflow-x: auto;
       padding: 15px 20px 20px 20px;
       scrollbar-width: none;
@@ -343,38 +343,39 @@
 
     .top10-item-card {
       position: relative;
-      min-width: 175px;
-      width: 175px;
+      min-width: 185px;
+      width: 185px;
       flex-shrink: 0;
       display: flex;
       align-items: flex-end;
       cursor: pointer;
     }
 
-    /* NÚMEROS PERFECTAMENTE DISEÑADOS, CLAROS Y SIN DEFORMACIONES */
+    /* NÚMEROS MÁS COMPACTOS Y ESTÉTICOS */
     .top10-number-svg {
       position: absolute;
-      left: -28px;
-      bottom: -6px;
-      width: 90px;
-      height: 135px;
+      left: -22px;
+      bottom: -4px;
+      width: 75px;
+      height: 110px;
       z-index: 1;
       pointer-events: none;
       user-select: none;
-      filter: drop-shadow(4px 6px 14px rgba(0,0,0,0.9));
+      filter: drop-shadow(3px 5px 12px rgba(0,0,0,0.9));
     }
 
+    /* PÓSTERS MÁS GRANDES Y DESTACADOS */
     .top10-poster-box {
       position: relative;
-      width: 118px;
+      width: 135px;
       aspect-ratio: 2/3;
-      border-radius: 8px;
+      border-radius: 9px;
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.12);
       z-index: 2;
-      margin-left: 57px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.7);
+      margin-left: 50px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.75);
       transition: transform 0.2s ease;
     }
     .top10-item-card:active .top10-poster-box { transform: scale(0.96); }
@@ -2281,7 +2282,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Mejora diseño SVG limpio y profesional para números Top 10',
+            message: 'Ajuste de tamaño para números Top 10 más compactos y pósters más grandes',
             content: updatedBase64,
             sha: sha
           })
