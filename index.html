@@ -1681,6 +1681,25 @@
       const topScroll = document.getElementById('moviesTopScroll');
       topScroll.innerHTML = '';
       [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+
+      const genreRowsContainer = document.getElementById('moviesGenreRowsContainer');
+      genreRowsContainer.innerHTML = '';
+      let movieGenres = [];
+      movies.forEach(item => {
+        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !movieGenres.includes(g.trim())) movieGenres.push(g.trim()); });
+      });
+      movieGenres.sort();
+
+      movieGenres.forEach(genre => {
+        const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `🎬 ${genre}`;
+          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+          genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
+        }
+      });
+
       const grid = document.getElementById('moviesGrid');
       grid.innerHTML = '';
       movies.forEach(item => grid.appendChild(createCardElement(item)));
@@ -1691,6 +1710,25 @@
       const topScroll = document.getElementById('seriesTopScroll');
       topScroll.innerHTML = '';
       [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+
+      const genreRowsContainer = document.getElementById('seriesGenreRowsContainer');
+      genreRowsContainer.innerHTML = '';
+      let seriesGenres = [];
+      series.forEach(item => {
+        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !seriesGenres.includes(g.trim())) seriesGenres.push(g.trim()); });
+      });
+      seriesGenres.sort();
+
+      seriesGenres.forEach(genre => {
+        const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+        if (genreItems.length > 0) {
+          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = `📺 ${genre}`;
+          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+          genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
+        }
+      });
+
       const grid = document.getElementById('seriesGrid');
       grid.innerHTML = '';
       series.forEach(item => grid.appendChild(createCardElement(item)));
