@@ -731,7 +731,47 @@
     const DB_FILE_PATH = "database.json";
 
     /*CATALOG_START*/
-    let catalog = [];
+    let catalog = [
+      {
+        id: 1728000000001,
+        type: "movie",
+        title: "Somos los Miller",
+        ageRating: "+13",
+        genre: "Comedia",
+        year: "2013",
+        desc: "Un veterano traficante de marihuana crea una familia falsa como parte de su plan para pasar un gran cargamento de droga desde México a los Estados Unidos.",
+        cover: "https://m.media-amazon.com/images/M/MV5BMjA5MjgyMjE3M15BMl5BanBnXkFtZTcwODA5ODAwOQ@@._V1_FMjpg_UX1000_.jpg",
+        trailer: "",
+        video: "",
+        seasons: [],
+        featured: true,
+        views: 450,
+        dateAdded: 1728000000001
+      },
+      {
+        id: 1728000000002,
+        type: "series",
+        title: "Monstruo: La historia de Lyle y Erik Menéndez",
+        ageRating: "+18",
+        genre: "Crimen, Drama, Suspenso",
+        year: "2024",
+        desc: "La historia real de los hermanos condenados por el parricidio de sus padres en Beverly Hills.",
+        cover: "https://m.media-amazon.com/images/M/MV5BNGE0ODBjOWUtZDg4OC00OGE2LWI2YjgtY2M0ZTc5ZjdmMWU4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+        trailer: "",
+        video: "",
+        seasons: [
+          {
+            name: "Temporada 1",
+            episodes: [
+              { num: 1, title: "Piloto", duration: "55 min", img: "", desc: "Primer episodio de la temporada.", video: "" }
+            ]
+          }
+        ],
+        featured: true,
+        views: 890,
+        dateAdded: 1728000000002
+      }
+    ];
     /*CATALOG_END*/
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
@@ -758,7 +798,7 @@
         const res = await fetch(rawUrl, { cache: 'no-store' });
         if (res.ok) {
           const cloudCatalog = await res.json();
-          if (Array.isArray(cloudCatalog)) {
+          if (Array.isArray(cloudCatalog) && cloudCatalog.length > 0) {
             catalog = cloudCatalog;
             localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
             computeSessionRecommendations();
@@ -1013,6 +1053,7 @@
     function renderHeroSlider() {
       const wrapper = document.getElementById('hboSlidesWrapper');
       const dotsContainer = document.getElementById('hboSliderDots');
+      if (!wrapper || !dotsContainer) return;
       
       let displayItems = catalog.filter(item => item.featured);
       if (displayItems.length === 0) {
@@ -1118,47 +1159,56 @@
       renderHomeRecommendations();
 
       const topMoviesScroll = document.getElementById('topMoviesScroll');
-      topMoviesScroll.innerHTML = '';
-      const fragTopM = document.createDocumentFragment();
-      catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTopM.appendChild(renderTop10Element(item, idx + 1)));
-      topMoviesScroll.appendChild(fragTopM);
+      if (topMoviesScroll) {
+        topMoviesScroll.innerHTML = '';
+        const fragTopM = document.createDocumentFragment();
+        catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTopM.appendChild(renderTop10Element(item, idx + 1)));
+        topMoviesScroll.appendChild(fragTopM);
+      }
 
       const topSeriesScroll = document.getElementById('topSeriesScroll');
-      topSeriesScroll.innerHTML = '';
-      const fragTopS = document.createDocumentFragment();
-      catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTopS.appendChild(renderTop10Element(item, idx + 1)));
-      topSeriesScroll.appendChild(fragTopS);
+      if (topSeriesScroll) {
+        topSeriesScroll.innerHTML = '';
+        const fragTopS = document.createDocumentFragment();
+        catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTopS.appendChild(renderTop10Element(item, idx + 1)));
+        topSeriesScroll.appendChild(fragTopS);
+      }
 
       const recentScroll = document.getElementById('recentScroll');
-      recentScroll.innerHTML = '';
-      const fragRecent = document.createDocumentFragment();
-      [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => fragRecent.appendChild(createCardElement(item)));
-      recentScroll.appendChild(fragRecent);
+      if (recentScroll) {
+        recentScroll.innerHTML = '';
+        const fragRecent = document.createDocumentFragment();
+        [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => fragRecent.appendChild(createCardElement(item)));
+        recentScroll.appendChild(fragRecent);
+      }
 
       const genreContainer = document.getElementById('genreRowsContainer');
-      genreContainer.innerHTML = '';
-      let allIndividualGenres = [];
-      catalog.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allIndividualGenres.includes(g.trim())) allIndividualGenres.push(g.trim()); });
-      });
-      allIndividualGenres.sort();
+      if (genreContainer) {
+        genreContainer.innerHTML = '';
+        let allIndividualGenres = [];
+        catalog.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allIndividualGenres.includes(g.trim())) allIndividualGenres.push(g.trim()); });
+        });
+        allIndividualGenres.sort();
 
-      const fragGenres = document.createDocumentFragment();
-      allIndividualGenres.forEach(genre => {
-        const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          fragGenres.appendChild(titleDiv);
-          fragGenres.appendChild(scrollDiv);
-        }
-      });
-      genreContainer.appendChild(fragGenres);
+        const fragGenres = document.createDocumentFragment();
+        allIndividualGenres.forEach(genre => {
+          const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            fragGenres.appendChild(titleDiv);
+            fragGenres.appendChild(scrollDiv);
+          }
+        });
+        genreContainer.appendChild(fragGenres);
+      }
     }
 
     function renderHomeRecommendations() {
       const recContainer = document.getElementById('recommendedContainer');
+      if (!recContainer) return;
       recContainer.innerHTML = '';
       if (sessionRecommendedPool.length === 0) return;
       const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
@@ -1191,6 +1241,7 @@
       if (clearBtn) clearBtn.style.display = query.length > 0 ? 'block' : 'none';
 
       const searchGrid = document.getElementById('searchGrid');
+      if (!searchGrid) return;
       searchGrid.innerHTML = '';
 
       if (query.length === 0) {
@@ -1211,77 +1262,90 @@
     function renderMoviesGrid() {
       const movies = catalog.filter(i => i.type === 'movie');
       const topScroll = document.getElementById('moviesTopScroll');
-      topScroll.innerHTML = '';
-      const fragTop = document.createDocumentFragment();
-      [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTop.appendChild(renderTop10Element(item, idx + 1)));
-      topScroll.appendChild(fragTop);
+      if (topScroll) {
+        topScroll.innerHTML = '';
+        const fragTop = document.createDocumentFragment();
+        [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTop.appendChild(renderTop10Element(item, idx + 1)));
+        topScroll.appendChild(fragTop);
+      }
 
       const genreRowsContainer = document.getElementById('moviesGenreRowsContainer');
-      genreRowsContainer.innerHTML = '';
-      let movieGenres = [];
-      movies.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !movieGenres.includes(g.trim())) movieGenres.push(g.trim()); });
-      });
-      movieGenres.sort();
+      if (genreRowsContainer) {
+        genreRowsContainer.innerHTML = '';
+        let movieGenres = [];
+        movies.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !movieGenres.includes(g.trim())) movieGenres.push(g.trim()); });
+        });
+        movieGenres.sort();
 
-      const fragGenres = document.createDocumentFragment();
-      movieGenres.forEach(genre => {
-        const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          fragGenres.appendChild(titleDiv);
-          fragGenres.appendChild(scrollDiv);
-        }
-      });
-      genreRowsContainer.appendChild(fragGenres);
+        const fragGenres = document.createDocumentFragment();
+        movieGenres.forEach(genre => {
+          const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            fragGenres.appendChild(titleDiv);
+            fragGenres.appendChild(scrollDiv);
+          }
+        });
+        genreRowsContainer.appendChild(fragGenres);
+      }
 
       const grid = document.getElementById('moviesGrid');
-      grid.innerHTML = '';
-      const fragGrid = document.createDocumentFragment();
-      movies.forEach(item => fragGrid.appendChild(createCardElement(item)));
-      grid.appendChild(fragGrid);
+      if (grid) {
+        grid.innerHTML = '';
+        const fragGrid = document.createDocumentFragment();
+        movies.forEach(item => fragGrid.appendChild(createCardElement(item)));
+        grid.appendChild(fragGrid);
+      }
     }
 
     function renderSeriesGrid() {
       const series = catalog.filter(i => i.type === 'series');
       const topScroll = document.getElementById('seriesTopScroll');
-      topScroll.innerHTML = '';
-      const fragTop = document.createDocumentFragment();
-      [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTop.appendChild(renderTop10Element(item, idx + 1)));
-      topScroll.appendChild(fragTop);
+      if (topScroll) {
+        topScroll.innerHTML = '';
+        const fragTop = document.createDocumentFragment();
+        [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => fragTop.appendChild(renderTop10Element(item, idx + 1)));
+        topScroll.appendChild(fragTop);
+      }
 
       const genreRowsContainer = document.getElementById('seriesGenreRowsContainer');
-      genreRowsContainer.innerHTML = '';
-      let seriesGenres = [];
-      series.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !seriesGenres.includes(g.trim())) seriesGenres.push(g.trim()); });
-      });
-      seriesGenres.sort();
+      if (genreRowsContainer) {
+        genreRowsContainer.innerHTML = '';
+        let seriesGenres = [];
+        series.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !seriesGenres.includes(g.trim())) seriesGenres.push(g.trim()); });
+        });
+        seriesGenres.sort();
 
-      const fragGenres = document.createDocumentFragment();
-      seriesGenres.forEach(genre => {
-        const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          fragGenres.appendChild(titleDiv);
-          fragGenres.appendChild(scrollDiv);
-        }
-      });
-      genreRowsContainer.appendChild(fragGenres);
+        const fragGenres = document.createDocumentFragment();
+        seriesGenres.forEach(genre => {
+          const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            fragGenres.appendChild(titleDiv);
+            fragGenres.appendChild(scrollDiv);
+          }
+        });
+        genreRowsContainer.appendChild(fragGenres);
+      }
 
       const grid = document.getElementById('seriesGrid');
-      grid.innerHTML = '';
-      const fragGrid = document.createDocumentFragment();
-      series.forEach(item => fragGrid.appendChild(createCardElement(item)));
-      grid.appendChild(fragGrid);
+      if (grid) {
+        grid.innerHTML = '';
+        const fragGrid = document.createDocumentFragment();
+        series.forEach(item => fragGrid.appendChild(createCardElement(item)));
+        grid.appendChild(fragGrid);
+      }
     }
 
     function renderMyList() {
       const grid = document.getElementById('myListGrid');
+      if (!grid) return;
       grid.innerHTML = '';
       const listItems = catalog.filter(i => myFavorites.includes(i.id));
       if (listItems.length === 0) {
