@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NaPlus - Streaming</title>
   
+  <!-- OPTIMIZACIÓN DE RED: CONEXIÓN TEMPRANA A GITHUB -->
+  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+
   <!-- CONFIGURACIÓN PWA OFICIAL -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
@@ -57,12 +61,35 @@
       100% { transform: scale(1); }
     }
 
+    @keyframes pulseLoading {
+      0% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+      100% { opacity: 0.4; }
+    }
+
     .anim-pop {
       animation: popBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     .anim-heart {
       animation: heartBeat 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* SKELETON LOADER PARA NUEVOS NAVEGADORES */
+    .skeleton-loader {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px 10px;
+      overflow: hidden;
+    }
+    .skeleton-card {
+      min-width: 110px;
+      width: 110px;
+      height: 165px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      animation: pulseLoading 1.2s infinite ease-in-out;
+      flex-shrink: 0;
     }
 
     /* BARRA SUPERIOR */
@@ -689,7 +716,9 @@
           <span class="top10-title-main">TOP 10</span>
           <span class="top10-title-sub">Películas Hoy</span>
         </div>
-        <div class="top10-scroll-container" id="topMoviesScroll"></div>
+        <div class="top10-scroll-container" id="topMoviesScroll">
+          <div class="skeleton-loader"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+        </div>
       </div>
 
       <div class="top10-section-wrapper">
@@ -697,11 +726,15 @@
           <span class="top10-title-main">TOP 10</span>
           <span class="top10-title-sub">Series Hoy</span>
         </div>
-        <div class="top10-scroll-container" id="topSeriesScroll"></div>
+        <div class="top10-scroll-container" id="topSeriesScroll">
+          <div class="skeleton-loader"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+        </div>
       </div>
 
       <div class="section-title">Lo Más Reciente</div>
-      <div class="horizontal-scroll" id="recentScroll"></div>
+      <div class="horizontal-scroll" id="recentScroll">
+        <div class="skeleton-loader"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+      </div>
 
       <div id="genreRowsContainer"></div>
     </div>
@@ -1028,6 +1061,11 @@
     let catalog = JSON.parse(localStorage.getItem('naPlus_permanent_db')) || [];
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
     let seriesLikes = JSON.parse(localStorage.getItem('naPlus_series_likes')) || [];
+
+    // SI YA HAY DATOS EN LOCAL, LOS PINTAMOS AL INSTANTE (EVITA CUALQUIER RETARDO)
+    if (catalog.length > 0) {
+      renderHomeSections();
+    }
 
     function preloadAllImages() {
       const urls = new Set();
@@ -2128,12 +2166,8 @@
       vBox.innerHTML = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
     }
 
-    // Inicialización rápida
-    autoSyncCatalogFromCloud().then(() => {
-      if (catalog.length > 0) {
-        renderHomeSections();
-      }
-    });
+    // SINCRONIZACIÓN EN SEGUNDO PLANO
+    autoSyncCatalogFromCloud();
   </script>
 </body>
 </html>
