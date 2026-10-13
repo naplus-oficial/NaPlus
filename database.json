@@ -1,5 +1,67 @@
 [
   {
+    "id": 1791927429374,
+    "type": "series",
+    "title": "Grotesquerie",
+    "ageRating": "+18",
+    "genre": "Drama",
+    "year": "2024",
+    "desc": "",
+    "cover": "https://peliculas.lavanguardia.com/imagenes/w500/oskgLp7inXPU9NgfL2NWRW0KK2e.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Piloto",
+            "duration": "41 min",
+            "img": "https://images.squarespace-cdn.com/content/v1/617429993039ec793bfb3450/86573107-3bd9-465c-8cde-719501f75ec7/66f2d85ee6648.jpg",
+            "desc": "Un crimen grotesco sacude a la comunidad de un pequeño pueblo.",
+            "video": "https://ok.ru/video/16836531981019"
+          },
+          {
+            "num": 2,
+            "title": "Católicos del crimen real",
+            "duration": "49 min",
+            "img": "https://images.squarespace-cdn.com/content/v1/617429993039ec793bfb3450/86573107-3bd9-465c-8cde-719501f75ec7/66f2d85ee6648.jpg",
+            "desc": "Lois acepta la ayuda de una monja para investigar los crímenes recientes.",
+            "video": "https://ok.ru/video/16836533357275"
+          },
+          {
+            "num": 3,
+            "title": "La borrachera",
+            "duration": "45 min",
+            "img": "https://images.squarespace-cdn.com/content/v1/617429993039ec793bfb3450/86573107-3bd9-465c-8cde-719501f75ec7/66f2d85ee6648.jpg",
+            "desc": "Lois encuentra consuelo en una persona inesperada.",
+            "video": "https://ok.ru/video/16836536044251"
+          },
+          {
+            "num": 4,
+            "title": "Coordenadas",
+            "duration": "52 min",
+            "img": "https://images.squarespace-cdn.com/content/v1/617429993039ec793bfb3450/86573107-3bd9-465c-8cde-719501f75ec7/66f2d85ee6648.jpg",
+            "desc": "Una extraña pista dirige a Lois a un lugar remoto.",
+            "video": "https://ok.ru/video/16836538927835"
+          },
+          {
+            "num": 5,
+            "title": "Niebla roja",
+            "duration": "30 min",
+            "img": "https://images.squarespace-cdn.com/content/v1/617429993039ec793bfb3450/86573107-3bd9-465c-8cde-719501f75ec7/66f2d85ee6648.jpg",
+            "desc": "Lois se encuentra un paso más cerca del asesino.",
+            "video": "https://ok.ru/video/16836540238555"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 93,
+    "dateAdded": 1791927429374
+  },
+  {
     "id": 1791898662971,
     "type": "series",
     "title": "Channel Zero",
