@@ -1,5 +1,75 @@
 [
   {
+    "id": 1791898662971,
+    "type": "series",
+    "title": "Channel Zero",
+    "ageRating": "+18",
+    "genre": "Terror",
+    "year": "2016",
+    "desc": "Serie antológica basada en la popular Creepypastas. En el que cada temporada es una historia de terror diferente.",
+    "cover": "https://image.film.at/images/cfs_2_3_large/5411094/8R1M2z1hAIUJaeEOe0YN2GCDkiW.jpg",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1: Candle Cove",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Tú tienes que ir dentro",
+            "duration": "44 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "El psicólogo infantil Mike Painter vuelve a su pueblo natal para investigar el asesinato de su hermano gemelo en 1988. Un programa infantil de televisión podría ser la clave.",
+            "video": "https://ok.ru/video/16831953046235"
+          },
+          {
+            "num": 2,
+            "title": "Yo te tomaré de la mano",
+            "duration": "43 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "Después de lo que le pasa a Katie, Marla decide ayudar a Mike a investigar los asesinatos. Descubre un secreto oculto desde 1988.",
+            "video": "https://ok.ru/video/16831961500379"
+          },
+          {
+            "num": 3,
+            "title": "¿Quieres ver algo increíble?",
+            "duration": "42 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "Mike debe convencer a sus antiguos amigos de que Candle Cove está detrás de los asesinatos antes de que tomen la justicia por su cuenta.",
+            "video": "https://ok.ru/video/16831969692379"
+          },
+          {
+            "num": 4,
+            "title": "Un buque extraño",
+            "duration": "43 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "Cuando Lily, la hija de Mike, aparece misteriosamente, él teme por su seguridad. Se descubren más detalles sobre lo ocurrido en 1988.",
+            "video": "https://ok.ru/video/16831983389403"
+          },
+          {
+            "num": 5,
+            "title": "Invitado de honor",
+            "duration": "43 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "Mike y Amy buscan al creador de Candle Cove. Mike descubre que no es quien pensaba. Un asesinato brutal conmociona a la policía.",
+            "video": "https://ok.ru/video/16831998135003"
+          },
+          {
+            "num": 6,
+            "title": "Bienvenido a casa",
+            "duration": "43 min",
+            "img": "https://img.aullidos.com/imagenes/noticias/tw-29983.jpg",
+            "desc": "Después de que se lleven a Lily, Mike se pone en gran peligro para salvar a su hija y enfrentarse a quien lo atormenta.",
+            "video": "https://ok.ru/video/16832013601499"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 259,
+    "dateAdded": 1791898662971
+  },
+  {
     "id": 1791893498531,
     "type": "movie",
     "title": "Al interior",
