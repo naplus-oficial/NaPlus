@@ -1023,93 +1023,49 @@
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
-    const FILE_PATH = "index.html";
     const DB_FILE_PATH = "database.json";
 
-    /*CATALOG_START*/
-    let catalog = [];
-    /*CATALOG_END*/
-
-    const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
-    if (Array.isArray(localDb) && localDb.length > 0) {
-      catalog = localDb;
-    }
-
+    // 1. CARGA INMEDIATA LOCAL (Cero demora en navegadores nuevos o frecuentes)
+    let catalog = JSON.parse(localStorage.getItem('naPlus_permanent_db')) || [];
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
     let seriesLikes = JSON.parse(localStorage.getItem('naPlus_series_likes')) || [];
-
-    // Las imágenes se cargan bajo demanda mediante loading="lazy".
-    function preloadAllImages() {}
-
-    let sessionRecommendedPool = [];
-    function computeSessionRecommendations() {
-      if (catalog.length === 0) {
-        sessionRecommendedPool = [];
-        return;
-      }
-      let targetItems = [...catalog].sort(() => 0.5 - Math.random());
-      sessionRecommendedPool = targetItems;
-    }
-    computeSessionRecommendations();
-    preloadAllImages();
-
-    async function autoSyncCatalogFromCloud() {
-      try {
-        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}`;
-        const res = await fetch(rawUrl, { cache: 'default' });
-        if (res.ok) {
-          const cloudCatalog = await res.json();
-          if (Array.isArray(cloudCatalog)) {
-            catalog = cloudCatalog;
-            localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-            computeSessionRecommendations();
-            preloadAllImages();
-            renderHomeSections();
-            if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
-            if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
-            if (document.getElementById('viewList').classList.contains('active')) renderMyList();
-            return;
-          }
-        }
-      } catch (e) {
-        console.log("Intentando respaldo desde index.html...");
-      }
-
-      try {
-        const rawUrlIndex = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
-        const res = await fetch(rawUrlIndex, { cache: 'no-store' });
-        if (res.ok) {
-          const text = await res.text();
-          const startMarker = "/*CATALOG_START*/";
-          const endMarker = "/*CATALOG_END*/";
-          const startIndex = text.indexOf(startMarker);
-          const endIndex = text.indexOf(endMarker);
-          if (startIndex !== -1 && endIndex !== -1) {
-            const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
-            const cloudCatalog = jsonStr.startsWith("[") ? JSON.parse(jsonStr) : [];
-            if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
-              catalog = cloudCatalog;
-              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
-              preloadAllImages();
-              renderHomeSections();
-            }
-          }
-        }
-      } catch (err) {
-        console.log("Modo offline o error de sincronización total:", err);
-      }
-    }
-
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
-    let isCreatorMode = localStorage.getItem('naPlus_is_creator_active') === 'true';
+    let isCreatorMode = JSON.parse(localStorage.getItem('naPlus_is_creator_active')) || false;
 
     if (isCreatorMode) {
       document.body.classList.add('creator-mode');
     }
 
+    // SI HAY DATOS LOCALES, SE RENDERIZAN AL INSTANTE (EVITA PANTALLA EN BLANCO)
+    if (catalog.length > 0) {
+      renderHomeSections();
+    }
+
+    // 2. SINCRONIZACIÓN ASÍNCRONA EN SEGUNDO PLANO
+    async function initCatalogSync() {
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
+        const res = await fetch(rawUrl, { cache: 'no-store' });
+        if (res.ok) {
+          const cloudCatalog = await res.json();
+          if (Array.isArray(cloudCatalog) && cloudCatalog.length > 0) {
+            catalog = cloudCatalog;
+            localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+            computeSessionRecommendations();
+            renderHomeSections();
+            if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
+            if (document.getElementById('viewSeries').classList.contains('active')) renderSeriesGrid();
+            if (document.getElementById('viewList').classList.contains('active')) renderMyList();
+          }
+        }
+      } catch (err) {
+        console.log("Modo offline activado:", err);
+      }
+    }
+    initCatalogSync();
+
     const NO_COVER_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
-      "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>Sin portada</text></svg>"
+      "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='100%' height='100%' fill='#1a1528'/><text x='50%' y='50%' fill='#94a3b8' font-size='14' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>NaPlus</text></svg>"
     );
 
     function handleImgError(img) {
@@ -1143,7 +1099,6 @@
         }
         return;
       }
-
       history.pushState(null, '', location.href);
     });
 
@@ -1192,7 +1147,6 @@
 
     function toggleFavorite(id, e) {
       if (e) e.stopPropagation();
-      
       const btn = e ? e.currentTarget : null;
       if (btn) {
         btn.classList.add('anim-pop');
@@ -1210,25 +1164,19 @@
       renderMoviesGrid();
       renderSeriesGrid();
       renderMyList();
-      if (currentMovieData && currentMovieData.id === id) {
-        updateMovieModalFavoriteState();
-      }
-      if (currentSeriesData && currentSeriesData.id === id) {
-        updateSeriesModalFavoriteState();
-      }
+      if (currentMovieData && currentMovieData.id === id) updateMovieModalFavoriteState();
+      if (currentSeriesData && currentSeriesData.id === id) updateSeriesModalFavoriteState();
     }
 
     function toggleLikeMovie(e) {
       if (e) e.stopPropagation();
       if (!currentMovieData) return;
       const id = currentMovieData.id;
-
       const circle = document.getElementById('movieLikeCircle');
       if (circle) {
         circle.classList.add('anim-heart');
         setTimeout(() => circle.classList.remove('anim-heart'), 500);
       }
-
       if (movieLikes.includes(id)) {
         movieLikes = movieLikes.filter(lId => lId !== id);
       } else {
@@ -1266,13 +1214,11 @@
       if (e) e.stopPropagation();
       if (!currentSeriesData) return;
       const id = currentSeriesData.id;
-
       const circle = document.getElementById('seriesLikeCircle');
       if (circle) {
         circle.classList.add('anim-heart');
         setTimeout(() => circle.classList.remove('anim-heart'), 500);
       }
-
       if (seriesLikes.includes(id)) {
         seriesLikes = seriesLikes.filter(lId => lId !== id);
       } else {
@@ -1316,8 +1262,6 @@
         circle.style.borderColor = 'var(--accent-light)';
         circle.style.background = 'rgba(124, 58, 237, 0.3)';
         circle.style.color = 'var(--accent-light)';
-        circle.classList.add('anim-pop');
-        setTimeout(() => circle.classList.remove('anim-pop'), 400);
       } else {
         btn.classList.remove('active-list');
         circle.style.borderColor = 'rgba(255,255,255,0.15)';
@@ -1336,8 +1280,6 @@
         circle.style.borderColor = 'var(--accent-light)';
         circle.style.background = 'rgba(124, 58, 237, 0.3)';
         circle.style.color = 'var(--accent-light)';
-        circle.classList.add('anim-pop');
-        setTimeout(() => circle.classList.remove('anim-pop'), 400);
       } else {
         btn.classList.remove('active-list');
         circle.style.borderColor = 'rgba(255,255,255,0.15)';
@@ -1364,6 +1306,7 @@
     function renderHeroSlider() {
       const wrapper = document.getElementById('hboSlidesWrapper');
       const dotsContainer = document.getElementById('hboSliderDots');
+      if (!wrapper || !dotsContainer) return;
       
       let displayItems = catalog.filter(item => item.featured);
       if (displayItems.length === 0) {
@@ -1372,7 +1315,10 @@
         displayItems = displayItems.slice(0, 6);
       }
 
-      if (displayItems.length === 0) return;
+      if (displayItems.length === 0) {
+        wrapper.innerHTML = '<div class="empty-msg" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">Cargando catálogo...</div>';
+        return;
+      }
 
       wrapper.innerHTML = '';
       dotsContainer.innerHTML = '';
@@ -1418,9 +1364,7 @@
       currentSlide = idx;
       const wrapper = document.getElementById('hboSlidesWrapper');
       const dots = document.querySelectorAll('.hbo-dot');
-      if (wrapper) {
-        wrapper.style.transform = `translateX(-${idx * 100}%)`;
-      }
+      if (wrapper) wrapper.style.transform = `translateX(-${idx * 100}%)`;
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
@@ -1455,10 +1399,30 @@
           <button class="top10-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
             <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
           </button>
-          <img src="${item.cover}" data-orig="${item.cover}" alt="Poster" loading="lazy" decoding="async" onerror="handleImgError(this)">
+          <img src="${item.cover}" data-orig="${item.cover}" alt="Poster" loading="eager" onerror="handleImgError(this)">
         </div>
       `;
       return div;
+    }
+
+    let sessionRecommendedPool = [];
+    function computeSessionRecommendations() {
+      if (catalog.length === 0) {
+        sessionRecommendedPool = [];
+        return;
+      }
+      sessionRecommendedPool = [...catalog].sort(() => 0.5 - Math.random());
+    }
+
+    function renderHomeRecommendations() {
+      const recContainer = document.getElementById('recommendedContainer');
+      if (!recContainer) return;
+      recContainer.innerHTML = '';
+      if (sessionRecommendedPool.length === 0) return;
+      const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
+      const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+      sessionRecommendedPool.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+      recContainer.appendChild(titleDiv); recContainer.appendChild(scrollDiv);
     }
 
     function renderHomeSections() {
@@ -1467,44 +1431,42 @@
       renderHomeRecommendations();
 
       const topMoviesScroll = document.getElementById('topMoviesScroll');
-      topMoviesScroll.innerHTML = '';
-      catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topMoviesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      if (topMoviesScroll) {
+        topMoviesScroll.innerHTML = '';
+        catalog.filter(i => i.type === 'movie').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topMoviesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      }
 
       const topSeriesScroll = document.getElementById('topSeriesScroll');
-      topSeriesScroll.innerHTML = '';
-      catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topSeriesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      if (topSeriesScroll) {
+        topSeriesScroll.innerHTML = '';
+        catalog.filter(i => i.type === 'series').sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topSeriesScroll.appendChild(renderTop10Element(item, idx + 1)));
+      }
 
       const recentScroll = document.getElementById('recentScroll');
-      recentScroll.innerHTML = '';
-      [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => recentScroll.appendChild(createCardElement(item)));
+      if (recentScroll) {
+        recentScroll.innerHTML = '';
+        [...catalog].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)).forEach(item => recentScroll.appendChild(createCardElement(item)));
+      }
 
       const genreContainer = document.getElementById('genreRowsContainer');
-      genreContainer.innerHTML = '';
-      let allIndividualGenres = [];
-      catalog.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allIndividualGenres.includes(g.trim())) allIndividualGenres.push(g.trim()); });
-      });
-      allIndividualGenres.sort();
+      if (genreContainer) {
+        genreContainer.innerHTML = '';
+        let allIndividualGenres = [];
+        catalog.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !allIndividualGenres.includes(g.trim())) allIndividualGenres.push(g.trim()); });
+        });
+        allIndividualGenres.sort();
 
-      allIndividualGenres.forEach(genre => {
-        const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
-        }
-      });
-    }
-
-    function renderHomeRecommendations() {
-      const recContainer = document.getElementById('recommendedContainer');
-      recContainer.innerHTML = '';
-      if (sessionRecommendedPool.length === 0) return;
-      const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
-      const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-      sessionRecommendedPool.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-      recContainer.appendChild(titleDiv); recContainer.appendChild(scrollDiv);
+        allIndividualGenres.forEach(genre => {
+          const genreItems = catalog.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
+          }
+        });
+      }
     }
 
     function checkSecretCode(e) {
@@ -1514,7 +1476,7 @@
           e.preventDefault();
           document.getElementById('searchInput').value = '';
           isCreatorMode = !isCreatorMode;
-          localStorage.setItem('naPlus_is_creator_active', isCreatorMode ? 'true' : 'false');
+          localStorage.setItem('naPlus_is_creator_active', JSON.stringify(isCreatorMode));
           document.body.classList.toggle('creator-mode', isCreatorMode);
           if (isCreatorMode) openUploadModal();
         }
@@ -1528,6 +1490,7 @@
       if (clearBtn) clearBtn.style.display = query.length > 0 ? 'block' : 'none';
 
       const searchGrid = document.getElementById('searchGrid');
+      if (!searchGrid) return;
       searchGrid.innerHTML = '';
 
       if (query.length === 0) {
@@ -1546,63 +1509,76 @@
     function renderMoviesGrid() {
       const movies = catalog.filter(i => i.type === 'movie');
       const topScroll = document.getElementById('moviesTopScroll');
-      topScroll.innerHTML = '';
-      [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+      if (topScroll) {
+        topScroll.innerHTML = '';
+        [...movies].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+      }
 
       const genreRowsContainer = document.getElementById('moviesGenreRowsContainer');
-      genreRowsContainer.innerHTML = '';
-      let movieGenres = [];
-      movies.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !movieGenres.includes(g.trim())) movieGenres.push(g.trim()); });
-      });
-      movieGenres.sort();
+      if (genreRowsContainer) {
+        genreRowsContainer.innerHTML = '';
+        let movieGenres = [];
+        movies.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !movieGenres.includes(g.trim())) movieGenres.push(g.trim()); });
+        });
+        movieGenres.sort();
 
-      movieGenres.forEach(genre => {
-        const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
-        }
-      });
+        movieGenres.forEach(genre => {
+          const genreItems = movies.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
+          }
+        });
+      }
 
       const grid = document.getElementById('moviesGrid');
-      grid.innerHTML = '';
-      movies.forEach(item => grid.appendChild(createCardElement(item)));
+      if (grid) {
+        grid.innerHTML = '';
+        movies.forEach(item => grid.appendChild(createCardElement(item)));
+      }
     }
 
     function renderSeriesGrid() {
       const series = catalog.filter(i => i.type === 'series');
       const topScroll = document.getElementById('seriesTopScroll');
-      topScroll.innerHTML = '';
-      [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+      if (topScroll) {
+        topScroll.innerHTML = '';
+        [...series].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).forEach((item, idx) => topScroll.appendChild(renderTop10Element(item, idx + 1)));
+      }
 
       const genreRowsContainer = document.getElementById('seriesGenreRowsContainer');
-      genreRowsContainer.innerHTML = '';
-      let seriesGenres = [];
-      series.forEach(item => {
-        if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !seriesGenres.includes(g.trim())) seriesGenres.push(g.trim()); });
-      });
-      seriesGenres.sort();
+      if (genreRowsContainer) {
+        genreRowsContainer.innerHTML = '';
+        let seriesGenres = [];
+        series.forEach(item => {
+          if (item.genre) item.genre.split(',').forEach(g => { if (g.trim() && !seriesGenres.includes(g.trim())) seriesGenres.push(g.trim()); });
+        });
+        seriesGenres.sort();
 
-      seriesGenres.forEach(genre => {
-        const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
-        if (genreItems.length > 0) {
-          const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
-          const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-          genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-          genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
-        }
-      });
+        seriesGenres.forEach(genre => {
+          const genreItems = series.filter(i => i.genre && i.genre.split(',').map(x => x.trim().toLowerCase()).includes(genre.toLowerCase()));
+          if (genreItems.length > 0) {
+            const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = genre;
+            const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+            genreItems.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+            genreRowsContainer.appendChild(titleDiv); genreRowsContainer.appendChild(scrollDiv);
+          }
+        });
+      }
 
       const grid = document.getElementById('seriesGrid');
-      grid.innerHTML = '';
-      series.forEach(item => grid.appendChild(createCardElement(item)));
+      if (grid) {
+        grid.innerHTML = '';
+        series.forEach(item => grid.appendChild(createCardElement(item)));
+      }
     }
 
     function renderMyList() {
       const grid = document.getElementById('myListGrid');
+      if (!grid) return;
       grid.innerHTML = '';
       catalog.filter(i => myFavorites.includes(i.id)).forEach(item => grid.appendChild(createCardElement(item)));
       if (grid.children.length === 0) grid.innerHTML = '<div class="empty-msg">No tenés elementos guardados.</div>';
@@ -1622,7 +1598,7 @@
           <button onclick="event.stopPropagation(); editItem(${item.id})" title="Editar">✏️</button>
           <button onclick="event.stopPropagation(); deleteItem(${item.id})" title="Eliminar">🗑️</button>
         </div>
-        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="lazy" decoding="async" onerror="handleImgError(this)">
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${item.year}</div>
@@ -1641,7 +1617,7 @@
         <button class="card-fav-btn ${isFav ? 'saved' : ''}" onclick="toggleFavorite(${item.id}, event)" title="Guardar">
           <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         </button>
-        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="lazy" decoding="async" onerror="handleImgError(this)">
+        <img src="${item.cover}" data-orig="${item.cover}" alt="Portada" loading="eager" onerror="handleImgError(this)">
         <div class="card-info">
           <div class="card-title">${item.title}</div>
           <div class="card-sub">${item.year}</div>
@@ -1822,7 +1798,6 @@
       }
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-      preloadAllImages();
       renderHomeSections();
       renderMoviesGrid();
       renderSeriesGrid();
@@ -1830,13 +1805,13 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando en base y nube...";
+      if (saveBtn) saveBtn.innerText = "Publicando en nube...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y sincronizado automáticamente con database.json y GitHub!");
+        alert("¡Guardado y sincronizado automáticamente con database.json en GitHub!");
       }
     }
 
@@ -1869,30 +1844,6 @@
             sha: dbSha
           })
         });
-
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
-        });
-        if (getRes.ok) {
-          const getData = await getRes.json();
-          let fileText = decodeURIComponent(escape(atob(getData.content)));
-          if (fileText.includes('/*CATALOG_START*/')) {
-            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = [];\n    /*CATALOG_END*/`);
-          }
-          await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-            method: 'PUT',
-            headers: {
-              'Authorization': 'Bearer ' + token.trim(),
-              'Content-Type': 'application/json',
-              'Accept': 'application/vnd.github+json'
-            },
-            body: JSON.stringify({
-              message: 'Sincronización de catálogo en index.html',
-              content: utoa(fileText),
-              sha: getData.sha
-            })
-          });
-        }
         return true;
       } catch (err) {
         console.error(err);
@@ -2035,7 +1986,7 @@
         itemDiv.className = 'stream-ep-item';
         itemDiv.innerHTML = `
           <div class="stream-ep-thumb-box" onclick="playEpisode(${sIdx}, ${eIdx})">
-            <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="lazy" decoding="async" onerror="handleImgError(this)">
+            <img src="${thumbImg}" data-orig="${thumbImg}" alt="Ep" loading="eager" onerror="handleImgError(this)">
             <div class="stream-ep-play-overlay">▶</div>
           </div>
           <div class="stream-ep-info" onclick="playEpisode(${sIdx}, ${eIdx})">
@@ -2154,7 +2105,7 @@
         if (!okEmbed.includes('/videoembed/')) {
           okEmbed = okEmbed.replace('/video/', '/videoembed/');
         }
-        vBox.innerHTML = `<iframe src="${okEmbed}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${okEmbed}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%H;height:100%;position:absolute;top:0;left:0;"></iframe>`;
         return;
       }
       if (vInput.includes('odysee.com')) {
@@ -2167,9 +2118,6 @@
       }
       vBox.innerHTML = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
     }
-
-    autoSyncCatalogFromCloud();
-    renderHomeSections();
   </script>
 </body>
 </html>
