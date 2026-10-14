@@ -61,6 +61,38 @@
             "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
             "desc": "Ben ayuda a un paciente aterrorizado por una leyenda urbana y Constance involucra a Violet con Tate.",
             "video": "https://ok.ru/video/16851665881819"
+          },
+          {
+            "num": 7,
+            "title": "Puertas abiertas",
+            "duration": "40 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Moira intenta vender la casa mientras Constance y Larry conspiran en su contra.",
+            "video": "https://ok.ru/video/16851692948187"
+          },
+          {
+            "num": 8,
+            "title": "El hombre de latex",
+            "duration": "43 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Un misterioso hombre vestido de látex aterroriza a la familia y revela secretos más oscuros de la casa.",
+            "video": "https://ok.ru/video/16851694127835"
+          },
+          {
+            "num": 9,
+            "title": "Niña aterradora",
+            "duration": "40 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Vivien y Ben investigan un caso relacionado con una niña desaparecida y la historia de la casa se complica aún más.",
+            "video": "https://ok.ru/video/16851695045339"
+          },
+          {
+            "num": 10,
+            "title": "Los niños ardientes",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Se revelan secretos del pasado de Constance y de los niños que murieron en la casa.",
+            "video": "https://ok.ru/video/16851695635163"
           }
         ]
       }
