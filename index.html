@@ -682,8 +682,6 @@
     </div>
 
     <div id="mainHomeContent">
-      <div id="recommendedContainer"></div>
-      
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -1038,20 +1036,7 @@
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
     let seriesLikes = JSON.parse(localStorage.getItem('naPlus_series_likes')) || [];
 
-    // Las imágenes se cargan bajo demanda mediante loading="lazy".
     function preloadAllImages() {}
-
-    let sessionRecommendedPool = [];
-    function computeSessionRecommendations() {
-      if (catalog.length === 0) {
-        sessionRecommendedPool = [];
-        return;
-      }
-      let targetItems = [...catalog].sort(() => 0.5 - Math.random());
-      sessionRecommendedPool = targetItems;
-    }
-    computeSessionRecommendations();
-    preloadAllImages();
 
     async function autoSyncCatalogFromCloud() {
       try {
@@ -1062,7 +1047,6 @@
           if (Array.isArray(cloudCatalog)) {
             catalog = cloudCatalog;
             localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-            computeSessionRecommendations();
             preloadAllImages();
             renderHomeSections();
             if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
@@ -1090,7 +1074,6 @@
             if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
               catalog = cloudCatalog;
               localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
               preloadAllImages();
               renderHomeSections();
             }
@@ -1236,8 +1219,6 @@
       }
       localStorage.setItem('naPlus_movie_likes', JSON.stringify(movieLikes));
       updateMovieLikeState();
-      computeSessionRecommendations();
-      renderHomeRecommendations();
     }
 
     function updateMovieLikeState() {
@@ -1280,8 +1261,6 @@
       }
       localStorage.setItem('naPlus_series_likes', JSON.stringify(seriesLikes));
       updateSeriesLikeState();
-      computeSessionRecommendations();
-      renderHomeRecommendations();
     }
 
     function updateSeriesLikeState() {
@@ -1463,8 +1442,6 @@
 
     function renderHomeSections() {
       renderHeroSlider();
-      computeSessionRecommendations();
-      renderHomeRecommendations();
 
       const topMoviesScroll = document.getElementById('topMoviesScroll');
       topMoviesScroll.innerHTML = '';
@@ -1495,16 +1472,6 @@
           genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
         }
       });
-    }
-
-    function renderHomeRecommendations() {
-      const recContainer = document.getElementById('recommendedContainer');
-      recContainer.innerHTML = '';
-      if (sessionRecommendedPool.length === 0) return;
-      const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
-      const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
-      sessionRecommendedPool.forEach(item => scrollDiv.appendChild(createCardElement(item)));
-      recContainer.appendChild(titleDiv); recContainer.appendChild(scrollDiv);
     }
 
     function checkSecretCode(e) {
@@ -1822,7 +1789,6 @@
       }
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-      preloadAllImages();
       renderHomeSections();
       renderMoviesGrid();
       renderSeriesGrid();
