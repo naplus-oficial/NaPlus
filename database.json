@@ -1,35 +1,5 @@
 [
   {
-    "id": 1791997350326,
-    "type": "series",
-    "title": "Dragon Ball Super: Beerus",
-    "ageRating": "Todos",
-    "genre": "Animación, Acción",
-    "year": "2026",
-    "desc": "Años después de la derrota de Majin Buu, la Tierra disfruta de la paz. Mientras tanto, en un planeta lejano, Beerus, el Dios de la Destrucción, despierta de un largo sueño.",
-    "cover": "https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/c67d0f79bd2331c122164e6aa2c353ec.png",
-    "trailer": "",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "El dios de la destrucción",
-            "duration": "25 min",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj6WufL3phP1db3RNKh_kNduMlC_GgxhbN6WAWXpvKoJUA82oG8vXH2lIx&s=10",
-            "desc": "Años después de la derrota de Majin Buu, la Tierra disfruta de la paz. Mientras tanto, en un planeta lejano, Beerus, el Dios de la Destrucción, despierta de un largo sueño.",
-            "video": "https://ok.ru/video/16848280619739"
-          }
-        ]
-      }
-    ],
-    "featured": true,
-    "views": 533,
-    "dateAdded": 1791997350326
-  },
-  {
     "id": 1791990389649,
     "type": "series",
     "title": "VisionQuest",
@@ -64,7 +34,7 @@
       }
     ],
     "featured": true,
-    "views": 120,
+    "views": 119,
     "dateAdded": 1791990389649
   },
   {
@@ -347,7 +317,7 @@
     "desc": "Mientras busca a su hermana desaparecida, un joven y un grupo de estudiantes descubren a un asesino enmascarado armado con un machete en las ruinas de Camp Crystal Lake.",
     "cover": "https://es.web.img3.acsta.net/medias/nmedia/18/67/53/27/20312624.jpg",
     "trailer": "",
-    "video": "https://ok.ru/video/16830839589595",
+    "video": "https://odysee.com/@Romualdoignacio:0/V13.R",
     "seasons": [],
     "featured": false,
     "views": 498,
