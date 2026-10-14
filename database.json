@@ -1,5 +1,75 @@
 [
   {
+    "id": 1792020960741,
+    "type": "series",
+    "title": "American horror story",
+    "ageRating": "+18",
+    "genre": "Terror, Fantasía",
+    "year": "2011",
+    "desc": "Es una serie que involucra diferentes personajes y locaciones tales como una casa embrujada, un asilo de dementes, brujas, cultos e incluso el apocalipsis.",
+    "cover": "https://static.wikia.nocookie.net/headhuntersholosuite/images/f/f9/American_Horror_Story_-_Season_8.jpg/revision/latest/scale-to-width-down/1200?cb=20180923115451",
+    "trailer": "",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1 Murder House",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Piloto",
+            "duration": "51 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "La familia Harmon se muda a una casa en Los Ángeles para empezar de nuevo, sin saber que está llena de secretos oscuros.",
+            "video": "https://ok.ru/video/16851660966619"
+          },
+          {
+            "num": 2,
+            "title": "Allanamiento",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Un grupo de fanáticos de asesinos en serie invade la casa mientras Ben viaja a Boston para resolver un problema del pasado.",
+            "video": "https://ok.ru/video/16851661687515"
+          },
+          {
+            "num": 3,
+            "title": "La casa del crimen",
+            "duration": "42 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Vivien descubre la historia de los primeros residentes de la casa y Ben enfrenta las consecuencias de su pasado.",
+            "video": "https://ok.ru/video/16851662932699"
+          },
+          {
+            "num": 4,
+            "title": "Halloween parte 1",
+            "duration": "39 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "La línea entre vivos y muertos se borra en Halloween cuando antiguos habitantes de la casa reaparecen.",
+            "video": "https://ok.ru/video/16851663850203"
+          },
+          {
+            "num": 5,
+            "title": "Halloween parte 2",
+            "duration": "41 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Tate se enfrenta a su pasado mientras Ben y Vivien son perseguidos por un nuevo “huésped” de la casa.",
+            "video": "https://ok.ru/video/16851664440027"
+          },
+          {
+            "num": 6,
+            "title": "Cerdito, cerdito",
+            "duration": "44 min",
+            "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
+            "desc": "Ben ayuda a un paciente aterrorizado por una leyenda urbana y Constance involucra a Violet con Tate.",
+            "video": "https://ok.ru/video/16851665881819"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 357,
+    "dateAdded": 1792020960742
+  },
+  {
     "id": 1791990389649,
     "type": "series",
     "title": "VisionQuest",
@@ -317,10 +387,10 @@
     "desc": "Mientras busca a su hermana desaparecida, un joven y un grupo de estudiantes descubren a un asesino enmascarado armado con un machete en las ruinas de Camp Crystal Lake.",
     "cover": "https://es.web.img3.acsta.net/medias/nmedia/18/67/53/27/20312624.jpg",
     "trailer": "",
-    "video": "https://odysee.com/@Romualdoignacio:0/V13.R",
+    "video": "https://ok.ru/video/16830839589595",
     "seasons": [],
     "featured": false,
-    "views": 499,
+    "views": 498,
     "dateAdded": 1791891911173
   },
   {
@@ -333,10 +403,10 @@
     "desc": "El asesino enmascarado despierta en el año 2455 y mata a un profesor y a un grupo de estudiantes abordo de una nave espacial.",
     "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1L4Wh6uHLPvEiF9EoVUb7HNrTACUWQpPyb57ylfdpAVuZIySC_0yU5Ig5Fs4NiamGD6PigmaNmp--G_mCXNHvybXPwcEIzggRvCY0w&s=10",
     "trailer": "",
-    "video": "https://odysee.com/@Romualdoignacio:0/V13.X",
+    "video": "https://ok.ru/video/16830758521563",
     "seasons": [],
     "featured": false,
-    "views": 549,
+    "views": 548,
     "dateAdded": 1791891447972
   },
   {
