@@ -1,35 +1,5 @@
 [
   {
-    "id": 1791992743876,
-    "type": "series",
-    "title": "Dragon Ball Super: Beerus",
-    "ageRating": "Todos",
-    "genre": "Animación, Acción",
-    "year": "2026",
-    "desc": "Narra los acontecimientos que ocurren varios años después de la derrota de Majin Buu, cuando la Tierra disfruta de un periodo de paz",
-    "cover": "https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/c67d0f79bd2331c122164e6aa2c353ec.png",
-    "trailer": "",
-    "video": "",
-    "seasons": [
-      {
-        "name": "Temporada 1",
-        "episodes": [
-          {
-            "num": 1,
-            "title": "El dios de la destrucción",
-            "duration": "25 min",
-            "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj6WufL3phP1db3RNKh_kNduMlC_GgxhbN6WAWXpvKoJUA82oG8vXH2lIx&s=10",
-            "desc": "Años después de la derrota de Majin Buu, la Tierra disfruta de la paz. Mientras tanto, en un planeta lejano, Beerus, el Dios de la Destrucción, despierta de un largo sueño.",
-            "video": "https://ok.ru/video/16848280619739"
-          }
-        ]
-      }
-    ],
-    "featured": true,
-    "views": 88,
-    "dateAdded": 1791992743876
-  },
-  {
     "id": 1791990389649,
     "type": "series",
     "title": "VisionQuest",
@@ -323,7 +293,7 @@
     "desc": "Cinco amigos se van de escapada a una remota cabaña en el bosque donde descubren más de lo que hubiesen querido.",
     "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k_3kCYmGPuTKrkJjXGd8L_lDC41n_iMFEIV7nnCn2M1X1qkr3oYgfdQWlOICMx-ylqagQvY5949e12gUz9LC03H46LS3pvkrumb8xQ&s=10",
     "trailer": "",
-    "video": "https://ok.ru/video/16831027940059",
+    "video": "https://odysee.com/@Romualdoignacio:0/La.C.Eel",
     "seasons": [],
     "featured": false,
     "views": 168,
