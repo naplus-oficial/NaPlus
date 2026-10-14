@@ -21,12 +21,20 @@
             "img": "https://cdn.marvel.com/content/2x/visionquest_lob_mas_mob_02.webp",
             "desc": "Visión se embarca en un viaje de autodescubrimiento y termina huyendo de una amenaza letal.",
             "video": "https://ok.ru/video/16847777696475"
+          },
+          {
+            "num": 2,
+            "title": "Teseo",
+            "duration": "45 min",
+            "img": "https://cdn.marvel.com/content/2x/visionquest_lob_mas_mob_02.webp",
+            "desc": "Visión se enfrenta a su misterioso atacante mientras investiga si Tommy Shepherd es su hijo.",
+            "video": "https://ok.ru/video/16847908768475"
           }
         ]
       }
     ],
     "featured": true,
-    "views": 117,
+    "views": 118,
     "dateAdded": 1791990389649
   },
   {
