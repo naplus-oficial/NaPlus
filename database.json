@@ -1,5 +1,35 @@
 [
   {
+    "id": 1791990389649,
+    "type": "series",
+    "title": "VisionQuest",
+    "ageRating": "Todos",
+    "genre": "Acción, Cienciaficción",
+    "year": "2026",
+    "desc": "Sigue a La Visión intentando recuperar su memoria y su humanidad.",
+    "cover": "https://static0.cbrimages.com/wordpress/wp-content/uploads/sharedimages/2026/08/visionquest-poster.jpg",
+    "trailer": "https://youtu.be/Oqf2hvtqE6Y?si=WCtQkmug8rLd2bxS",
+    "video": "",
+    "seasons": [
+      {
+        "name": "Temporada 1",
+        "episodes": [
+          {
+            "num": 1,
+            "title": "Sin ataduras",
+            "duration": "53 min",
+            "img": "https://cdn.marvel.com/content/2x/visionquest_lob_mas_mob_02.webp",
+            "desc": "Visión se embarca en un viaje de autodescubrimiento y termina huyendo de una amenaza letal.",
+            "video": "https://ok.ru/video/16847777696475"
+          }
+        ]
+      }
+    ],
+    "featured": false,
+    "views": 117,
+    "dateAdded": 1791990389649
+  },
+  {
     "id": 1791927429374,
     "type": "series",
     "title": "Grotesquerie",
