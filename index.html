@@ -46,7 +46,9 @@
       width: 100%;
       height: 100%;
       background: #000;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -671,10 +673,25 @@
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
     .video-box { 
-      width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 12px; border-radius: 6px; overflow: hidden; position: relative;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; 
+      height: 220px; 
+      background: #000; 
+      margin-bottom: 12px; 
+      border-radius: 6px; 
+      overflow: hidden; 
+      position: relative;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
     }
-    .video-box iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+    .video-box iframe, .video-box .native-player-box { 
+      width: 100%; 
+      height: 100%; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+    }
     
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
@@ -2179,10 +2196,10 @@
         return;
       }
       
-      // Reproductor nativo hiper-optimizado (Carga instantánea y sin bloqueos)
+      // Reproductor nativo optimizado con dimensiones absolutas
       vBox.innerHTML = `
-        <div class="native-player-box">
-          <video controls autoplay playsinline preload="auto">
+        <div class="native-player-box" style="width:100%; height:100%; background:#000; position:absolute; top:0; left:0; display:flex; align-items:center; justify-content:center;">
+          <video controls autoplay playsinline preload="auto" style="width:100%; height:100%; object-fit:contain;">
             <source src="${vInput.trim()}" type="video/mp4">
             Tu navegador no soporta la reproducción de video.
           </video>
