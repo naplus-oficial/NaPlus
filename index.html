@@ -1168,8 +1168,8 @@
         const el = document.getElementById(topModal);
         if (el) el.style.display = 'none';
         if (topModal === 'moviePlayerModal' || topModal === 'episodeModal') {
-          document.getElementById('episodeVideoBox').innerHTML = '';
-          document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
+          if (topModal === 'moviePlayerModal') closeMoviePlayerModal();
+          else if (topModal === 'episodeModal') closeEpisodePlayer();
         }
         return;
       }
@@ -2183,7 +2183,6 @@
         return;
       }
       
-      // Limpiar cualquier video o iframe previo de forma segura
       vBox.innerHTML = '';
 
       if (vInput.includes('<iframe')) {
@@ -2214,7 +2213,6 @@
         return;
       }
       
-      // Reproductor nativo con recarga limpia para evitar bloqueos al reabrir
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
       playerWrapper.style.cssText = "width:100%; height:100%; background:#000; position:absolute; top:0; left:0; display:flex; align-items:center; justify-content:center;";
@@ -2235,7 +2233,6 @@
       playerWrapper.appendChild(videoEl);
       vBox.appendChild(playerWrapper);
 
-      // Forzar carga limpia al insertar
       videoEl.load();
     }
 
