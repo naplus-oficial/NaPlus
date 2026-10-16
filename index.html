@@ -9,9 +9,6 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
-  <!-- VIDEO.JS CSS OPTIMIZADO -->
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-
   <style>
     :root {
       --bg-dark: #07040d;
@@ -44,37 +41,21 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ESTILOS OPTIMIZADOS PARA VIDEO.JS */
-    .video-js {
+    /* REPRODUCTOR NATIVO ULTRA OPTIMIZADO Y LIMPIO */
+    .native-player-box {
       width: 100%;
       height: 100%;
-      background-color: #000;
-      font-family: inherit;
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .video-js .vjs-big-play-button {
-      background-color: rgba(124, 58, 237, 0.9);
-      border: none;
-      border-radius: 50%;
-      width: 72px;
-      height: 72px;
-      line-height: 72px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-    }
-    .video-js .vjs-big-play-button:hover {
-      background-color: var(--accent-light);
-    }
-    .video-js .vjs-control-bar {
-      background: linear-gradient(180deg, transparent 0%, rgba(7,4,13,0.95) 100%);
-      height: 48px;
-    }
-    .video-js .vjs-play-progress {
-      background-color: var(--accent-light);
-    }
-    .video-js .vjs-load-progress div {
-      background: rgba(255, 255, 255, 0.2);
+    .native-player-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      outline: none;
     }
 
     /* ANIMACIONES PERSONALIZADAS */
@@ -695,8 +676,6 @@
     }
     .video-box iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
     
-    .native-player-container { width: 100%; height: 100%; position: relative; background: #000; display: flex; flex-direction: column; justify-content: center; }
-    
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
 
@@ -1055,9 +1034,6 @@
       </form>
     </div>
   </div>
-
-  <!-- VIDEO.JS JS OPTIMIZADO -->
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
@@ -2203,32 +2179,15 @@
         return;
       }
       
-      // Reproductor limpio y ultra rápido con Video.js
+      // Reproductor nativo hiper-optimizado (Carga instantánea y sin bloqueos)
       vBox.innerHTML = `
-        <div class="native-player-container">
-          <video id="optimized-video" class="video-js vjs-big-play-centered" controls preload="auto" playsinline>
-            <source src="${vInput.trim()}" type="video/mp4" />
+        <div class="native-player-box">
+          <video controls autoplay playsinline preload="auto">
+            <source src="${vInput.trim()}" type="video/mp4">
             Tu navegador no soporta la reproducción de video.
           </video>
         </div>
       `;
-
-      // Inicialización ultrarrápida sin configuraciones pesadas
-      setTimeout(() => {
-        if (window.videojs) {
-          const player = videojs('optimized-video', {
-            fluid: true,
-            autoplay: true,
-            preload: 'auto',
-            playbackRates: [0.5, 1, 1.25, 1.5, 2]
-          });
-          
-          // Optimización para carga rápida en móviles
-          player.ready(() => {
-            player.play().catch(() => {});
-          });
-        }
-      }, 50);
     }
 
     autoSyncCatalogFromCloud();
