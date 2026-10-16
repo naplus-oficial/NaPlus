@@ -9,8 +9,8 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
-  <!-- PLYR CSS PARA UN REPRODUCTOR MODERNIZADO -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+  <!-- VIDEO.JS CSS OFICIAL -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 
   <style>
     :root {
@@ -21,7 +21,6 @@
       --text-white: #f8fafc;
       --text-gray: #94a3b8;
       --border-purple: rgba(124, 58, 237, 0.25);
-      --plyr-color-main: var(--accent-purple);
     }
 
     * {
@@ -43,6 +42,35 @@
       padding-top: 0;
       padding-bottom: 85px;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* ESTILOS PERSONALIZADOS PARA VIDEO.JS (TEMA OSCURO Y VIOLETA) */
+    .video-js {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      font-family: inherit;
+    }
+    .video-js .vjs-big-play-button {
+      background-color: rgba(124, 58, 237, 0.85);
+      border: none;
+      border-radius: 50%;
+      width: 68px;
+      height: 68px;
+      line-height: 68px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .video-js .vjs-big-play-button:hover,
+    .video-js:hover .vjs-big-play-button {
+      background-color: var(--accent-light);
+    }
+    .video-js .vjs-control-bar {
+      background: linear-gradient(180deg, transparent 0%, rgba(7,4,13,0.85) 100%);
+    }
+    .video-js .vjs-play-progress {
+      background-color: var(--accent-light);
     }
 
     /* ANIMACIONES PERSONALIZADAS */
@@ -664,7 +692,6 @@
     .video-box iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
     
     .native-player-container { width: 100%; height: 100%; position: relative; background: #000; display: flex; flex-direction: column; justify-content: center; }
-    .native-player-container video { width: 100%; height: 100%; object-fit: contain; }
     
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
@@ -1025,8 +1052,8 @@
     </div>
   </div>
 
-  <!-- PLYR JS -->
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
+  <!-- VIDEO.JS JS OFICIAL -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
@@ -2172,23 +2199,23 @@
         return;
       }
       
-      // Reproductor personalizado con Plyr.io
+      // Reproductor profesional personalizado con Video.js
       vBox.innerHTML = `
         <div class="native-player-container">
-          <video id="playerInstance" playsinline controls autoplay>
+          <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" data-setup='{}'>
             <source src="${vInput.trim()}" type="video/mp4" />
             Tu navegador no soporta la reproducción de video.
           </video>
         </div>
       `;
-      
-      // Inicializar la interfaz de Plyr
+
+      // Inicializar Video.js de forma dinámica
       setTimeout(() => {
-        const videoElement = document.getElementById('playerInstance');
-        if (videoElement && window.Plyr) {
-          new Plyr(videoElement, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
-            ratio: '16:9'
+        if (window.videojs) {
+          videojs('my-video', {
+            fluid: true,
+            autoplay: true,
+            responsive: true
           });
         }
       }, 100);
