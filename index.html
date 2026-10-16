@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
-  <!-- VIDEO.JS CSS OFICIAL -->
+  <!-- VIDEO.JS CSS OPTIMIZADO -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 
   <style>
@@ -44,7 +44,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ESTILOS PERSONALIZADOS PARA VIDEO.JS (TEMA OSCURO Y VIOLETA) */
+    /* ESTILOS OPTIMIZADOS PARA VIDEO.JS */
     .video-js {
       width: 100%;
       height: 100%;
@@ -52,25 +52,29 @@
       font-family: inherit;
     }
     .video-js .vjs-big-play-button {
-      background-color: rgba(124, 58, 237, 0.85);
+      background-color: rgba(124, 58, 237, 0.9);
       border: none;
       border-radius: 50%;
-      width: 68px;
-      height: 68px;
-      line-height: 68px;
+      width: 72px;
+      height: 72px;
+      line-height: 72px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
     }
-    .video-js .vjs-big-play-button:hover,
-    .video-js:hover .vjs-big-play-button {
+    .video-js .vjs-big-play-button:hover {
       background-color: var(--accent-light);
     }
     .video-js .vjs-control-bar {
-      background: linear-gradient(180deg, transparent 0%, rgba(7,4,13,0.85) 100%);
+      background: linear-gradient(180deg, transparent 0%, rgba(7,4,13,0.95) 100%);
+      height: 48px;
     }
     .video-js .vjs-play-progress {
       background-color: var(--accent-light);
+    }
+    .video-js .vjs-load-progress div {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* ANIMACIONES PERSONALIZADAS */
@@ -1052,7 +1056,7 @@
     </div>
   </div>
 
-  <!-- VIDEO.JS JS OFICIAL -->
+  <!-- VIDEO.JS JS OPTIMIZADO -->
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
   <script>
@@ -2199,26 +2203,32 @@
         return;
       }
       
-      // Reproductor profesional personalizado con Video.js
+      // Reproductor limpio y ultra rápido con Video.js
       vBox.innerHTML = `
         <div class="native-player-container">
-          <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" data-setup='{}'>
+          <video id="optimized-video" class="video-js vjs-big-play-centered" controls preload="auto" playsinline>
             <source src="${vInput.trim()}" type="video/mp4" />
             Tu navegador no soporta la reproducción de video.
           </video>
         </div>
       `;
 
-      // Inicializar Video.js de forma dinámica
+      // Inicialización ultrarrápida sin configuraciones pesadas
       setTimeout(() => {
         if (window.videojs) {
-          videojs('my-video', {
+          const player = videojs('optimized-video', {
             fluid: true,
             autoplay: true,
-            responsive: true
+            preload: 'auto',
+            playbackRates: [0.5, 1, 1.25, 1.5, 2]
+          });
+          
+          // Optimización para carga rápida en móviles
+          player.ready(() => {
+            player.play().catch(() => {});
           });
         }
-      }, 100);
+      }, 50);
     }
 
     autoSyncCatalogFromCloud();
