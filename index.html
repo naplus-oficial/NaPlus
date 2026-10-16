@@ -2029,8 +2029,15 @@
     }
 
     function closeMoviePlayerModal() {
+      const videoBox = document.getElementById('fullscreenMovieVideoBox');
+      const videoEl = videoBox.querySelector('video');
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.src = "";
+        videoEl.load();
+      }
+      videoBox.innerHTML = '';
       document.getElementById('moviePlayerModal').style.display = 'none';
-      document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
     }
 
     function toggleSynopsis() {
@@ -2147,8 +2154,15 @@
     }
 
     function closeEpisodePlayer() {
+      const videoBox = document.getElementById('episodeVideoBox');
+      const videoEl = videoBox.querySelector('video');
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.src = "";
+        videoEl.load();
+      }
+      videoBox.innerHTML = '';
       document.getElementById('episodeModal').style.display = 'none';
-      document.getElementById('episodeVideoBox').innerHTML = '';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
       else if (currentMovieData) document.getElementById('movieDetailModal').style.display = 'block';
     }
@@ -2168,6 +2182,10 @@
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
         return;
       }
+      
+      // Limpiar cualquier video o iframe previo de forma segura
+      vBox.innerHTML = '';
+
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
         return;
@@ -2196,15 +2214,29 @@
         return;
       }
       
-      // Reproductor nativo optimizado con dimensiones absolutas
-      vBox.innerHTML = `
-        <div class="native-player-box" style="width:100%; height:100%; background:#000; position:absolute; top:0; left:0; display:flex; align-items:center; justify-content:center;">
-          <video controls autoplay playsinline preload="auto" style="width:100%; height:100%; object-fit:contain;">
-            <source src="${vInput.trim()}" type="video/mp4">
-            Tu navegador no soporta la reproducción de video.
-          </video>
-        </div>
-      `;
+      // Reproductor nativo con recarga limpia para evitar bloqueos al reabrir
+      const playerWrapper = document.createElement('div');
+      playerWrapper.className = 'native-player-box';
+      playerWrapper.style.cssText = "width:100%; height:100%; background:#000; position:absolute; top:0; left:0; display:flex; align-items:center; justify-content:center;";
+
+      const videoEl = document.createElement('video');
+      videoEl.controls = true;
+      videoEl.autoplay = true;
+      videoEl.playsInline = true;
+      videoEl.preload = 'auto';
+      videoEl.style.cssText = "width:100%; height:100%; object-fit:contain;";
+
+      const sourceEl = document.createElement('source');
+      sourceEl.src = vInput.trim();
+      sourceEl.type = 'video/mp4';
+
+      videoEl.appendChild(sourceEl);
+      videoEl.appendChild(document.createTextNode("Tu navegador no soporta la reproducción de video."));
+      playerWrapper.appendChild(videoEl);
+      vBox.appendChild(playerWrapper);
+
+      // Forzar carga limpia al insertar
+      videoEl.load();
     }
 
     autoSyncCatalogFromCloud();
