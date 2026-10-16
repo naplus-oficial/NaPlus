@@ -9,6 +9,9 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
+  <!-- PLYR CSS PARA UN REPRODUCTOR MODERNIZADO -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+
   <style>
     :root {
       --bg-dark: #07040d;
@@ -18,6 +21,7 @@
       --text-white: #f8fafc;
       --text-gray: #94a3b8;
       --border-purple: rgba(124, 58, 237, 0.25);
+      --plyr-color-main: var(--accent-purple);
     }
 
     * {
@@ -682,6 +686,8 @@
     </div>
 
     <div id="mainHomeContent">
+      <div id="recommendedContainer"></div>
+      
       <div class="top10-section-wrapper">
         <div class="top10-header-title">
           <span class="top10-title-main">TOP 10</span>
@@ -956,8 +962,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (OK.ru, Odysee o MP4)</label>
-          <input type="text" id="videoInput" placeholder="https://ok.ru/video/... o https://odysee.com/...">
+          <label>Enlace de Video (OK.ru, Odysee, Archive.org .mp4 o directo)</label>
+          <input type="text" id="videoInput" placeholder="https://archive.org/download/.../.mp4">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -1008,7 +1014,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (OK.ru, Odysee o MP4)</label>
+          <label>Enlace de Video (.mp4 directo)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1018,6 +1024,9 @@
       </form>
     </div>
   </div>
+
+  <!-- PLYR JS -->
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
@@ -1038,6 +1047,18 @@
 
     function preloadAllImages() {}
 
+    let sessionRecommendedPool = [];
+    function computeSessionRecommendations() {
+      if (catalog.length === 0) {
+        sessionRecommendedPool = [];
+        return;
+      }
+      let targetItems = [...catalog].sort(() => 0.5 - Math.random());
+      sessionRecommendedPool = targetItems;
+    }
+    computeSessionRecommendations();
+    preloadAllImages();
+
     async function autoSyncCatalogFromCloud() {
       try {
         const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}`;
@@ -1047,6 +1068,7 @@
           if (Array.isArray(cloudCatalog)) {
             catalog = cloudCatalog;
             localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+            computeSessionRecommendations();
             preloadAllImages();
             renderHomeSections();
             if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
@@ -1074,6 +1096,7 @@
             if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
               catalog = cloudCatalog;
               localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+              computeSessionRecommendations();
               preloadAllImages();
               renderHomeSections();
             }
@@ -1219,6 +1242,8 @@
       }
       localStorage.setItem('naPlus_movie_likes', JSON.stringify(movieLikes));
       updateMovieLikeState();
+      computeSessionRecommendations();
+      renderHomeRecommendations();
     }
 
     function updateMovieLikeState() {
@@ -1261,6 +1286,8 @@
       }
       localStorage.setItem('naPlus_series_likes', JSON.stringify(seriesLikes));
       updateSeriesLikeState();
+      computeSessionRecommendations();
+      renderHomeRecommendations();
     }
 
     function updateSeriesLikeState() {
@@ -1442,6 +1469,8 @@
 
     function renderHomeSections() {
       renderHeroSlider();
+      computeSessionRecommendations();
+      renderHomeRecommendations();
 
       const topMoviesScroll = document.getElementById('topMoviesScroll');
       topMoviesScroll.innerHTML = '';
@@ -1472,6 +1501,16 @@
           genreContainer.appendChild(titleDiv); genreContainer.appendChild(scrollDiv);
         }
       });
+    }
+
+    function renderHomeRecommendations() {
+      const recContainer = document.getElementById('recommendedContainer');
+      recContainer.innerHTML = '';
+      if (sessionRecommendedPool.length === 0) return;
+      const titleDiv = document.createElement('div'); titleDiv.className = 'section-title'; titleDiv.innerText = "Recomendado";
+      const scrollDiv = document.createElement('div'); scrollDiv.className = 'horizontal-scroll';
+      sessionRecommendedPool.forEach(item => scrollDiv.appendChild(createCardElement(item)));
+      recContainer.appendChild(titleDiv); recContainer.appendChild(scrollDiv);
     }
 
     function checkSecretCode(e) {
@@ -1789,6 +1828,7 @@
       }
 
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+      preloadAllImages();
       renderHomeSections();
       renderMoviesGrid();
       renderSeriesGrid();
@@ -2131,7 +2171,27 @@
         vBox.innerHTML = `<iframe src="${odyseeEmbed}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;"></iframe>`;
         return;
       }
-      vBox.innerHTML = `<div class="native-player-container"><video src="${vInput.trim()}" controls autoplay playsinline></video></div>`;
+      
+      // Reproductor personalizado con Plyr.io
+      vBox.innerHTML = `
+        <div class="native-player-container">
+          <video id="playerInstance" playsinline controls autoplay>
+            <source src="${vInput.trim()}" type="video/mp4" />
+            Tu navegador no soporta la reproducción de video.
+          </video>
+        </div>
+      `;
+      
+      // Inicializar la interfaz de Plyr
+      setTimeout(() => {
+        const videoElement = document.getElementById('playerInstance');
+        if (videoElement && window.Plyr) {
+          new Plyr(videoElement, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
+            ratio: '16:9'
+          });
+        }
+      }, 100);
     }
 
     autoSyncCatalogFromCloud();
