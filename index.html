@@ -825,8 +825,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (playmate.to, ok.ru, odysee, .mp4 directo)</label>
-          <input type="text" id="videoInput" placeholder="https://playmate.to/watch/aNvgDbnSgpXTh">
+          <label>Enlace de Video (firestream, playmate.to, ok.ru, odysee, .mp4 directo)</label>
+          <input type="text" id="videoInput" placeholder="https://firestream.to/...">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -877,7 +877,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (playmate.to, ok.ru, odysee o .mp4)</label>
+          <label>Enlace de Video (firestream, playmate.to, ok.ru, odysee o .mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1596,7 +1596,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace de video (playmate.to, ok.ru, odysee o .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace de video (firestream, playmate.to, ok.ru, odysee o .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -2011,7 +2011,7 @@
       }
     }
 
-    // REPRODUCTOR EXCLUSIVO: PLAYMATE.TO, OK.RU, ODYSEE Y MP4 NATIVO
+    // REPRODUCTOR ADAPTADO PARA FIRESTREAM, PLAYMATE.TO, OK.RU, ODYSEE Y MP4 NATIVO
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2020,7 +2020,23 @@
       
       vBox.innerHTML = '';
 
-      // 1. Playmate.to (Prioridad y compatibilidad optimizada con permisos avanzados)
+      // 1. FireStream
+      if (vInput.includes('firestream')) {
+        let cleanUrl = vInput.trim();
+        let embedUrl = cleanUrl;
+        
+        if (!embedUrl.includes('/embed/') && !embedUrl.includes('/e/')) {
+          let matchId = cleanUrl.match(/\/([a-zA-Z0-9_-]+)\/?$/);
+          if (matchId && matchId[1]) {
+            embedUrl = `https://firestream.to/embed-${matchId[1]}.html`;
+          }
+        }
+
+        vBox.innerHTML = `<iframe src="${embedUrl}" frameborder="0" scrolling="no" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;"></iframe>`;
+        return;
+      }
+
+      // 2. Playmate.to
       if (vInput.includes('playmate.to')) {
         let cleanUrl = vInput.trim();
         let matchId = cleanUrl.match(/\/([a-zA-Z0-9]+)\/?$/);
@@ -2037,13 +2053,13 @@
         return;
       }
 
-      // 2. Si es un iframe manual
+      // 3. Iframe manual
       if (vInput.includes('<iframe')) {
         vBox.innerHTML = vInput;
         return;
       }
 
-      // 3. OK.ru
+      // 4. OK.ru
       if (vInput.includes('ok.ru')) {
         let okEmbed = vInput.trim();
         if (!okEmbed.includes('/videoembed/')) {
@@ -2053,7 +2069,7 @@
         return;
       }
 
-      // 4. Odysee
+      // 5. Odysee
       if (vInput.includes('odysee.com')) {
         let odyseeEmbed = vInput.trim();
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -2063,7 +2079,7 @@
         return;
       }
       
-      // 5. Reproductor nativo HTML5 para enlaces directos (.mp4)
+      // 6. Reproductor nativo HTML5 para enlaces directos (.mp4)
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
