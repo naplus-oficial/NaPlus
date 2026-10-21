@@ -2030,7 +2030,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA (VK, OK.ru, ODYSEE, HTML5) */
+    /* REPRODUCTOR MULTIPLATAFORMA OPTIMIZADO (VK, OK.ru, ODYSEE, HTML5) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2051,6 +2051,10 @@
           iframeEl.style.top = '0';
           iframeEl.style.left = '0';
           iframeEl.style.border = 'none';
+          // Aseguramos políticas de permisos en iframes manuales
+          iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock');
+          iframeEl.setAttribute('allowfullscreen', 'true');
+          iframeEl.setAttribute('referrerpolicy', 'unsafe-url');
 
           iframeEl.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
@@ -2067,15 +2071,13 @@
         return;
       }
 
-      // VK (Soporte directo para URL o enlace web de VK)
+      // VK (Soporte optimizado para enlaces de VK y reproductor embebido)
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
-        // Si pegan el enlace directo y no el iframe, convertimos el enlace al formato de incrustación de VK si es necesario
         if (!vkEmbed.includes('/video_ext.php')) {
-          // Ejemplo de conversión básica si pegan la url tipo https://vk.com/video...
           vkEmbed = vkEmbed.replace('vk.com/video', 'vk.com/video_ext.php?');
         }
-        vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen referrerpolicy="unsafe-url" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
 
@@ -2114,7 +2116,6 @@
       sourceEl.type = 'video/mp4';
 
       videoEl.appendChild(sourceEl);
-      playerWrapper.videoEl = videoEl;
       playerWrapper.appendChild(videoEl);
       vBox.appendChild(playerWrapper);
 
