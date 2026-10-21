@@ -41,7 +41,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* REPRODUCTOR NATIVO PROPIETARIO */
+    /* REPRODUCTOR NATIVO PROPIETARIO - AJUSTADO PARA EVITAR CORTES */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -58,7 +58,7 @@
     .native-player-box video {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: contain !important; /* Fuerza a que se vea completo sin recortar los lados */
       outline: none;
     }
 
@@ -319,7 +319,6 @@
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-      /* CORREGIDO: Z-index mayor (3000) para asegurar que la tarjeta flotante esté siempre al frente */
       z-index: 3000; padding: 15px; align-items: center; justify-content: center; overflow-y: auto;
     }
     .modal-box {
