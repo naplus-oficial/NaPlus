@@ -41,7 +41,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* REPRODUCTOR NATIVO PROPIETARIO A PANTALLA COMPLETA */
+    /* REPRODUCTOR NATIVO PROPIETARIO */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -53,6 +53,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      border-radius: 8px 8px 0 0;
     }
     .native-player-box video {
       width: 100%;
@@ -467,9 +468,9 @@
     body.creator-mode .stream-edit-ep-btn { display: inline-block; }
 
     .btn-close {
-      position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6);
+      position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6);
       backdrop-filter: blur(4px); color: #fff; border: 1px solid rgba(255,255,255,0.2);
-      width: 40px; height: 40px; border-radius: 50%; font-size: 1.1rem; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%; font-size: 0.9rem; cursor: pointer;
       z-index: 2250; display: flex; align-items: center; justify-content: center;
     }
 
@@ -484,29 +485,74 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL (OPTIMIZADO SIN ESPACIOS) */
-    .video-box-fullscreen {
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 2600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* 🎴 ESTILO TARJETA FLOTANTE (ESTILO DE TU IMAGEN DE REFERENCIA) */
+    .player-card-container {
+      background: #11091e;
+      border: 1px solid var(--border-purple);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 440px;
       overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
-    .video-box-fullscreen iframe, 
-    .video-box-fullscreen .native-player-box {
+
+    /* CONTENEDOR DEL VIDEO DENTRO DE LA TARJETA */
+    .video-frame-box {
+      width: 100%;
+      aspect-ratio: 16/9;
+      position: relative;
+      background: #000;
+    }
+    .video-frame-box iframe, 
+    .video-frame-box .native-player-box {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
       border: none;
-      object-fit: contain;
+    }
+
+    /* INFORMACIÓN INFERIOR DE LA TARJETA */
+    .player-card-info {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .player-card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .player-card-desc {
+      font-size: 0.78rem;
+      color: var(--text-gray);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .player-card-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .player-card-back-btn {
+      background: none;
+      border: none;
+      color: var(--accent-light);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .player-card-back-btn:hover {
+      color: #fff;
     }
     
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
@@ -672,11 +718,18 @@
     </div>
   </div>
 
-  <!-- REPRODUCTOR PELÍCULA PANTALLA COMPLETA -->
-  <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500; padding: 0;">
-    <div class="video-box-fullscreen">
+  <!-- REPRODUCTOR PELÍCULA TIPO TARJETA FLOTANTE -->
+  <div class="modal-overlay" id="moviePlayerModal">
+    <div class="player-card-container">
       <button class="btn-close" onclick="closeMoviePlayerModal()">✕</button>
-      <div id="fullscreenMovieVideoBox" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
+      <div class="video-frame-box" id="fullscreenMovieVideoBox"></div>
+      <div class="player-card-info">
+        <div class="player-card-title" id="playerMovieTitle">Película</div>
+        <div class="player-card-desc" id="playerMovieDesc"></div>
+        <div class="player-card-footer">
+          <button class="player-card-back-btn" onclick="closeMoviePlayerModal()">Volver</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -739,11 +792,18 @@
     </div>
   </div>
 
-  <!-- REPRODUCTOR EPISODIO PANTALLA COMPLETA -->
-  <div class="modal-overlay" id="episodeModal" style="z-index: 2500; padding: 0;">
-    <div class="video-box-fullscreen">
+  <!-- REPRODUCTOR EPISODIO TIPO TARJETA FLOTANTE -->
+  <div class="modal-overlay" id="episodeModal">
+    <div class="player-card-container">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
-      <div id="episodeVideoBox" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
+      <div class="video-frame-box" id="episodeVideoBox"></div>
+      <div class="player-card-info">
+        <div class="player-card-title" id="playerEpTitle">Capítulo</div>
+        <div class="player-card-desc" id="playerEpDesc"></div>
+        <div class="player-card-footer">
+          <button class="player-card-back-btn" onclick="closeEpisodePlayer()">Volver</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1822,6 +1882,9 @@
 
     function playCurrentMovie() {
       if (!currentMovieData) return;
+      document.getElementById('playerMovieTitle').innerText = currentMovieData.title;
+      document.getElementById('playerMovieDesc').innerText = currentMovieData.desc || 'Sin descripción.';
+      
       const modal = document.getElementById('moviePlayerModal');
       renderVideoInBox(document.getElementById('fullscreenMovieVideoBox'), currentMovieData.video);
       pushModalState('moviePlayerModal');
@@ -1929,6 +1992,11 @@
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       document.getElementById('seriesModal').style.display = 'none';
+      
+      const epNumDisplay = ep.num !== undefined ? ep.num : (epIdx + 1);
+      document.getElementById('playerEpTitle').innerText = `Capítulo ${epNumDisplay}: ${ep.title || ''}`;
+      document.getElementById('playerEpDesc').innerText = ep.desc || '';
+
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
       pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
@@ -1951,7 +2019,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR PROPIO HTML5 (ESTILO RAVE / NATIVO PROFESIONAL + ROTACIÓN + SIN ESPACIOS) */
+    /* REPRODUCTOR PROPIO HTML5 (ESTILO TARJETA + ROTACIÓN AUTOMÁTICA) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
