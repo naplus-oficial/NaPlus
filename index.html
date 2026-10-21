@@ -336,7 +336,7 @@
       position: relative; width: 100%; min-height: 520px;
       background-size: cover; background-position: center;
       display: flex; flex-direction: column; justify-content: flex-end; padding: 75px 20px 20px 20px;
-      pointer-events: none; /* Permite que los clicks atraviesen el fondo y toquen los botones */
+      pointer-events: auto;
     }
     .movie-header-gradient {
       position: absolute; inset: 0;
@@ -347,7 +347,6 @@
     .movie-main-title { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
     .movie-meta-info { font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px; font-weight: 500; }
     
-    /* 🛠️ CORRECCIÓN CLAVE PARA EL BOTÓN "VER AHORA" */
     .movie-btn-play {
       background: #ffffff; color: #000000; border: none; width: 100%; padding: 13px;
       border-radius: 8px; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center;
@@ -398,7 +397,7 @@
     .stream-header-bg {
       position: relative; width: 100%; background-size: cover; background-position: center;
       display: flex; flex-direction: column; justify-content: flex-end; padding: 70px 20px 16px 20px;
-      pointer-events: none;
+      pointer-events: auto;
     }
     .stream-header-gradient {
       position: absolute; inset: 0;
@@ -701,7 +700,7 @@
         <div class="movie-main-title" id="movieTitle"></div>
         <div class="movie-meta-info" id="movieMeta"></div>
         
-        <button class="movie-btn-play" onclick="playCurrentMovie()">▶ Ver ahora</button>
+        <button class="movie-btn-play" id="playMovieBtn" onclick="playCurrentMovie()">▶ Ver ahora</button>
 
         <div class="movie-actions-row">
           <button class="movie-action-ico-btn" id="movieFavBtn" onclick="toggleFavoriteFromMovieModal(event)">
@@ -764,7 +763,7 @@
         </div>
         <div class="stream-meta-info" id="seriesMeta"></div>
         
-        <button class="stream-play-main-btn" onclick="playFirstEpisodeOfSeries()">▶ Reproducir</button>
+        <button class="stream-play-main-btn" id="playSeriesBtn" onclick="playFirstEpisodeOfSeries()">▶ Reproducir</button>
 
         <div class="stream-actions-row">
           <button class="movie-action-ico-btn" id="seriesFavBtn" onclick="toggleFavoriteFromSeriesModal(event)">
@@ -2122,6 +2121,20 @@
 
       videoEl.play().catch(() => {});
     }
+
+    // Listener de seguridad táctil para asegurar respuesta instantánea
+    document.addEventListener('DOMContentLoaded', () => {
+      const playMovieBtn = document.getElementById('playMovieBtn');
+      if (playMovieBtn) {
+        playMovieBtn.addEventListener('click', (e) => { e.stopPropagation(); playCurrentMovie(); });
+        playMovieBtn.addEventListener('touchend', (e) => { e.stopPropagation(); playCurrentMovie(); });
+      }
+      const playSeriesBtn = document.getElementById('playSeriesBtn');
+      if (playSeriesBtn) {
+        playSeriesBtn.addEventListener('click', (e) => { e.stopPropagation(); playFirstEpisodeOfSeries(); });
+        playSeriesBtn.addEventListener('touchend', (e) => { e.stopPropagation(); playFirstEpisodeOfSeries(); });
+      }
+    });
 
     autoSyncCatalogFromCloud();
     renderHomeSections();
