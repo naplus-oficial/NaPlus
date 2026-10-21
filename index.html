@@ -484,7 +484,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL */
+    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL (OPTIMIZADO SIN ESPACIOS) */
     .video-box-fullscreen {
       width: 100vw;
       height: 100vh;
@@ -506,6 +506,7 @@
       top: 0;
       left: 0;
       border: none;
+      object-fit: contain;
     }
     
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
@@ -1950,7 +1951,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR PROPIO HTML5 (ESTILO RAVE / NATIVO PROFESIONAL + ROTACIÓN AUTOMÁTICA) */
+    /* REPRODUCTOR PROPIO HTML5 (ESTILO RAVE / NATIVO PROFESIONAL + ROTACIÓN + SIN ESPACIOS) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1960,11 +1961,18 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // Si es un iframe manual (como el de Internet Archive u otros)
+      // Si es un iframe manual (como el de Internet Archive)
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
         if (iframeEl) {
+          iframeEl.style.width = '100%';
+          iframeEl.style.height = '100%';
+          iframeEl.style.position = 'absolute';
+          iframeEl.style.top = '0';
+          iframeEl.style.left = '0';
+          iframeEl.style.border = 'none';
+
           iframeEl.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
               if (screen.orientation && screen.orientation.lock) {
@@ -2000,7 +2008,7 @@
         return;
       }
 
-      // 🎥 REPRODUCTOR HTML5 NATIVO PROPIETARIO (Con rotación automática a horizontal)
+      // 🎥 REPRODUCTOR HTML5 NATIVO PROPIETARIO
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
@@ -2018,7 +2026,7 @@
       playerWrapper.appendChild(videoEl);
       vBox.appendChild(playerWrapper);
 
-      // 🔄 DETECTOR AUTOMÁTICO DE PANTALLA COMPLETA PARA ROTAR A HORIZONTAL
+      // 🔄 DETECTOR AUTOMÁTICO DE PANTALLA COMPLETA
       videoEl.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
           if (screen.orientation && screen.orientation.lock) {
