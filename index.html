@@ -41,7 +41,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* REPRODUCTOR NATIVO DE VIDEO LOCAL */
+    /* REPRODUCTOR NATIVO PROPIETARIO A PANTALLA COMPLETA */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -484,7 +484,7 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL CON RECIDOR ESTÉTICO PARA DRIVE */
+    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL */
     .video-box-fullscreen {
       width: 100vw;
       height: 100vh;
@@ -496,20 +496,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden; /* Esto es clave para recortar los elementos nativos sobrantes de Drive */
+      overflow: hidden;
     }
-    
-    /* Truco CSS profesional para ocultar la barra inferior de Drive haciendo un leve zoom controlado */
-    .video-box-fullscreen iframe {
-      width: 100% !important;
-      height: calc(100% + 75px) !important;
-      position: absolute !important;
-      top: -38px !important;
-      left: 0 !important;
-      border: none !important;
-      background: #000;
-    }
-
+    .video-box-fullscreen iframe, 
     .video-box-fullscreen .native-player-box {
       width: 100%;
       height: 100%;
@@ -806,8 +795,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (Google Drive, ok.ru, odysee, .mp4 directo)</label>
-          <input type="text" id="videoInput" placeholder="https://drive.google.com/file/d/... o enlace directo">
+          <label>Enlace Directo de Video (.mp4 / Enlace compatible)</label>
+          <input type="text" id="videoInput" placeholder="Enlace directo al archivo de video">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -858,7 +847,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (Google Drive, ok.ru, odysee o .mp4)</label>
+          <label>Enlace Directo de Video (.mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1571,7 +1560,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace de video (Google Drive, ok.ru, odysee o .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace directo (.mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -1944,7 +1933,7 @@
       document.getElementById('episodeModal').style.display = 'flex';
     }
 
-    function closeEpisodePlayer() {
+    closeEpisodePlayer = function() {
       document.getElementById('episodeVideoBox').innerHTML = '';
       document.getElementById('episodeModal').style.display = 'none';
       if (currentSeriesData) document.getElementById('seriesModal').style.display = 'block';
@@ -1961,7 +1950,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR PROPIO: GOOGLE DRIVE, OK.RU, ODYSEE Y MP4 NATIVO */
+    /* REPRODUCTOR PROPIO HTML5 (ESTILO RAVE / NATIVO PROFESIONAL) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1971,27 +1960,13 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // 1. Google Drive
-      if (cleanUrl.includes('drive.google.com')) {
-        let fileIdMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
-        let previewUrl = "";
-        if (fileIdMatch && fileIdMatch[1]) {
-          previewUrl = `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
-        } else {
-          previewUrl = cleanUrl.replace('/view', '/preview');
-        }
-
-        vBox.innerHTML = `<iframe src="${previewUrl}" frameborder="0" scrolling="no" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;"></iframe>`;
-        return;
-      }
-
-      // 2. Iframe manual
+      // Si es un iframe manual o un reproductor externo incrustado
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         return;
       }
 
-      // 3. OK.ru
+      // OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -2001,7 +1976,7 @@
         return;
       }
 
-      // 4. Odysee
+      // Odysee
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -2010,8 +1985,8 @@
         vBox.innerHTML = `<iframe src="${odyseeEmbed}" frameborder="0" allow="autoplay" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
-      
-      // 5. Reproductor nativo HTML5
+
+      // 🎥 REPRODUCTOR HTML5 NATIVO PROPIETARIO (Para enlaces directos o archivos compatibles)
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
