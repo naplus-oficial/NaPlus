@@ -867,7 +867,7 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Iframe de Video (Vimeo, Dailymotion, VK, .mp4, etc.)</label>
+          <label>Enlace o Iframe de Video (Vimeo, OK.ru, Archive.org, VK, .mp4)</label>
           <input type="text" id="videoInput" placeholder="Enlace directo o iframe">
         </div>
 
@@ -919,7 +919,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (Vimeo, Dailymotion / .mp4)</label>
+          <label>Enlace de Video (Vimeo, OK.ru, Archive.org / .mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1632,7 +1632,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace de video (Vimeo, Dailymotion / .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace de video (Vimeo, OK.ru, Archive.org / .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -2030,7 +2030,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA (VIMEO, VK, DAILYMOTION, OK.RU, ODYSEE, HTML5) */
+    /* REPRODUCTOR MULTIPLATAFORMA (VIMEO, VK, OK.RU, ODYSEE, HTML5) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2070,16 +2070,36 @@
         return;
       }
 
-      // 🎬 Vimeo (Soporte optimizado para enlaces estándar y de inserción)
+      // 🎬 Vimeo (Soporte optimizado y rotación automática al pasar a pantalla completa)
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
           const vimeoMatch = vimeoEmbed.match(/vimeo\.com\/([0-9]+)/);
           if (vimeoMatch && vimeoMatch[1]) {
-            vimeoEmbed = `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+            vimeoEmbed = `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1&title=0&byline=0&portrait=0`;
+          }
+        } else {
+          if (!vimeoEmbed.includes('autoplay=1')) {
+            vimeoEmbed += (vimeoEmbed.includes('?') ? '&' : '?') + 'autoplay=1';
           }
         }
-        vBox.innerHTML = `<iframe src="${vimeoEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+
+        vBox.innerHTML = `<iframe src="${vimeoEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        
+        const iframeEl = vBox.querySelector('iframe');
+        if (iframeEl) {
+          iframeEl.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+              if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+              }
+            } else {
+              if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+              }
+            }
+          });
+        }
         return;
       }
 
@@ -2093,22 +2113,6 @@
         return;
       }
 
-      // Dailymotion (Soporte automático para enlaces de Dailymotion)
-      if (cleanUrl.includes('dailymotion.com') || cleanUrl.includes('dai.ly')) {
-        let dmEmbed = cleanUrl;
-        if (!dmEmbed.includes('/embed/video/')) {
-          const match = dmEmbed.match(/\/video\/([a-zA-Z0-9]+)/);
-          if (match && match[1]) {
-            dmEmbed = `https://www.dailymotion.com/embed/video/${match[1]}?autoplay=1&mute=0`;
-          } else if (dmEmbed.includes('dai.ly/')) {
-            const shortId = dmEmbed.split('dai.ly/')[1]?.split('?')[0];
-            if (shortId) dmEmbed = `https://www.dailymotion.com/embed/video/${shortId}?autoplay=1&mute=0`;
-          }
-        }
-        vBox.innerHTML = `<iframe src="${dmEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="unsafe-url" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
-        return;
-      }
-
       // OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
@@ -2119,7 +2123,7 @@
         return;
       }
 
-      // Odysee
+      // Odysee / Internet Archive
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -2150,7 +2154,9 @@
       videoEl.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
           if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
+            screen.orientation.lock('landscape').catch((err) => {
+              console.log("Bloqueo de orientación no soportado o denegado:", err);
+            });
           }
         } else {
           if (screen.orientation && screen.orientation.unlock) {
