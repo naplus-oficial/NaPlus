@@ -867,8 +867,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Iframe de Video (VK, .mp4, etc.)</label>
-          <input type="text" id="videoInput" placeholder="Enlace directo o iframe de VK">
+          <label>Enlace o Iframe de Video (VK, Dailymotion, .mp4, etc.)</label>
+          <input type="text" id="videoInput" placeholder="Enlace directo o iframe">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -919,7 +919,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (VK / .mp4)</label>
+          <label>Enlace de Video (VK, Dailymotion / .mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1632,7 +1632,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace de video (VK / .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace de video (VK, Dailymotion / .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -2030,7 +2030,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA OPTIMIZADO (VK, OK.ru, ODYSEE, HTML5) */
+    /* REPRODUCTOR MULTIPLATAFORMA (VK, DAILYMOTION, OK.RU, ODYSEE, HTML5) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2040,7 +2040,7 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // Si es un iframe manual (incluyendo el código de inserción de VK)
+      // Si es un iframe manual (incluyendo inserciones personalizadas)
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -2051,7 +2051,6 @@
           iframeEl.style.top = '0';
           iframeEl.style.left = '0';
           iframeEl.style.border = 'none';
-          // Aseguramos políticas de permisos en iframes manuales
           iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock');
           iframeEl.setAttribute('allowfullscreen', 'true');
           iframeEl.setAttribute('referrerpolicy', 'unsafe-url');
@@ -2071,13 +2070,30 @@
         return;
       }
 
-      // VK (Soporte optimizado para enlaces de VK y reproductor embebido)
+      // VK (Soporte optimizado)
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
           vkEmbed = vkEmbed.replace('vk.com/video', 'vk.com/video_ext.php?');
         }
         vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen referrerpolicy="unsafe-url" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        return;
+      }
+
+      // 📺 Dailymotion (Soporte automático para enlaces de Dailymotion)
+      if (cleanUrl.includes('dailymotion.com') || cleanUrl.includes('dai.ly')) {
+        let dmEmbed = cleanUrl;
+        if (!dmEmbed.includes('/embed/video/')) {
+          // Si es un enlace normal tipo https://www.dailymotion.com/video/x7tgv12 se convierte a embed
+          const match = dmEmbed.match(/\/video\/([a-zA-Z0-9]+)/);
+          if (match && match[1]) {
+            dmEmbed = `https://www.dailymotion.com/embed/video/${match[1]}`;
+          } else if (dmEmbed.includes('dai.ly/')) {
+            const shortId = dmEmbed.split('dai.ly/')[1]?.split('?')[0];
+            if (shortId) dmEmbed = `https://www.dailymotion.com/embed/video/${shortId}`;
+          }
+        }
+        vBox.innerHTML = `<iframe src="${dmEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
 
