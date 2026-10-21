@@ -41,7 +41,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* REPRODUCTOR NATIVO Y ESTÉTICO */
+    /* REPRODUCTOR NATIVO A PANTALLA COMPLETA */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -52,7 +52,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
       overflow: hidden;
     }
     .native-player-box video {
@@ -60,38 +59,6 @@
       height: 100%;
       object-fit: contain;
       outline: none;
-    }
-
-    /* BOTÓN FLOTANTE DE ROTACIÓN HORIZONTAL */
-    .rotate-screen-btn {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 3000;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .rotate-screen-btn:hover {
-      background: rgba(124, 58, 237, 0.8);
-      border-color: var(--accent-light);
-    }
-    .rotate-screen-btn svg {
-      width: 16px; height: 16px;
-      fill: none; stroke: currentColor;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
 
     /* ANIMACIONES */
@@ -347,7 +314,7 @@
       border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
-    /* MODALES */
+    /* MODALES GENERALES */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
@@ -500,9 +467,9 @@
     body.creator-mode .stream-edit-ep-btn { display: inline-block; }
 
     .btn-close {
-      position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px); color: #fff; border: 1px solid rgba(255,255,255,0.15);
-      width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer;
+      position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+      width: 40px; height: 40px; border-radius: 50%; font-size: 1.1rem; cursor: pointer;
       z-index: 2250; display: flex; align-items: center; justify-content: center;
     }
 
@@ -517,12 +484,28 @@
     .btn-cancel { background: transparent; color: var(--text-gray); border: none; padding: 8px 12px; cursor: pointer; font-size: 0.85rem; }
     .btn-submit { background: var(--accent-purple); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
-    .video-box { 
-      width: 100%; height: 220px; background: #000; margin-bottom: 12px; 
-      border-radius: 6px; overflow: hidden; position: relative;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    /* CONTENEDOR DE REPRODUCTOR A PANTALLA COMPLETA TOTAL */
+    .video-box-fullscreen {
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .video-box iframe, .video-box .native-player-box { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+    .video-box-fullscreen iframe, 
+    .video-box-fullscreen .native-player-box {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: none;
+    }
     
     .empty-msg { font-size: 0.8rem; color: var(--text-gray); padding: 0 20px; font-style: italic; }
     .admin-episode-card { background: #07040d; border: 1px solid var(--border-purple); padding: 10px; border-radius: 6px; margin-bottom: 8px; position: relative; }
@@ -687,14 +670,11 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500;">
-    <div class="modal-box" style="max-width: 750px; background:#000; padding:0; border:none; position:relative;">
+  <!-- REPRODUCTOR PELÍCULA PANTALLA COMPLETA -->
+  <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500; padding: 0;">
+    <div style="width: 100vw; height: 100vh; background:#000; position:relative;">
       <button class="btn-close" onclick="closeMoviePlayerModal()">✕</button>
-      <div class="video-box" id="fullscreenMovieVideoBox" style="aspect-ratio:16/9; margin-bottom:0;"></div>
-      <button class="rotate-screen-btn" onclick="forceLandscapeMode()" title="Girar pantalla horizontal">
-        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>
-        Girar horizontal
-      </button>
+      <div id="fullscreenMovieVideoBox" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
     </div>
   </div>
 
@@ -757,19 +737,11 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="episodeModal" style="z-index: 2500;">
-    <div class="modal-box" style="max-width: 550px; position: relative;">
+  <!-- REPRODUCTOR EPISODIO PANTALLA COMPLETA -->
+  <div class="modal-overlay" id="episodeModal" style="z-index: 2500; padding: 0;">
+    <div style="width: 100vw; height: 100vh; background:#000; position:relative;">
       <button class="btn-close" onclick="closeEpisodePlayer()">✕</button>
-      <div class="video-box" id="episodeVideoBox"></div>
-      <button class="rotate-screen-btn" onclick="forceLandscapeMode()" title="Girar pantalla horizontal">
-        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>
-        Girar horizontal
-      </button>
-      <h3 id="epModalTitle" style="margin-top: 15px;"></h3>
-      <p id="epModalDesc" style="color:var(--text-gray); font-size:0.8rem; margin-bottom:12px;"></p>
-      <div class="form-actions" style="margin-top: 0;">
-        <button class="btn-cancel" onclick="closeEpisodePlayer()">Volver</button>
-      </div>
+      <div id="episodeVideoBox" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
     </div>
   </div>
 
@@ -1955,8 +1927,6 @@
     function playEpisode(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       document.getElementById('seriesModal').style.display = 'none';
-      document.getElementById('epModalTitle').innerText = `Capítulo ${ep.num || 1}: ${ep.title || ''}`;
-      document.getElementById('epModalDesc').innerText = ep.desc || '';
       renderVideoInBox(document.getElementById('episodeVideoBox'), ep.video);
       pushModalState('episodeModal');
       document.getElementById('episodeModal').style.display = 'flex';
@@ -1979,20 +1949,6 @@
       else alert("Enlace copiado.");
     }
 
-    async function forceLandscapeMode() {
-      try {
-        if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock('landscape');
-        } else if (screen.lockOrientation) {
-          screen.lockOrientation('landscape');
-        } else {
-          alert("Gira tu dispositivo manualmente a posición horizontal.");
-        }
-      } catch (err) {
-        alert("Por favor gira tu celular de forma horizontal.");
-      }
-    }
-
     /* REPRODUCTOR PROPIO: GOOGLE DRIVE, OK.RU, ODYSEE Y MP4 NATIVO */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
@@ -2003,7 +1959,7 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // 1. Google Drive (Optimizado y fluido mediante inserción de previsualización web)
+      // 1. Google Drive
       if (cleanUrl.includes('drive.google.com')) {
         let fileIdMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
         let previewUrl = "";
@@ -2017,7 +1973,7 @@
         return;
       }
 
-      // 2. Iframe manual personalizado
+      // 2. Iframe manual
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         return;
@@ -2043,7 +1999,7 @@
         return;
       }
       
-      // 5. Reproductor nativo HTML5 para enlaces directos (.mp4)
+      // 5. Reproductor nativo HTML5
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
