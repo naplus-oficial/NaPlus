@@ -41,7 +41,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* CONTENEDOR DE REPRODUCTOR SENCILLO Y MODERNO */
+    /* REPRODUCTOR NATIVO Y ESTÉTICO */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -94,7 +94,7 @@
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    /* ANIMACIONES PERSONALIZADAS */
+    /* ANIMACIONES */
     @keyframes heartBeat {
       0% { transform: scale(1); }
       30% { transform: scale(1.35); }
@@ -178,7 +178,7 @@
     .view-section.active { display: block; }
     #viewMovies, #viewSeries, #viewList, #viewSearch { padding-top: 75px; }
 
-    /* CARRUSEL HERO AUTOMÁTICO */
+    /* CARRUSEL HERO */
     .hbo-hero-slider {
       position: relative;
       width: 100%;
@@ -240,7 +240,7 @@
     .hbo-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
     .hbo-dot.active { background: #fff; width: 18px; border-radius: 3px; }
 
-    /* BUSCADOR DEDICADO */
+    /* BUSCADOR */
     .search-hero { padding: 15px 20px 10px; }
     .search-box { width: 100%; max-width: 500px; position: relative; margin: 0 auto; }
     .search-box .search-icon {
@@ -262,13 +262,11 @@
     }
     .clear-search-btn:hover { color: #fff; }
 
-    /* TÍTULOS DE SECCIÓN */
     .section-title {
       font-size: 1.2rem; font-weight: 800;
       margin: 28px 20px 12px; color: #ffffff; letter-spacing: -0.3px;
     }
 
-    /* CARRUSEL GENERAL */
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto;
       padding: 0 20px 10px; scrollbar-width: none;
@@ -320,7 +318,7 @@
     .top10-fav-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
     .top10-fav-btn.saved svg { fill: var(--accent-light); stroke: var(--accent-light); }
 
-    /* GRILLAS GENERALES */
+    /* GRILLAS */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 12px; padding: 0 20px; }
     .card {
       background: var(--card-bg); border-radius: 6px; overflow: hidden;
@@ -360,7 +358,7 @@
       border: 1px solid var(--border-purple); position: relative; max-height: 90vh; overflow-y: auto;
     }
 
-    /* MODAL DETALLE PELÍCULA */
+    /* MODAL PELÍCULA */
     .modal-box-movie {
       background: #07040d; padding: 0; border-radius: 0;
       width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh;
@@ -400,7 +398,6 @@
     }
     .movie-synopsis { font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 12px; }
     .movie-genres-tags { font-size: 0.75rem; color: var(--accent-light); margin-bottom: 24px; font-weight: 600; }
-
     .movie-recommendations-area { padding: 0 0 40px 0; background: #07040d; }
     .movie-rec-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin: 0 20px 14px 20px; }
 
@@ -418,7 +415,7 @@
     }
     .stream-top-btn:hover { background: rgba(0, 0, 0, 0.8); transform: scale(1.05); }
 
-    /* MODAL DETALLE SERIE */
+    /* MODAL SERIE */
     .modal-box-series {
       background: #07040d; padding: 0; border-radius: 0;
       width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh;
@@ -701,7 +698,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE SERIE -->
+  <!-- MODAL SERIE -->
   <div class="modal-box-series" id="seriesModal">
     <div class="stream-top-bar">
       <button class="stream-top-btn" onclick="shareCurrentSeries()" title="Compartir">
@@ -776,7 +773,7 @@
     </div>
   </div>
 
-  <!-- MODAL SUBIR / EDITAR CONTENIDO -->
+  <!-- MODAL SUBIR / EDITAR -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <button class="btn-close" onclick="closeModal('uploadModal')">✕</button>
@@ -820,13 +817,13 @@
           <input type="text" id="coverInput" required placeholder="https://...">
         </div>
         <div class="form-group" style="display:none;">
-          <label>URL de Tráiler de YouTube (opcional)</label>
+          <label>URL de Tráiler</label>
           <input type="text" id="trailerInput" placeholder="">
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (firestream, playmate.to, ok.ru, odysee, .mp4 directo)</label>
-          <input type="text" id="videoInput" placeholder="https://firestream.to/...">
+          <label>Enlace de Video (Google Drive, ok.ru, odysee, .mp4 directo)</label>
+          <input type="text" id="videoInput" placeholder="https://drive.google.com/file/d/... o enlace directo">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -877,7 +874,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace de Video (firestream, playmate.to, ok.ru, odysee o .mp4)</label>
+          <label>Enlace de Video (Google Drive, ok.ru, odysee o .mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1075,12 +1072,8 @@
       renderMoviesGrid();
       renderSeriesGrid();
       renderMyList();
-      if (currentMovieData && currentMovieData.id === id) {
-        updateMovieModalFavoriteState();
-      }
-      if (currentSeriesData && currentSeriesData.id === id) {
-        updateSeriesModalFavoriteState();
-      }
+      if (currentMovieData && currentMovieData.id === id) updateMovieModalFavoriteState();
+      if (currentSeriesData && currentSeriesData.id === id) updateSeriesModalFavoriteState();
     }
 
     function toggleLikeMovie(e) {
@@ -1283,9 +1276,7 @@
       currentSlide = idx;
       const wrapper = document.getElementById('hboSlidesWrapper');
       const dots = document.querySelectorAll('.hbo-dot');
-      if (wrapper) {
-        wrapper.style.transform = `translateX(-${idx * 100}%)`;
-      }
+      if (wrapper) wrapper.style.transform = `translateX(-${idx * 100}%)`;
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
@@ -1596,7 +1587,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace de video (firestream, playmate.to, ok.ru, odysee o .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace de video (Google Drive, ok.ru, odysee o .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -1922,10 +1913,6 @@
       playEpisode(0, 0);
     }
 
-    function playTrailer() {
-      alert("Tráiler no disponible.");
-    }
-
     function openSingleEpisodeEdit(seasonIdx, epIdx) {
       const ep = currentSeriesData.seasons[seasonIdx].episodes[epIdx];
       document.getElementById('editEpSeasonIdx').value = seasonIdx;
@@ -1992,17 +1979,12 @@
       else alert("Enlace copiado.");
     }
 
-    // FUNCIÓN PARA FORZAR ROTACIÓN HORIZONTAL EN MÓVILES
     async function forceLandscapeMode() {
       try {
         if (screen.orientation && screen.orientation.lock) {
           await screen.orientation.lock('landscape');
         } else if (screen.lockOrientation) {
           screen.lockOrientation('landscape');
-        } else if (screen.mozLockOrientation) {
-          screen.mozLockOrientation('landscape');
-        } else if (screen.msLockOrientation) {
-          screen.msLockOrientation('landscape');
         } else {
           alert("Gira tu dispositivo manualmente a posición horizontal.");
         }
@@ -2011,7 +1993,7 @@
       }
     }
 
-    // REPRODUCTOR ADAPTADO PARA FIRESTREAM, PLAYMATE.TO, OK.RU, ODYSEE Y MP4 NATIVO
+    /* REPRODUCTOR PROPIO: GOOGLE DRIVE, OK.RU, ODYSEE Y MP4 NATIVO */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2019,49 +2001,31 @@
       }
       
       vBox.innerHTML = '';
+      let cleanUrl = vInput.trim();
 
-      // 1. FireStream
-      if (vInput.includes('firestream')) {
-        let cleanUrl = vInput.trim();
-        let embedUrl = cleanUrl;
-        
-        if (!embedUrl.includes('/embed/') && !embedUrl.includes('/e/')) {
-          let matchId = cleanUrl.match(/\/([a-zA-Z0-9_-]+)\/?$/);
-          if (matchId && matchId[1]) {
-            embedUrl = `https://firestream.to/embed-${matchId[1]}.html`;
-          }
-        }
-
-        vBox.innerHTML = `<iframe src="${embedUrl}" frameborder="0" scrolling="no" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;"></iframe>`;
-        return;
-      }
-
-      // 2. Playmate.to
-      if (vInput.includes('playmate.to')) {
-        let cleanUrl = vInput.trim();
-        let matchId = cleanUrl.match(/\/([a-zA-Z0-9]+)\/?$/);
-        let embedUrl = "";
-        
-        if (matchId && matchId[1]) {
-          let videoId = matchId[1];
-          embedUrl = `https://playmate.to/embed/${videoId}`;
+      // 1. Google Drive (Optimizado y fluido mediante inserción de previsualización web)
+      if (cleanUrl.includes('drive.google.com')) {
+        let fileIdMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
+        let previewUrl = "";
+        if (fileIdMatch && fileIdMatch[1]) {
+          previewUrl = `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
         } else {
-          embedUrl = cleanUrl.includes('/embed/') ? cleanUrl : cleanUrl.replace('/watch/', '/embed/');
+          previewUrl = cleanUrl.replace('/view', '/preview');
         }
 
-        vBox.innerHTML = `<iframe src="${embedUrl}" frameborder="0" scrolling="no" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${previewUrl}" frameborder="0" scrolling="no" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;"></iframe>`;
         return;
       }
 
-      // 3. Iframe manual
-      if (vInput.includes('<iframe')) {
-        vBox.innerHTML = vInput;
+      // 2. Iframe manual personalizado
+      if (cleanUrl.includes('<iframe')) {
+        vBox.innerHTML = cleanUrl;
         return;
       }
 
-      // 4. OK.ru
-      if (vInput.includes('ok.ru')) {
-        let okEmbed = vInput.trim();
+      // 3. OK.ru
+      if (cleanUrl.includes('ok.ru')) {
+        let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
           okEmbed = okEmbed.replace('/video/', '/videoembed/');
         }
@@ -2069,9 +2033,9 @@
         return;
       }
 
-      // 5. Odysee
-      if (vInput.includes('odysee.com')) {
-        let odyseeEmbed = vInput.trim();
+      // 4. Odysee
+      if (cleanUrl.includes('odysee.com')) {
+        let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
           odyseeEmbed = odyseeEmbed.replace('odysee.com/', 'odysee.com/$/embed/');
         }
@@ -2079,7 +2043,7 @@
         return;
       }
       
-      // 6. Reproductor nativo HTML5 para enlaces directos (.mp4)
+      // 5. Reproductor nativo HTML5 para enlaces directos (.mp4)
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
@@ -2090,7 +2054,7 @@
       videoEl.preload = 'auto';
 
       const sourceEl = document.createElement('source');
-      sourceEl.src = vInput.trim();
+      sourceEl.src = cleanUrl;
       sourceEl.type = 'video/mp4';
 
       videoEl.appendChild(sourceEl);
