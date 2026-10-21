@@ -58,7 +58,7 @@
     .native-player-box video {
       width: 100%;
       height: 100%;
-      object-fit: contain !important; /* Fuerza a que se vea completo sin recortar los lados */
+      object-fit: contain !important;
       outline: none;
     }
 
@@ -867,8 +867,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace Directo de Video (.mp4 / Enlace compatible)</label>
-          <input type="text" id="videoInput" placeholder="Enlace directo al archivo de video">
+          <label>Enlace o Iframe de Video (VK, .mp4, etc.)</label>
+          <input type="text" id="videoInput" placeholder="Enlace directo o iframe de VK">
         </div>
 
         <div id="seriesSeasonsGroup" style="display: none;">
@@ -919,7 +919,7 @@
           <textarea id="modalEpDesc" rows="2" required></textarea>
         </div>
         <div class="form-group">
-          <label>Enlace Directo de Video (.mp4)</label>
+          <label>Enlace de Video (VK / .mp4)</label>
           <input type="text" id="modalEpVideo" required>
         </div>
         <div class="form-actions">
@@ -1632,7 +1632,7 @@
         </div>
         <input type="text" class="ep-img" placeholder="Miniatura opcional" value="${epData ? (epData.img || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;">
         <textarea class="ep-desc" rows="2" placeholder="Sinopsis" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem; margin-bottom:6px;" required>${epData ? (epData.desc || '') : ''}</textarea>
-        <input type="text" class="ep-video" placeholder="Enlace directo (.mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
+        <input type="text" class="ep-video" placeholder="Enlace de video (VK / .mp4)" value="${epData ? (epData.video || '') : ''}" style="width:100%; padding:5px; background:#07040d; border:1px solid var(--border-purple); color:#fff; border-radius:4px; font-size:0.7rem;" required>
       `;
       container.appendChild(epDiv);
     }
@@ -2030,7 +2030,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR PROPIO HTML5 (ESTILO TARJETA + ROTACIÓN AUTOMÁTICA) */
+    /* REPRODUCTOR MULTIPLATAFORMA (VK, OK.ru, ODYSEE, HTML5) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -2040,7 +2040,7 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // Si es un iframe manual (como el de Internet Archive)
+      // Si es un iframe manual (incluyendo el código de inserción de VK)
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -2064,6 +2064,18 @@
             }
           });
         }
+        return;
+      }
+
+      // VK (Soporte directo para URL o enlace web de VK)
+      if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
+        let vkEmbed = cleanUrl;
+        // Si pegan el enlace directo y no el iframe, convertimos el enlace al formato de incrustación de VK si es necesario
+        if (!vkEmbed.includes('/video_ext.php')) {
+          // Ejemplo de conversión básica si pegan la url tipo https://vk.com/video...
+          vkEmbed = vkEmbed.replace('vk.com/video', 'vk.com/video_ext.php?');
+        }
+        vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
 
@@ -2102,6 +2114,7 @@
       sourceEl.type = 'video/mp4';
 
       videoEl.appendChild(sourceEl);
+      playerWrapper.videoEl = videoEl;
       playerWrapper.appendChild(videoEl);
       vBox.appendChild(playerWrapper);
 
