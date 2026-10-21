@@ -66,7 +66,7 @@
       }
     ],
     "featured": false,
-    "views": 369,
+    "views": 370,
     "dateAdded": 1792020960742
   },
   {
@@ -630,7 +630,7 @@
     "video": "https://ok.ru/video/16819842452187",
     "seasons": [],
     "featured": false,
-    "views": 457,
+    "views": 458,
     "dateAdded": 1791812353551
   },
   {
@@ -2471,14 +2471,16 @@
     "id": 1791219471572,
     "type": "movie",
     "title": "El día de la revelación",
+    "ageRating": "+18",
     "genre": "Cienciaficción, Drama",
     "year": "2026",
     "desc": "Una presentadora de noticias meteorológicas descubre que puede hablar lo que parece ser un idioma extraño. Al mismo tiempo, un hombre encuentra pruebas robadas del gobierno que prueban la existencia de vida extraterrestre.",
     "cover": "https://m.media-amazon.com/images/S/pv-target-images/f7e83372fb69dd255f2e42d1d2596e90797f65aaa1beed42330e870c027a6c09.jpg",
     "trailer": "",
-    "video": "https://odysee.com/@Romualdoignacio:0/El-di:5",
+    "video": "https://lh3.googleusercontent.com/d/1H2vkhktrTHdEmofqD3dOkjyqL4mXXg5e",
     "seasons": [],
-    "views": 372,
+    "featured": false,
+    "views": 373,
     "dateAdded": 1791219471572
   },
   {
