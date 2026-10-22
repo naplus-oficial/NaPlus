@@ -2123,13 +2123,28 @@
         return;
       }
 
-      // Odysee / Internet Archive
+      // 📺 Odysee (Con rotación automática horizontal en pantalla completa)
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
           odyseeEmbed = odyseeEmbed.replace('odysee.com/', 'odysee.com/$/embed/');
         }
-        vBox.innerHTML = `<iframe src="${odyseeEmbed}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${odyseeEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        
+        const iframeEl = vBox.querySelector('iframe');
+        if (iframeEl) {
+          iframeEl.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+              if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+              }
+            } else {
+              if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+              }
+            }
+          });
+        }
         return;
       }
 
