@@ -1,5 +1,20 @@
 [
   {
+    "id": 1792670631813,
+    "type": "movie",
+    "title": "Freaky",
+    "ageRating": "+16",
+    "genre": "Terror, Comedia",
+    "year": "2020",
+    "desc": "La daga mística de un asesino en serie provoca que este intercambie su cuerpo con el de una chica de 17 años. La adolescente, asustada, descubre que solo tiene 24 horas para recuperar su identidad antes de convertirse en una maníaca para siempre.",
+    "cover": "https://image.tmdb.org/t/p/original/8xC6QSyxrpm0D5A6iyHNemEWBVe.jpg",
+    "video": "https://odysee.com/@Romualdoignacio:0/FREAKY",
+    "seasons": [],
+    "featured": false,
+    "views": 129,
+    "dateAdded": 1792670631814
+  },
+  {
     "id": 1792669564491,
     "type": "movie",
     "title": "Shelby Oaks",
