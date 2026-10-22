@@ -928,12 +928,9 @@
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
-    const FILE_PATH = "index.html";
     const DB_FILE_PATH = "database.json";
 
-    /*CATALOG_START*/
     let catalog = [];
-    /*CATALOG_END*/
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
@@ -976,32 +973,7 @@
           }
         }
       } catch (e) {
-        console.log("Intentando respaldo desde index.html...");
-      }
-
-      try {
-        const rawUrlIndex = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
-        const res = await fetch(rawUrlIndex, { cache: 'no-store' });
-        if (res.ok) {
-          const text = await res.text();
-          const startMarker = "/*CATALOG_START*/";
-          const endMarker = "/*CATALOG_END*/";
-          const startIndex = text.indexOf(startMarker);
-          const endIndex = text.indexOf(endMarker);
-          if (startIndex !== -1 && endIndex !== -1) {
-            const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
-            const cloudCatalog = jsonStr.startsWith("[") ? JSON.parse(jsonStr) : [];
-            if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
-              catalog = cloudCatalog;
-              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
-              preloadAllImages();
-              renderHomeSections();
-            }
-          }
-        }
-      } catch (err) {
-        console.log("Modo offline o error de sincronización total:", err);
+        console.log("No se pudo sincronizar automáticamente con la nube, usando almacenamiento local.");
       }
     }
 
@@ -1725,13 +1697,13 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando en base y nube...";
+      if (saveBtn) saveBtn.innerText = "Publicando en database.json...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y sincronizado correctamente en database.json y GitHub a la primera!");
+        alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
       } else {
         alert("⚠️ Hubo un error al sincronizar con GitHub. Revisa tu token o conexión.");
       }
@@ -1744,7 +1716,7 @@
       try {
         const catalogJson = JSON.stringify(catalog, null, 2);
 
-        // 1. Guardar database.json de forma robusta obteniendo siempre el sha actualizado sin caché
+        // Obtener el sha actual de database.json sin caché
         let dbSha = null;
         const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}?_t=` + Date.now(), {
           headers: { 
@@ -1758,6 +1730,7 @@
           dbSha = dbData.sha;
         }
 
+        // Enviar actualización exclusiva a database.json
         const putDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           method: 'PUT',
           headers: {
@@ -1772,41 +1745,7 @@
           })
         });
 
-        if (!putDbRes.ok) return false;
-
-        // 2. Actualizar el index.html de forma robusta
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}?_t=` + Date.now(), {
-          headers: { 
-            'Authorization': 'Bearer ' + token.trim(), 
-            'Accept': 'application/vnd.github+json',
-            'Cache-Control': 'no-cache'
-          }
-        });
-        
-        if (getRes.ok) {
-          const getData = await getRes.json();
-          let fileText = decodeURIComponent(escape(atob(getData.content)));
-          if (fileText.includes('/*CATALOG_START*/')) {
-            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = [];\n    /*CATALOG_END*/`);
-          }
-          
-          const putIndexRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-            method: 'PUT',
-            headers: {
-              'Authorization': 'Bearer ' + token.trim(),
-              'Content-Type': 'application/json',
-              'Accept': 'application/vnd.github+json'
-            },
-            body: JSON.stringify({
-              message: 'Sincronización de catálogo en index.html',
-              content: utoa(fileText),
-              sha: getData.sha
-            })
-          });
-
-          return putIndexRes.ok;
-        }
-        return true;
+        return putDbRes.ok;
       } catch (err) {
         console.error("Error en sincronización automática con GitHub:", err);
         return false;
@@ -2052,7 +1991,6 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // Si es un iframe manual (incluyendo inserciones personalizadas)
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -2082,7 +2020,6 @@
         return;
       }
 
-      // 🎬 Vimeo (Soporte optimizado y rotación automática al pasar a pantalla completa)
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
@@ -2115,7 +2052,6 @@
         return;
       }
 
-      // VK (Soporte optimizado)
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
@@ -2125,7 +2061,6 @@
         return;
       }
 
-      // OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -2135,7 +2070,6 @@
         return;
       }
 
-      // 📺 Odysee (Con rotación automática horizontal en pantalla completa)
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -2160,7 +2094,6 @@
         return;
       }
 
-      // REPRODUCTOR HTML5 NATIVO PROPIETARIO
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
@@ -2195,7 +2128,6 @@
       videoEl.play().catch(() => {});
     }
 
-    // Listener de seguridad táctil para asegurar respuesta instantánea
     document.addEventListener('DOMContentLoaded', () => {
       const playMovieBtn = document.getElementById('playMovieBtn');
       if (playMovieBtn) {
