@@ -1,63 +1,18 @@
 [
   {
-    "id": 1792671818094,
+    "id": 1792679280578,
     "type": "movie",
-    "title": "La última chica",
-    "ageRating": "+16",
-    "genre": "Terror, Comedia",
-    "year": "2015",
-    "desc": "Una joven que ha perdido a su madre recientemente, que era una famosa estrella del cine de terror de los años 80, se encuentra dentro de la película más famosa de su madre. Juntas, deberán enfrentarse al asesino maniático de la película.",
-    "cover": "https://image.tmdb.org/t/p/original/jbeX4Hi8F4DiqVwIoOA5GigYg5V.jpg",
-    "video": "https://odysee.com/@Romualdoignacio:0/La-ult",
-    "seasons": [],
-    "featured": false,
-    "views": 469,
-    "dateAdded": 1792671818094
-  },
-  {
-    "id": 1792670631813,
-    "type": "movie",
-    "title": "Freaky",
-    "ageRating": "+16",
-    "genre": "Terror, Comedia",
-    "year": "2020",
-    "desc": "La daga mística de un asesino en serie provoca que este intercambie su cuerpo con el de una chica de 17 años. La adolescente, asustada, descubre que solo tiene 24 horas para recuperar su identidad antes de convertirse en una maníaca para siempre.",
-    "cover": "https://image.tmdb.org/t/p/original/8xC6QSyxrpm0D5A6iyHNemEWBVe.jpg",
-    "video": "https://odysee.com/@Romualdoignacio:0/FREAKY",
-    "seasons": [],
-    "featured": false,
-    "views": 129,
-    "dateAdded": 1792670631814
-  },
-  {
-    "id": 1792669564491,
-    "type": "movie",
-    "title": "Shelby Oaks",
+    "title": "Dollhouse",
     "ageRating": "+18",
     "genre": "Terror",
-    "year": "2024",
-    "desc": "Años después de la desaparición de su hermana, Mia descubre que el demonio que las acechaba en su infancia podría no ser tan imaginario como creían.",
-    "cover": "https://m.media-amazon.com/images/S/pv-target-images/54e0f88fd59ce9af55f0fdf08a4f45f7ea5a49e996b3657228f88c12f2c3ece3.jpg",
-    "video": "https://odysee.com/@Romualdoignacio:0/T.En.Sh",
+    "year": "2025",
+    "desc": "Una mujer que guarda luto por la pérdida de su hija encuentra un día en un mercado de antigüedades una muñeca que se parece mucho a ella. Al cuidar la muñeca, su estado de ánimo mejora. Sin embargo, la muñeca causa eventos perturbadores en la familia.",
+    "cover": "https://image.tmdb.org/t/p/original/zOTXxsvCMzolh6uuEy7GBY9zihB.jpg",
+    "video": "https://odysee.com/@Romualdoignacio:0/Dollhouse:3",
     "seasons": [],
     "featured": false,
-    "views": 175,
-    "dateAdded": 1792669564491
-  },
-  {
-    "id": 1792668642200,
-    "type": "movie",
-    "title": "Terrifier",
-    "ageRating": "+18",
-    "genre": "Terror",
-    "year": "2011",
-    "desc": "Cortometraje independiente de terror escrito, dirigido y editado por Damien Leone, que sirve como la segunda aparición y el origen directo de Art el Payaso",
-    "cover": "https://image.tmdb.org/t/p/original/sg4ng4TsqFTJYF2DZVKIWbD2fn1.jpg",
-    "video": "<iframe src=\"https://archive.org/embed/Terrfier\" width=\"560\" height=\"384\" frameborder=\"0\" webkitallowfullscreen=\"true\" mozallowfullscreen=\"true\" allowfullscreen></iframe>",
-    "seasons": [],
-    "featured": false,
-    "views": 143,
-    "dateAdded": 1792668642200
+    "views": 531,
+    "dateAdded": 1792679280578
   },
   {
     "id": 1792609765123,
@@ -72,7 +27,7 @@
     "video": "<iframe src=\"https://archive.org/embed/vid-20261020-210207-351\" width=\"560\" height=\"384\" frameborder=\"0\" webkitallowfullscreen=\"true\" mozallowfullscreen=\"true\" allowfullscreen></iframe>",
     "seasons": [],
     "featured": false,
-    "views": 94,
+    "views": 93,
     "dateAdded": 1792609765123
   },
   {
@@ -96,7 +51,7 @@
             "duration": "51 min",
             "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
             "desc": "La familia Harmon se muda a una casa en Los Ángeles para empezar de nuevo, sin saber que está llena de secretos oscuros.",
-            "video": "https://odysee.com/@Romualdoignacio:0/AHS1.1:e"
+            "video": "<iframe src="
           },
           {
             "num": 2,
@@ -104,7 +59,7 @@
             "duration": "42 min",
             "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
             "desc": "Un grupo de fanáticos de asesinos en serie invade la casa mientras Ben viaja a Boston para resolver un problema del pasado.",
-            "video": "https://odysee.com/@Romualdoignacio:0/AHS1.2:e"
+            "video": "https://dai.ly/xbq8qw6"
           },
           {
             "num": 3,
@@ -112,7 +67,7 @@
             "duration": "42 min",
             "img": "https://m.media-amazon.com/images/S/pv-target-images/dc661fa1481a0d615a58d45abc582a61da7aef914d86ae352a217c98de452e5d.jpg",
             "desc": "Vivien descubre la historia de los primeros residentes de la casa y Ben enfrenta las consecuencias de su pasado.",
-            "video": "https://odysee.com/@Romualdoignacio:0/AHS1.3:0"
+            "video": "https://dai.ly/xbq8qw6"
           },
           {
             "num": 4,
@@ -142,7 +97,7 @@
       }
     ],
     "featured": false,
-    "views": 378,
+    "views": 373,
     "dateAdded": 1792020960742
   },
   {
@@ -3398,7 +3353,7 @@
         ]
       }
     ],
-    "views": 194,
+    "views": 193,
     "dateAdded": 1790869921110
   },
   {
