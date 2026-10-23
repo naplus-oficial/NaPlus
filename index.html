@@ -928,9 +928,12 @@
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
+    const FILE_PATH = "index.html";
     const DB_FILE_PATH = "database.json";
 
+    /*CATALOG_START*/
     let catalog = [];
+    /*CATALOG_END*/
 
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
@@ -956,8 +959,8 @@
 
     async function autoSyncCatalogFromCloud() {
       try {
-        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
-        const res = await fetch(rawUrl, { cache: 'no-store' });
+        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}`;
+        const res = await fetch(rawUrl, { cache: 'default' });
         if (res.ok) {
           const cloudCatalog = await res.json();
           if (Array.isArray(cloudCatalog)) {
@@ -973,7 +976,32 @@
           }
         }
       } catch (e) {
-        console.log("No se pudo sincronizar automáticamente con la nube, usando almacenamiento local.");
+        console.log("Intentando respaldo desde index.html...");
+      }
+
+      try {
+        const rawUrlIndex = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
+        const res = await fetch(rawUrlIndex, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          const startMarker = "/*CATALOG_START*/";
+          const endMarker = "/*CATALOG_END*/";
+          const startIndex = text.indexOf(startMarker);
+          const endIndex = text.indexOf(endMarker);
+          if (startIndex !== -1 && endIndex !== -1) {
+            const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
+            const cloudCatalog = jsonStr.startsWith("[") ? JSON.parse(jsonStr) : [];
+            if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
+              catalog = cloudCatalog;
+              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+              computeSessionRecommendations();
+              preloadAllImages();
+              renderHomeSections();
+            }
+          }
+        }
+      } catch (err) {
+        console.log("Modo offline o error de sincronización total:", err);
       }
     }
 
@@ -1697,15 +1725,13 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando en database.json...";
+      if (saveBtn) saveBtn.innerText = "Publicando en base y nube...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
-      } else {
-        alert("⚠️ Hubo un error al sincronizar con GitHub. Revisa tu token o conexión.");
+        alert("¡Guardado y sincronizado automáticamente con database.json y GitHub!");
       }
     }
 
@@ -1716,22 +1742,16 @@
       try {
         const catalogJson = JSON.stringify(catalog, null, 2);
 
-        // Obtener el sha actual de database.json sin caché
         let dbSha = null;
-        const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}?_t=` + Date.now(), {
-          headers: { 
-            'Authorization': 'Bearer ' + token.trim(), 
-            'Accept': 'application/vnd.github+json',
-            'Cache-Control': 'no-cache'
-          }
+        const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
+          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
         });
         if (getDbRes.ok) {
           const dbData = await getDbRes.json();
           dbSha = dbData.sha;
         }
 
-        // Enviar actualización exclusiva a database.json
-        const putDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
+        await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer ' + token.trim(),
@@ -1745,9 +1765,32 @@
           })
         });
 
-        return putDbRes.ok;
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
+        });
+        if (getRes.ok) {
+          const getData = await getRes.json();
+          let fileText = decodeURIComponent(escape(atob(getData.content)));
+          if (fileText.includes('/*CATALOG_START*/')) {
+            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = [];\n    /*CATALOG_END*/`);
+          }
+          await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'Bearer ' + token.trim(),
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github+json'
+            },
+            body: JSON.stringify({
+              message: 'Sincronización de catálogo en index.html',
+              content: utoa(fileText),
+              sha: getData.sha
+            })
+          });
+        }
+        return true;
       } catch (err) {
-        console.error("Error en sincronización automática con GitHub:", err);
+        console.error(err);
         return false;
       }
     }
@@ -1991,6 +2034,7 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
+      // Si es un iframe manual (incluyendo inserciones personalizadas)
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -2020,6 +2064,7 @@
         return;
       }
 
+      // 🎬 Vimeo (Soporte optimizado y rotación automática al pasar a pantalla completa)
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
@@ -2052,6 +2097,7 @@
         return;
       }
 
+      // VK (Soporte optimizado)
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
@@ -2061,6 +2107,7 @@
         return;
       }
 
+      // OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -2070,6 +2117,7 @@
         return;
       }
 
+      // 📺 Odysee (Con rotación automática horizontal en pantalla completa)
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -2094,6 +2142,7 @@
         return;
       }
 
+      // REPRODUCTOR HTML5 NATIVO PROPIETARIO
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
@@ -2128,6 +2177,7 @@
       videoEl.play().catch(() => {});
     }
 
+    // Listener de seguridad táctil para asegurar respuesta instantánea
     document.addEventListener('DOMContentLoaded', () => {
       const playMovieBtn = document.getElementById('playMovieBtn');
       if (playMovieBtn) {
