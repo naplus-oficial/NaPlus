@@ -679,7 +679,7 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (Archive.org, Iframe, MP4 directo, etc.)</label>
+          <label>Enlace de Video (Telegram, Archive.org, Iframe, MP4 directo, etc.)</label>
           <input type="text" id="videoInput" placeholder="https://..." required>
         </div>
 
@@ -1288,7 +1288,6 @@
       if (success) {
         alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
       } else {
-        // Si falla por token vencido o incorrecto, limpiamos el token para pedirlo de nuevo la próxima vez
         if (confirm("⚠️ Hubo un error al sincronizar con GitHub (posible token incorrecto o expirado). ¿Deseas reingresar tu token?")) {
           localStorage.removeItem('naPlus_gh_token');
         }
@@ -1391,7 +1390,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA OPTIMIZADO (CONVIERTE ARCHIVE.ORG Y SOPORTA TODO) */
+    /* REPRODUCTOR MULTIPLATAFORMA (SOPORTE PARA TELEGRAM, ARCHIVE.ORG Y VIDEO.JS ESTILO VLC) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1419,17 +1418,38 @@
         return;
       }
 
-      // 2. MAGIA: Si pegas el enlace normal de la página de Internet Archive, lo transforma automáticamente al MP4 directo
+      // 2. SOPORTE PARA TELEGRAM (Enlaces de t.me)
+      if (cleanUrl.includes('t.me/')) {
+        let tgPath = '';
+        if (cleanUrl.includes('t.me/c/')) {
+          const parts = cleanUrl.split('t.me/c/');
+          if (parts[1]) tgPath = parts[1].split('?')[0];
+        } else if (cleanUrl.includes('t.me/')) {
+          const parts = cleanUrl.split('t.me/');
+          if (parts[1]) tgPath = parts[1].split('?')[0];
+        }
+
+        if (tgPath) {
+          vBox.innerHTML = `
+            <div style="width:100%; height:100%; position:absolute; top:0; left:0; overflow-y:auto; background:#000; display:flex; align-items:center; justify-content:center;">
+              <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="${tgPath}" data-width="100%"></script>
+            </div>
+          `;
+          return;
+        }
+      }
+
+      // 3. Conversión automática de Internet Archive (archive.org/details/...)
       if (cleanUrl.includes('archive.org/details/')) {
         try {
           const identifier = cleanUrl.split('/details/')[1].split('/')[0].split('?')[0];
           cleanUrl = `https://archive.org/download/${identifier}/${identifier}.mp4`;
         } catch (e) {
-          console.log("No se pudo parsear el link de Archive automáticamente, usándolo tal cual.");
+          console.log("No se pudo parsear el link de Archive automáticamente.");
         }
       }
 
-      // 3. Soporte para Vimeo
+      // 4. Soporte para Vimeo
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
@@ -1442,7 +1462,7 @@
         return;
       }
 
-      // 4. Soporte para VK
+      // 5. Soporte para VK
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
@@ -1452,7 +1472,7 @@
         return;
       }
 
-      // 5. Soporte para OK.ru
+      // 6. Soporte para OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -1462,7 +1482,7 @@
         return;
       }
 
-      // 6. Soporte para Odysee
+      // 7. Soporte para Odysee
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -1472,7 +1492,7 @@
         return;
       }
 
-      // 7. Reproductor general Video.js (Estilo VLC) para cualquier archivo multimedia directo
+      // 8. Reproductor Video.js (Estilo VLC) para cualquier archivo multimedia directo
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
