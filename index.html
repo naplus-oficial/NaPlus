@@ -679,8 +679,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace de Video (Telegram Embed, Archive.org, Iframe, MP4 directo)</label>
-          <input type="text" id="videoInput" placeholder="https:// o código iframe" required>
+          <label>Enlace de Video (Telegram, Archive.org, Iframe, MP4 directo, etc.)</label>
+          <input type="text" id="videoInput" placeholder="https://..." required>
         </div>
 
         <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 15px; background: rgba(124, 58, 237, 0.15); padding: 10px; border-radius: 6px; border: 1px solid var(--border-purple);">
@@ -1284,11 +1284,7 @@
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
-      } else {
-        if (confirm("⚠️ Hubo un error al sincronizar con GitHub (posible token incorrecto o expirado). ¿Deseas reingresar tu token?")) {
-          localStorage.removeItem('naPlus_gh_token');
-        }
+        alert("¡Guardado y sincronizado perfectamente en database.json!");
       }
     }
 
@@ -1311,6 +1307,11 @@
         if (getDbRes.ok) {
           const dbData = await getDbRes.json();
           dbSha = dbData.sha;
+        } else if (getDbRes.status !== 404) {
+          const errJson = await getDbRes.json().catch(() => ({}));
+          alert("Error de GitHub: " + (errJson.message || getDbRes.statusText));
+          localStorage.removeItem('naPlus_gh_token');
+          return false;
         }
 
         const putDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
@@ -1327,9 +1328,17 @@
           })
         });
 
-        return putDbRes.ok;
+        if (!putDbRes.ok) {
+          const putErr = await putDbRes.json().catch(() => ({}));
+          alert("Error al guardar en GitHub: " + (putErr.message || putDbRes.statusText));
+          localStorage.removeItem('naPlus_gh_token');
+          return false;
+        }
+
+        return true;
       } catch (err) {
-        console.error("Error en sincronización automática con GitHub:", err);
+        console.error("Excepción con GitHub:", err);
+        alert("Error de red: " + err.message);
         return false;
       }
     }
@@ -1398,7 +1407,6 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
-      // 1. Si pegas un iframe completo
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -1416,7 +1424,6 @@
         return;
       }
 
-      // 2. Soporte para Telegram (Generador dinámico de widget por script)
       if (cleanUrl.includes('t.me/')) {
         let tgPath = '';
         if (cleanUrl.includes('t.me/c/')) {
@@ -1443,7 +1450,6 @@
         }
       }
 
-      // 3. Conversión automática de Internet Archive
       if (cleanUrl.includes('archive.org/details/')) {
         try {
           const identifier = cleanUrl.split('/details/')[1].split('/')[0].split('?')[0];
@@ -1453,7 +1459,6 @@
         }
       }
 
-      // 4. Soporte para Vimeo
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
@@ -1466,7 +1471,6 @@
         return;
       }
 
-      // 5. Soporte para VK
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
@@ -1476,7 +1480,6 @@
         return;
       }
 
-      // 6. Soporte para OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -1486,7 +1489,6 @@
         return;
       }
 
-      // 7. Soporte para Odysee
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -1496,7 +1498,6 @@
         return;
       }
 
-      // 8. Reproductor Video.js (Estilo VLC) para cualquier archivo multimedia directo
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
