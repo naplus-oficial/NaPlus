@@ -59,7 +59,6 @@
       border-radius: 8px 8px 0 0;
     }
 
-    /* Ajustes estéticos para que Video.js luzca con tonos VLC (naranja/oscuro) */
     .video-js.vjs-fluid { width: 100%; height: 100%; }
     .video-js .vjs-control-bar {
       background-color: rgba(20, 15, 30, 0.9) !important;
@@ -680,8 +679,8 @@
         </div>
 
         <div class="form-group" id="movieVideoGroup">
-          <label>Enlace o Iframe de Video (Vimeo, OK.ru, Archive.org, Odysee, VK, .mp4)</label>
-          <input type="text" id="videoInput" placeholder="Enlace directo o iframe" required>
+          <label>Enlace de Video (Archive.org, Iframe, MP4 directo, etc.)</label>
+          <input type="text" id="videoInput" placeholder="https://..." required>
         </div>
 
         <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 15px; background: rgba(124, 58, 237, 0.15); padding: 10px; border-radius: 6px; border: 1px solid var(--border-purple);">
@@ -1227,6 +1226,7 @@
       }
     }
 
+    // Codificación UTF-8 robusta para Base64 (evita errores con tildes o eñes al guardar en GitHub)
     function utoa(str) {
       return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
         return String.fromCharCode('0x' + p1);
@@ -1237,13 +1237,14 @@
       e.preventDefault();
       const id = document.getElementById('editId').value;
 
+      // Verificación y solicitud de Token de GitHub robusta
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token || !token.trim()) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
         if (token && token.trim()) {
           localStorage.setItem('naPlus_gh_token', token.trim());
         } else {
-          alert("⚠️ Se necesita el token de GitHub para publicar automáticamente.");
+          alert("⚠️ Se necesita un token válido de GitHub para publicar.");
           return;
         }
       }
@@ -1287,7 +1288,10 @@
       if (success) {
         alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
       } else {
-        alert("⚠️ Hubo un error al sincronizar con GitHub. Revisa tu token o conexión.");
+        // Si falla por token vencido o incorrecto, limpiamos el token para pedirlo de nuevo la próxima vez
+        if (confirm("⚠️ Hubo un error al sincronizar con GitHub (posible token incorrecto o expirado). ¿Deseas reingresar tu token?")) {
+          localStorage.removeItem('naPlus_gh_token');
+        }
       }
     }
 
@@ -1306,6 +1310,7 @@
             'Cache-Control': 'no-cache'
           }
         });
+        
         if (getDbRes.ok) {
           const dbData = await getDbRes.json();
           dbSha = dbData.sha;
@@ -1319,7 +1324,7 @@
             'Accept': 'application/vnd.github+json'
           },
           body: JSON.stringify({
-            message: 'Actualización automática de database.json (Solo Películas)',
+            message: 'Actualización automática de database.json (NaPlus)',
             content: utoa(catalogJson),
             sha: dbSha
           })
@@ -1373,7 +1378,6 @@
     }
 
     function closeMoviePlayerModal() {
-      // Destruir instancia previa de video.js si existe para evitar conflictos de memoria
       const existingVideo = videojs.getPlayer('naplus-vlc-player');
       if (existingVideo) {
         existingVideo.dispose();
@@ -1387,7 +1391,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA INTEGRADO CON VIDEO.JS */
+    /* REPRODUCTOR MULTIPLATAFORMA OPTIMIZADO (CONVIERTE ARCHIVE.ORG Y SOPORTA TODO) */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1397,6 +1401,7 @@
       vBox.innerHTML = '';
       let cleanUrl = vInput.trim();
 
+      // 1. Si pegas un iframe completo
       if (cleanUrl.includes('<iframe')) {
         vBox.innerHTML = cleanUrl;
         const iframeEl = vBox.querySelector('iframe');
@@ -1414,6 +1419,17 @@
         return;
       }
 
+      // 2. MAGIA: Si pegas el enlace normal de la página de Internet Archive, lo transforma automáticamente al MP4 directo
+      if (cleanUrl.includes('archive.org/details/')) {
+        try {
+          const identifier = cleanUrl.split('/details/')[1].split('/')[0].split('?')[0];
+          cleanUrl = `https://archive.org/download/${identifier}/${identifier}.mp4`;
+        } catch (e) {
+          console.log("No se pudo parsear el link de Archive automáticamente, usándolo tal cual.");
+        }
+      }
+
+      // 3. Soporte para Vimeo
       if (cleanUrl.includes('vimeo.com')) {
         let vimeoEmbed = cleanUrl;
         if (!vimeoEmbed.includes('/player.vimeo.com/video/')) {
@@ -1421,25 +1437,22 @@
           if (vimeoMatch && vimeoMatch[1]) {
             vimeoEmbed = `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1&title=0&byline=0&portrait=0`;
           }
-        } else {
-          if (!vimeoEmbed.includes('autoplay=1')) {
-            vimeoEmbed += (vimeoEmbed.includes('?') ? '&' : '?') + 'autoplay=1';
-          }
         }
-
-        vBox.innerHTML = `<iframe src="${vimeoEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${vimeoEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
 
+      // 4. Soporte para VK
       if (cleanUrl.includes('vk.com') || cleanUrl.includes('vkvideo.ru')) {
         let vkEmbed = cleanUrl;
         if (!vkEmbed.includes('/video_ext.php')) {
           vkEmbed = vkEmbed.replace('vk.com/video', 'vk.com/video_ext.php?');
         }
-        vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen referrerpolicy="unsafe-url" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
+        vBox.innerHTML = `<iframe src="${vkEmbed}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
         return;
       }
 
+      // 5. Soporte para OK.ru
       if (cleanUrl.includes('ok.ru')) {
         let okEmbed = cleanUrl;
         if (!okEmbed.includes('/videoembed/')) {
@@ -1449,6 +1462,7 @@
         return;
       }
 
+      // 6. Soporte para Odysee
       if (cleanUrl.includes('odysee.com')) {
         let odyseeEmbed = cleanUrl;
         if (!odyseeEmbed.includes('/$/embed/')) {
@@ -1458,13 +1472,13 @@
         return;
       }
 
-      // Si es un enlace directo a archivo multimedia (.mp4, .webm, etc.), usamos Video.js estilizado estilo VLC
+      // 7. Reproductor general Video.js (Estilo VLC) para cualquier archivo multimedia directo
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
       playerWrapper.innerHTML = `
         <video-js id="naplus-vlc-player" class="vjs-big-play-centered vjs-fluid" controls preload="auto">
-          <source src="${cleanUrl}" type="video/mp4" />
+          <source src="${cleanUrl}" />
           <p class="vjs-no-js">
             Para ver este video, por favor habilita JavaScript y considera actualizar a un navegador que soporte video HTML5.
           </p>
@@ -1472,7 +1486,6 @@
       `;
       vBox.appendChild(playerWrapper);
 
-      // Inicializar Video.js de forma dinámica
       try {
         const player = videojs('naplus-vlc-player');
         player.ready(() => {
