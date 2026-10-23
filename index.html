@@ -9,6 +9,9 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#7c3aed">
 
+  <!-- Estilos y Librería de Video.js (Estilo VLC) -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+
   <style>
     :root {
       --bg-dark: #07040d;
@@ -41,7 +44,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* REPRODUCTOR NATIVO PROPIETARIO - AJUSTADO PARA EVITAR CORTES */
+    /* REPRODUCTOR ESTILO VLC (VIDEO.JS) PERSONALIZADO */
     .native-player-box {
       width: 100%;
       height: 100%;
@@ -55,12 +58,26 @@
       overflow: hidden;
       border-radius: 8px 8px 0 0;
     }
-    .native-player-box video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain !important;
-      outline: none;
+
+    /* Ajustes estéticos para que Video.js luzca con tonos VLC (naranja/oscuro) */
+    .video-js.vjs-fluid { width: 100%; height: 100%; }
+    .video-js .vjs-control-bar {
+      background-color: rgba(20, 15, 30, 0.9) !important;
+      border-top: 1px solid var(--border-purple);
     }
+    .video-js .vjs-play-progress { background-color: var(--accent-purple) !important; }
+    .video-js .vjs-slider { background-color: rgba(255, 255, 255, 0.2) !important; }
+    .video-js .vjs-big-play-button {
+      background-color: rgba(124, 58, 237, 0.8) !important;
+      border: none !important;
+      border-radius: 50% !important;
+      width: 60px !important;
+      height: 60px !important;
+      line-height: 60px !important;
+      margin-top: -30px !important;
+      margin-left: -30px !important;
+    }
+    .video-js .vjs-big-play-button:hover { background-color: var(--accent-purple) !important; }
 
     /* ANIMACIONES */
     @keyframes heartBeat {
@@ -679,6 +696,9 @@
       </form>
     </div>
   </div>
+
+  <!-- Script de Video.js -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.js"></script>
 
   <script>
     const REPO = "ignacio12adrian-ux/NaPlus";
@@ -1353,6 +1373,11 @@
     }
 
     function closeMoviePlayerModal() {
+      // Destruir instancia previa de video.js si existe para evitar conflictos de memoria
+      const existingVideo = videojs.getPlayer('naplus-vlc-player');
+      if (existingVideo) {
+        existingVideo.dispose();
+      }
       document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
       document.getElementById('moviePlayerModal').style.display = 'none';
     }
@@ -1362,7 +1387,7 @@
       else alert("Enlace copiado.");
     }
 
-    /* REPRODUCTOR MULTIPLATAFORMA */
+    /* REPRODUCTOR MULTIPLATAFORMA INTEGRADO CON VIDEO.JS */
     function renderVideoInBox(vBox, vInput) {
       if (!vInput) {
         vBox.innerHTML = '<div class="empty-msg">Enlace no disponible.</div>';
@@ -1385,18 +1410,6 @@
           iframeEl.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock');
           iframeEl.setAttribute('allowfullscreen', 'true');
           iframeEl.setAttribute('referrerpolicy', 'unsafe-url');
-
-          iframeEl.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-              if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-              }
-            } else {
-              if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-              }
-            }
-          });
         }
         return;
       }
@@ -1415,21 +1428,6 @@
         }
 
         vBox.innerHTML = `<iframe src="${vimeoEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
-        
-        const iframeEl = vBox.querySelector('iframe');
-        if (iframeEl) {
-          iframeEl.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-              if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-              }
-            } else {
-              if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-              }
-            }
-          });
-        }
         return;
       }
 
@@ -1457,54 +1455,32 @@
           odyseeEmbed = odyseeEmbed.replace('odysee.com/', 'odysee.com/$/embed/');
         }
         vBox.innerHTML = `<iframe src="${odyseeEmbed}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;"></iframe>`;
-        
-        const iframeEl = vBox.querySelector('iframe');
-        if (iframeEl) {
-          iframeEl.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-              if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-              }
-            } else {
-              if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-              }
-            }
-          });
-        }
         return;
       }
 
+      // Si es un enlace directo a archivo multimedia (.mp4, .webm, etc.), usamos Video.js estilizado estilo VLC
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'native-player-box';
 
-      const videoEl = document.createElement('video');
-      videoEl.controls = true;
-      videoEl.autoplay = true;
-      videoEl.playsInline = true;
-      videoEl.preload = 'auto';
-
-      const sourceEl = document.createElement('source');
-      sourceEl.src = cleanUrl;
-      sourceEl.type = 'video/mp4';
-
-      videoEl.appendChild(sourceEl);
-      playerWrapper.appendChild(videoEl);
+      playerWrapper.innerHTML = `
+        <video-js id="naplus-vlc-player" class="vjs-big-play-centered vjs-fluid" controls preload="auto">
+          <source src="${cleanUrl}" type="video/mp4" />
+          <p class="vjs-no-js">
+            Para ver este video, por favor habilita JavaScript y considera actualizar a un navegador que soporte video HTML5.
+          </p>
+        </video-js>
+      `;
       vBox.appendChild(playerWrapper);
 
-      videoEl.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
-          }
-        } else {
-          if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-          }
-        }
-      });
-
-      videoEl.play().catch(() => {});
+      // Inicializar Video.js de forma dinámica
+      try {
+        const player = videojs('naplus-vlc-player');
+        player.ready(() => {
+          player.play().catch(err => console.log("Autoplay prevenido por el navegador:", err));
+        });
+      } catch (e) {
+        console.error("Error al inicializar Video.js:", e);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
