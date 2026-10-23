@@ -1,5 +1,20 @@
 [
   {
+    "id": 1792766543004,
+    "type": "movie",
+    "title": "El heladero",
+    "ageRating": "+18",
+    "genre": "Terror",
+    "year": "2026",
+    "desc": "Un pueblo veraniego ideal cae en la locura cuando un heladero sirve a los niños dulces delicias con resultados terroríficos.",
+    "cover": "https://image.tmdb.org/t/p/w780/uuQv2MDvfym1UluVyC5mRE86eFJ.jpg",
+    "video": "<iframe src=\"https://archive.org/embed/el-heladero\" width=\"560\" height=\"384\" frameborder=\"0\" webkitallowfullscreen=\"true\" mozallowfullscreen=\"true\" allowfullscreen></iframe>",
+    "seasons": [],
+    "featured": true,
+    "views": 501,
+    "dateAdded": 1792766543004
+  },
+  {
     "id": 1792679280578,
     "type": "movie",
     "title": "Dollhouse",
