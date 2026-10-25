@@ -62,42 +62,6 @@
       height: 100%;
     }
 
-    /* BOTÓN FLOTANTE DE ROTACIÓN HORIZONTAL */
-    .rotate-screen-btn {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 3000;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .rotate-screen-btn:hover {
-      background: rgba(124, 58, 237, 0.8);
-      border-color: var(--accent-light);
-    }
-    .rotate-screen-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
     /* ANIMACIONES PERSONALIZADAS */
     @keyframes heartBeat {
       0% { transform: scale(1); }
@@ -359,7 +323,7 @@
       letter-spacing: -0.3px;
     }
 
-    /* CARRUSELES HORIZONTALES CON TAMAÑO FIJO PARA EVITAR APLASTAMIENTO */
+    /* CARRUSELES HORIZONTALES */
     .horizontal-scroll {
       display: flex;
       gap: 12px;
@@ -775,15 +739,11 @@
     </div>
   </div>
 
-  <!-- REPRODUCTOR DE VIDEO CON ROTACIÓN FORZADA -->
+  <!-- REPRODUCTOR DE VIDEO (ROTACIÓN AUTOMÁTICA EN PANTALLA COMPLETA) -->
   <div class="modal-overlay" id="moviePlayerModal" style="z-index: 2500;">
     <div class="modal-box" style="max-width: 750px; background:#000; padding:0; border:none; position:relative;">
       <button class="btn-close" onclick="closeMoviePlayerModal()">✕</button>
       <div class="video-box" id="fullscreenMovieVideoBox" style="aspect-ratio:16/9; margin-bottom:0;"></div>
-      <button class="rotate-screen-btn" onclick="forceLandscapeMode()" title="Girar pantalla horizontal">
-        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>
-        Girar horizontal
-      </button>
     </div>
   </div>
 
@@ -858,6 +818,7 @@
     let catalog = [];
     /*CATALOG_END*/
 
+    // Priorizar estrictamente localStorage para evitar sobrescrituras de caché en la nube
     const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
     if (Array.isArray(localDb) && localDb.length > 0) {
       catalog = localDb;
@@ -877,48 +838,24 @@
     }
     computeSessionRecommendations();
 
+    // Sincronización en segundo plano con la nube sin afectar los datos locales activos
     async function autoSyncCatalogFromCloud() {
       try {
-        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}`;
-        const res = await fetch(rawUrl, { cache: 'default' });
+        const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
+        const res = await fetch(rawUrl, { cache: 'no-store' });
         if (res.ok) {
           const cloudCatalog = await res.json();
-          if (Array.isArray(cloudCatalog)) {
+          if (Array.isArray(cloudCatalog) && cloudCatalog.length > catalog.length) {
             catalog = cloudCatalog;
             localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
             computeSessionRecommendations();
             renderHomeSections();
             if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
             if (document.getElementById('viewList').classList.contains('active')) renderMyList();
-            return;
           }
         }
       } catch (e) {
-        console.log("Intentando respaldo desde index.html...");
-      }
-
-      try {
-        const rawUrlIndex = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?_t=` + Date.now();
-        const res = await fetch(rawUrlIndex, { cache: 'no-store' });
-        if (res.ok) {
-          const text = await res.text();
-          const startMarker = "/*CATALOG_START*/";
-          const endMarker = "/*CATALOG_END*/";
-          const startIndex = text.indexOf(startMarker);
-          const endIndex = text.indexOf(endMarker);
-          if (startIndex !== -1 && endIndex !== -1) {
-            const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
-            const cloudCatalog = jsonStr.startsWith("[") ? JSON.parse(jsonStr) : [];
-            if (Array.isArray(cloudCatalog) && (cloudCatalog.length > 0 || catalog.length === 0)) {
-              catalog = cloudCatalog;
-              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
-              renderHomeSections();
-            }
-          }
-        }
-      } catch (err) {
-        console.log("Modo offline o error de sincronización total:", err);
+        console.log("Modo offline o activo localmente.");
       }
     }
 
@@ -1439,6 +1376,7 @@
         catalog.unshift(newItem);
       }
 
+      // Guardar inmediatamente en localStorage de forma prioritaria
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
       renderMoviesGrid();
@@ -1452,7 +1390,7 @@
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado y sincronizado automáticamente con database.json y GitHub!");
+        alert("¡Guardado localmente y sincronizado con GitHub con éxito!");
       }
     }
 
@@ -1493,7 +1431,7 @@
           const getData = await getRes.json();
           let fileText = decodeURIComponent(escape(atob(getData.content)));
           if (fileText.includes('/*CATALOG_START*/')) {
-            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = [];\n    /*CATALOG_END*/`);
+            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = ${catalogJson};\n    /*CATALOG_END*/`);
           }
           await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
             method: 'PUT',
@@ -1555,11 +1493,21 @@
 
     function closeMoviePlayerModal() {
       if (currentPlyrInstance) {
+        try {
+          if (currentPlyrInstance.fullscreen.active) {
+            currentPlyrInstance.fullscreen.exit();
+          }
+        } catch(e) {}
         currentPlyrInstance.destroy();
         currentPlyrInstance = null;
       }
       document.getElementById('fullscreenMovieVideoBox').innerHTML = '';
       document.getElementById('moviePlayerModal').style.display = 'none';
+      try {
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
+        }
+      } catch(e) {}
     }
 
     function shareCurrentMovie() {
@@ -1567,26 +1515,26 @@
       else alert("Enlace copiado.");
     }
 
-    // FORZAR ROTACIÓN HORIZONTAL EN MÓVILES
-    async function forceLandscapeMode() {
+    // FORZAR ROTACIÓN AUTOMÁTICA A HORIZONTAL EN PANTALLA COMPLETA
+    async function handleAutomaticLandscape(isEntering) {
       try {
-        if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock('landscape');
-        } else if (screen.lockOrientation) {
-          screen.lockOrientation('landscape');
-        } else if (screen.mozLockOrientation) {
-          screen.mozLockOrientation('landscape');
-        } else if (screen.msLockOrientation) {
-          screen.msLockOrientation('landscape');
+        if (isEntering) {
+          if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape');
+          } else if (screen.lockOrientation) {
+            screen.lockOrientation('landscape');
+          } else if (screen.mozLockOrientation) {
+            screen.mozLockOrientation('landscape');
+          } else if (screen.msLockOrientation) {
+            screen.msLockOrientation('landscape');
+          }
         } else {
-          alert("Gira tu dispositivo manualmente a posición horizontal.");
+          if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+          }
         }
       } catch (err) {
-        if (currentPlyrInstance && currentPlyrInstance.fullscreen) {
-          currentPlyrInstance.fullscreen.enter();
-        } else {
-          alert("Por favor gira tu celular de forma horizontal.");
-        }
+        console.log("Bloqueo automático de orientación no soportado en este navegador.");
       }
     }
 
@@ -1657,6 +1605,15 @@
 
       currentPlyrInstance.on('ready', () => {
         currentPlyrInstance.play().catch(() => {});
+      });
+
+      // Detectar evento de pantalla completa para activar la rotación horizontal automáticamente
+      currentPlyrInstance.on('enterfullscreen', () => {
+        handleAutomaticLandscape(true);
+      });
+
+      currentPlyrInstance.on('exitfullscreen', () => {
+        handleAutomaticLandscape(false);
       });
     }
 
