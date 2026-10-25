@@ -1221,7 +1221,9 @@
       if (!token || !token.trim()) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
         if (token && token.trim()) {
-          localStorage.setItem('naPlus_gh_token', token.trim());
+          // Limpiamos espacios accidentales al ingresar el token
+          token = token.trim();
+          localStorage.setItem('naPlus_gh_token', token);
         } else {
           alert("⚠️ Se necesita el token de GitHub para publicar automáticamente.");
           return;
@@ -1267,15 +1269,15 @@
       if (success) {
         alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
       } else {
-        // CORRECCIÓN DEL TOKEN: Si falla la autenticación, limpiamos el token malo para obligar a pedir uno nuevo y válido
         localStorage.removeItem('naPlus_gh_token');
-        alert("⚠️ Error al conectar con el token de GitHub. El token actual es inválido o expiró. Por favor vuelve a intentarlo para ingresar un token correcto.");
+        alert("⚠️ Error al conectar con el token de GitHub. Asegúrate de haber copiado el token completo (que empiece con ghp_...) y que tenga la casilla 'repo' marcada.");
       }
     }
 
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
       if (!token) return false;
+      token = token.trim();
 
       try {
         const catalogJson = JSON.stringify(catalog, null, 2);
@@ -1283,14 +1285,14 @@
         let dbSha = null;
         const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}?_t=` + Date.now(), {
           headers: { 
-            'Authorization': 'Bearer ' + token.trim(), 
+            'Authorization': 'Bearer ' + token, 
             'Accept': 'application/vnd.github+json',
             'Cache-Control': 'no-cache'
           }
         });
         
         if (getDbRes.status === 401 || getDbRes.status === 403) {
-          return false; // Token inválido o sin permisos
+          return false;
         }
 
         if (getDbRes.ok) {
@@ -1301,7 +1303,7 @@
         const putDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           method: 'PUT',
           headers: {
-            'Authorization': 'Bearer ' + token.trim(),
+            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json',
             'Accept': 'application/vnd.github+json'
           },
