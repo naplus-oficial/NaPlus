@@ -1221,7 +1221,6 @@
       if (!token || !token.trim()) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
         if (token && token.trim()) {
-          // Limpiamos espacios accidentales al ingresar el token
           token = token.trim();
           localStorage.setItem('naPlus_gh_token', token);
         } else {
@@ -1263,20 +1262,23 @@
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) saveBtn.innerText = "Publicando en database.json...";
 
-      const success = await publishToGitHubAutomatically();
+      const result = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
-      if (success) {
-        alert("¡Guardado y sincronizado perfectamente en database.json a la primera!");
+      if (result.success) {
+        alert("¡Guardado y sincronizado perfectamente en database.json!");
       } else {
-        localStorage.removeItem('naPlus_gh_token');
-        alert("⚠️ Error al conectar con el token de GitHub. Asegúrate de haber copiado el token completo (que empiece con ghp_...) y que tenga la casilla 'repo' marcada.");
+        // Solo borramos el token si el error es explícitamente 401 (Unauthorized / Token inválido)
+        if (result.status === 401) {
+          localStorage.removeItem('naPlus_gh_token');
+        }
+        alert("⚠️ Error al conectar con GitHub (" + result.status + "): " + result.message);
       }
     }
 
     async function publishToGitHubAutomatically() {
       let token = localStorage.getItem('naPlus_gh_token');
-      if (!token) return false;
+      if (!token) return { success: false, status: 401, message: "Token no encontrado." };
       token = token.trim();
 
       try {
@@ -1285,39 +1287,49 @@
         let dbSha = null;
         const getDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}?_t=` + Date.now(), {
           headers: { 
-            'Authorization': 'Bearer ' + token, 
-            'Accept': 'application/vnd.github+json',
+            'Authorization': 'token ' + token, 
+            'Accept': 'application/vnd.github.v3+json',
             'Cache-Control': 'no-cache'
           }
         });
-        
-        if (getDbRes.status === 401 || getDbRes.status === 403) {
-          return false;
-        }
 
         if (getDbRes.ok) {
           const dbData = await getDbRes.json();
           dbSha = dbData.sha;
         }
 
+        // Armamos el cuerpo de la petición de forma dinámica (sin incluir 'sha' si es null para evitar errores de creación)
+        const requestBody = {
+          message: 'Actualización automática de database.json',
+          content: utoa(catalogJson)
+        };
+        if (dbSha) {
+          requestBody.sha = dbSha;
+        }
+
         const putDbRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${DB_FILE_PATH}`, {
           method: 'PUT',
           headers: {
-            'Authorization': 'Bearer ' + token,
+            'Authorization': 'token ' + token,
             'Content-Type': 'application/json',
-            'Accept': 'application/vnd.github+json'
+            'Accept': 'application/vnd.github.v3+json'
           },
-          body: JSON.stringify({
-            message: 'Actualización automática de database.json (Solo Películas)',
-            content: utoa(catalogJson),
-            sha: dbSha
-          })
+          body: JSON.stringify(requestBody)
         });
 
-        return putDbRes.ok;
+        if (putDbRes.ok) {
+          return { success: true };
+        } else {
+          const errData = await putDbRes.json().catch(() => ({}));
+          return { 
+            success: false, 
+            status: putDbRes.status, 
+            message: errData.message || putDbRes.statusText || "Error desconocido en GitHub" 
+          };
+        }
       } catch (err) {
         console.error("Error en sincronización automática con GitHub:", err);
-        return false;
+        return { success: false, status: 0, message: err.message || "Error de red" };
       }
     }
 
