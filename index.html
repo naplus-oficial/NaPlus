@@ -815,54 +815,13 @@
     const DB_FILE_PATH = "database.json";
 
     /*CATALOG_START*/
-    let catalog = [
-      {
-        "id": 1,
-        "type": "movie",
-        "title": "Somos los Miller",
-        "ageRating": "+16",
-        "genre": "Comedia",
-        "year": "2013",
-        "desc": "Un veterano traficante de marihuana crea una familia falsa como parte de su plan para pasar un gran cargamento de droga desde México a los Estados Unidos.",
-        "cover": "https://m.media-amazon.com/images/M/MV5BMjMzODU2NzQ0N15BMl5BanBnXkFtZTcwODE3MzUyOQ@@._V1_SX300.jpg",
-        "video": "https://archive.org/download/somos-los-miller-2013/Somos%20los%20Miller%20%282013%29.mp4",
-        "featured": true,
-        "views": 420,
-        "dateAdded": 1720000000000
-      },
-      {
-        "id": 2,
-        "type": "movie",
-        "title": "Mortal Kombat 11",
-        "ageRating": "+18",
-        "genre": "Acción, Lucha",
-        "year": "2019",
-        "desc": "Acción y combates épicos basados en la icónica saga de videojuegos.",
-        "cover": "https://m.media-amazon.com/images/M/MV5BNGFmYzI2MWUtMGZjNC00ODcxLTllNTEtMzg5MTk4ZjllMTZlXkEyXkFqcGc@._V1_SX300.jpg",
-        "video": "https://archive.org/download/mortal-kombat-11/mk11.mp4",
-        "featured": true,
-        "views": 380,
-        "dateAdded": 1720000001000
-      }
-    ];
+    let catalog = [];
     /*CATALOG_END*/
-
-    // Recuperar y fusionar con localStorage asegurando que estén todas las películas y sin series
-    const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
-    if (Array.isArray(localDb) && localDb.length > 0) {
-      // Filtrar por seguridad cualquier serie que pudiera haber
-      const cleanLocal = localDb.filter(item => item.type !== 'series' && !item.seasons);
-      if (cleanLocal.length > 0) {
-        catalog = cleanLocal;
-      }
-    } else {
-      localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-    }
 
     let movieLikes = JSON.parse(localStorage.getItem('naPlus_movie_likes')) || [];
     let currentPlyrInstance = null;
-
     let sessionRecommendedPool = [];
+
     function computeSessionRecommendations() {
       if (catalog.length === 0) {
         sessionRecommendedPool = [];
@@ -871,29 +830,36 @@
       let targetItems = [...catalog].sort(() => 0.5 - Math.random());
       sessionRecommendedPool = targetItems;
     }
-    computeSessionRecommendations();
 
-    async function autoSyncCatalogFromCloud() {
+    // Carga robusta primaria: descarga siempre la información directamente desde database.json de GitHub
+    async function loadCatalogFromDatabaseJson() {
       try {
         const rawUrl = `https://raw.githubusercontent.com/${REPO}/main/${DB_FILE_PATH}?_t=` + Date.now();
         const res = await fetch(rawUrl, { cache: 'no-store' });
         if (res.ok) {
           const cloudCatalog = await res.json();
-          if (Array.isArray(cloudCatalog)) {
-            const cleanCloud = cloudCatalog.filter(item => item.type !== 'series' && !item.seasons);
-            if (cleanCloud.length >= catalog.length) {
-              catalog = cleanCloud;
-              localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
-              computeSessionRecommendations();
-              renderHomeSections();
-              if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
-              if (document.getElementById('viewList').classList.contains('active')) renderMyList();
-            }
+          if (Array.isArray(cloudCatalog) && cloudCatalog.length > 0) {
+            // Filtrar estrictamente solo películas (excluyendo cualquier tipo de serie o temporada)
+            catalog = cloudCatalog.filter(item => item.type !== 'series' && !item.seasons);
+            localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
+            computeSessionRecommendations();
+            renderHomeSections();
+            if (document.getElementById('viewMovies').classList.contains('active')) renderMoviesGrid();
+            if (document.getElementById('viewList').classList.contains('active')) renderMyList();
+            return;
           }
         }
       } catch (e) {
-        console.log("Modo offline o activo localmente.");
+        console.log("No se pudo cargar desde database.json en la nube, usando respaldo local.");
       }
+
+      // Si falla la red, recurrimos al localStorage limpio
+      const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
+      if (Array.isArray(localDb) && localDb.length > 0) {
+        catalog = localDb.filter(item => item.type !== 'series' && !item.seasons);
+      }
+      computeSessionRecommendations();
+      renderHomeSections();
     }
 
     let myFavorites = JSON.parse(localStorage.getItem('naPlus_my_list')) || [];
@@ -1420,13 +1386,13 @@
       closeModal('uploadModal');
 
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.innerText = "Publicando en base y nube...";
+      if (saveBtn) saveBtn.innerText = "Publicando en database.json...";
 
       const success = await publishToGitHubAutomatically();
       if (saveBtn) saveBtn.innerText = "Guardar y Publicar";
 
       if (success) {
-        alert("¡Guardado localmente y sincronizado con GitHub con éxito!");
+        alert("¡Guardado y sincronizado con database.json en GitHub con éxito!");
       }
     }
 
@@ -1459,30 +1425,6 @@
             sha: dbSha
           })
         });
-
-        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-          headers: { 'Authorization': 'Bearer ' + token.trim(), 'Accept': 'application/vnd.github+json' }
-        });
-        if (getRes.ok) {
-          const getData = await getRes.json();
-          let fileText = decodeURIComponent(escape(atob(getData.content)));
-          if (fileText.includes('/*CATALOG_START*/')) {
-            fileText = fileText.replace(/\/\*CATALOG_START\*\/[\s\S]*?\/\*CATALOG_END\*\//, `/*CATALOG_START*/\n    let catalog = ${catalogJson};\n    /*CATALOG_END*/`);
-          }
-          await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-            method: 'PUT',
-            headers: {
-              'Authorization': 'Bearer ' + token.trim(),
-              'Content-Type': 'application/json',
-              'Accept': 'application/vnd.github+json'
-            },
-            body: JSON.stringify({
-              message: 'Sincronización de catálogo en index.html',
-              content: utoa(fileText),
-              sha: getData.sha
-            })
-          });
-        }
         return true;
       } catch (err) {
         console.error(err);
@@ -1651,8 +1593,8 @@
       });
     }
 
-    autoSyncCatalogFromCloud();
-    renderHomeSections();
+    // Cargar contenido al iniciar desde database.json
+    loadCatalogFromDatabaseJson();
   </script>
 </body>
 </html>
