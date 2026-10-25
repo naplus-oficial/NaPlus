@@ -815,14 +815,47 @@
     const DB_FILE_PATH = "database.json";
 
     /*CATALOG_START*/
-    let catalog = [];
+    let catalog = [
+      {
+        "id": 1,
+        "type": "movie",
+        "title": "Somos los Miller",
+        "ageRating": "+16",
+        "genre": "Comedia",
+        "year": "2013",
+        "desc": "Un veterano traficante de marihuana crea una familia falsa como parte de su plan para pasar un gran cargamento de droga desde México a los Estados Unidos.",
+        "cover": "https://m.media-amazon.com/images/M/MV5BMjMzODU2NzQ0N15BMl5BanBnXkFtZTcwODE3MzUyOQ@@._V1_SX300.jpg",
+        "video": "https://archive.org/download/somos-los-miller-2013/Somos%20los%20Miller%20%282013%29.mp4",
+        "featured": true,
+        "views": 420,
+        "dateAdded": 1720000000000
+      },
+      {
+        "id": 2,
+        "type": "movie",
+        "title": "Mortal Kombat 11",
+        "ageRating": "+18",
+        "genre": "Acción, Lucha",
+        "year": "2019",
+        "desc": "Acción y combates épicos basados en la icónica saga de videojuegos.",
+        "cover": "https://m.media-amazon.com/images/M/MV5BNGFmYzI2MWUtMGZjNC00ODcxLTllNTEtMzg5MTk4ZjllMTZlXkEyXkFqcGc@._V1_SX300.jpg",
+        "video": "https://archive.org/download/mortal-kombat-11/mk11.mp4",
+        "featured": true,
+        "views": 380,
+        "dateAdded": 1720000001000
+      }
+    ];
     /*CATALOG_END*/
 
-    // Limpieza estricta: Eliminar de localStorage cualquier serie que haya quedado guardada previamente
-    let rawLocalDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
-    if (Array.isArray(rawLocalDb)) {
-      // Filtrar únicamente elementos que NO sean series y que no tengan temporadas
-      catalog = rawLocalDb.filter(item => item.type !== 'series' && !item.seasons);
+    // Recuperar y fusionar con localStorage asegurando que estén todas las películas y sin series
+    const localDb = JSON.parse(localStorage.getItem('naPlus_permanent_db'));
+    if (Array.isArray(localDb) && localDb.length > 0) {
+      // Filtrar por seguridad cualquier serie que pudiera haber
+      const cleanLocal = localDb.filter(item => item.type !== 'series' && !item.seasons);
+      if (cleanLocal.length > 0) {
+        catalog = cleanLocal;
+      }
+    } else {
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
     }
 
@@ -847,7 +880,6 @@
         if (res.ok) {
           const cloudCatalog = await res.json();
           if (Array.isArray(cloudCatalog)) {
-            // Filtrar también en la nube para asegurar que no se cuele ninguna serie
             const cleanCloud = cloudCatalog.filter(item => item.type !== 'series' && !item.seasons);
             if (cleanCloud.length >= catalog.length) {
               catalog = cleanCloud;
@@ -1381,7 +1413,6 @@
         catalog.unshift(newItem);
       }
 
-      // Guardar inmediatamente en localStorage de forma prioritaria y limpia de series
       localStorage.setItem('naPlus_permanent_db', JSON.stringify(catalog));
       renderHomeSections();
       renderMoviesGrid();
