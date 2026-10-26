@@ -517,9 +517,7 @@
       try {
         const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/main/${GITHUB_FILE_PATH}?t=${Date.now()}`);
         if (res.ok) {
-          const rawData = await res.json();
-          // FILTRAR ESTRICTAMENTE PARA QUEDARSE SOLO CON PELÍCULAS Y ELIMINAR CUALQUIER SERIE
-          catalog = Array.isArray(rawData) ? rawData.filter(item => item.type !== 'series' && !item.seasons) : [];
+          catalog = await res.json();
         } else {
           throw new Error();
         }
@@ -546,9 +544,6 @@
     }
 
     async function publishToGitHubAutomatically(updatedCatalog) {
-      // ASEGURARSE DE LIMPIAR CUALQUIER TIPO DE SERIE ANTES DE ENVIAR A GITHUB
-      const cleanCatalog = updatedCatalog.filter(item => item.type !== 'series' && !item.seasons);
-
       let token = localStorage.getItem('naPlus_github_token');
       if (!token) {
         token = prompt("Introduce tu token de GitHub (ghp_... o github_pat_...):");
@@ -573,7 +568,7 @@
           sha = fileData.sha;
         }
 
-        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(cleanCatalog, null, 2))));
+        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedCatalog, null, 2))));
 
         const putRes = await fetch(apiUrl, {
           method: "PUT",
@@ -583,7 +578,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: "Actualización automática de catálogo NaPlus (Solo Películas)",
+            message: "Actualización automática de catálogo NaPlus",
             content: contentBase64,
             sha: sha
           })
